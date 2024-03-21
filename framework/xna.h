@@ -8,6 +8,7 @@
 #include "Windows.h"
 #include "game/window.hpp"
 #include "platform/window-dx.hpp"
-#include "graphics/device.hpp"
+#include "platform/device-dx.hpp"
+#include "platform/game-dx.hpp"
 
 // TODO: Reference additional headers your program requires here.

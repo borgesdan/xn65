@@ -2,33 +2,26 @@
 #include "../helpers.hpp"
 
 namespace xna {
-	GraphicsAdapter::GraphicsAdapter() {
-		ip_GraphicsAdapter = New<InternalProperty>();
-	}
 
 	String GraphicsAdapter::Description() const {
-		auto& p = ip_GraphicsAdapter;
 		DXGI_ADAPTER_DESC1 desc;
-		p->_adapter->GetDesc1(&desc);
+		_adapter->GetDesc1(&desc);
 		String description = WStringToString(desc.Description);
 		return description;
 	}
 
 	Uint GraphicsAdapter::DeviceId() const {
-		auto& p = ip_GraphicsAdapter;
 		DXGI_ADAPTER_DESC1 desc;
-		p->_adapter->GetDesc1(&desc);
+		_adapter->GetDesc1(&desc);
 
 		return static_cast<Uint>(desc.DeviceId);
 	}
 
 	String GraphicsAdapter::DeviceName() const {
-		auto& p = ip_GraphicsAdapter;
-
 		IDXGIOutput* pOutput = nullptr;
 		DXGI_OUTPUT_DESC outputDesc;
 		
-		if (p->_adapter->EnumOutputs(0, &pOutput) != DXGI_ERROR_NOT_FOUND) {
+		if (_adapter->EnumOutputs(0, &pOutput) != DXGI_ERROR_NOT_FOUND) {
 			pOutput->GetDesc(&outputDesc);
 			String deviceName = WStringToString(outputDesc.DeviceName);
 			
@@ -42,12 +35,10 @@ namespace xna {
 	}
 
 	intptr_t GraphicsAdapter::MonitorHandle() const {
-		auto& p = ip_GraphicsAdapter;
-
 		IDXGIOutput* pOutput = nullptr;
 		DXGI_OUTPUT_DESC outputDesc;
 
-		if (p->_adapter->EnumOutputs(0, &pOutput) != DXGI_ERROR_NOT_FOUND) {
+		if (_adapter->EnumOutputs(0, &pOutput) != DXGI_ERROR_NOT_FOUND) {
 			pOutput->GetDesc(&outputDesc);			
 
 			pOutput->Release();
@@ -60,37 +51,33 @@ namespace xna {
 	}
 
 	Uint GraphicsAdapter::Revision() const {
-		auto& p = ip_GraphicsAdapter;
 		DXGI_ADAPTER_DESC1 desc;
-		p->_adapter->GetDesc1(&desc);
+		_adapter->GetDesc1(&desc);
 
 		return static_cast<Uint>(desc.Revision);
 	}
 
 	Uint GraphicsAdapter::SubSystemId() const {
-		auto& p = ip_GraphicsAdapter;
 		DXGI_ADAPTER_DESC1 desc;
-		p->_adapter->GetDesc1(&desc);
+		_adapter->GetDesc1(&desc);
 
 		return static_cast<Uint>(desc.SubSysId);
 	}
 
 	Uint GraphicsAdapter::VendorId() const {
-		auto& p = ip_GraphicsAdapter;
 		DXGI_ADAPTER_DESC1 desc;
-		p->_adapter->GetDesc1(&desc);
+		_adapter->GetDesc1(&desc);
 
 		return static_cast<Uint>(desc.VendorId);
 	}
 
 	PDisplayModeCollection GraphicsAdapter::SupportedDisplayModes() const {
-		auto& p = ip_GraphicsAdapter;
 		IDXGIOutput* pOutput = nullptr;
 		UINT numModes = 0;
 		UINT totalModes = 0;
 		std::vector<DXGI_MODE_DESC> buffer(250);
 		
-		if (p->_adapter->EnumOutputs(0, &pOutput) != DXGI_ERROR_NOT_FOUND) {
+		if (_adapter->EnumOutputs(0, &pOutput) != DXGI_ERROR_NOT_FOUND) {
 			for (size_t f = 0; f < SURFACE_FORMAT_COUNT; ++f) {
 				const auto currentSurface = static_cast<SurfaceFormat>(f);
 				DXGI_FORMAT format = SurfaceFormatMapper::ParseToDXGI(currentSurface);
@@ -100,8 +87,8 @@ namespace xna {
 				if (numModes == 0)
 					continue;
 
-				if (buffer.size() < totalModes + numModes)
-					buffer.resize(totalModes * 2);
+				if (buffer.size() < static_cast<size_t>(totalModes) + numModes)
+					buffer.resize(static_cast<size_t>(totalModes * 2));
 
 				pOutput->GetDisplayModeList(format, 0, &numModes, buffer.data() + totalModes);
 
@@ -127,7 +114,7 @@ namespace xna {
 		return New<DisplayModeCollection>();
 	}
 
-	std::vector<PGraphicsAdapter> GraphicsAdapter::getAllAdapters() {
+	std::vector<PGraphicsAdapter> IGraphicsAdapter::getAllAdapters() {
 		IDXGIFactory1* pFactory = nullptr;
 		std::vector<PGraphicsAdapter> adapters;
 
@@ -140,9 +127,10 @@ namespace xna {
 
 		for (; pFactory->EnumAdapters1(count, &pAdapter) != DXGI_ERROR_NOT_FOUND; ++count) {
 			auto adp = New<GraphicsAdapter>();
-			const auto& p = adp->ip_GraphicsAdapter;
+			
+			adp->_index = count;
+			adp->_adapter = pAdapter;
 
-			p->_adapter = pAdapter;
 			adapters.push_back(adp);
 		}
 

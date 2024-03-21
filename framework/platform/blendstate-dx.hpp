@@ -6,20 +6,23 @@
 #include "d3d11.h"
 
 namespace xna {
-	class BlendState::InternalProperty {
-		friend class BlendState;
-		friend class GraphicsDevice;
+	class BlendState : public IBlendState {
 	public:
-		~InternalProperty() {
+		BlendState(GraphicsDevice* device);
+
+		virtual ~BlendState() override {
 			if (_blendState) {
 				_blendState->Release();
 				_blendState = nullptr;
 			}
 		}
 
-	private:
-		ID3D11BlendState* _blendState{ nullptr };
-	};
+		virtual bool Apply(GraphicsDevice* device) override;
+
+	public:
+		ID3D11BlendState* _blendState{ nullptr };	
+		GraphicsDevice* _device{ nullptr };
+	};	
 
 	struct BlendMapper {
 		static constexpr D3D11_BLEND ConvertBlend(Blend blend) {

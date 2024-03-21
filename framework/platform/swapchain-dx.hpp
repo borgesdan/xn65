@@ -7,18 +7,19 @@
 #include "d3d11.h"
 
 namespace xna {
-	class SwapChain::InternalProperty {
-		friend class SwapChain;
-		friend class GraphicsDevice;
+	class SwapChain : public ISwapChain{
 	public:
-		InternalProperty(){}
+		SwapChain(GraphicsDevice* device);
 
-		~InternalProperty() {
+		virtual ~SwapChain() override {
 			if (_swapChain) {
 				_swapChain->Release();
 				_swapChain = nullptr;
 			}
 		}
+
+		virtual bool Initialize(GameWindow const& gameWindow) override;
+		virtual bool Apply() override;
 
 		bool GetBackBuffer(ID3D11Texture2D*& texture2D) {
 			if FAILED(_swapChain->GetBuffer(0, __uuidof(texture2D), (void**)(&texture2D)))
@@ -27,10 +28,11 @@ namespace xna {
 			return true;
 		}
 
-	private:
-		IDXGISwapChain* _swapChain{nullptr};
-		DXGI_SWAP_CHAIN_DESC _swapDescription{};
-	};
+	public:
+		IDXGISwapChain* _swapChain{ nullptr };
+		DXGI_SWAP_CHAIN_DESC _swapDescription{};	
+		GraphicsDevice* _device{ nullptr };
+	};	
 }
 
 #endif

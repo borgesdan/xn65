@@ -2,30 +2,27 @@
 
 namespace xna {
 	GameWindow::GameWindow() {
-		ip_GameWindow = New<InternalProperty>(this);
-		auto& p = ip_GameWindow;
+		_hInstance = GetModuleHandle(NULL);
+		_windowIcon = LoadIcon(NULL, IDI_APPLICATION);
+		_windowCursor = LoadCursor(NULL, IDC_ARROW);
+		_windowStyle = static_cast<int>(GameWindowMode::Windowed);		
+		_windowCenterX = _windowWidth / 2.0F;
+		_windowCenterY = _windowHeight / 2.0F;	
 
-		p->_hInstance = GetModuleHandle(NULL);
-		p->_windowIcon = LoadIcon(NULL, IDI_APPLICATION);
-		p->_windowCursor = LoadCursor(NULL, IDC_ARROW);
-		p->_windowStyle = static_cast<int>(GameWindowMode::Windowed);		
-		p->_windowCenterX = p->_windowWidth / 2.0F;
-		p->_windowCenterY = p->_windowHeight / 2.0F;
+	}
+
+	void GameWindow::Size(int width, int height) {
+		_windowWidth = width;
+		_windowHeight = height;
+		setPosition();
+		setCenter();
 	}
 
 	void GameWindow::Title(String const& title) {
-		ip_GameWindow->_windowTitle = title;
-	}
+		_windowTitle = title;
+	}	
 
-	void GameWindow::InternalProperty::Size(int width, int height) {
-		_windowWidth = width;
-		_windowHeight = height;
-
-		setCenter();
-		setPosition();
-	}
-
-	bool GameWindow::InternalProperty::Create() {
+	bool GameWindow::Create() {
 		WNDCLASSEX wndClass{};
 		wndClass.cbSize = sizeof(WNDCLASSEX);
 		wndClass.style = CS_DBLCLKS | CS_OWNDC | CS_HREDRAW | CS_VREDRAW;
@@ -75,27 +72,29 @@ namespace xna {
 				TRUE);
 
 			return _windowHandle ? true : false;
-		}			
+		}	
+
+		return true;
 	}
 
 	String GameWindow::Title() const {
-		return ip_GameWindow->_windowTitle;
+		return _windowTitle;
 	}
 
 	Rectangle GameWindow::ClientBounds() const {
 		return Rectangle(
-			ip_GameWindow->_windowPosX,
-			ip_GameWindow->_windowPosY,
-			ip_GameWindow->_windowWidth,
-			ip_GameWindow->_windowHeight
+			_windowPosX,
+			_windowPosY,
+			_windowWidth,
+			_windowHeight
 		);
 	}
 
 	intptr_t GameWindow::Handle() const {
-		return reinterpret_cast<intptr_t>(ip_GameWindow->_windowHandle);
+		return reinterpret_cast<intptr_t>(_windowHandle);
 	}
 
-	LRESULT GameWindow::InternalProperty::WinProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
+	LRESULT GameWindow::WinProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	{
 		switch (msg) {
 		case WM_DESTROY:

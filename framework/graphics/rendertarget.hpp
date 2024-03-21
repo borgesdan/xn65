@@ -5,21 +5,15 @@
 
 
 namespace xna {
-	class RenderTarget2D : public Texture2D {
+	class IRenderTarget2D {
 	public:
-		RenderTarget2D(GraphicsDevice* device);
+		virtual ~IRenderTarget2D(){}
 
-		PLATFORM_DEVELOPMENT
-			bool Apply();
+		virtual bool Apply() = 0;
 
-	private:
-		GraphicsDevice* _device;
-
-	public:
-		class InternalProperty;
-		friend class InternalProperty;
-		sptr<InternalProperty> ip_RenderTarget2D{ nullptr };
-	};
+	protected:
+		GraphicsDevice* _device{nullptr};
+	};	
 }
 
 #endif

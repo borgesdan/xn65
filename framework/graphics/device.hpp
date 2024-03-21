@@ -12,22 +12,12 @@
 #include "blendstate.hpp"
 
 namespace xna {
-	class GraphicsDevice : public std::enable_shared_from_this<GraphicsDevice> {
+	class IGraphicsDevice {
 	public:
-		PLATFORM_DEVELOPMENT
-			GraphicsDevice();
-
-		PLATFORM_DEVELOPMENT
-			void Clear();
-
-		PLATFORM_DEVELOPMENT
-			void Clear(Color const& color);
-
-		PLATFORM_DEVELOPMENT
-			bool Initialize(GameWindow& gameWindow);
-
-		PLATFORM_DEVELOPMENT
-			bool Present();
+		virtual ~IGraphicsDevice() {}
+		virtual void Clear() = 0;
+		virtual bool Initialize(GameWindow& gameWindow) = 0;
+		virtual bool Present() = 0;
 
 		PGraphicsAdapter Adapter() const {
 			return _adapter;
@@ -35,7 +25,7 @@ namespace xna {
 
 		void Adapter(PGraphicsAdapter const& adapter) {
 			_adapter = adapter;
-		}		
+		}
 
 		constexpr xna::Viewport Viewport() const {
 			return _viewport;
@@ -49,17 +39,17 @@ namespace xna {
 			return _swapChain;
 		}
 
-	private:
+		constexpr void UseVSync(bool use) {
+			_usevsync = use;
+		}
+
+	protected:
 		PGraphicsAdapter _adapter{ nullptr };
 		PSwapChain _swapChain{ nullptr };
 		PRenderTarget2D _renderTarget2D{ nullptr };
 		xna::Viewport _viewport{};
 		PBlendState _blendState{ nullptr };
-
-	public:
-		class InternalProperty;
-		friend class InternalProperty;
-		sptr<InternalProperty> ip_GraphicsDevice{ nullptr };
+		bool _usevsync{ false };
 	};
 }
 

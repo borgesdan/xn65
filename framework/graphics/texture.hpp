@@ -9,15 +9,9 @@ namespace xna {
 	class Texture {
 	};
 
-	class Texture2D : public Texture {
+	class ITexture2D {
 	public:
-		PLATFORM_DEVELOPMENT
-			Texture2D();
-
-	public:
-		class InternalProperty;
-		friend class InternalProperty;
-		sptr<InternalProperty> ip_Texture2D{ nullptr };
+		virtual ~ITexture2D(){}
 	};
 }
 

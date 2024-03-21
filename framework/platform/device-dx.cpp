@@ -3,28 +3,25 @@
 #include "swapchain-dx.hpp"
 #include "rendertarget-dx.hpp"
 #include "adapter-dx.hpp"
+#include "blendstate-dx.hpp"
 
 namespace xna {
-    GraphicsDevice::GraphicsDevice() {
-        _adapter = New<GraphicsAdapter>();            
+    GraphicsDevice::GraphicsDevice() {        
         _blendState = BlendState::NonPremultiplied();  
-        _adapter = GraphicsAdapter::DefaultAdapter();
-
-        ip_GraphicsDevice = New<InternalProperty>();
+        _adapter = GraphicsAdapter::DefaultAdapter();        
     }
 
-	bool GraphicsDevice::Initialize(GameWindow& gameWindow) {
-		auto& p = ip_GraphicsDevice;
-		p->_createDeviceFlags |= D3D11_CREATE_DEVICE_DEBUG;
+	bool GraphicsDevice::Initialize(GameWindow& gameWindow) {		
+	    _createDeviceFlags |= D3D11_CREATE_DEVICE_DEBUG;
 
-		if (p->_device) {
-			p->_device->Release();
-			p->_device = nullptr;
+		if (_device) {
+			_device->Release();
+			_device = nullptr;
 		}
 
-		if (p->_context) {
-			p->_context->Release();
-			p->_context = nullptr;
+		if (_context) {
+			_context->Release();
+			_context = nullptr;
 		}
 
         const auto bounds = gameWindow.ClientBounds();
@@ -33,43 +30,14 @@ namespace xna {
             static_cast<float>(bounds.Height),
             0.0F, 1.F);
 
-        if FAILED(
-            D3D11CreateDevice(
-                _adapter->ip_GraphicsAdapter->_adapter,                           // adaptador de vídeo (NULL = adaptador padrão)
-                D3D_DRIVER_TYPE_HARDWARE,       // tipo de driver D3D (Hardware, Reference ou Software)
-                NULL,                           // ponteiro para rasterizador em software
-                p->_createDeviceFlags,              // modo de depuração ou modo normal
-                NULL,                           // featureLevels do Direct3D (NULL = maior suportada)
-                0,                              // tamanho do vetor featureLevels
-                D3D11_SDK_VERSION,              // versão do SDK do Direct3D
-                &p->_device,                        // guarda o dispositivo D3D criado
-                &p->_featureLevel,                  // versão do Direct3D utilizada
-                &p->_context))                      // contexto do dispositivo D3D
-        {
-            // sistema não suporta dispositivo D3D11
-            // fazendo a criação de um WARP Device que 
-            // implementa um rasterizador em software
-            if FAILED(D3D11CreateDevice(
-                NULL, 
-                D3D_DRIVER_TYPE_WARP,
-                NULL, 
-                p->_createDeviceFlags, 
-                NULL, 
-                0, 
-                D3D11_SDK_VERSION,
-                &p->_device, 
-                &p->_featureLevel, 
-                &p->_context))
-                return false;
+        if (!createDevice())
+            return false;
 
-            OutputDebugString("---> Usando Adaptador WARP: não há suporte ao D3D11\n");
-        }                       
-
-        COLORREF color = gameWindow.ip_GameWindow->Color();
-        p->_backgroundColor[0] = GetRValue(color) / 255.0f;
-        p->_backgroundColor[1] = GetGValue(color) / 255.0f;
-        p->_backgroundColor[2] = GetBValue(color) / 255.0f;
-        p->_backgroundColor[3] = 1.0f;
+        COLORREF color = gameWindow.Color();
+        _backgroundColor[0] = GetRValue(color) / 255.0f;
+        _backgroundColor[1] = GetGValue(color) / 255.0f;
+        _backgroundColor[2] = GetBValue(color) / 255.0f;
+        _backgroundColor[3] = 1.0f;
 
         if (!_swapChain)
             _swapChain = New<xna::SwapChain>(this);
@@ -83,7 +51,7 @@ namespace xna {
         if FAILED(CreateDXGIFactory1(__uuidof(IDXGIFactory1), (void**)&dxgiFactory))
             return false;
 
-        if FAILED(dxgiFactory->MakeWindowAssociation(gameWindow.ip_GameWindow->WindowHandle(), DXGI_MWA_NO_ALT_ENTER))
+        if FAILED(dxgiFactory->MakeWindowAssociation(gameWindow.WindowHandle(), DXGI_MWA_NO_ALT_ENTER))
             return false;
 
         if (!_renderTarget2D) {
@@ -101,7 +69,7 @@ namespace xna {
         view.MinDepth = _viewport.MinDetph;
         view.MaxDepth = _viewport.MaxDepth;
 
-        p->_context->RSSetViewports(1, &view);
+        _context->RSSetViewports(1, &view);
 
         _blendState->Apply(this);
 
@@ -109,19 +77,57 @@ namespace xna {
 	}
 
     bool GraphicsDevice::Present() {
-        _swapChain->ip_SwapChain->_swapChain->Present(false, NULL);
-        auto& p = ip_GraphicsDevice;
-        auto& pr = _renderTarget2D->ip_RenderTarget2D;
-
-        p->_context->OMSetRenderTargets(1, &pr->_renderTargetView, nullptr);
+        _swapChain->_swapChain->Present(_usevsync, NULL);
+        _context->OMSetRenderTargets(1, &_renderTarget2D->_renderTargetView, nullptr);
 
         return true;
     }
 
-    void GraphicsDevice::Clear() {
-        auto& p = ip_GraphicsDevice;
-        auto& pr = _renderTarget2D->ip_RenderTarget2D;
+    bool GraphicsDevice::GetSwapChainBackBuffer(ID3D11Texture2D*& texture2D) {
+        if FAILED(_swapChain->_swapChain->GetBuffer(0, __uuidof(texture2D), (void**)(&texture2D)))
+            return false;
 
-        p->_context->ClearRenderTargetView(pr->_renderTargetView, p->_backgroundColor);
+        return true;
+    }
+
+    bool GraphicsDevice::createDevice() {
+#if _DEBUG
+        _createDeviceFlags |= D3D11_CREATE_DEVICE_FLAG::D3D11_CREATE_DEVICE_DEBUG;
+#endif
+
+        if FAILED(
+            D3D11CreateDevice(
+                _adapter->_adapter,
+                D3D_DRIVER_TYPE_UNKNOWN,
+                NULL,
+                _createDeviceFlags,
+                NULL,
+                0,
+                D3D11_SDK_VERSION,
+                &_device,
+                &_featureLevel,
+                &_context)) {
+            
+            if FAILED(D3D11CreateDevice(
+                NULL,
+                D3D_DRIVER_TYPE_WARP,
+                NULL,
+                _createDeviceFlags,
+                NULL,
+                0,
+                D3D11_SDK_VERSION,
+                &_device,
+                &_featureLevel,
+                &_context))
+                return false;
+
+            OutputDebugString("---> Usando Adaptador WARP: não há suporte ao D3D11\n");
+        }
+
+        return true;
+    }
+
+    void GraphicsDevice::Clear() {        
+        _context->ClearRenderTargetView(_renderTarget2D->_renderTargetView, _backgroundColor);
     }
 }

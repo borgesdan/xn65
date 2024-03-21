@@ -6,13 +6,18 @@
 #include "d3d11.h"
 
 namespace xna {
-	class Texture2D::InternalProperty {
-		friend class Texture2D;
-		friend class GraphicsDevice;	
-		friend class RenderTarget2D;
-	public:		
+	class Texture2D : public ITexture2D {
+	public:
+		Texture2D();
 
-	private:
+		virtual ~Texture2D() override {
+			if (_texture2D) {
+				_texture2D->Release();
+				_texture2D = nullptr;
+			}
+		}
+
+	public:
 		ID3D11Texture2D* _texture2D{nullptr};
 	};
 }

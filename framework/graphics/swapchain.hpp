@@ -7,25 +7,12 @@
 #include "../game/window.hpp"
 
 namespace xna {
-	class SwapChain {
+	class ISwapChain {
 	public:
-		PLATFORM_DEVELOPMENT
-			SwapChain(GraphicsDevice* device);
-
-		PLATFORM_DEVELOPMENT
-		bool Initialize(GameWindow const& gameWindow);
-
-		PLATFORM_DEVELOPMENT
-			bool Apply();	
-
-	private:
-		GraphicsDevice* _device{ nullptr };		
-
-	public:
-		class InternalProperty;
-		friend class InternalProperty;	
-		sptr<InternalProperty> ip_SwapChain{ nullptr };
-	};
+		virtual ~ISwapChain() {}
+		virtual bool Initialize(GameWindow const& gameWindow) = 0;
+		virtual bool Apply() = 0;
+	};	
 }
 
 #endif

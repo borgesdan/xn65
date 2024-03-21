@@ -23,7 +23,16 @@ namespace xna {
 	struct Vector3;
 	struct Vector4;
 
-	//Audio
+	//Game
+	class DrawableGameComponent;
+	class Game;
+	class GameComponent;
+	class GameComponentCollection;
+	class GameTime;
+	class GameWindow;
+	class IDrawable;
+	class IGameComponent;
+	class IUpdatable;
 
 	//Graphics
 	class BlendState;
@@ -35,18 +44,7 @@ namespace xna {
 	class SwapChain;
 	class Texture;
 	class Texture2D;
-	struct Viewport;
-
-	//Game
-	class DrawableGameComponent;
-	class Game;
-	class GameComponent;
-	class GameComponentCollection;
-	class GameTime;
-	class GameWindow;
-	class IDrawable;
-	class IGameComponent;
-	class IUpdatable;
+	struct Viewport;	
 
 	using PBoundingBox					= std::shared_ptr<BoundingBox>;
 	using PBoundingFrustum				= std::shared_ptr<BoundingFrustum>;
@@ -64,18 +62,7 @@ namespace xna {
 	using PRectangle					= std::shared_ptr<Rectangle>;
 	using PVector2						= std::shared_ptr<Vector2>;
 	using PVector3						= std::shared_ptr<Vector3>;
-	using PVector4						= std::shared_ptr<Vector4>;
-
-	using PBlendState					= std::shared_ptr<BlendState>;
-	using PDisplayMode					= std::shared_ptr<DisplayMode>;
-	using PDisplayModeCollection		= std::shared_ptr<DisplayModeCollection>;
-	using PGraphicsAdapter				= std::shared_ptr<GraphicsAdapter>;
-	using PGraphicsDevice				= std::shared_ptr<GraphicsDevice>;
-	using PRenderTarget2D				= std::shared_ptr<RenderTarget2D>;
-	using PSwapChain					= std::shared_ptr<SwapChain>;
-	using PTexture						= std::shared_ptr<Texture>;
-	using PTexture2D					= std::shared_ptr<Texture2D>;
-	using PViewport						= std::shared_ptr<Viewport>;
+	using PVector4						= std::shared_ptr<Vector4>;	
 
 	using PDrawableGameComponent		= std::shared_ptr<DrawableGameComponent>;
 	using PGame							= std::shared_ptr<Game>;
@@ -86,6 +73,17 @@ namespace xna {
 	using PIDrawable					= std::shared_ptr<IDrawable>;
 	using PIGameComponent				= std::shared_ptr<IGameComponent>;
 	using PIUpdatable					= std::shared_ptr<IUpdatable>;
+
+	using PBlendState = std::shared_ptr<BlendState>;
+	using PDisplayMode = std::shared_ptr<DisplayMode>;
+	using PDisplayModeCollection = std::shared_ptr<DisplayModeCollection>;
+	using PGraphicsAdapter = std::shared_ptr<GraphicsAdapter>;
+	using PGraphicsDevice = std::shared_ptr<GraphicsDevice>;
+	using PRenderTarget2D = std::shared_ptr<RenderTarget2D>;
+	using PSwapChain = std::shared_ptr<SwapChain>;
+	using PTexture = std::shared_ptr<Texture>;
+	using PTexture2D = std::shared_ptr<Texture2D>;
+	using PViewport = std::shared_ptr<Viewport>;
 }
 
 #endif

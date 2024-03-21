@@ -5,25 +5,14 @@
 #include "../common/rectangle.hpp"
 
 namespace xna {
-	class GameWindow {
+	class IGameWindow {
 	public:
-		PLATFORM_DEVELOPMENT
-			GameWindow();
-		PLATFORM_DEVELOPMENT
-			String Title() const;
-		PLATFORM_DEVELOPMENT
-			void Title(String const& title);
-		PLATFORM_DEVELOPMENT
-			Rectangle ClientBounds() const;
-		PLATFORM_DEVELOPMENT
-			intptr_t Handle() const;
+		virtual ~IGameWindow(){}
 
-	private:
-		class InternalProperty;
-		friend class InternalProperty;
-
-	public:
-		sptr<InternalProperty> ip_GameWindow{ nullptr };
+		virtual String Title() const = 0;
+		virtual void Title(String const& title) = 0;
+		virtual Rectangle ClientBounds() const = 0;
+		virtual intptr_t Handle() const = 0;
 	};
 }
 

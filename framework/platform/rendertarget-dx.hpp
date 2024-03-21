@@ -7,13 +7,21 @@
 #include "d3d11.h"
 
 namespace xna {
-	class RenderTarget2D::InternalProperty {
-		friend class RenderTarget2D;
-		friend class GraphicsDevice;
+	class RenderTarget2D : public IRenderTarget2D, public Texture2D {
 	public:
+		RenderTarget2D(GraphicsDevice* device);
 
-	private:
-		ID3D11RenderTargetView* _renderTargetView;
+		virtual ~RenderTarget2D() override {
+			if (_renderTargetView) {
+				_renderTargetView->Release();
+				_renderTargetView = nullptr;
+			}
+		}
+
+		virtual bool Apply() override;
+
+	public:
+		ID3D11RenderTargetView* _renderTargetView = nullptr;
 	};
 }
 

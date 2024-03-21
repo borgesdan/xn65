@@ -6,13 +6,11 @@
 #include "d3d11.h"
 
 namespace xna {
-	class GraphicsDevice::InternalProperty {
-		friend class GraphicsDevice;
-
+	class GraphicsDevice : public IGraphicsDevice {
 	public:
-		InternalProperty() {}
+		GraphicsDevice();
 
-		~InternalProperty() {
+		virtual ~GraphicsDevice() override {
 			if (_device) {
 				_device->Release();
 				_device = nullptr;
@@ -24,6 +22,10 @@ namespace xna {
 			}
 		}
 
+		virtual void Clear() override;
+		virtual bool Initialize(GameWindow& gameWindow) override;
+		virtual bool Present() override;
+
 		constexpr void SetCreateFlags(D3D11_CREATE_DEVICE_FLAG flags) {
 			_createDeviceFlags |= flags;
 		}
@@ -31,6 +33,8 @@ namespace xna {
 		constexpr void ClearCreateFlags() {
 			_createDeviceFlags = 0;
 		}
+
+		bool GetSwapChainBackBuffer(ID3D11Texture2D*& texture2D);
 
 	public:
 		ID3D11Device* _device{ nullptr };
@@ -40,7 +44,9 @@ namespace xna {
 		unsigned int _createDeviceFlags{ 0 };
 		D3D_FEATURE_LEVEL _featureLevel{ D3D_FEATURE_LEVEL::D3D_FEATURE_LEVEL_11_0 };
 		float _backgroundColor[4] = { 0, 0, 0, 0 };
-	};
+
+		bool createDevice();
+	};	
 }
 
 #endif

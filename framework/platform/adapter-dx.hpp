@@ -6,23 +6,29 @@
 #include "d3d11.h"
 
 namespace xna {
-	class GraphicsAdapter::InternalProperty {
-		friend class GraphicsAdapter;
-
+	class GraphicsAdapter : public IGraphicsAdapter {
 	public:
-		InternalProperty() {
-		}
+		GraphicsAdapter() {}
 
-		~InternalProperty() {
+		virtual ~GraphicsAdapter() override {
 			if (_adapter) {
 				_adapter->Release();
 				_adapter = nullptr;
 			}
 		}
 
+		virtual String Description() const override;
+		virtual Uint DeviceId() const override;
+		virtual String DeviceName() const override;
+		virtual intptr_t MonitorHandle() const override;
+		virtual Uint Revision() const override;
+		virtual Uint SubSystemId() const override;
+		virtual Uint VendorId() const override;
+		virtual PDisplayModeCollection SupportedDisplayModes() const override;
+
 	public:
-		IDXGIAdapter1* _adapter{ nullptr };		
-	};
+		IDXGIAdapter1* _adapter{ nullptr };
+	};	
 
 	struct SurfaceFormatMapper {
 		static constexpr DXGI_FORMAT ParseToDXGI(SurfaceFormat format)

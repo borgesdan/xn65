@@ -13,11 +13,9 @@ namespace xna {
 		Borderless = WS_EX_TOPMOST | WS_POPUP | WS_VISIBLE,
 	};
 
-	class GameWindow::InternalProperty {
-		friend class GameWindow;
+	class GameWindow : public IGameWindow {
 	public:
-		InternalProperty(GameWindow* gamewindow) :
-			_gamewindow(gamewindow){}
+		GameWindow();
 
 		constexpr void Mode(GameWindowMode mode) {
 			_windowStyle = static_cast<int>(mode);
@@ -52,7 +50,7 @@ namespace xna {
 		inline void Icon(HICON icon) {
 			_windowIcon = icon;
 		}
-		
+
 		inline void Cursor(unsigned int cursor) {
 			_windowCursor = LoadCursor(GetModuleHandle(NULL), MAKEINTRESOURCE(cursor));
 		}
@@ -81,7 +79,7 @@ namespace xna {
 			return _windowColor;
 		}
 
-		inline void Color(COLORREF color)	{
+		inline void Color(COLORREF color) {
 			_windowColor = color;
 		}
 
@@ -92,7 +90,12 @@ namespace xna {
 		bool Create();
 		static LRESULT CALLBACK WinProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
-	private:	
+		virtual String Title() const override;
+		virtual void Title(String const& title) override;
+		virtual Rectangle ClientBounds() const override;
+		virtual intptr_t Handle() const override;
+
+	private:
 		HINSTANCE		_hInstance{ nullptr };
 		HWND			_windowHandle{ nullptr };
 		int				_windowWidth{ 800 };
@@ -108,8 +111,6 @@ namespace xna {
 		float			_windowCenterY{ 0 };
 
 	private:
-		GameWindow* _gamewindow = nullptr;
-
 		inline void setPosition() {
 			_windowPosX = GetSystemMetrics(SM_CXSCREEN) / 2 - _windowWidth / 2;
 			_windowPosY = GetSystemMetrics(SM_CYSCREEN) / 2 - _windowHeight / 2;
@@ -118,7 +119,7 @@ namespace xna {
 		inline void setCenter() {
 			_windowCenterX = _windowWidth / 2.0f;
 			_windowCenterY = _windowHeight / 2.0f;
-		}		
+		}
 	};	
 }
 

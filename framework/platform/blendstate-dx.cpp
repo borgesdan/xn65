@@ -2,8 +2,8 @@
 #include "device-dx.hpp"
 
 namespace xna {
-	BlendState::BlendState(GraphicsDevice* device) : _device(device) {
-        ip_BlendState = New<InternalProperty>();
+	BlendState::BlendState(GraphicsDevice* device) {
+		_device = device;
 	}
 
 	bool BlendState::Apply(GraphicsDevice* device) {
@@ -23,12 +23,51 @@ namespace xna {
         if (_device == nullptr || _device != device)
             _device = device;
 
-        auto& p = _device->ip_GraphicsDevice;
-        if FAILED(p->_device->CreateBlendState(&blendDesc, &ip_BlendState->_blendState))
+        if FAILED(_device->_device->CreateBlendState(&blendDesc, &_blendState))
             return false;
 
-        p->_context->OMSetBlendState(ip_BlendState->_blendState, nullptr, 0xffffffff);
+        _device->_context->OMSetBlendState(_blendState, nullptr, 0xffffffff);
 
         return true;
+	}
+
+	PBlendState IBlendState::Opaque() {
+		auto blendState = New<BlendState>(nullptr);
+		blendState->_source = Blend::SourceAlpha;
+		blendState->_sourceAlpha = Blend::SourceAlpha;
+		blendState->_destination = Blend::Zero;
+		blendState->_destinationAlpha = Blend::Zero;
+
+		return blendState;
+	}
+
+	PBlendState IBlendState::AlphaBlend() {
+		auto blendState = New<BlendState>(nullptr);
+		blendState->_source = Blend::One;
+		blendState->_sourceAlpha = Blend::One;
+		blendState->_destination = Blend::InverseSourceAlpha;
+		blendState->_destinationAlpha = Blend::InverseSourceAlpha;
+
+		return blendState;
+	}
+
+	PBlendState IBlendState::Additive() {
+		auto blendState = New<BlendState>(nullptr);
+		blendState->_source = Blend::SourceAlpha;
+		blendState->_sourceAlpha = Blend::SourceAlpha;
+		blendState->_destination = Blend::One;
+		blendState->_destinationAlpha = Blend::One;
+
+		return blendState;
+	}
+
+	PBlendState IBlendState::NonPremultiplied() {
+		auto blendState = New<BlendState>(nullptr);
+		blendState->_source = Blend::SourceAlpha;
+		blendState->_sourceAlpha = Blend::SourceAlpha;
+		blendState->_destination = Blend::InverseSourceAlpha;
+		blendState->_destinationAlpha = Blend::InverseSourceAlpha;
+
+		return blendState;
 	}
 }
