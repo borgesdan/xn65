@@ -2,6 +2,7 @@
 #define XNA_PLATFORM_GAME_DX_HPP
 
 #include "../game/game.hpp"
+#include "clock-dx.hpp"
 #include "dxgi.h"
 #include "d3d11.h"
 
@@ -24,6 +25,9 @@ namespace xna {
 	private:		
 		PGameWindow _gameWindow{ nullptr };
 		PGraphicsDevice _graphicsDevice{ nullptr };
+		
+		GameClock _clock{};
+		GameTime _currentGameTime{};
 		
 		int startLoop();		
 	};

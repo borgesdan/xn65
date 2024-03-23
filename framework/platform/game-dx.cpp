@@ -2,6 +2,7 @@
 #include "window-dx.hpp"
 #include "device-dx.hpp"
 #include "Windows.h"
+#include "../game/time.hpp"
 
 namespace xna {
 	Game::Game() {
@@ -27,7 +28,8 @@ namespace xna {
 	}
 	
 	int Game::startLoop() {
-		MSG msg{};
+		MSG msg{};		
+		_clock.Start();
 
 		do {
 			if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
@@ -37,14 +39,26 @@ namespace xna {
 			}
 			else {
 				GameTime gt;
+
+				gt.ElapsedGameTime = _clock.ElapsedTime();
+				gt.TotalGameTime = _clock.TotalTime();	
+				auto ml = gt.ElapsedGameTime.Milliseconds();
+
 				this->Update(gt);
+
 				_graphicsDevice->Clear();
+
+				gt.ElapsedGameTime = _clock.ElapsedTime();
+				gt.TotalGameTime = _clock.TotalTime();
+				ml = gt.ElapsedGameTime.Milliseconds();
+
 				this->Draw(gt);
+
 				_graphicsDevice->Present();
 			}
 
 		} while (msg.message != WM_QUIT);
 
-		return msg.wParam;
+		return static_cast<int>(msg.wParam);
 	}
 }

@@ -28,6 +28,7 @@ namespace xna {
 	class Game;
 	class GameComponent;
 	class GameComponentCollection;
+	class GameClock;
 	class GameTime;
 	class GameWindow;
 	class IDrawable;

@@ -3,34 +3,21 @@
 
 #include "../forward.hpp"
 #include "../types.hpp"
-#include "../timespan.hpp"
+#include "../csharp/timespan.hpp"
 
 namespace xna {
 	class GameTime {	
 	public:
 		constexpr GameTime() = default;
 
-		constexpr GameTime(const TimeSpan& elapsedGameTime, bool isRunningSlowly, const TimeSpan& totalGameTime) : 
-			_elapsedGameTime(elapsedGameTime),
-			_isRunningSlowly(isRunningSlowly), 
-			_totalGameTime(totalGameTime) { }
+		constexpr GameTime(const TimeSpan& elapsedGameTime, const TimeSpan& totalGameTime, bool isRunningSlowly) :
+			ElapsedGameTime(elapsedGameTime),
+			IsRunningSlowly(isRunningSlowly), 
+			TotalGameTime(totalGameTime) { }		
 
-		constexpr TimeSpan ElapsedGameTime() const {
-			return _elapsedGameTime;
-		}
-
-		constexpr bool IsRunningSlowly() const {
-			return _isRunningSlowly;
-		}
-
-		constexpr TimeSpan TotalGameTime() const {
-			return _totalGameTime;
-		}
-
-	private:
-		TimeSpan _elapsedGameTime{ 0 };
-		bool _isRunningSlowly{ false };
-		TimeSpan _totalGameTime{ 0 };		
+		TimeSpan ElapsedGameTime{ 0 };
+		bool IsRunningSlowly{ false };
+		TimeSpan TotalGameTime{ 0 };		
 	};
 }
 
