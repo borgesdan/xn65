@@ -31,6 +31,9 @@ namespace xna {
 		MSG msg{};		
 		_clock.Start();
 
+		GameTime gameTime{};
+		TimeSpan endElapsedTime{};
+
 		do {
 			if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
 			{
@@ -38,23 +41,23 @@ namespace xna {
 				DispatchMessage(&msg);
 			}
 			else {
-				GameTime gt;
+				auto elapsed = _clock.ElapsedTime();
+				gameTime.ElapsedGameTime = elapsed - endElapsedTime;
+				gameTime.TotalGameTime = _clock.TotalTime();
 
-				gt.ElapsedGameTime = _clock.ElapsedTime();
-				gt.TotalGameTime = _clock.TotalTime();	
-				auto ml = gt.ElapsedGameTime.Milliseconds();
+				this->Update(gameTime);
 
-				this->Update(gt);
+				//_graphicsDevice->Clear();
 
-				_graphicsDevice->Clear();
+				elapsed = _clock.ElapsedTime();
+				gameTime.ElapsedGameTime = elapsed - endElapsedTime;
+				gameTime.TotalGameTime = _clock.TotalTime();
 
-				gt.ElapsedGameTime = _clock.ElapsedTime();
-				gt.TotalGameTime = _clock.TotalTime();
-				ml = gt.ElapsedGameTime.Milliseconds();
-
-				this->Draw(gt);
+				this->Draw(gameTime);
 
 				_graphicsDevice->Present();
+
+				endElapsedTime = _clock.ElapsedTime();
 			}
 
 		} while (msg.message != WM_QUIT);

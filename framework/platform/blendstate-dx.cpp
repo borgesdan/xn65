@@ -10,15 +10,21 @@ namespace xna {
 		
 		D3D11_BLEND_DESC blendDesc{};
         blendDesc.AlphaToCoverageEnable = AlphaToCoverage;
-        blendDesc.IndependentBlendEnable = IndependentBlendEnable;
-        blendDesc.RenderTarget[0].BlendEnable = RenderTargets[0]->Enabled;
-        blendDesc.RenderTarget[0].SrcBlend = BlendMapper::ConvertBlend(RenderTargets[0]->Source);
-        blendDesc.RenderTarget[0].DestBlend = BlendMapper::ConvertBlend(RenderTargets[0]->Destination);
-        blendDesc.RenderTarget[0].BlendOp = BlendMapper::ConvertOperation(RenderTargets[0]->Operation);
-        blendDesc.RenderTarget[0].SrcBlendAlpha = BlendMapper::ConvertBlend(RenderTargets[0]->SourceAlpha);
-        blendDesc.RenderTarget[0].DestBlendAlpha = BlendMapper::ConvertBlend(RenderTargets[0]->DestinationAlpha);
-        blendDesc.RenderTarget[0].BlendOpAlpha = BlendMapper::ConvertOperation(RenderTargets[0]->OperationAlpha);
-        blendDesc.RenderTarget[0].RenderTargetWriteMask = BlendMapper::ConvertColorWrite(RenderTargets[0]->WriteMask);
+        blendDesc.IndependentBlendEnable = IndependentBlendEnable;        
+
+		for (size_t i = 0; i < 8; ++i) {
+			if (RenderTargets[i] == nullptr)
+				break;
+
+			blendDesc.RenderTarget[0].BlendEnable = RenderTargets[0]->Enabled;
+			blendDesc.RenderTarget[0].SrcBlend = BlendMapper::ConvertBlend(RenderTargets[0]->Source);
+			blendDesc.RenderTarget[0].DestBlend = BlendMapper::ConvertBlend(RenderTargets[0]->Destination);
+			blendDesc.RenderTarget[0].BlendOp = BlendMapper::ConvertOperation(RenderTargets[0]->Operation);
+			blendDesc.RenderTarget[0].SrcBlendAlpha = BlendMapper::ConvertBlend(RenderTargets[0]->SourceAlpha);
+			blendDesc.RenderTarget[0].DestBlendAlpha = BlendMapper::ConvertBlend(RenderTargets[0]->DestinationAlpha);
+			blendDesc.RenderTarget[0].BlendOpAlpha = BlendMapper::ConvertOperation(RenderTargets[0]->OperationAlpha);
+			blendDesc.RenderTarget[0].RenderTargetWriteMask = BlendMapper::ConvertColorWrite(RenderTargets[0]->WriteMask);
+		}
 
         if (_device == nullptr || _device != device)
             _device = device;

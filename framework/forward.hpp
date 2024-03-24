@@ -6,85 +6,84 @@
 namespace xna {
 	//Framework
 	class BoundingBox;
+	using PBoundingBox					= std::shared_ptr<BoundingBox>;
 	class BoundingFrustum;
+	using PBoundingFrustum				= std::shared_ptr<BoundingFrustum>;
 	class BoundinSphere;
+	using PBoundinSphere				= std::shared_ptr<BoundinSphere>;
 	struct Color;
+	using PColor						= std::shared_ptr<Color>;
 	class Curve;
+	using PCurve						= std::shared_ptr<Curve>;
 	class CurveContinuity;
+	using PCurveContinuity				= std::shared_ptr<CurveContinuity>;
 	class CurveKey;
+	using PCurveKey						= std::shared_ptr<CurveKey>;
 	class CurveKeyCollection;
+	using PCurveKeyCollection			= std::shared_ptr<CurveKeyCollection>;
 	struct Matrix;
+	using PMatrix						= std::shared_ptr<Matrix>;
 	class Plane;
+	using PPlane						= std::shared_ptr<Plane>;
 	struct Point;
+	using PPoint						= std::shared_ptr<Point>;
 	class Quaternion;
+	using PQuaternion					= std::shared_ptr<Quaternion>;
 	class Ray;
+	using PRay							= std::shared_ptr<Ray>;
 	struct Rectangle;
+	using PRectangle					= std::shared_ptr<Rectangle>;
 	struct Vector2;
+	using PVector2						= std::shared_ptr<Vector2>;
 	struct Vector3;
+	using PVector3						= std::shared_ptr<Vector3>;
 	struct Vector4;
+	using PVector4						= std::shared_ptr<Vector4>;
+
 
 	//Game
 	class DrawableGameComponent;
+	using PDrawableGameComponent		= std::shared_ptr<DrawableGameComponent>;
 	class Game;
+	using PGame							= std::shared_ptr<Game>;
 	class GameComponent;
+	using PGameComponent				= std::shared_ptr<GameComponent>;
 	class GameComponentCollection;
+	using PGameComponentCollection		= std::shared_ptr<GameComponentCollection>;
 	class GameClock;
+	using PGameClock					= std::shared_ptr<GameClock>;
 	class GameTime;
+	using PGameTime						= std::shared_ptr<GameTime>;
 	class GameWindow;
+	using PGameWindow					= std::shared_ptr<GameWindow>;
 	class IDrawable;
+	using PIDrawable					= std::shared_ptr<IDrawable>;
 	class IGameComponent;
+	using PIGameComponent				= std::shared_ptr<IGameComponent>;
 	class IUpdatable;
+	using PIUpdatable					= std::shared_ptr<IUpdatable>;
 
 	//Graphics
 	class BlendState;
+	using PBlendState					= std::shared_ptr<BlendState>;
 	class DisplayMode;
+	using PDisplayMode					= std::shared_ptr<DisplayMode>;
 	class DisplayModeCollection;
+	using PDisplayModeCollection		= std::shared_ptr<DisplayModeCollection>;
 	class GraphicsAdapter;
+	using PGraphicsAdapter				= std::shared_ptr<GraphicsAdapter>;
 	class GraphicsDevice;
+	using PGraphicsDevice				= std::shared_ptr<GraphicsDevice>;
 	class RenderTarget2D;
+	using PRenderTarget2D				= std::shared_ptr<RenderTarget2D>;
 	class SwapChain;
+	using PSwapChain					= std::shared_ptr<SwapChain>;
 	class Texture;
+	using PTexture						= std::shared_ptr<Texture>;
 	class Texture2D;
+	using PTexture2D					= std::shared_ptr<Texture2D>;
 	struct Viewport;	
-
-	using PBoundingBox					= std::shared_ptr<BoundingBox>;
-	using PBoundingFrustum				= std::shared_ptr<BoundingFrustum>;
-	using PBoundinSphere				= std::shared_ptr<BoundinSphere>;
-	using PColor						= std::shared_ptr<Color>;
-	using PCurve						= std::shared_ptr<Curve>;
-	using PCurveContinuity				= std::shared_ptr<CurveContinuity>;
-	using PCurveKey						= std::shared_ptr<CurveKey>;
-	using PCurveKeyCollection			= std::shared_ptr<CurveKeyCollection>;
-	using PMatrix						= std::shared_ptr<Matrix>;
-	using PPlane						= std::shared_ptr<Plane>;
-	using PPoint						= std::shared_ptr<Point>;
-	using PQuaternion					= std::shared_ptr<Quaternion>;
-	using PRay							= std::shared_ptr<Ray>;
-	using PRectangle					= std::shared_ptr<Rectangle>;
-	using PVector2						= std::shared_ptr<Vector2>;
-	using PVector3						= std::shared_ptr<Vector3>;
-	using PVector4						= std::shared_ptr<Vector4>;	
-
-	using PDrawableGameComponent		= std::shared_ptr<DrawableGameComponent>;
-	using PGame							= std::shared_ptr<Game>;
-	using PGameComponent				= std::shared_ptr<GameComponent>;
-	using PGameComponentCollection		= std::shared_ptr<GameComponentCollection>;
-	using PGameTime						= std::shared_ptr<GameTime>;
-	using PGameWindow					= std::shared_ptr<GameWindow>;
-	using PIDrawable					= std::shared_ptr<IDrawable>;
-	using PIGameComponent				= std::shared_ptr<IGameComponent>;
-	using PIUpdatable					= std::shared_ptr<IUpdatable>;
-
-	using PBlendState = std::shared_ptr<BlendState>;
-	using PDisplayMode = std::shared_ptr<DisplayMode>;
-	using PDisplayModeCollection = std::shared_ptr<DisplayModeCollection>;
-	using PGraphicsAdapter = std::shared_ptr<GraphicsAdapter>;
-	using PGraphicsDevice = std::shared_ptr<GraphicsDevice>;
-	using PRenderTarget2D = std::shared_ptr<RenderTarget2D>;
-	using PSwapChain = std::shared_ptr<SwapChain>;
-	using PTexture = std::shared_ptr<Texture>;
-	using PTexture2D = std::shared_ptr<Texture2D>;
-	using PViewport = std::shared_ptr<Viewport>;
+	using PViewport						= std::shared_ptr<Viewport>;
 }
 
 #endif
