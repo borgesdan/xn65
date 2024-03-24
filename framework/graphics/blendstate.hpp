@@ -6,9 +6,24 @@
 #include "../enums.hpp"
 
 namespace xna {
+	struct BlendRenderTarget {
+		bool Enabled{ true };
+		Blend Source{ Blend::SourceAlpha };
+		Blend Destination{ Blend::InverseSourceAlpha };
+		BlendOperation Operation{ BlendOperation::Add };
+		Blend SourceAlpha{ Blend::One };
+		Blend DestinationAlpha{ Blend::Zero };
+		BlendOperation OperationAlpha{ BlendOperation::Add };
+		ColorWriteChannels WriteMask{ ColorWriteChannels::All };
+
+		constexpr BlendRenderTarget() = default;
+	};
+
+	using PBlendRenderTarget = sptr<BlendRenderTarget>;
+
 	class IBlendState {
 	public:
-		virtual ~IBlendState(){}
+		virtual ~IBlendState() {}
 
 		static PBlendState Opaque();
 		static PBlendState AlphaBlend();
@@ -18,15 +33,9 @@ namespace xna {
 		virtual bool Apply(GraphicsDevice* device) = 0;
 
 	public:
-		bool _alphaToCoverage{ false };
-		bool _enabled{ true };
-		Blend _source{ Blend::SourceAlpha };
-		Blend _destination{ Blend::InverseSourceAlpha };
-		BlendOperation _operation{ BlendOperation::Add };
-		Blend _sourceAlpha{ Blend::One };
-		Blend _destinationAlpha{ Blend::Zero };
-		BlendOperation _operationAlpha{ BlendOperation::Add };
-		ColorWriteChannels _writeMask{ ColorWriteChannels::All };
+		bool AlphaToCoverage{ false };
+		bool IndependentBlendEnable{ false };		
+		PBlendRenderTarget RenderTargets[8];
 	};	
 }
 

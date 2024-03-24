@@ -8,7 +8,8 @@
 namespace xna {
     GraphicsDevice::GraphicsDevice() {        
         _blendState = BlendState::NonPremultiplied();  
-        _adapter = GraphicsAdapter::DefaultAdapter();        
+        _adapter = GraphicsAdapter::DefaultAdapter();   
+        auto a = _adapter->DeviceId();
     }
 
 	bool GraphicsDevice::Initialize(GameWindow& gameWindow) {		

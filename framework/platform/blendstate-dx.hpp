@@ -8,7 +8,7 @@
 namespace xna {
 	class BlendState : public IBlendState {
 	public:
-		BlendState(GraphicsDevice* device);
+		BlendState(GraphicsDevice* device);		
 
 		virtual ~BlendState() override {
 			if (_blendState) {

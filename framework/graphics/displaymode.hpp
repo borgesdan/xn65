@@ -36,22 +36,24 @@ namespace xna {
 		Int _width{ 0 };
 		Int _height{ 0 };
 		SurfaceFormat _format{ SurfaceFormat::Color };
-	};
+	};	
 
 	class DisplayModeCollection {
 	public:
 		constexpr DisplayModeCollection() = default;
 
+		DisplayModeCollection(size_t count) : _displayModes(count){}
+
 		DisplayModeCollection(std::vector<DisplayMode> const& displayModes) :
 			_displayModes(displayModes) {}
 
-		std::vector<DisplayMode> At(SurfaceFormat format) {
+		std::vector<DisplayMode> At(SurfaceFormat format) const {
 			std::vector<DisplayMode> modes;
 			At(format, modes);
 			return modes;
-		}
+		}		
 
-		void At(SurfaceFormat format, std::vector<DisplayMode>& modes) {
+		void At(SurfaceFormat format, std::vector<DisplayMode>& modes) const {
 			size_t counter = 0;
 
 			for (size_t i = 0; i < _displayModes.size(); ++i) {
@@ -68,11 +70,23 @@ namespace xna {
 				modes.resize(counter);			
 		}
 
-		std::vector<DisplayMode> operator[](SurfaceFormat format) {
+		size_t SurfaceCount(SurfaceFormat format) const {
+			size_t counter = 0;
+
+			for (size_t i = 0; i < _displayModes.size(); ++i) {
+				if (_displayModes[i].Format() == format) {
+					++counter;
+				}
+			}
+
+			return counter;
+		}
+
+		std::vector<DisplayMode> operator[](SurfaceFormat format) const {
 			return At(format);
 		}
 
-	private:
+	public:
 		std::vector<DisplayMode> _displayModes;
 	};
 }

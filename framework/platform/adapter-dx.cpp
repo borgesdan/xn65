@@ -75,7 +75,7 @@ namespace xna {
 		IDXGIOutput* pOutput = nullptr;
 		UINT numModes = 0;
 		UINT totalModes = 0;
-		std::vector<DXGI_MODE_DESC> buffer(250);
+		std::vector<DXGI_MODE_DESC> buffer(500);
 		
 		if (_adapter->EnumOutputs(0, &pOutput) != DXGI_ERROR_NOT_FOUND) {
 			for (size_t f = 0; f < SURFACE_FORMAT_COUNT; ++f) {
@@ -95,33 +95,31 @@ namespace xna {
 				totalModes += numModes;
 			}
 
-			pOutput->Release();						
+			pOutput->Release();			
+			
+			auto collection = New<DisplayModeCollection>(totalModes);
 
-			buffer.resize(totalModes);
-			std::vector<DisplayMode> dmodes;
-
-			for (size_t i = 0; i < buffer.size(); ++i) {
+			for (size_t i = 0; i < totalModes; ++i) {
 				const auto& modedesc = buffer[i];
 				const auto surface = SurfaceFormatMapper::ParseToSurface(modedesc.Format);
 
-				dmodes[0] = DisplayMode(modedesc.Width, modedesc.Height, surface);
+				collection->_displayModes[i] = DisplayMode(modedesc.Width, modedesc.Height, surface);
 			}
-
-			dmodes.resize(buffer.size());
-			return New<DisplayModeCollection>(dmodes);
+			
+			return collection;
 		}
 
 		return New<DisplayModeCollection>();
 	}
 
 	std::vector<PGraphicsAdapter> IGraphicsAdapter::getAllAdapters() {
-		IDXGIFactory1* pFactory = nullptr;
-		std::vector<PGraphicsAdapter> adapters;
+		IDXGIFactory1* pFactory = nullptr;		
 
 		if FAILED(CreateDXGIFactory1(__uuidof(IDXGIFactory1), (void**)&pFactory)) {
-			return adapters;
+			return std::vector<PGraphicsAdapter>();
 		}
 
+		std::vector<PGraphicsAdapter> adapters(2);
 		IDXGIAdapter1* pAdapter = nullptr;
 		UINT count = 0;
 
@@ -131,10 +129,13 @@ namespace xna {
 			adp->_index = count;
 			adp->_adapter = pAdapter;
 
-			adapters.push_back(adp);
+			if (adapters.size() == count)
+				adapters.push_back(adp);
+			else
+				adapters[count] = adp;
 		}
 
-		if (!adapters.empty())
+		if (!adapters.empty() && adapters.size() != count)
 			adapters.resize(count);
 
 		return adapters;
