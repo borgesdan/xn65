@@ -47,6 +47,12 @@ namespace xna {
 		Portrait = 4,
 	};
 
+	enum class SeekOrigin {
+		Begin,
+		Current,
+		End,
+	};
+
 	enum class SurfaceFormat {
 		Color = 0,
 		Bgr565 = 1,

@@ -1,3 +1,8 @@
+/*
+	TimeSpan in C++
+	Source code: https://source.dot.net/#System.Private.CoreLib/src/libraries/System.Private.CoreLib/src/System/TimeSpan.cs,865ef7b89f41b632 
+*/
+
 #ifndef XNA_CSHARP_TIMESPAN_HPP
 #define XNA_CSHARP_TIMESPAN_HPP
 

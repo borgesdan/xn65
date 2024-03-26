@@ -4,6 +4,16 @@
 #include "types.hpp"
 
 namespace xna {
+	//CShap
+	struct TimeSpan;
+	using PTimeSpan						= std::shared_ptr<TimeSpan>;
+	class Stream;
+	using PStream						= std::shared_ptr<Stream>;
+	class FileStream;
+	using PFileStream					= std::shared_ptr<FileStream>;
+	class MemoryStream;
+	using PMemoryStream					= std::shared_ptr<MemoryStream>;
+
 	//Framework
 	class BoundingBox;
 	using PBoundingBox					= std::shared_ptr<BoundingBox>;

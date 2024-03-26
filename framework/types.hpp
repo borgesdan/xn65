@@ -7,6 +7,7 @@
 #include <string>
 #include <memory>
 #include <utility>
+#include <cassert>
 
 namespace xna {
 	using Sbyte		= int8_t;
@@ -53,6 +54,9 @@ namespace xna {
 	}
 
 #define PLATFORM_DEVELOPMENT
+
+//See ref: https://en.cppreference.com/w/cpp/error/assert
+#define assertm(exp, msg) assert(((void)msg, exp))
 }
 
 #endif
