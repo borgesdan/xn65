@@ -26,8 +26,11 @@ class Game1 : public Game {
 };
 
 int APIENTRY WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPSTR lpCmdLine, _In_ int nCmdShow) {	
-	/*Game game;
-	game.Run();*/
+	FileStream stream("D:/VS_EXPBSLN_x64_enu.CAB");
+	auto pos = stream.Position();
+	auto len = stream.Length();
+	pos = stream.Position();
+
 	Game1 game;
 	game.Run();
 	return 0;

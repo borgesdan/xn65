@@ -10,5 +10,6 @@
 #include "platform/window-dx.hpp"
 #include "platform/device-dx.hpp"
 #include "platform/game-dx.hpp"
+#include "csharp/stream.hpp"
 
 // TODO: Reference additional headers your program requires here.

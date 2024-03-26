@@ -11,7 +11,7 @@ namespace xna {
 	class Stream {
 	public:
 		virtual Int Length() = 0;
-		virtual Long Position() = 0;
+		virtual Long Position() = 0;		
 		virtual void Close() = 0;
 		virtual Long Seek(Long offset, SeekOrigin const& origin, xna_error_nullarg) = 0;
 		virtual Int Read(Byte* buffer, Int bufferLength, Int offset, Int count, xna_error_nullarg) = 0;
@@ -68,8 +68,8 @@ namespace xna {
 		FileStream(std::string const& path){
 			int flags = std::fstream::in
 				| std::fstream::out
-				| std::fstream::binary
-				| std::fstream::ate;
+				| std::fstream::binary;
+				//| std::fstream::ate;
 
 			const auto exists = std::filesystem::exists(path);
 
@@ -78,24 +78,20 @@ namespace xna {
 
 			_fstream.open(path.c_str(), flags);
 
-			if (_fstream.is_open()) {
-				_filesize = _fstream.tellg();
-				_fstream.seekg(0);
-			}
-			else {
+			if (!_fstream.is_open()) 
 				_closed = true;
-			}
 		}
 
 		~FileStream() {
 			Close();
-		}
+		}		
 
-		virtual constexpr Int Length() override {
+		virtual Int Length() override {
 			if (_closed)
 				return 0;
 
-			return static_cast<Int>(_filesize);
+			const auto end = endOfFile();
+			return end;
 		}
 
 		virtual Long Position() override {
@@ -124,6 +120,19 @@ namespace xna {
 		std::streampos _filesize{ 0 };
 		std::fstream _fstream;
 		bool _closed{ false };
+
+		Int endOfFile() {
+			if (_closed)
+				return 0;
+
+			const auto pos = _fstream.tellg();
+			_fstream.seekg(0, std::ios_base::end);
+
+			const auto end = _fstream.tellg();
+			_fstream.seekg(pos);
+
+			return static_cast<Int>(end);
+		}
 	};
 }
 
