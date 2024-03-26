@@ -8,7 +8,7 @@ namespace xna {
 		ARGUMENT_IS_NULL,
 		INVALID_OPERATION,
 		OVERFLOW_OPERATION,
-		NULL_CAST,
+		NULL_CAST,		
 	};
 
 	inline void xna_error_apply(XnaErrorCode* source, XnaErrorCode const& value) {

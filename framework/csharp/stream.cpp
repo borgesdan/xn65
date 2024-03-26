@@ -32,7 +32,7 @@ namespace xna {
 			}			
 			break;
 		default:
-			xna_error_apply(err, XnaErrorCode::OVERFLOW_OPERATION);
+			xna_error_apply(err, XnaErrorCode::INVALID_OPERATION);
 			return -1;
 		}
 
@@ -123,5 +123,116 @@ namespace xna {
 		}
 
 		_buffer[_position++] = value;
+	}
+
+	Long FileStream::Seek(Long offset, SeekOrigin const& origin, xna_error_ptr_arg){
+		if (_closed)
+			return 0;
+
+		int seek;
+
+		switch (origin)
+		{
+		case SeekOrigin::Begin:
+			seek = std::ios_base::beg;
+			break;
+		case SeekOrigin::Current:
+			seek = std::ios_base::cur;
+			break;
+		case SeekOrigin::End:
+			seek = std::ios_base::end;
+			break;
+		default:
+			xna_error_apply(err, XnaErrorCode::INVALID_OPERATION);
+			return -1;
+		}
+		
+		_fstream.seekg(offset, seek);				
+		const auto state = _fstream.rdstate();
+
+		if (state != std::fstream::goodbit) {
+			xna_error_apply(err, XnaErrorCode::OVERFLOW_OPERATION);
+			return -1;
+		}		
+
+		const auto pos = static_cast<Long>(_fstream.tellg());
+		return pos;
+	}
+
+	Int FileStream::Read(Byte* buffer, Int bufferLength, Int offset, Int count, xna_error_ptr_arg){
+		if (buffer == nullptr || offset < 0 || count < 0 || bufferLength - offset < count) {
+			xna_error_apply(err, XnaErrorCode::INVALID_OPERATION);
+			return -1;
+		}
+		
+		if (_closed)
+			return 0; 
+
+		auto _buff = reinterpret_cast<char*>(buffer);
+		_fstream.read(_buff + offset, count);
+
+		if (_fstream.rdstate() != std::fstream::goodbit) {
+			xna_error_apply(err, XnaErrorCode::INVALID_OPERATION);
+			return -1;
+		}
+
+		return static_cast<Int>(_fstream.gcount());
+	}
+
+	Int FileStream::Read(std::vector<Byte>& buffer, Int offset, Int count, xna_error_ptr_arg){
+		return Read(buffer.data(), static_cast<Int>(buffer.size()), offset, count, err);
+	}
+
+	Int FileStream::ReadByte(xna_error_ptr_arg){
+		if (_closed)
+			return 0;
+
+		char c = 0;
+
+		_fstream.read(&c, 1);
+
+		if (_fstream.rdstate() != std::fstream::goodbit) {
+			xna_error_apply(err, XnaErrorCode::INVALID_OPERATION);
+			return -1;
+		}
+
+		const auto result = static_cast<Int>(c);
+
+		return result;
+	}
+
+	void FileStream::Write(Byte const* buffer, Int bufferLength, Int offset, Int count, xna_error_ptr_arg) {
+		if (buffer == nullptr || offset < 0 || count < 0 || bufferLength - offset < count) {
+			xna_error_apply(err, XnaErrorCode::INVALID_OPERATION);
+			return;
+		}
+		
+		if (_closed)
+			return;
+
+		auto _buff = reinterpret_cast<const char*>(buffer);
+
+		_fstream.write(_buff + offset, count);
+
+		if (_fstream.rdstate() != std::fstream::goodbit) {
+			xna_error_apply(err, XnaErrorCode::INVALID_OPERATION);
+		}
+	}
+
+	void FileStream::Write(std::vector<Byte> const& buffer, Int offset, Int count, xna_error_ptr_arg) {
+		Write(buffer.data(), static_cast<Int>(buffer.size()), offset, count, err);
+	}
+
+	void FileStream::WriteByte(Byte value, xna_error_ptr_arg) {
+		if (_closed)
+			return;
+
+		const char c = static_cast<char>(value);
+
+		_fstream.write(&c, 1);
+
+		if (_fstream.rdstate() != std::fstream::goodbit) {
+			xna_error_apply(err, XnaErrorCode::INVALID_OPERATION);			
+		}
 	}
 }
