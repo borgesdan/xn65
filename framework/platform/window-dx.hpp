@@ -25,7 +25,8 @@ namespace xna {
 			return static_cast<GameWindowMode>(_windowStyle);
 		}
 
-		void Size(int width, int height);
+		void Position(int width, int height, bool update = true);
+		void Size(int width, int height, bool update = true);
 
 		inline HINSTANCE HInstance() const {
 			return _hInstance;
@@ -88,6 +89,8 @@ namespace xna {
 		}
 
 		bool Create();
+		bool Update();
+
 		static LRESULT CALLBACK WinProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 		virtual String Title() const override;

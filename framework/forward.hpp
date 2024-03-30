@@ -50,7 +50,6 @@ namespace xna {
 	struct Vector4;
 	using PVector4						= std::shared_ptr<Vector4>;
 
-
 	//Game
 	class DrawableGameComponent;
 	using PDrawableGameComponent		= std::shared_ptr<DrawableGameComponent>;
@@ -63,15 +62,19 @@ namespace xna {
 	class GameClock;
 	using PGameClock					= std::shared_ptr<GameClock>;
 	class GameTime;
-	using PGameTime						= std::shared_ptr<GameTime>;
+	using PGameTime						= std::shared_ptr<GameTime>;	
 	class GameWindow;
 	using PGameWindow					= std::shared_ptr<GameWindow>;
+	class GraphicsDeviceInformation;
+	using PGraphicsDeviceInformation = std::shared_ptr<GraphicsDeviceInformation>;
+	class GraphicsDeviceManager;
+	using PGraphicsDeviceManager		= std::shared_ptr<GraphicsDeviceManager>;
 	class IDrawable;
 	using PIDrawable					= std::shared_ptr<IDrawable>;
 	class IGameComponent;
 	using PIGameComponent				= std::shared_ptr<IGameComponent>;
 	class IUpdatable;
-	using PIUpdatable					= std::shared_ptr<IUpdatable>;
+	using PIUpdatable					= std::shared_ptr<IUpdatable>;	
 
 	//Graphics
 	class BlendState;
@@ -84,6 +87,10 @@ namespace xna {
 	using PGraphicsAdapter				= std::shared_ptr<GraphicsAdapter>;
 	class GraphicsDevice;
 	using PGraphicsDevice				= std::shared_ptr<GraphicsDevice>;
+	class GraphicsDeviceInformation;
+	using PGraphicsDeviceInformation	= std::shared_ptr<GraphicsDeviceInformation>;
+	class PresentationParameters;
+	using PPresentationParameters		= std::shared_ptr< PresentationParameters>;
 	class RenderTarget2D;
 	using PRenderTarget2D				= std::shared_ptr<RenderTarget2D>;
 	class SwapChain;

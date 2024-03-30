@@ -4,6 +4,7 @@
 #include "rendertarget-dx.hpp"
 #include "adapter-dx.hpp"
 #include "blendstate-dx.hpp"
+#include "gdeviceinfo-dx.hpp"
 
 namespace xna {
     GraphicsDevice::GraphicsDevice() {        
@@ -12,7 +13,15 @@ namespace xna {
         auto a = _adapter->DeviceId();
     }
 
-	bool GraphicsDevice::Initialize(GameWindow& gameWindow) {		
+    GraphicsDevice::GraphicsDevice(GraphicsDeviceInformation const& info) {
+        _adapter = info.Adapter();
+        _presentParameters = info.PresentationParameters();
+    }
+
+	bool GraphicsDevice::Initialize(GameWindow& gameWindow) {	
+        if (_blendState == nullptr)
+            _blendState = BlendState::NonPremultiplied();
+
 	    _createDeviceFlags |= D3D11_CREATE_DEVICE_DEBUG;
 
 		if (_device) {

@@ -2,6 +2,7 @@
 #define XNA_PLATFORM_DEVICE_DX_HPP
 
 #include "../graphics/device.hpp"
+#include "../graphics/presentparams.hpp"
 #include "dxgi.h"
 #include "d3d11.h"
 
@@ -9,6 +10,7 @@ namespace xna {
 	class GraphicsDevice : public IGraphicsDevice {
 	public:
 		GraphicsDevice();
+		GraphicsDevice(GraphicsDeviceInformation const& info);
 
 		virtual ~GraphicsDevice() override {
 			if (_device) {
@@ -44,6 +46,7 @@ namespace xna {
 		unsigned int _createDeviceFlags{ 0 };
 		D3D_FEATURE_LEVEL _featureLevel{ D3D_FEATURE_LEVEL::D3D_FEATURE_LEVEL_11_0 };
 		float _backgroundColor[4] = { 0, 0, 0, 0 };
+		xna::PresentationParameters _presentParameters;
 
 		bool createDevice();
 	};	

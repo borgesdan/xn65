@@ -11,11 +11,21 @@ namespace xna {
 
 	}
 
-	void GameWindow::Size(int width, int height) {
+	void GameWindow::Position(int width, int height, bool update) {
+		_windowPosX = width;
+		_windowPosY = height;
+		setCenter();
+
+		if(update) Update();
+	}
+
+	void GameWindow::Size(int width, int height, bool update) {
 		_windowWidth = width;
 		_windowHeight = height;
 		setPosition();
 		setCenter();
+		
+		if(update) Update();
 	}
 
 	void GameWindow::Title(String const& title) {
@@ -73,6 +83,32 @@ namespace xna {
 
 			return _windowHandle ? true : false;
 		}	
+
+		return true;
+	}
+
+	bool GameWindow::Update() {
+		if (_windowStyle == static_cast<int>(GameWindowMode::Windowed)) {
+			RECT winRect = { 0, 0, _windowWidth, _windowHeight };
+
+			AdjustWindowRectEx(&winRect,
+				GetWindowStyle(_windowHandle),
+				GetMenu(_windowHandle) != NULL,
+				GetWindowExStyle(_windowHandle));
+
+			_windowPosX = GetSystemMetrics(SM_CXSCREEN) / 2 - (winRect.right - winRect.left) / 2;
+			_windowPosY = GetSystemMetrics(SM_CYSCREEN) / 2 - (winRect.bottom - winRect.top) / 2;
+
+			MoveWindow(
+				_windowHandle,
+				_windowPosX,
+				_windowPosY,
+				winRect.right - winRect.left,
+				winRect.bottom - winRect.top,
+				TRUE);
+
+			return _windowHandle ? true : false;
+		}
 
 		return true;
 	}

@@ -3,12 +3,16 @@
 #include "device-dx.hpp"
 #include "Windows.h"
 #include "../game/time.hpp"
+#include "gdevicemanager-dx.hpp"
 
 namespace xna {
 	Game::Game() {
 		_gameWindow = New<GameWindow>();
 		_gameWindow->Color(255, 155, 55);
 		_gameWindow->Title("Teste de título");
+		_gameWindow->Size(
+			GraphicsDeviceManager::DefaultBackBufferWidth,
+			GraphicsDeviceManager::DefaultBackBufferHeight, false);
 
 		_graphicsDevice = New<GraphicsDevice>();
 	}

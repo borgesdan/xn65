@@ -16,6 +16,10 @@ namespace xna {
 
 		virtual void Exit() override{}
 		virtual int Run() override;
+		
+		virtual PGameWindow Window() override {
+			return _gameWindow;
+		}
 
 	protected:
 		virtual void Draw(GameTime const& gameTime) override{}

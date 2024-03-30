@@ -40,11 +40,36 @@ namespace xna {
 
 	using BlendOperation = BlendFunction;
 
+	enum class DepthFormat {
+		None,
+		Depth16,
+		Depth24,
+		Depth24Stencil8
+	};
+
 	enum class DisplayOrientation {
 		Default = 0,
 		LandscapeLeft = 1,
 		LandscapeRight = 2,
 		Portrait = 4,
+	};
+
+	enum class GraphicsProfile {
+		Reach,
+		HiDef
+	};
+
+	enum class PresentInterval {
+		Default,
+		One,
+		Two,
+		Immediate
+	};
+
+	enum RenderTargetUsage {
+		DiscardContents,
+		PreserveContents,
+		PlatformContents
 	};
 
 	enum class SeekOrigin {
