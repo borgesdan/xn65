@@ -3,6 +3,16 @@
 
 namespace xna {
 
+	PGraphicsAdapter GraphicsAdapter::DefaultAdapter() {
+		if (_adaptersList.empty())
+			return nullptr;
+
+		if (_defaultAdapterIndex >= _adaptersList.size())
+			return nullptr;
+
+		return _adaptersList[_defaultAdapterIndex];
+	}
+
 	String GraphicsAdapter::Description() const {
 		DXGI_ADAPTER_DESC1 desc;
 		_adapter->GetDesc1(&desc);
@@ -112,7 +122,7 @@ namespace xna {
 		return New<DisplayModeCollection>();
 	}
 
-	std::vector<PGraphicsAdapter> IGraphicsAdapter::getAllAdapters() {
+	std::vector<PGraphicsAdapter> GraphicsAdapter::getAllAdapters() {
 		IDXGIFactory1* pFactory = nullptr;		
 
 		if FAILED(CreateDXGIFactory1(__uuidof(IDXGIFactory1), (void**)&pFactory)) {

@@ -24,11 +24,28 @@ namespace xna {
 		virtual Uint Revision() const override;
 		virtual Uint SubSystemId() const override;
 		virtual Uint VendorId() const override;
-		virtual PDisplayModeCollection SupportedDisplayModes() const override;
+		virtual PDisplayModeCollection SupportedDisplayModes() const override;		
+		virtual constexpr bool IsDefaultAdapter() const { return _index == _defaultAdapterIndex; }
+
+		static PGraphicsAdapter DefaultAdapter();
+
+		static constexpr void DefaultAdapter(size_t index) {
+			_defaultAdapterIndex = index;
+		}
+
+		static constexpr std::vector<PGraphicsAdapter> Adapters() {
+			return _adaptersList;
+		}
 
 	public:
 		IDXGIAdapter1* _adapter{ nullptr };
-	};	
+
+	private:
+		Uint _index{ 0 };
+		inline static size_t _defaultAdapterIndex = 0;
+		static std::vector<PGraphicsAdapter> getAllAdapters();
+		inline static std::vector<PGraphicsAdapter> _adaptersList = getAllAdapters();
+	};		
 
 	struct SurfaceFormatMapper {
 		static constexpr DXGI_FORMAT ParseToDXGI(SurfaceFormat format)
