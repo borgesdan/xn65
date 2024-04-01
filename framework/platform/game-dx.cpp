@@ -13,18 +13,11 @@ namespace xna {
 		_gameWindow->Size(
 			GraphicsDeviceManager::DefaultBackBufferWidth,
 			GraphicsDeviceManager::DefaultBackBufferHeight, false);
-
-		_graphicsDevice = New<GraphicsDevice>();
 	}
 
-	int Game::Run() {
-		if (!_gameWindow->Create()) {
-			MessageBox(nullptr, "Falha na criação da janela", "Xna Game Engine", MB_OK);			
-			return EXIT_FAILURE;
-		}
-
-		if (!_graphicsDevice->Initialize(*_gameWindow)) {
-			MessageBox(nullptr, "Falha na inicialização do dispositivo gráfico", "Xna Game Engine", MB_OK);			
+	int Game::Run() {		
+		if (_graphicsDevice == nullptr) {
+			MessageBox(nullptr, "O dispositivo gráfico não foi inicializar corretamente", "Xna Game Engine", MB_OK);
 			return EXIT_FAILURE;
 		}
 

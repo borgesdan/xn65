@@ -12,8 +12,8 @@ namespace xna {
 
 		constexpr Rectangle() = default;
 
-		constexpr Rectangle(const Int& Height, const Int& Width, const Int& X, const Int& Y)
-			: Height(Height), Width(Width), X(X), Y(Y) {}
+		constexpr Rectangle(const Int& X, const Int& Y, const Int& Width, const Int& Height):
+			X(X), Y(Y), Width(Width), Height(Height) {}
 	};
 }
 

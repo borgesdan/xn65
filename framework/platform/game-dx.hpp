@@ -26,8 +26,10 @@ namespace xna {
 		virtual void Initialize() override{}
 		virtual void Update(GameTime const& gameTime) override{}		
 
-	protected:		
+	public:
 		PGraphicsDevice _graphicsDevice{ nullptr };		
+
+	protected:		
 		PGameWindow _gameWindow{ nullptr };
 		
 		GameClock _clock{};

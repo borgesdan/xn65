@@ -9,8 +9,7 @@
 namespace xna {
     GraphicsDevice::GraphicsDevice() {        
         _blendState = BlendState::NonPremultiplied();  
-        _adapter = GraphicsAdapter::DefaultAdapter();   
-        auto a = _adapter->DeviceId();
+        _adapter = GraphicsAdapter::DefaultAdapter();  
     }
 
     GraphicsDevice::GraphicsDevice(GraphicsDeviceInformation const& info) {
@@ -32,9 +31,11 @@ namespace xna {
 		if (_context) {
 			_context->Release();
 			_context = nullptr;
-		}
+		}        
 
+        gameWindow.Size(_presentParameters.BackBufferWidth, _presentParameters.BackBufferHeight);
         const auto bounds = gameWindow.ClientBounds();
+
         _viewport = xna::Viewport(0.0F, 0.0F, 
             static_cast<float>(bounds.Width), 
             static_cast<float>(bounds.Height),
@@ -103,7 +104,7 @@ namespace xna {
     bool GraphicsDevice::createDevice() {
 #if _DEBUG
         _createDeviceFlags |= D3D11_CREATE_DEVICE_FLAG::D3D11_CREATE_DEVICE_DEBUG;
-#endif
+#endif        
 
         if FAILED(
             D3D11CreateDevice(

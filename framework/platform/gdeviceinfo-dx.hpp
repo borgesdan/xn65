@@ -3,6 +3,7 @@
 
 #include "../game/gdeviceinfo.hpp"
 #include "adapter-dx.hpp"
+#include "window-dx.hpp"
 
 namespace xna {
 	class GraphicsDeviceInformation : public IGraphicsDeviceInformation {
@@ -15,26 +16,35 @@ namespace xna {
 			_adapter = value;
 		}
 
-		inline virtual xna::PresentationParameters PresentationParameters() const override{
+		constexpr virtual xna::PresentationParameters PresentationParameters() const override{
 			return _parameters;
 		};
 
-		inline virtual void PresentationParameters(xna::PresentationParameters const& value) override{
+		constexpr virtual void PresentationParameters(xna::PresentationParameters const& value) override{
 			_parameters = value;
 		};
 
-		inline virtual xna::GraphicsProfile GraphicsProfile() const override {
+		constexpr virtual xna::GraphicsProfile GraphicsProfile() const override {
 			return _profile;
 		};
 
-		inline virtual void GraphicsProfile(xna::GraphicsProfile value) override {
+		constexpr virtual void GraphicsProfile(xna::GraphicsProfile value) override {
 			_profile = value;
 		};
+
+		inline virtual PGameWindow Window() const override {
+			return _window;
+		}
+
+		inline virtual void Window(PGameWindow const& window) override {
+			_window = window;
+		}
 
 	private:
 		PGraphicsAdapter _adapter{ nullptr };
 		xna::GraphicsProfile _profile{xna::GraphicsProfile::Reach};
 		xna::PresentationParameters _parameters{};
+		PGameWindow _window{ nullptr };
 	};
 }
 

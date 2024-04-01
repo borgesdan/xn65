@@ -6,7 +6,7 @@
 namespace xna {
 	class GraphicsDeviceManager : public IGraphicsDeviceManager {
 	public:
-		GraphicsDeviceManager(Game* game) : _game(game){}
+		GraphicsDeviceManager(Game* game);
 
 		virtual void ApplyChanges() override;
 		virtual void ToggleFullScreen() override;

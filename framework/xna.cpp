@@ -13,6 +13,11 @@ using namespace xna;
 //}
 
 class Game1 : public Game {
+public:
+	Game1() {
+		manager = New<GraphicsDeviceManager>(this);
+	}
+
 	virtual void Update(GameTime const& gameTime) {
 
 		Game::Update(gameTime);
@@ -23,13 +28,16 @@ class Game1 : public Game {
 
 		Game::Draw(gameTime);
 	}
+
+private:
+	PGraphicsDeviceManager manager;
 };
 
-int APIENTRY WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPSTR lpCmdLine, _In_ int nCmdShow) {	
-	FileStream stream("D:/VS_EXPBSLN_x64_enu.CAB");
+int APIENTRY WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPSTR lpCmdLine, _In_ int nCmdShow) {
+	/*FileStream stream("D:/VS_EXPBSLN_x64_enu.CAB");
 	auto pos = stream.Position();
 	auto len = stream.Length();
-	pos = stream.Position();
+	pos = stream.Position();*/
 
 	Game1 game;
 	game.Run();

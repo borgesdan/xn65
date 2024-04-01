@@ -5,19 +5,46 @@
 #include "gdeviceinfo-dx.hpp"
 
 namespace xna {
+	GraphicsDeviceManager::GraphicsDeviceManager(Game* game) : _game(game){
+		GraphicsDeviceInformation information;
+		
+		const auto adp = GraphicsAdapter::DefaultAdapter();
+		information.Adapter(adp);
+		information.GraphicsProfile(xna::GraphicsProfile::HiDef);
+		
+		PresentationParameters parameters;
+		parameters.BackBufferWidth = _backBufferWidth;
+		parameters.BackBufferHeight = _backBufferHeight;
+		information.PresentationParameters(parameters);
+
+		information.Window(game->Window());
+
+		CreateDevice(information);
+	}
+
 	void GraphicsDeviceManager::ApplyChanges() {
+		//_game->_graphicsDevice = _device;
 	}
 
 	void GraphicsDeviceManager::ToggleFullScreen() {
 	}
 
 	void GraphicsDeviceManager::CreateDevice(GraphicsDeviceInformation const& info) {
-		_device = New<GraphicsDevice>();
-
+		_device = New<GraphicsDevice>(info);
 		auto window = _game->Window();
-		window->Size(_backBufferWidth, _backBufferHeight);
 
-		_device->Initialize(*window);
+		if (!window->Create()) {
+			MessageBox(nullptr, "Falha na criação da janela", "Xna Game Engine", MB_OK);			
+			return;
+		}
+
+		//_device->Initialize(*window);
+		if (!_device->Initialize(*window)) {
+			MessageBox(nullptr, "Falha na inicialização do dispositivo gráfico", "Xna Game Engine", MB_OK);			
+			return;
+		}		
+
+		_game->_graphicsDevice = _device;
 	}
 
 	void GraphicsDeviceManager::ChangeDevice() {

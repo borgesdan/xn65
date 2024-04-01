@@ -39,7 +39,11 @@ namespace xna {
         auto dxdevice = _device->_device;
 
         if FAILED(dxFactory->CreateSwapChain(dxdevice, &_swapDescription, &_swapChain))
+        {
+            dxFactory->Release();
+            dxFactory = nullptr;
             return false;
+        }
 
         dxFactory->Release();
         dxFactory = nullptr;

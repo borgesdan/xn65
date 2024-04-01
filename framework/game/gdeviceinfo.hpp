@@ -13,6 +13,8 @@ namespace xna {
 		virtual void PresentationParameters(xna::PresentationParameters const& value) = 0;
 		virtual xna::GraphicsProfile GraphicsProfile() const = 0;
 		virtual void GraphicsProfile(xna::GraphicsProfile value) = 0;
+		virtual PGameWindow Window() const = 0;
+		virtual void Window(PGameWindow const& window) = 0;
 	};
 }
 
