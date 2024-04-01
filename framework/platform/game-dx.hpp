@@ -21,13 +21,17 @@ namespace xna {
 			return _gameWindow;
 		}
 
+		virtual PGraphicsDevice GetGraphicsDevice() override {
+			return GraphicsDevice;
+		}
+
 	protected:
 		virtual void Draw(GameTime const& gameTime) override{}
 		virtual void Initialize() override{}
 		virtual void Update(GameTime const& gameTime) override{}		
 
 	public:
-		PGraphicsDevice _graphicsDevice{ nullptr };		
+		PGraphicsDevice GraphicsDevice{ nullptr };		
 
 	protected:		
 		PGameWindow _gameWindow{ nullptr };

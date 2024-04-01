@@ -15,6 +15,7 @@ namespace xna {
 		virtual void Exit() = 0;
 		virtual int Run() = 0;
 		virtual PGameWindow Window() = 0;
+		virtual PGraphicsDevice GetGraphicsDevice() = 0;
 
 	protected:
 		virtual void Draw(GameTime const& gameTime) = 0;

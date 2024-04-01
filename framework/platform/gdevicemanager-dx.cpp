@@ -44,7 +44,7 @@ namespace xna {
 			return;
 		}		
 
-		_game->_graphicsDevice = _device;
+		_game->GraphicsDevice = _device;
 	}
 
 	void GraphicsDeviceManager::ChangeDevice() {

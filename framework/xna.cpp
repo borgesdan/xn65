@@ -15,7 +15,7 @@ using namespace xna;
 class Game1 : public Game {
 public:
 	Game1() {
-		manager = New<GraphicsDeviceManager>(this);
+		graphics = New<GraphicsDeviceManager>(this);
 	}
 
 	virtual void Update(GameTime const& gameTime) {
@@ -24,13 +24,13 @@ public:
 	}
 
 	virtual void Draw(GameTime const& gameTime) {
-		_graphicsDevice->Clear();
+		GraphicsDevice->Clear();
 
 		Game::Draw(gameTime);
 	}
 
 private:
-	PGraphicsDeviceManager manager;
+	PGraphicsDeviceManager graphics;
 };
 
 int APIENTRY WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPSTR lpCmdLine, _In_ int nCmdShow) {
