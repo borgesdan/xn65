@@ -7,6 +7,7 @@
 namespace xna {
 	class IGraphicsDeviceInformation {
 	public:
+		virtual ~IGraphicsDeviceInformation(){}
 		virtual PGraphicsAdapter Adapter() const = 0;
 		virtual void Adapter(PGraphicsAdapter const& value) = 0;
 		virtual xna::PresentationParameters PresentationParameters() const = 0;

@@ -8,6 +8,8 @@
 namespace xna {
 	class GraphicsDeviceInformation : public IGraphicsDeviceInformation {
 	public:
+		virtual ~GraphicsDeviceInformation() override {}
+
 		inline virtual PGraphicsAdapter Adapter() const override {
 			return _adapter;
 		};

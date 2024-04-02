@@ -22,6 +22,7 @@ namespace xna {
 
 	public:
 		ID3D11RenderTargetView* _renderTargetView = nullptr;
+		GraphicsDevice* _device{ nullptr };
 	};
 }
 

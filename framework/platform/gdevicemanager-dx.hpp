@@ -8,6 +8,8 @@ namespace xna {
 	public:
 		GraphicsDeviceManager(Game* game);
 
+		virtual ~GraphicsDeviceManager() override{}
+
 		virtual void ApplyChanges() override;
 		virtual void ToggleFullScreen() override;
 		

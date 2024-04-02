@@ -8,6 +8,7 @@
 namespace xna {
 	class IGraphicsDeviceManager {
 	public:
+		virtual ~IGraphicsDeviceManager(){}
 		virtual void ApplyChanges() = 0;
 		virtual void ToggleFullScreen() = 0;
 		virtual Int PreferredBackBufferWidth() const = 0;

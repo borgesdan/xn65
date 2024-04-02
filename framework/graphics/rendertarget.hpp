@@ -10,9 +10,6 @@ namespace xna {
 		virtual ~IRenderTarget2D(){}
 
 		virtual bool Apply() = 0;
-
-	protected:
-		GraphicsDevice* _device{nullptr};
 	};	
 }
 
