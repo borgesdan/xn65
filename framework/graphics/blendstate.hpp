@@ -31,11 +31,6 @@ namespace xna {
 		static PBlendState NonPremultiplied();
 		
 		virtual bool Apply(GraphicsDevice* device) = 0;
-
-	public:
-		bool AlphaToCoverage{ false };
-		bool IndependentBlendEnable{ false };		
-		PBlendRenderTarget RenderTargets[8];
 	};	
 }
 

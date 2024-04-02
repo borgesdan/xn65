@@ -28,6 +28,26 @@ namespace xna {
 		virtual bool Initialize(GameWindow& gameWindow) override;
 		virtual bool Present() override;
 
+		virtual PGraphicsAdapter Adapter() const override {
+			return _adapter;
+		}
+
+		virtual void Adapter(PGraphicsAdapter const& adapter) override {
+			_adapter = adapter;
+		}
+
+		virtual constexpr xna::Viewport Viewport() const override {
+			return _viewport;
+		}
+
+		virtual constexpr void Viewport(xna::Viewport const& viewport) override {
+			_viewport = viewport;
+		}
+
+		virtual void UseVSync(bool use) override {
+			_usevsync = use;
+		}
+
 		constexpr void SetCreateFlags(D3D11_CREATE_DEVICE_FLAG flags) {
 			_createDeviceFlags |= flags;
 		}
@@ -47,6 +67,12 @@ namespace xna {
 		D3D_FEATURE_LEVEL _featureLevel{ D3D_FEATURE_LEVEL::D3D_FEATURE_LEVEL_11_0 };
 		float _backgroundColor[4] = { 0, 0, 0, 0 };
 		xna::PresentationParameters _presentParameters;
+		PGraphicsAdapter _adapter{ nullptr };
+		PSwapChain _swapChain{ nullptr };
+		PRenderTarget2D _renderTarget2D{ nullptr };
+		xna::Viewport _viewport{};
+		PBlendState _blendState{ nullptr };
+		bool _usevsync{ false };
 
 		bool createDevice();
 	};	

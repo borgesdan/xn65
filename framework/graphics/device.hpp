@@ -18,38 +18,11 @@ namespace xna {
 		virtual void Clear() = 0;
 		virtual bool Initialize(GameWindow& gameWindow) = 0;
 		virtual bool Present() = 0;
-
-		PGraphicsAdapter Adapter() const {
-			return _adapter;
-		}
-
-		void Adapter(PGraphicsAdapter const& adapter) {
-			_adapter = adapter;
-		}
-
-		constexpr xna::Viewport Viewport() const {
-			return _viewport;
-		}
-
-		constexpr void Viewport(xna::Viewport const& viewport) {
-			_viewport = viewport;
-		}
-
-		PSwapChain GetSwapChain() const {
-			return _swapChain;
-		}
-
-		constexpr void UseVSync(bool use) {
-			_usevsync = use;
-		}
-
-	protected:
-		PGraphicsAdapter _adapter{ nullptr };
-		PSwapChain _swapChain{ nullptr };
-		PRenderTarget2D _renderTarget2D{ nullptr };
-		xna::Viewport _viewport{};
-		PBlendState _blendState{ nullptr };
-		bool _usevsync{ false };
+		virtual PGraphicsAdapter Adapter() const = 0;
+		virtual void Adapter(PGraphicsAdapter const& adapter) = 0;
+		virtual xna::Viewport Viewport() const = 0;
+		virtual void Viewport(xna::Viewport const& viewport) = 0;
+		virtual void UseVSync(bool use) = 0;		
 	};
 }
 

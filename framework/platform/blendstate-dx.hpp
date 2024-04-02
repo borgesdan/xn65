@@ -22,6 +22,9 @@ namespace xna {
 	public:
 		ID3D11BlendState* _blendState{ nullptr };	
 		GraphicsDevice* _device{ nullptr };
+		bool AlphaToCoverage{ false };
+		bool IndependentBlendEnable{ false };
+		PBlendRenderTarget RenderTargets[8];		
 	};	
 
 	struct BlendMapper {
