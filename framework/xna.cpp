@@ -16,15 +16,19 @@ class Game1 : public Game {
 public:
 	Game1() {
 		graphics = New<GraphicsDeviceManager>(this);
-	}
 
-	virtual void Update(GameTime const& gameTime) {
+		XnaErrorCode err;
+		Texture2D::FromStream(*_graphicsDevice, "D:\\sprite.jpg", &err);
+
+	}	
+
+	virtual void Update(GameTime const& gameTime) override {
 
 		Game::Update(gameTime);
 	}
 
-	virtual void Draw(GameTime const& gameTime) {
-		GraphicsDevice->Clear();
+	virtual void Draw(GameTime const& gameTime) override {
+		_graphicsDevice->Clear();
 
 		Game::Draw(gameTime);
 	}

@@ -4,6 +4,7 @@
 #include "../graphics/texture.hpp"
 #include "dxgi.h"
 #include "d3d11.h"
+#include "../xnaerror.hpp"
 
 namespace xna {
 	class Texture2D : public ITexture2D {
@@ -17,8 +18,22 @@ namespace xna {
 			}
 		}
 
+		virtual constexpr Int Width() const override {
+			return _width;
+		}
+
+		virtual constexpr Int Height() const override {
+			return _height;
+		}
+
+		static PTexture2D FromStream(GraphicsDevice& device, String const& fileName, xna_error_nullarg);
+
 	public:
 		ID3D11Texture2D* _texture2D{nullptr};
+
+	private:
+		Uint _width{ 0 };
+		Uint _height{ 0 };
 	};
 }
 

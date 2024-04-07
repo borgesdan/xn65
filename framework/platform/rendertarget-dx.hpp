@@ -18,10 +18,11 @@ namespace xna {
 			}
 		}
 
-		virtual bool Apply() override;
+		virtual bool Bind() override;
 
 	public:
 		ID3D11RenderTargetView* _renderTargetView = nullptr;
+		D3D11_RENDER_TARGET_VIEW_DESC _renderTargetDesc{};
 		GraphicsDevice* _device{ nullptr };
 	};
 }

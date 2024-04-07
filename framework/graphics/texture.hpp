@@ -9,9 +9,11 @@ namespace xna {
 	class Texture {
 	};
 
-	class ITexture2D {
+	class ITexture2D : public Texture {
 	public:
 		virtual ~ITexture2D(){}
+		virtual Int Width() const = 0;
+		virtual Int Height() const = 0;
 	};
 }
 

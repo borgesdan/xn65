@@ -8,7 +8,7 @@ namespace xna {
 		_device = device;
 	}
 
-	bool RenderTarget2D::Apply() {
+	bool RenderTarget2D::Bind() {
 		if (_texture2D) {
 			_texture2D->Release();
 			_texture2D = nullptr;
@@ -18,7 +18,7 @@ namespace xna {
 			return false;
 
 		auto& device = _device->_device;
-
+		
 		if FAILED(device->CreateRenderTargetView(_texture2D, NULL, &_renderTargetView))
 			return false;
 

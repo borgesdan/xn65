@@ -16,7 +16,7 @@ namespace xna {
 	}
 
 	int Game::Run() {		
-		if (GraphicsDevice == nullptr) {
+		if (_graphicsDevice == nullptr) {
 			MessageBox(nullptr, "O dispositivo gráfico não foi inicializar corretamente", "Xna Game Engine", MB_OK);
 			return EXIT_FAILURE;
 		}
@@ -50,7 +50,7 @@ namespace xna {
 
 				this->Draw(gameTime);
 
-				GraphicsDevice->Present();
+				_graphicsDevice->Present();
 
 				endElapsedTime = _clock.ElapsedTime();
 			}

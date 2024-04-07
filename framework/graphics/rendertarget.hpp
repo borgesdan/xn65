@@ -9,7 +9,7 @@ namespace xna {
 	public:
 		virtual ~IRenderTarget2D(){}
 
-		virtual bool Apply() = 0;
+		virtual bool Bind() = 0;
 	};	
 }
 

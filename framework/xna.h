@@ -12,5 +12,6 @@
 #include "platform/game-dx.hpp"
 #include "csharp/stream.hpp"
 #include "platform/gdevicemanager-dx.hpp"
+#include "platform/texture-dx.hpp"
 
 // TODO: Reference additional headers your program requires here.

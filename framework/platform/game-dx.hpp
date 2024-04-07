@@ -22,7 +22,7 @@ namespace xna {
 		}
 
 		virtual PGraphicsDevice GetGraphicsDevice() override {
-			return GraphicsDevice;
+			return _graphicsDevice;
 		}
 
 	protected:
@@ -31,7 +31,7 @@ namespace xna {
 		virtual void Update(GameTime const& gameTime) override{}		
 
 	public:
-		PGraphicsDevice GraphicsDevice{ nullptr };		
+		PGraphicsDevice _graphicsDevice{ nullptr };		
 
 	protected:		
 		PGameWindow _gameWindow{ nullptr };

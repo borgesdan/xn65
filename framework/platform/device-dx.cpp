@@ -69,7 +69,7 @@ namespace xna {
             _renderTarget2D = New<RenderTarget2D>(this);
         }
 
-        if (!_renderTarget2D->Apply())
+        if (!_renderTarget2D->Bind())
             return false;
 
         D3D11_VIEWPORT view{};

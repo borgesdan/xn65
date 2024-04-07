@@ -99,6 +99,8 @@ namespace xna {
 	using PTexture						= std::shared_ptr<Texture>;
 	class Texture2D;
 	using PTexture2D					= std::shared_ptr<Texture2D>;
+	class VertexInputLayout;
+	using PVertexInputLayout			= std::shared_ptr<VertexInputLayout>;
 	struct Viewport;	
 	using PViewport						= std::shared_ptr<Viewport>;
 }
