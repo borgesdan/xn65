@@ -1,0 +1,4 @@
+#include "../types.hpp"
+#include "../forward.hpp"
+#include "../xnaerror.hpp"
+#include "../enums.hpp"

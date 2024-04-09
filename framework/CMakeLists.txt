@@ -3,7 +3,7 @@
 #
 
 # Add source to this project's executable.
-add_executable (xna WIN32 "xna.cpp" "xna.h" "platform/window-dx.cpp" "platform/device-dx.cpp"   "platform/adapter-dx.cpp" "platform/swapchain-dx.cpp" "platform/rendertarget-dx.cpp" "platform/texture-dx.cpp" "platform/blendstate-dx.cpp" "platform/game-dx.cpp" "platform/clock-dx.cpp" "csharp/stream.cpp"  "platform/gdevicemanager-dx.cpp")
+add_executable (xna WIN32 "xna.cpp" "xna.h" "platform/window-dx.cpp" "platform/device-dx.cpp"   "platform/adapter-dx.cpp" "platform/swapchain-dx.cpp" "platform/rendertarget-dx.cpp" "platform/texture-dx.cpp" "platform/blendstate-dx.cpp" "platform/game-dx.cpp" "platform/clock-dx.cpp" "csharp/stream.cpp"  "platform/gdevicemanager-dx.cpp" "platform/vertexinput-dx.cpp" "platform/shader-dx.cpp")
 
 if (CMAKE_VERSION VERSION_GREATER 3.12)
   set_property(TARGET xna PROPERTY CXX_STANDARD 20)
@@ -26,7 +26,7 @@ endif()
 # "cacheVariables": {
 #    "CMAKE_TOOLCHAIN_FILE": "{VCPKG_DIR}\\scripts\\buildsystems\\vcpkg.cmake"
 # }
-
+#
 find_package(directxtk CONFIG REQUIRED)
 
-target_link_libraries(${PROJECT_NAME} D3d11.lib dxgi.lib Microsoft::DirectXTK)
+target_link_libraries(${PROJECT_NAME} D3d11.lib dxgi.lib d3dcompiler.lib Microsoft::DirectXTK)
