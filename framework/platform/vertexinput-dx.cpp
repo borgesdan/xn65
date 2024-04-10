@@ -13,7 +13,7 @@ namespace xna {
 
 		const auto hr = _device->_device->CreateInputLayout(
 			_description.data(),
-			_description.size(),
+			static_cast<UINT>(_description.size()),
 			blob->GetBufferPointer(),
 			blob->GetBufferSize(),
 			&_inputLayout);

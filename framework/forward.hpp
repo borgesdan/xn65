@@ -99,6 +99,8 @@ namespace xna {
 	using PTexture						= std::shared_ptr<Texture>;
 	class Texture2D;
 	using PTexture2D					= std::shared_ptr<Texture2D>;
+	class RasterizerState;
+	using PRasterizerState				= std::shared_ptr<RasterizerState>;
 	class Shader;
 	using PShader						= std::shared_ptr<Shader>;
 	class VertexInputLayout;

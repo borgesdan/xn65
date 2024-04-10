@@ -20,15 +20,7 @@ namespace xna {
 		InverseSource1Color,
 		Source1Alpha,
 		InverseSource1Alpha
-	};
-
-	enum class ColorWriteChannels {
-		Red,
-		Green,
-		Blue,
-		Alpha,
-		All
-	};
+	};	
 
 	enum class BlendFunction {
 		Add = 0,
@@ -39,6 +31,20 @@ namespace xna {
 	};
 
 	using BlendOperation = BlendFunction;
+
+	enum class ColorWriteChannels {
+		Red,
+		Green,
+		Blue,
+		Alpha,
+		All
+	};
+
+	enum class CullMode {
+		None,
+		CullClockwiseFace,
+		CullCounterClockwiseFace,
+	};
 
 	enum class DepthFormat {
 		None,
@@ -52,6 +58,12 @@ namespace xna {
 		LandscapeLeft = 1,
 		LandscapeRight = 2,
 		Portrait = 4,
+	};
+
+	enum class FillMode
+	{
+		Solid,
+		WireFrame,
 	};
 
 	enum class GraphicsProfile {
