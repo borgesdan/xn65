@@ -79,6 +79,8 @@ namespace xna {
 	//Graphics
 	class BlendState;
 	using PBlendState					= std::shared_ptr<BlendState>;
+	class ConstantBuffer;
+	using PConstantBuffer				= std::shared_ptr<ConstantBuffer>;
 	class DisplayMode;
 	using PDisplayMode					= std::shared_ptr<DisplayMode>;
 	class DisplayModeCollection;
@@ -103,8 +105,12 @@ namespace xna {
 	using PRasterizerState				= std::shared_ptr<RasterizerState>;
 	class Shader;
 	using PShader						= std::shared_ptr<Shader>;
+	class VertexBuffer;
+	using PVertexBuffer					= std::shared_ptr<VertexBuffer>;
 	class VertexInputLayout;
 	using PVertexInputLayout			= std::shared_ptr<VertexInputLayout>;
+	struct VertexPositionColor;
+	using PVertexPositionColor			= std::shared_ptr<VertexPositionColor>;
 	class VertexShader;
 	using pVertexShader					= std::shared_ptr<VertexShader>;
 	struct Viewport;	
