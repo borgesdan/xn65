@@ -44,11 +44,17 @@ namespace xna {
 	struct Rectangle;
 	using PRectangle					= std::shared_ptr<Rectangle>;
 	struct Vector2;
+	using Vec2 = Vector2;
 	using PVector2						= std::shared_ptr<Vector2>;
+	using PVec2							= std::shared_ptr<Vector2>;
 	struct Vector3;
+	using Vec3 = Vector3;
 	using PVector3						= std::shared_ptr<Vector3>;
+	using PVec3							= std::shared_ptr<Vector3>;
 	struct Vector4;
+	using Vec4 = Vector4;
 	using PVector4						= std::shared_ptr<Vector4>;
+	using PVec4							= std::shared_ptr<Vector4>;
 
 	//Game
 	class DrawableGameComponent;

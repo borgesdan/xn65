@@ -29,6 +29,25 @@ namespace xna {
 		constexpr bool operator==(const Vector3& other) const {
 			return X == other.X && Y == other.Y && Z == other.Z;
 		}
+
+		static Vector3 Cross(Vector3 const& vector1, Vector3 const& vector2) { return {}; }
+		static float Dot(Vector3 const& vector1, Vector3 const& vector2) { return 0; }
+		static Vector3 Forward() { return {}; }
+		static Vector3 Right() { return {}; }
+		float LengthSquared() const { return 0; };
+		static Vector3 Normalize(Vector3 const& value) { return {}; }
+		static Vector3 Multiply(Vector3 value1, Vector3 value2) { return {}; }
+		static Vector3 Subtract(Vector3 value1, Vector3 value2) { return {}; }
+		static Vector3 Multiply(Vector3 value1, float value) { return {}; }
+		void Normalize(){}
+
+		constexpr Vector3 operator-() const {
+			return Vector3();
+		}
+
+		friend constexpr Vector3 operator-(Vector3 const& value1, Vector3 const& value2) {
+			return Vector3();
+		}
 	};
 
 	struct Vector4 {
