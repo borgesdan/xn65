@@ -87,6 +87,8 @@ namespace xna {
 	using PBlendState					= std::shared_ptr<BlendState>;
 	class ConstantBuffer;
 	using PConstantBuffer				= std::shared_ptr<ConstantBuffer>;
+	class DataBuffer;
+	using PDataBuffer					= std::shared_ptr<DataBuffer>;
 	class DisplayMode;
 	using PDisplayMode					= std::shared_ptr<DisplayMode>;
 	class DisplayModeCollection;

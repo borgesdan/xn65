@@ -7,6 +7,7 @@ namespace xna {
 	class IShader {
 	public:
 		virtual ~IShader() {}		
+		virtual bool Initialize(GraphicsDevice& device, DataBuffer& buffer, xna_error_nullarg) = 0;
 	};
 }
 

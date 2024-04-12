@@ -1,8 +1,9 @@
 #include "shader-dx.hpp"
 #include "device-dx.hpp"
+#include "databuffer-dx.hpp"
 
 namespace xna {
-    HRESULT Shader::CompileFromFile(LPCWSTR srcFile, LPCSTR entryPoint, LPCSTR profile, ID3DBlob** blob)
+    HRESULT Shader::CompileFromFile(_In_ LPCWSTR srcFile, _In_ LPCSTR entryPoint, _In_ LPCSTR profile, _Outptr_ ID3DBlob** blob)
 	{
 		//https://learn.microsoft.com/en-us/windows/win32/direct3d11/how-to--compile-a-shader
 
@@ -44,43 +45,54 @@ namespace xna {
         *blob = shaderBlob;
 
         return hr;
-	}
+	}       
 
-    bool VertexShader::Initialize(ID3DBlob* blob, xna_error_ptr_arg) {
-        if (!_device || !blob) {
+    bool VertexShader::Initialize(GraphicsDevice& device, DataBuffer& buffer, xna_error_ptr_arg)
+    {
+        if (!device._device || !buffer._blob) {
             xna_error_apply(err, XnaErrorCode::INVALID_OPERATION);
             return false;
         }
 
-        const auto hr = _device->_device->CreateVertexShader(
-            blob->GetBufferPointer(),
-            blob->GetBufferSize(),
+        if (_vertexShader) {
+            _vertexShader->Release();
+            _vertexShader = nullptr;
+        }
+
+        const auto hr = device._device->CreateVertexShader(
+            buffer._blob->GetBufferPointer(),
+            buffer._blob->GetBufferSize(),
             NULL,
             &_vertexShader);
 
         if (FAILED(hr)) {
-            xna_error_apply(err, XnaErrorCode::INVALID_OPERATION);
+            xna_error_apply(err, XnaErrorCode::FAILED_OPERATION);
             return false;
         }
 
         return true;
     }
 
-    bool PixelShader::Initialize(ID3DBlob* blob, xna_error_ptr_arg)
+    bool PixelShader::Initialize(GraphicsDevice& device, DataBuffer& buffer, xna_error_ptr_arg)
     {
-        if (!_device || !blob) {
+        if (!device._device || !buffer._blob) {
             xna_error_apply(err, XnaErrorCode::INVALID_OPERATION);
             return false;
         }
 
-        const auto hr = _device->_device->CreatePixelShader(
-            blob->GetBufferPointer(),
-            blob->GetBufferSize(),
+        if (_pixelShader) {
+            _pixelShader->Release();
+            _pixelShader = nullptr;
+        }
+
+        const auto hr = device._device->CreatePixelShader(
+            buffer._blob->GetBufferPointer(),
+            buffer._blob->GetBufferSize(),
             NULL,
             &_pixelShader);
 
         if (FAILED(hr)) {
-            xna_error_apply(err, XnaErrorCode::INVALID_OPERATION);
+            xna_error_apply(err, XnaErrorCode::FAILED_OPERATION);
             return false;
         }
 

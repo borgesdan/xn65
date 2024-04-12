@@ -8,10 +8,11 @@
 namespace xna {
 	class VertexInputLayout : public IVertexInputLayout {
 	public:
+		VertexInputLayout() = default;
+
 		VertexInputLayout(
-			GraphicsDevice* device,
 			std::vector<D3D11_INPUT_ELEMENT_DESC> const& description) :
-			_device(device), _description(description){}
+			_description(description){}
 
 		virtual ~VertexInputLayout() override{
 			if (_inputLayout) {
@@ -20,12 +21,11 @@ namespace xna {
 			}
 		}		
 
-		virtual bool Initialize(ID3DBlob* blob, xna_error_nullarg);
+		virtual bool Initialize(GraphicsDevice& device, DataBuffer& blob, xna_error_nullarg);
 
 	public:
 		ID3D11InputLayout* _inputLayout{ nullptr };
-		std::vector<D3D11_INPUT_ELEMENT_DESC> _description{};			
-		GraphicsDevice* _device = nullptr;
+		std::vector<D3D11_INPUT_ELEMENT_DESC> _description{};
 	};
 }
 

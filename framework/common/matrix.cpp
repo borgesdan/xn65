@@ -9,7 +9,7 @@ namespace xna {
         if (d < 9.9999997473787516E-05)
             result1 = cameraForwardVector ? -*cameraForwardVector : Vector3::Forward();
         else
-            result1 = Vector3::Multiply(result1, 1.0f / sqrt(d));
+            result1 = Vector3::Multiply(result1, static_cast<float>(1.0 / sqrt(d)));
 
         Vector3 result2 = Vector3::Cross(cameraUpVector, result1);
         result2.Normalize();
@@ -45,7 +45,7 @@ namespace xna {
         if (d < 9.9999997473787516E-05)
             result1 = cameraForwardVector ? -*cameraForwardVector : Vector3::Forward();
         else
-            result1 = Vector3::Multiply(result1, 1.0f / sqrt(d));
+            result1 = Vector3::Multiply(result1, static_cast<float>(1.0 / sqrt(d)));
 
         //Vector3 vector2 = rotateAxis;
         float result2 = Vector3::Dot(rotateAxis, result1);
@@ -106,8 +106,8 @@ namespace xna {
 
     Matrix Matrix::CreateRotationX(float radians)
 	{
-        const auto num1 = cos(radians);
-        const auto num2 = sin(radians);
+        const auto num1 = static_cast<float>(cos(radians));
+        const auto num2 = static_cast<float>(sin(radians));
 
         Matrix rotationX;
         rotationX.M11 = 1.0f;
@@ -131,8 +131,8 @@ namespace xna {
 
     Matrix Matrix::CreateRotationY(float radians)
     {
-        const auto num1 = cos(radians);
-        const auto num2 = sin(radians);
+        const auto num1 = static_cast<float>(cos(radians));
+        const auto num2 = static_cast<float>(sin(radians));
         Matrix rotationY;
         rotationY.M11 = num1;
         rotationY.M12 = 0.0f;
@@ -155,8 +155,8 @@ namespace xna {
 
     Matrix Matrix::CreateRotationZ(float radians)
     {
-        const auto num1 = cos(radians);
-        const auto num2 = sin(radians);
+        const auto num1 = static_cast<float>(cos(radians));
+        const auto num2 = static_cast<float>(sin(radians));
         Matrix rotationZ;
         rotationZ.M11 = num1;
         rotationZ.M12 = num2;
@@ -182,8 +182,8 @@ namespace xna {
         const auto x = axis.X;
         const auto y = axis.Y;
         const auto z = axis.Z;
-        const auto num1 = sin(angle);
-        const auto num2 = cos(angle);
+        const auto num1 = static_cast<float>(sin(angle));
+        const auto num2 = static_cast<float>(cos(angle));
         const auto num3 = x * x;
         const auto num4 = y * y;
         const auto num5 = z * z;
@@ -216,7 +216,7 @@ namespace xna {
             return Matrix();
         }
 
-        const auto num1 = 1.0f / tan(fieldOfView * 0.5);
+        const auto num1 = static_cast<float>(1.0 / tan(fieldOfView * 0.5));
         const auto num2 = num1 / aspectRatio;
 
         Matrix perspectiveFieldOfView;

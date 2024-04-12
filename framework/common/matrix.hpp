@@ -249,9 +249,9 @@ namespace xna {
 			}
 
 			Matrix perspectiveOffCenter;
-			perspectiveOffCenter.M11 = (2.0 * nearPlaneDistance / (right - left));
+			perspectiveOffCenter.M11 = (2.0F * nearPlaneDistance / (right - left));
 			perspectiveOffCenter.M12 = perspectiveOffCenter.M13 = perspectiveOffCenter.M14 = 0.0f;
-			perspectiveOffCenter.M22 = (2.0 * nearPlaneDistance / (top - bottom));
+			perspectiveOffCenter.M22 = (2.0F * nearPlaneDistance / (top - bottom));
 			perspectiveOffCenter.M21 = perspectiveOffCenter.M23 = perspectiveOffCenter.M24 = 0.0f;
 			perspectiveOffCenter.M31 = (left + right) / (right - left);
 			perspectiveOffCenter.M32 = (top + bottom) / (top - bottom);
@@ -268,7 +268,7 @@ namespace xna {
 			orthographic.M12 = orthographic.M13 = orthographic.M14 = 0.0f;
 			orthographic.M22 = 2.0f / height;
 			orthographic.M21 = orthographic.M23 = orthographic.M24 = 0.0f;
-			orthographic.M33 = (1.0 / (zNearPlane - zFarPlane));
+			orthographic.M33 = (1.0F / (zNearPlane - zFarPlane));
 			orthographic.M31 = orthographic.M32 = orthographic.M34 = 0.0f;
 			orthographic.M41 = orthographic.M42 = 0.0f;
 			orthographic.M43 = zNearPlane / (zNearPlane - zFarPlane);

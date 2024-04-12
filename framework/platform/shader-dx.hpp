@@ -7,23 +7,18 @@
 namespace xna {
 	class Shader : public IShader {
 	public:
-		Shader(GraphicsDevice* device) : _device(device) {
-		}
+		Shader() = default;
 
 		virtual ~Shader() override {}
 
-		virtual bool Initialize(ID3DBlob* blob, xna_error_nullarg) = 0;
+		virtual bool Initialize(GraphicsDevice& device, DataBuffer& buffer, xna_error_nullarg) override {}
 
-		static HRESULT CompileFromFile(_In_ LPCWSTR srcFile, _In_ LPCSTR entryPoint, _In_ LPCSTR profile, _Outptr_ ID3DBlob** blob);
-
-	public:
-		GraphicsDevice* _device = nullptr;
+		static HRESULT CompileFromFile(_In_ LPCWSTR srcFile, _In_ LPCSTR entryPoint, _In_ LPCSTR profile, _Outptr_ ID3DBlob** blob);			
 	};	
 
 	class VertexShader : public Shader {
 	public:
-		VertexShader(GraphicsDevice* device) :
-			Shader(device) {}
+		VertexShader() = default;
 
 		virtual ~VertexShader() override {
 			if (_vertexShader) {
@@ -32,7 +27,7 @@ namespace xna {
 			}
 		}
 
-		virtual bool Initialize(ID3DBlob* blob, xna_error_nullarg) override;
+		virtual bool Initialize(GraphicsDevice& device, DataBuffer& buffer, xna_error_nullarg) override;
 
 	public:
 		ID3D11VertexShader* _vertexShader = nullptr;
@@ -40,8 +35,7 @@ namespace xna {
 
 	class PixelShader : public Shader {
 	public:
-		PixelShader(GraphicsDevice* device) :
-			Shader(device) {}
+		PixelShader() = default;
 
 		virtual ~PixelShader() override {
 			if (_pixelShader) {
@@ -50,7 +44,7 @@ namespace xna {
 			}
 		}
 
-		virtual bool Initialize(ID3DBlob* blob, xna_error_nullarg) override;
+		virtual bool Initialize(GraphicsDevice& device, DataBuffer& buffer, xna_error_nullarg) override;
 
 	public:
 		ID3D11PixelShader* _pixelShader = nullptr;

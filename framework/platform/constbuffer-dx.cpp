@@ -1,8 +1,8 @@
-#include "vertexbuffer-dx.hpp"
+#include "constbuffer-dx.hpp"
 #include "device-dx.hpp"
 
-namespace xna {	
-	bool VertexBuffer::Initialize(GraphicsDevice& device, xna_error_ptr_arg)
+namespace xna {
+	bool ConstantBuffer::Initialize(GraphicsDevice& device, xna_error_ptr_arg)
 	{
 		if (!device._device) {
 			xna_error_apply(err, XnaErrorCode::ARGUMENT_IS_NULL);
@@ -25,5 +25,5 @@ namespace xna {
 		}
 
 		return true;
-	}	
+	}
 }

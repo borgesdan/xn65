@@ -9,8 +9,7 @@ namespace xna {
 	public:
 		IndexBuffer() {			
 			_description.Usage = D3D11_USAGE_DEFAULT;
-			_description.BindFlags = D3D11_BIND_INDEX_BUFFER;
-			
+			_description.BindFlags = D3D11_BIND_INDEX_BUFFER;			
 		}
 		
 		IndexBuffer(size_t size) {
@@ -33,7 +32,7 @@ namespace xna {
 	public:
 		D3D11_BUFFER_DESC _description;
 		ID3D11Buffer* _buffer = nullptr;
-		D3D11_SUBRESOURCE_DATA _initialData{};
+		D3D11_SUBRESOURCE_DATA _subResource{};
 	};
 }
 

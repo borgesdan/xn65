@@ -7,6 +7,7 @@ namespace xna {
 	class IVertexInputLayout {
 	public:
 		virtual ~IVertexInputLayout(){}
+		virtual bool Initialize(GraphicsDevice& device, DataBuffer& blob, xna_error_nullarg) = 0;
 	};
 }
 

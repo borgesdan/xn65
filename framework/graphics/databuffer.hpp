@@ -1,12 +1,12 @@
-#ifndef XNA_GRAPHICS_CONSTBUFFER_HPP
-#define XNA_GRAPHICS_CONSTBUFFER_HPP
+#ifndef XNA_GRAPHICS_DATABUFFER_HPP
+#define XNA_GRAPHICS_DATABUFFER_HPP
 
 #include "../default.hpp"
 
 namespace xna {
-	class IConstantBuffer {
+	class IDataBuffer {
 	public:
-		virtual ~IConstantBuffer(){}
+		virtual ~IDataBuffer(){}
 		virtual bool Initialize(GraphicsDevice& device, xna_error_nullarg) = 0;
 	};
 }

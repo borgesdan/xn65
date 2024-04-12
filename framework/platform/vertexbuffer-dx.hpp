@@ -34,8 +34,7 @@ namespace xna {
 
 	public:
 		D3D11_BUFFER_DESC _description{};
-		D3D11_SUBRESOURCE_DATA _initialData{};
-		bool _useInitialData{ false };
+		D3D11_SUBRESOURCE_DATA _subResource{};
 		ID3D11Buffer* _buffer = nullptr;
 	};
 }

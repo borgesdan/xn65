@@ -33,9 +33,9 @@ namespace xna {
 			indices.push_back(i + 2);
 		}
 		
-		_initialData.pSysMem = &indices.front();		
+		_subResource.pSysMem = &indices.front();
 
-		const auto hr = device._device->CreateBuffer(&_description, &_initialData, &_buffer);
+		const auto hr = device._device->CreateBuffer(&_description, &_subResource, &_buffer);
 
 		if (FAILED(hr)) {
 			xna_error_apply(err, XnaErrorCode::FAILED_OPERATION);
