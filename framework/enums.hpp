@@ -40,6 +40,17 @@ namespace xna {
 		All
 	};
 
+	enum class ComparisonFunction {
+		Never,
+		Less,
+		Equal,
+		LessEquals,
+		Greater,
+		NotEqual,
+		GreaterEqual,
+		Always
+	};
+
 	enum class CullMode {
 		None,
 		CullClockwiseFace,
@@ -111,6 +122,26 @@ namespace xna {
 		HalfVector2 = 17,
 		HalfVector4 = 18,
 		HdrBlendable = 19,
+	};
+
+	enum class TextureAddressMode {
+		Wrap,
+		Clamp,
+		Mirror,
+		Border,
+		MirrorOnce
+	};
+
+	enum class TextureFilter {
+		Linear,
+		Point,
+		Anisotropic,
+		LinearMipPoint,
+		PointMipLinear,
+		MinLinearMagPointMipLinear,
+		MinLinearMagPointMipPoint,
+		MinPointMagLinearMipLinear,
+		MinPointMagLinearMipPoint,
 	};
 
 	constexpr int SURFACE_FORMAT_COUNT = 19;

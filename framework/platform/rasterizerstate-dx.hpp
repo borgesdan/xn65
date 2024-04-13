@@ -1,7 +1,7 @@
-#ifndef XNA_PLATFORM_RASTERIZER_DX_HPP
-#define XNA_PLATFORM_RASTERIZER_DX_HPP
+#ifndef XNA_PLATFORM_RASTERIZERSTATE_DX_HPP
+#define XNA_PLATFORM_RASTERIZERSTATE_DX_HPP
 
-#include "../graphics/rasterizer.hpp"
+#include "../graphics/rasterizerstate.hpp"
 #include "dxheaders.hpp"
 
 namespace xna {
