@@ -18,6 +18,8 @@ namespace xna {
 			}
 		}
 
+		virtual bool Initialize(GraphicsDevice& device, xna_error_nullarg) override;
+
 		virtual constexpr void Filter(TextureFilter value) override {
 			switch (value)
 			{

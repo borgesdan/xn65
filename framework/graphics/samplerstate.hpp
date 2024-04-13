@@ -7,6 +7,7 @@ namespace xna {
 	class ISamplerState {
 	public:
 		virtual ~ISamplerState(){}
+		virtual bool Initialize(GraphicsDevice& device, xna_error_nullarg) = 0;
 		virtual void Filter(TextureFilter value) = 0;
 		virtual void AddressU(TextureAddressMode value) = 0;
 		virtual void AddressV(TextureAddressMode value) = 0;

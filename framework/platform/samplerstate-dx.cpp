@@ -1,4 +1,5 @@
 #include "samplerstate-dx.hpp"
+#include "device-dx.hpp"
 
 namespace xna {
 	PSamplerState ISamplerState::PoinWrap() {
@@ -53,5 +54,27 @@ namespace xna {
 		state->_description.AddressV = D3D11_TEXTURE_ADDRESS_CLAMP;
 		state->_description.AddressW = D3D11_TEXTURE_ADDRESS_CLAMP;
 		return state;
+	}
+
+	bool SamplerState::Initialize(GraphicsDevice& device, xna_error_ptr_arg)
+	{
+		if (!device._device) {
+			xna_error_apply(err, XnaErrorCode::ARGUMENT_IS_NULL);
+			return false;
+		}
+
+		if (_samplerState) {
+			_samplerState->Release();
+			_samplerState = nullptr;
+		}
+
+		const auto hr = device._device->CreateSamplerState(&_description, &_samplerState);
+
+		if (FAILED(hr)) {
+			xna_error_apply(err, XnaErrorCode::FAILED_OPERATION);
+			return false;
+		}
+
+		return true;
 	}
 }
