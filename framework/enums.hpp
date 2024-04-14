@@ -101,6 +101,22 @@ namespace xna {
 		End,
 	};
 
+	enum class SpriteEffects {
+		None = 0,
+		FlipHorizontally = 1,
+		FlipVertically = 2,
+		Both = FlipHorizontally | FlipVertically
+	};
+
+	enum class SpriteSortMode
+	{
+		Deferred,
+		Immediate,
+		Texture,
+		BackToFront,
+		FrontToBack,
+	};
+
 	enum class SurfaceFormat {
 		Color = 0,
 		Bgr565 = 1,
@@ -143,6 +159,8 @@ namespace xna {
 		MinPointMagLinearMipLinear,
 		MinPointMagLinearMipPoint,
 	};
+
+
 
 	constexpr int SURFACE_FORMAT_COUNT = 19;
 }

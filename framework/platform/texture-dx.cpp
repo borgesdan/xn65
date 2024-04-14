@@ -5,21 +5,25 @@
 
 namespace xna {
 	Texture2D::Texture2D() {		
-	}
+	}	
 
 	PTexture2D Texture2D::FromStream(GraphicsDevice& device, String const& fileName, xna_error_ptr_arg)
 	{		
-		ID3D11Resource* resource = nullptr;
-		//D3D11ShaderResourceView* view = nullptr;
+		auto texture2d = New<Texture2D>();
+		ID3D11Resource* resource = nullptr;		
 		auto wstr = StringToWString(fileName);
 		
 		HRESULT result = DirectX::CreateWICTextureFromFile(
-			device._device, device._context, wstr.c_str(),
-			&resource, nullptr, 0U);
+			device._device,
+			device._context,
+			wstr.c_str(),
+			&resource,
+			&texture2d->_textureView,
+			0U);		
 
 		if (FAILED(result))
 		{
-			xna_error_apply(err, XnaErrorCode::STREAM_ERROR);
+			xna_error_apply(err, XnaErrorCode::FAILED_OPERATION);
 			
 			if (resource) {
 				resource->Release();
@@ -28,12 +32,11 @@ namespace xna {
 
 			return nullptr;
 		}
-
-		ID3D11Texture2D* txt2d = nullptr;
-		result = resource->QueryInterface(IID_ID3D11Texture2D, (void**)&txt2d);
+		
+		result = resource->QueryInterface(IID_ID3D11Texture2D, (void**)&texture2d->_texture2D);
 
 		if (FAILED(result)) {
-			xna_error_apply(err, XnaErrorCode::BAD_CAST);
+			xna_error_apply(err, XnaErrorCode::FAILED_OPERATION);
 
 			if (resource) {
 				resource->Release();
@@ -43,8 +46,9 @@ namespace xna {
 			return nullptr;
 		}
 
-		auto texture2d = New<Texture2D>();
-		texture2d->_texture2D = txt2d;
+		D3D11_TEXTURE2D_DESC desc;
+		texture2d->_texture2D->GetDesc(&desc);
+		texture2d->_description = desc;
 
 		resource->Release();
 		resource = nullptr;

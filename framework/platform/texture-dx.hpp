@@ -16,24 +16,28 @@ namespace xna {
 				_texture2D->Release();
 				_texture2D = nullptr;
 			}
+
+			if (_textureView) {
+				_textureView->Release();
+				_textureView = nullptr;
+			}
 		}
 
 		virtual constexpr Int Width() const override {
-			return _width;
+			return _description.Width;
 		}
 
 		virtual constexpr Int Height() const override {
-			return _height;
+			return _description.Height;
 		}
 
-		static PTexture2D FromStream(GraphicsDevice& device, String const& fileName, xna_error_nullarg);
+		static PTexture2D FromStream(GraphicsDevice& device, String const& fileName, xna_error_nullarg);		
 
 	public:
 		ID3D11Texture2D* _texture2D{nullptr};
-
-	private:
-		Uint _width{ 0 };
-		Uint _height{ 0 };
+		ID3D11ShaderResourceView* _textureView{ nullptr };
+		D3D11_TEXTURE2D_DESC _description{};
+	
 	};
 }
 
