@@ -82,7 +82,7 @@ namespace xna {
 
         _context->RSSetViewports(1, &view);
 
-        _blendState->Apply(this);
+        _blendState->Apply(*this);
 
         return true;
 	}

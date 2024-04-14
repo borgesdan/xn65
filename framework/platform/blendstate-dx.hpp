@@ -8,7 +8,7 @@
 namespace xna {
 	class BlendState : public IBlendState {
 	public:
-		BlendState(GraphicsDevice* device);		
+		BlendState() = default;
 
 		virtual ~BlendState() override {
 			if (_blendState) {
@@ -16,21 +16,39 @@ namespace xna {
 				_blendState = nullptr;
 			}
 		}
+		virtual bool Initialize(GraphicsDevice& device, xna_error_nullarg) override;
+		
+		virtual constexpr void AlphaToCoverageEnable(bool value) override {
+			_description.AlphaToCoverageEnable = value;
+		}
 
-		virtual bool Apply(GraphicsDevice* device) override;
+		virtual constexpr void IndependentBlendEnable(bool value) override {
+			_description.IndependentBlendEnable = value;
+		}
+
+		virtual void RenderTargets(std::vector<BlendRenderTarget> const& value) override {
+			for (size_t i = 0; i < value.size() && i < 8; ++i) {
+				_description.RenderTarget[i].BlendEnable = value[i].Enabled;
+				_description.RenderTarget[i].SrcBlend = ConvertBlend(value[i].Source);
+				_description.RenderTarget[i].DestBlend = ConvertBlend(value[i].Destination);
+				_description.RenderTarget[i].BlendOp = ConvertOperation(value[i].Operation);
+				_description.RenderTarget[i].SrcBlendAlpha = ConvertBlend(value[i].SourceAlpha);
+				_description.RenderTarget[i].DestBlendAlpha = ConvertBlend(value[i].DestinationAlpha);
+				_description.RenderTarget[i].BlendOpAlpha = ConvertOperation(value[i].OperationAlpha);
+				_description.RenderTarget[i].RenderTargetWriteMask = ConvertColorWrite(value[i].WriteMask);
+			}
+		}
+
+		virtual bool Apply(GraphicsDevice& device, xna_error_nullarg) override;
 
 	public:
-		ID3D11BlendState* _blendState{ nullptr };	
-		GraphicsDevice* _device{ nullptr };
-		bool AlphaToCoverage{ false };
-		bool IndependentBlendEnable{ false };
-		PBlendRenderTarget RenderTargets[8];		
-	};	
+		ID3D11BlendState* _blendState{ nullptr };
+		D3D11_BLEND_DESC _description{};
 
-	struct BlendMapper {
+	public:
 		static constexpr D3D11_BLEND ConvertBlend(Blend blend) {
 			switch (blend)
-			{	
+			{
 			case xna::Blend::Zero:
 				return D3D11_BLEND_ZERO;
 			case xna::Blend::One:
@@ -105,7 +123,7 @@ namespace xna {
 				return D3D11_COLOR_WRITE_ENABLE_ALL;
 			}
 		}
-	};
+	};		
 }
 
 #endif
