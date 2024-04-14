@@ -22,6 +22,11 @@ namespace xna {
 				_context->Release();
 				_context = nullptr;
 			}
+
+			if (_factory) {
+				_factory->Release();
+				_factory = nullptr;
+			}
 		}
 
 		virtual void Clear() override;
@@ -61,6 +66,7 @@ namespace xna {
 	public:
 		ID3D11Device* _device{ nullptr };
 		ID3D11DeviceContext* _context{ nullptr };
+		IDXGIFactory1* _factory = nullptr;
 
 	private:
 		unsigned int _createDeviceFlags{ 0 };

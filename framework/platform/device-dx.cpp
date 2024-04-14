@@ -18,6 +18,17 @@ namespace xna {
     }
 
 	bool GraphicsDevice::Initialize(GameWindow& gameWindow) {	
+        if (_factory) {
+            _factory->Release();
+            _factory = nullptr;
+        }
+
+        auto hr = CreateDXGIFactory1(__uuidof(IDXGIFactory1), (void**)&_factory);
+
+        if (FAILED(hr)) {
+            return false;
+        }
+
         if (_blendState == nullptr)
             _blendState = BlendState::NonPremultiplied();
 
@@ -56,13 +67,9 @@ namespace xna {
         _swapChain->Initialize(gameWindow);
 
         if (!_swapChain->Apply())
-            return false;
+            return false;        
 
-        IDXGIFactory1* dxgiFactory = nullptr;
-        if FAILED(CreateDXGIFactory1(__uuidof(IDXGIFactory1), (void**)&dxgiFactory))
-            return false;
-
-        if FAILED(dxgiFactory->MakeWindowAssociation(gameWindow.WindowHandle(), DXGI_MWA_NO_ALT_ENTER))
+        if FAILED(_factory->MakeWindowAssociation(gameWindow.WindowHandle(), DXGI_MWA_NO_ALT_ENTER))
             return false;
 
         if (!_renderTarget2D) {
