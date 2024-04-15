@@ -14,7 +14,7 @@ namespace xna {
 			SpriteSortMode sortMode = SpriteSortMode::Deferred,
 			BlendState* blendState = nullptr,
 			SamplerState* samplerState = nullptr,
-			//DepthStencilState
+			DepthStencilState * depthStencil = nullptr,
 			RasterizerState* rasterizerState = nullptr,
 		//Effect
 			Matrix const& transformMatrix = _identity

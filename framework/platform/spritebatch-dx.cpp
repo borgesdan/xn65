@@ -1,6 +1,7 @@
 #include "blendstate-dx.hpp"
 #include "device-dx.hpp"
 #include "rasterizerstate-dx.hpp"
+#include "depthstencilstate-dx.hpp"
 #include "samplerstate-dx.hpp"
 #include "spritebatch-dx.hpp"
 #include "texture-dx.hpp"
@@ -21,7 +22,7 @@ namespace xna {
 		Viewport(device.Viewport());
 	}
 	
-	void SpriteBatch::Begin(SpriteSortMode sortMode, BlendState* blendState, SamplerState* samplerState, RasterizerState* rasterizerState, Matrix const& transformMatrix) {
+	void SpriteBatch::Begin(SpriteSortMode sortMode, BlendState* blendState, SamplerState* samplerState, DepthStencilState* depthStencil, RasterizerState* rasterizerState, Matrix const& transformMatrix) {
 
 		if (!_dxspriteBatch)
 			return;
@@ -41,7 +42,7 @@ namespace xna {
 			sort,
 			blendState ? blendState->_blendState : nullptr,
 			samplerState ? samplerState->_samplerState : nullptr,
-			nullptr,
+			depthStencil ? depthStencil->_depthStencil : nullptr,
 			rasterizerState ? rasterizerState->_rasterizerState : nullptr,
 			nullptr,
 			matrix
