@@ -4,7 +4,7 @@
 #include <string>
 
 namespace xna {
-	inline std::wstring StringToWString(const std::string& str)
+	inline std::wstring XnaHToWString(const std::string& str)
 	{
 		std::wstring wstr;
 		size_t size;
@@ -13,7 +13,7 @@ namespace xna {
 		return wstr;
 	}
 
-	inline std::string WStringToString(const std::wstring& wstr)
+	inline std::string XnaHToString(const std::wstring& wstr)
 	{
 		std::string str;
 		size_t size;

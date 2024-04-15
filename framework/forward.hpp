@@ -117,6 +117,8 @@ namespace xna {
 	using PShader						= std::shared_ptr<Shader>;
 	class SpriteBatch;
 	using PSpriteBatch					= std::shared_ptr<SpriteBatch>;
+	class SpriteFont;
+	using PSpriteFont					= std::shared_ptr<SpriteFont>;
 	class VertexBuffer;
 	using PVertexBuffer					= std::shared_ptr<VertexBuffer>;
 	class VertexInputLayout;

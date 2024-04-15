@@ -1,8 +1,13 @@
 #ifndef XNA_PLATFORM_SPRITEBATCH_DX_HPP
 #define XNA_PLATFORM_SPRITEBATCH_DX_HPP
 
+#include "../common/color.hpp"
+#include "../common/rectangle.hpp"
+#include "../common/vectors.hpp"
 #include "../graphics/spritebatch.hpp"
+#include "../graphics/viewport.hpp"
 #include "SpriteBatch.h"
+#include "spritefont-dx.hpp"
 
 namespace xna {
 	class SpriteBatch : public ISpriteBatch {
@@ -32,11 +37,12 @@ namespace xna {
 		virtual void Draw(Texture2D& texture, Rectangle const& destinationRectangle, Rectangle const* sourceRectangle, Color const& color) override;
 		virtual void Draw(Texture2D& texture, Rectangle const& destinationRectangle, Rectangle const* sourceRectangle, Color const& color,
 			float rotation, Vector2 const& origin, SpriteEffects effects, float layerDepth) override;
-		virtual void Viewport(xna::Viewport const& value) override;
+		virtual void Viewport(xna::Viewport const& value) override;	
+		virtual void DrawString(SpriteFont& spriteFont, String const& text, Vector2 const& position, Color const& color) override;
+		virtual void DrawString(SpriteFont& spriteFont, String const& text, Vector2 const& position, Color const& color,
+			float rotation, Vector2 const& origin, float scale, SpriteEffects effects, float layerDepth) override;
 
 	public:
-		sptr<DirectX::SpriteBatch> _dxspriteBatch = nullptr;
-
 		static constexpr void ConvertSpriteSort(SpriteSortMode value, DirectX::SpriteSortMode& target) {
 			switch (value)
 			{
@@ -60,6 +66,9 @@ namespace xna {
 				break;
 			}
 		}
+
+	public:
+		sptr<DirectX::SpriteBatch> _dxspriteBatch = nullptr;		
 	};
 }
 

@@ -16,7 +16,7 @@ namespace xna {
 	String GraphicsAdapter::Description() const {
 		DXGI_ADAPTER_DESC1 desc;
 		_adapter->GetDesc1(&desc);
-		String description = WStringToString(desc.Description);
+		String description = XnaHToString(desc.Description);
 		return description;
 	}
 
@@ -33,7 +33,7 @@ namespace xna {
 		
 		if (_adapter->EnumOutputs(0, &pOutput) != DXGI_ERROR_NOT_FOUND) {
 			pOutput->GetDesc(&outputDesc);
-			String deviceName = WStringToString(outputDesc.DeviceName);
+			String deviceName = XnaHToString(outputDesc.DeviceName);
 			
 			pOutput->Release();
 			pOutput = nullptr;

@@ -13,5 +13,7 @@
 #include "csharp/stream.hpp"
 #include "platform/gdevicemanager-dx.hpp"
 #include "platform/texture-dx.hpp"
+#include "platform/spritebatch-dx.hpp"
+#include "common/color.hpp"
 
 // TODO: Reference additional headers your program requires here.

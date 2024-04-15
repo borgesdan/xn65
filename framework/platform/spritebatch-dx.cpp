@@ -1,13 +1,9 @@
-#include "spritebatch-dx.hpp"
-#include "device-dx.hpp"
 #include "blendstate-dx.hpp"
-#include "samplerstate-dx.hpp"
+#include "device-dx.hpp"
 #include "rasterizerstate-dx.hpp"
-#include "../common/color.hpp"
+#include "samplerstate-dx.hpp"
+#include "spritebatch-dx.hpp"
 #include "texture-dx.hpp"
-#include "../common/vectors.hpp"
-#include "../common/rectangle.hpp"
-#include "../graphics/viewport.hpp"
 
 using DxSpriteBatch = DirectX::SpriteBatch;
 using DxSpriteSortMode = DirectX::SpriteSortMode;
@@ -66,9 +62,9 @@ namespace xna {
 		if (!texture._textureView)
 			return;
 
-		auto _position = XMFLOAT2(position.X, position.Y);
+		const auto _position = XMFLOAT2(position.X, position.Y);
 		const auto v4 = color.ToVector4();
-		XMVECTORF32 _color = { { { v4.X, v4.Y, v4.Z, v4.W } } };
+		XMVECTORF32 _color = { v4.X, v4.Y, v4.Z, v4.W };
 
 		_dxspriteBatch->Draw(
 			texture._textureView,
@@ -84,9 +80,9 @@ namespace xna {
 		if (!texture._textureView)
 			return;
 
-		auto _position = XMFLOAT2(position.X, position.Y);
+		const auto _position = XMFLOAT2(position.X, position.Y);
 		const auto v4 = color.ToVector4();
-		XMVECTORF32 _color = { { { v4.X, v4.Y, v4.Z, v4.W } } };
+		const XMVECTORF32 _color = { v4.X, v4.Y, v4.Z, v4.W };
 
 		RECT _sourceRect{};
 
@@ -111,10 +107,10 @@ namespace xna {
 		if (!texture._textureView)
 			return;
 
-		auto _position = XMFLOAT2(position.X, position.Y);
-		auto _origin = XMFLOAT2(origin.X, origin.Y);
+		const auto _position = XMFLOAT2(position.X, position.Y);
+		const auto _origin = XMFLOAT2(origin.X, origin.Y);
 		const auto v4 = color.ToVector4();
-		XMVECTORF32 _color = { { { v4.X, v4.Y, v4.Z, v4.W } } };
+		const XMVECTORF32 _color = { v4.X, v4.Y, v4.Z, v4.W };
 
 		RECT _sourceRect{};
 
@@ -125,7 +121,7 @@ namespace xna {
 			_sourceRect.bottom = sourceRectangle->Y + sourceRectangle->Height;
 		};
 
-		DxSpriteEffects _effects = static_cast<DxSpriteEffects>(effects);
+		const DxSpriteEffects _effects = static_cast<DxSpriteEffects>(effects);
 
 		_dxspriteBatch->Draw(
 			texture._textureView,
@@ -146,10 +142,10 @@ namespace xna {
 		if (!texture._textureView)
 			return;
 
-		auto _position = XMFLOAT2(position.X, position.Y);
-		auto _origin = XMFLOAT2(origin.X, origin.Y);
+		const auto _position = XMFLOAT2(position.X, position.Y);
+		const auto _origin = XMFLOAT2(origin.X, origin.Y);
 		const auto v4 = color.ToVector4();
-		XMVECTORF32 _color = { { { v4.X, v4.Y, v4.Z, v4.W } } };
+		const XMVECTORF32 _color = { v4.X, v4.Y, v4.Z, v4.W };
 
 		RECT _sourceRect{};
 
@@ -160,7 +156,7 @@ namespace xna {
 			_sourceRect.bottom = sourceRectangle->Y + sourceRectangle->Height;
 		};
 
-		DxSpriteEffects _effects = static_cast<DxSpriteEffects>(effects);
+		const auto _effects = static_cast<DxSpriteEffects>(effects);
 		const XMFLOAT2 _scale = { scale.X, scale.Y };
 
 		_dxspriteBatch->Draw(
@@ -189,7 +185,7 @@ namespace xna {
 		_destinationRect.bottom = destinationRectangle.Y + destinationRectangle.Height;
 
 		const auto v4 = color.ToVector4();
-		XMVECTORF32 _color = { { { v4.X, v4.Y, v4.Z, v4.W } } };
+		const XMVECTORF32 _color = { v4.X, v4.Y, v4.Z, v4.W };
 
 		_dxspriteBatch->Draw(texture._textureView, _destinationRect, _color);
 	}
@@ -208,7 +204,7 @@ namespace xna {
 		_destinationRect.bottom = destinationRectangle.Y + destinationRectangle.Height;
 
 		const auto v4 = color.ToVector4();
-		XMVECTORF32 _color = { { { v4.X, v4.Y, v4.Z, v4.W } } };
+		const XMVECTORF32 _color = { v4.X, v4.Y, v4.Z, v4.W };
 
 		RECT _sourceRect{};
 
@@ -236,7 +232,7 @@ namespace xna {
 		_destinationRect.bottom = destinationRectangle.Y + destinationRectangle.Height;
 
 		const auto v4 = color.ToVector4();
-		XMVECTORF32 _color = { { { v4.X, v4.Y, v4.Z, v4.W } } };
+		const XMVECTORF32 _color = { v4.X, v4.Y, v4.Z, v4.W };
 
 		RECT _sourceRect{};
 
@@ -248,7 +244,7 @@ namespace xna {
 		};
 
 		auto _origin = XMFLOAT2(origin.X, origin.Y);
-		DxSpriteEffects _effects = static_cast<DxSpriteEffects>(effects);
+		const auto _effects = static_cast<DxSpriteEffects>(effects);
 
 		_dxspriteBatch->Draw(
 			texture._textureView,
@@ -274,5 +270,45 @@ namespace xna {
 		_view.MaxDepth = value.MaxDepth;
 
 		_dxspriteBatch->SetViewport(_view);
+	}
+
+	void SpriteBatch::DrawString(SpriteFont& spriteFont, String const& text, Vector2 const& position, Color const& color) {
+		if (!_dxspriteBatch || !spriteFont._dxSpriteFont)
+			return;
+
+		const auto _position = XMFLOAT2(position.X, position.Y);
+		const auto v4 = color.ToVector4();
+		const XMVECTORF32 _color = { v4.X, v4.Y, v4.Z, v4.W };
+
+		spriteFont._dxSpriteFont->DrawString(
+			_dxspriteBatch.get(),
+			text.c_str(),
+			_position,
+			_color
+		);
+	}
+	
+	void SpriteBatch::DrawString(SpriteFont& spriteFont, String const& text, Vector2 const& position,
+		Color const& color, float rotation, Vector2 const& origin, float scale, SpriteEffects effects, float layerDepth) {
+		if (!_dxspriteBatch || !spriteFont._dxSpriteFont)
+			return;
+
+		const auto _position = XMFLOAT2(position.X, position.Y);
+		const auto _origin = XMFLOAT2(origin.X, origin.Y);
+		const auto v4 = color.ToVector4();
+		const XMVECTORF32 _color = { v4.X, v4.Y, v4.Z, v4.W };
+		const auto _effects = static_cast<DxSpriteEffects>(effects);
+
+		spriteFont._dxSpriteFont->DrawString(
+			_dxspriteBatch.get(),
+			text.c_str(),
+			_position,
+			_color, 
+			rotation, 
+			_origin, 
+			scale, 
+			_effects, 
+			layerDepth
+		);
 	}
 }

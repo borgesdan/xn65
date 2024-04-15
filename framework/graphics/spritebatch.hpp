@@ -31,6 +31,9 @@ namespace xna {
 		virtual void Draw(Texture2D& texture, Rectangle const& destinationRectangle, Rectangle const* sourceRectangle, Color const& color,
 			float rotation, Vector2 const& origin, SpriteEffects effects, float layerDepth) = 0;
 		virtual void Viewport(xna::Viewport const& value) = 0;
+		virtual void DrawString(SpriteFont& spriteFont, String const& text, Vector2 const& position, Color const& color) = 0;
+		virtual void DrawString(SpriteFont& spriteFont, String const& text, Vector2 const& position, Color const& color,
+			float rotation, Vector2 const& origin, float scale, SpriteEffects effects, float layerDepth) = 0;
 	};
 }
 

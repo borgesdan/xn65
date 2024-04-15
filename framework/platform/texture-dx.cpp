@@ -11,7 +11,7 @@ namespace xna {
 	{		
 		auto texture2d = New<Texture2D>();
 		ID3D11Resource* resource = nullptr;		
-		auto wstr = StringToWString(fileName);
+		auto wstr = XnaHToWString(fileName);
 		
 		HRESULT result = DirectX::CreateWICTextureFromFile(
 			device._device,
