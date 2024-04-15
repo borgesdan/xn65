@@ -64,6 +64,11 @@ namespace xna {
 		Depth24Stencil8
 	};
 
+	enum class DepthWriteMask {
+		Zero,
+		All
+	};
+
 	enum class DisplayOrientation {
 		Default = 0,
 		LandscapeLeft = 1,
@@ -115,6 +120,18 @@ namespace xna {
 		Texture,
 		BackToFront,
 		FrontToBack,
+	};
+
+	enum class StencilOperation
+	{
+		Keep,
+		Zero,
+		Replace,
+		IncrementSaturation,
+		DecrementSaturation,
+		Invert,
+		Increment,
+		Decrement,
 	};
 
 	enum class SurfaceFormat {

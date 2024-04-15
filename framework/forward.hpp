@@ -89,6 +89,8 @@ namespace xna {
 	using PConstantBuffer				= std::shared_ptr<ConstantBuffer>;
 	class DataBuffer;
 	using PDataBuffer					= std::shared_ptr<DataBuffer>;
+	class DepthStencilState;
+	using PDepthStencilState			= std::shared_ptr<DepthStencilState>;
 	class DisplayMode;
 	using PDisplayMode					= std::shared_ptr<DisplayMode>;
 	class DisplayModeCollection;
