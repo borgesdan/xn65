@@ -16,6 +16,7 @@ namespace xna {
 	public:
 		virtual ~IGraphicsDevice() {}
 		virtual void Clear() = 0;
+		virtual void Clear(Color const& color) = 0;
 		virtual bool Initialize(GameWindow& gameWindow) = 0;
 		virtual bool Present() = 0;
 		virtual PGraphicsAdapter Adapter() const = 0;

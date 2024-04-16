@@ -7,8 +7,6 @@
 namespace xna {
 	class ISpriteBatch {
 	public:
-		static constexpr Matrix _identity = Matrix::Identity();
-
 		virtual ~ISpriteBatch(){}
 		virtual void Begin(
 			SpriteSortMode sortMode = SpriteSortMode::Deferred,
@@ -17,7 +15,7 @@ namespace xna {
 			DepthStencilState * depthStencil = nullptr,
 			RasterizerState* rasterizerState = nullptr,
 		//Effect
-			Matrix const& transformMatrix = _identity
+			Matrix const& transformMatrix = Matrix::Identity()
 		) = 0;
 		virtual void End() = 0;
 		virtual void Draw(Texture2D& texture, Vector2 const& position, Color const& color) = 0;

@@ -18,6 +18,7 @@ namespace xna {
 		virtual void Stop() = 0;
 		virtual TimeSpan ElapsedTime() = 0;
 		virtual TimeSpan TotalTime() = 0;
+		virtual bool IsActive() = 0;
 	};
 }
 

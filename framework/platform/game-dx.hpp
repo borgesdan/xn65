@@ -27,7 +27,8 @@ namespace xna {
 
 	protected:
 		virtual void Draw(GameTime const& gameTime) override{}
-		virtual void Initialize() override{}
+		virtual void Initialize() override { LoadContent(); }
+		virtual void LoadContent() override{}
 		virtual void Update(GameTime const& gameTime) override{}		
 
 	public:
@@ -39,7 +40,9 @@ namespace xna {
 		GameClock _clock{};
 		GameTime _currentGameTime{};
 		
-		int startLoop();		
+	private:
+		int startLoop();
+		void tick();
 	};
 }
 

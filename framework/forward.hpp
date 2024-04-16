@@ -131,6 +131,10 @@ namespace xna {
 	using pVertexShader					= std::shared_ptr<VertexShader>;
 	struct Viewport;	
 	using PViewport						= std::shared_ptr<Viewport>;
+
+	//Input
+	struct KeyboardState;
+	using PKeyboardState				= std::shared_ptr<KeyboardState>;
 }
 
 #endif

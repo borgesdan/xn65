@@ -5,21 +5,26 @@
 #include "gdeviceinfo-dx.hpp"
 
 namespace xna {
-	GraphicsDeviceManager::GraphicsDeviceManager(Game* game) : _game(game){
+	GraphicsDeviceManager::GraphicsDeviceManager(Game*& game) : _game(game) {		
+	}
+
+	bool GraphicsDeviceManager::Initialize() {
 		GraphicsDeviceInformation information;
-		
+
 		const auto adp = GraphicsAdapter::DefaultAdapter();
 		information.Adapter(adp);
 		information.GraphicsProfile(xna::GraphicsProfile::HiDef);
-		
+
 		PresentationParameters parameters;
 		parameters.BackBufferWidth = _backBufferWidth;
 		parameters.BackBufferHeight = _backBufferHeight;
 		information.PresentationParameters(parameters);
 
-		information.Window(game->Window());
+		information.Window(_game->Window());
 
 		CreateDevice(information);
+
+		return true;
 	}
 
 	void GraphicsDeviceManager::ApplyChanges() {
@@ -31,7 +36,8 @@ namespace xna {
 
 	void GraphicsDeviceManager::CreateDevice(GraphicsDeviceInformation const& info) {
 		_device = New<GraphicsDevice>(info);
-		auto window = _game->Window();
+		//auto window = _game->Window();
+		auto window = info.Window();		
 
 		if (!window->Create()) {
 			MessageBox(nullptr, "Falha na criação da janela", "Xna Game Engine", MB_OK);			

@@ -15,5 +15,6 @@
 #include "platform/texture-dx.hpp"
 #include "platform/spritebatch-dx.hpp"
 #include "common/color.hpp"
+#include "platform/keyboard-dx.hpp"
 
 // TODO: Reference additional headers your program requires here.

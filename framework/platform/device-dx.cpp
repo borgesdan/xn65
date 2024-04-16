@@ -5,6 +5,7 @@
 #include "adapter-dx.hpp"
 #include "blendstate-dx.hpp"
 #include "gdeviceinfo-dx.hpp"
+#include "../common/color.hpp"
 
 namespace xna {
     GraphicsDevice::GraphicsDevice() {        
@@ -146,6 +147,17 @@ namespace xna {
     }
 
     void GraphicsDevice::Clear() {        
+        _context->ClearRenderTargetView(_renderTarget2D->_renderTargetView, _backgroundColor);
+    }
+    
+    void GraphicsDevice::Clear(Color const& color) {
+        const auto v4 = color.ToVector4();
+        
+        _backgroundColor[0] = v4.X;
+        _backgroundColor[1] = v4.Y;
+        _backgroundColor[2] = v4.Z;
+        _backgroundColor[3] = v4.W;
+
         _context->ClearRenderTargetView(_renderTarget2D->_renderTargetView, _backgroundColor);
     }
 }

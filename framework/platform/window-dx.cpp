@@ -1,4 +1,5 @@
 #include "window-dx.hpp"
+#include "keyboard-dx.hpp"
 
 namespace xna {
 	GameWindow::GameWindow() {
@@ -136,6 +137,20 @@ namespace xna {
 		case WM_DESTROY:
 			PostQuitMessage(0);
 			return 0;
+		case WM_ACTIVATE:
+		case WM_ACTIVATEAPP:
+			Keyboard::_dxKeyboard->ProcessMessage(msg, wParam, lParam);
+			break;
+		case WM_SYSKEYDOWN:
+			if (!(wParam == VK_RETURN && (lParam & 0x60000000) == 0x20000000)) {
+				Keyboard::_dxKeyboard->ProcessMessage(msg, wParam, lParam);
+			}			
+			break;
+		case WM_KEYDOWN:
+		case WM_KEYUP:
+		case WM_SYSKEYUP:
+			Keyboard::_dxKeyboard->ProcessMessage(msg, wParam, lParam);
+			break;
 		}
 
 		return DefWindowProc(hWnd, msg, wParam, lParam);

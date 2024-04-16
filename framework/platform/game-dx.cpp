@@ -16,8 +16,10 @@ namespace xna {
 	}
 
 	int Game::Run() {		
+		Initialize();
+
 		if (_graphicsDevice == nullptr) {
-			MessageBox(nullptr, "O dispositivo gráfico não foi inicializar corretamente", "Xna Game Engine", MB_OK);
+			MessageBox(nullptr, "O dispositivo gráfico não foi inicializado corretamente", "Xna Game Engine", MB_OK);
 			return EXIT_FAILURE;
 		}
 
@@ -25,38 +27,37 @@ namespace xna {
 	}
 	
 	int Game::startLoop() {
-		MSG msg{};		
+		MSG msg{};								
 		_clock.Start();
-
-		GameTime gameTime{};
-		TimeSpan endElapsedTime{};
 
 		do {
 			if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
-			{
+			{	
 				TranslateMessage(&msg);
-				DispatchMessage(&msg);
+				DispatchMessage(&msg);	
 			}
 			else {
-				auto elapsed = _clock.ElapsedTime();
-				gameTime.ElapsedGameTime = elapsed - endElapsedTime;
-				gameTime.TotalGameTime = _clock.TotalTime();
-
-				this->Update(gameTime);				
-
-				elapsed = _clock.ElapsedTime();
-				gameTime.ElapsedGameTime = elapsed - endElapsedTime;
-				gameTime.TotalGameTime = _clock.TotalTime();
-
-				this->Draw(gameTime);
-
-				_graphicsDevice->Present();
-
-				endElapsedTime = _clock.ElapsedTime();
+				tick();
 			}
 
 		} while (msg.message != WM_QUIT);
 
 		return static_cast<int>(msg.wParam);
+	}	
+
+	void Game::tick() {
+		_clock.Reset();
+
+		this->Update(_currentGameTime);
+
+		_currentGameTime.ElapsedGameTime = _clock.ElapsedTime();
+		_currentGameTime.TotalGameTime = _clock.TotalTime();
+
+		this->Draw(_currentGameTime);
+
+		_graphicsDevice->Present();
+
+		_currentGameTime.ElapsedGameTime = _clock.ElapsedTime();
+		_currentGameTime.TotalGameTime = _clock.TotalTime();
 	}
 }

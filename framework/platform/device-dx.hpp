@@ -30,6 +30,7 @@ namespace xna {
 		}
 
 		virtual void Clear() override;
+		virtual void Clear(Color const& color) override;
 		virtual bool Initialize(GameWindow& gameWindow) override;
 		virtual bool Present() override;
 
@@ -78,7 +79,7 @@ namespace xna {
 		PRenderTarget2D _renderTarget2D{ nullptr };
 		xna::Viewport _viewport{};
 		PBlendState _blendState{ nullptr };
-		bool _usevsync{ false };
+		bool _usevsync{ true };
 
 		bool createDevice();
 	};	

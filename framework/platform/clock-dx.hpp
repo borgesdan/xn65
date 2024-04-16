@@ -17,6 +17,10 @@ namespace xna {
 		virtual void Stop() override;
 		virtual TimeSpan ElapsedTime() override;
 		virtual TimeSpan TotalTime() override;
+		
+		virtual constexpr bool IsActive() override {
+			return !_suspended && !_stopped;
+		}
 
 		inline SteadyClock::time_point ClockNow() {
 			return SteadyClock::now();
@@ -40,8 +44,7 @@ namespace xna {
 		SteadyClock::time_point _end;	
 		long long _total{ 0 };		
 		bool _suspended{ false };
-		bool _stopped { false };	
-		static constexpr double _millisecondMask = 100'000'000.0;		
+		bool _stopped { true };		
 	};	
 }
 

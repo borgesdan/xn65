@@ -20,6 +20,7 @@ namespace xna {
 	protected:
 		virtual void Draw(GameTime const& gameTime) = 0;
 		virtual void Initialize() = 0;
+		virtual void LoadContent() = 0;
 		virtual void Update(GameTime const& gameTime) = 0;
 	};
 }

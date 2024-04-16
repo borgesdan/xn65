@@ -6,11 +6,12 @@
 namespace xna {
 	class GraphicsDeviceManager : public IGraphicsDeviceManager {
 	public:
-		GraphicsDeviceManager(Game* game);
+		GraphicsDeviceManager(Game*& game);
 
 		virtual ~GraphicsDeviceManager() override{}
 
 		virtual void ApplyChanges() override;
+		virtual bool Initialize() override;
 		virtual void ToggleFullScreen() override;
 		
 		virtual constexpr Int PreferredBackBufferWidth() const {
@@ -36,8 +37,8 @@ namespace xna {
 		virtual void ChangeDevice() override;
 
 	public:
-		static constexpr int DefaultBackBufferWidth = 800;
-		static constexpr int DefaultBackBufferHeight = 480;
+		static constexpr int DefaultBackBufferWidth = 1280;//800;
+		static constexpr int DefaultBackBufferHeight = 720;// 480;
 
 	private:
 		Game*& _game;
@@ -45,7 +46,6 @@ namespace xna {
 		Int _backBufferHeight{ DefaultBackBufferHeight };
 		bool _isDeviceDirty{ false };
 		PGraphicsDevice _device;
-
 	};
 }
 

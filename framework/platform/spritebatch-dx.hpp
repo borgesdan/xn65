@@ -23,7 +23,7 @@ namespace xna {
 			DepthStencilState* depthStencil = nullptr,
 			RasterizerState* rasterizerState = nullptr,
 			//Effect
-			Matrix const& transformMatrix = _identity
+			Matrix const& transformMatrix = Matrix::Identity()
 		) override;
 
 		virtual void End() override;
