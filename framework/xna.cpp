@@ -49,17 +49,14 @@ public:
 		}
 		if (state.IsKeyDown(Keys::Down)) {
 			position.Y += 1 * gameTime.ElapsedGameTime.TotalMilliseconds();
+		}		
+
+		oldState = currentState;
+		const auto currentState = Mouse::GetState();
+
+		if (currentState.LeftButton == ButtonState::Pressed && oldState.LeftButton == ButtonState::Released) {
+			points.push_back(Vector2(currentState.X, currentState.Y));
 		}
-
-		/*if (position.X > 1280 || position.X < 0)
-			vel *= -1;
-
-		if (gameTime.ElapsedGameTime.TotalMilliseconds() > 1) {
-
-		}
-
-		position.X += 0.05 * (gameTime.ElapsedGameTime.TotalMilliseconds() * vel);*/
-		//position.X += 2 * vel;
 
 		Game::Update(gameTime);
 	}
@@ -68,7 +65,11 @@ public:
 		_graphicsDevice->Clear(Colors::CornflowerBlue);
 
 		spriteBatch->Begin();
-		spriteBatch->Draw(*texture, position, nullptr, Colors::White, 0, { 0,0 }, 0.5F, SpriteEffects::None, 0);
+		// spriteBatch->Draw(*texture, position, nullptr, Colors::White, 0, { 0,0 }, 0.5F, SpriteEffects::None, 0);
+		for (size_t i = 0; i < points.size(); ++i) {
+			spriteBatch->Draw(*texture, points[i], nullptr, Colors::White, 0, {0,0}, 0.5F, SpriteEffects::None, 0);
+		}
+
 		spriteBatch->End();
 
 		Game::Draw(gameTime);
@@ -79,16 +80,14 @@ private:
 	PSpriteBatch spriteBatch = nullptr;
 	PTexture2D texture = nullptr;
 	Vector2 position{};
+	std::vector<Vector2> points;
+	MouseState currentState;
+	MouseState oldState;
 	float vel = 1;
 };
 
 int APIENTRY WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPSTR lpCmdLine, _In_ int nCmdShow) {
-	/*FileStream stream("D:/VS_EXPBSLN_x64_enu.CAB");
-	auto pos = stream.Position();
-	auto len = stream.Length();
-	pos = stream.Position();*/
-
-	Game1 game;
-	game.Run();
-	return 0;
+	auto game = Game1();
+	const auto result = game.Run();
+	return result;
 }

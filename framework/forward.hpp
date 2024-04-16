@@ -135,6 +135,8 @@ namespace xna {
 	//Input
 	struct KeyboardState;
 	using PKeyboardState				= std::shared_ptr<KeyboardState>;
+	struct MouseState;
+	using PMouseState					= std::shared_ptr<MouseState>;
 }
 
 #endif

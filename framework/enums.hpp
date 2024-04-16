@@ -32,6 +32,12 @@ namespace xna {
 
 	using BlendOperation = BlendFunction;
 
+    enum class ButtonState
+    {
+        Released,
+        Pressed,
+    };
+
 	enum class ColorWriteChannels {
 		Red,
 		Green,

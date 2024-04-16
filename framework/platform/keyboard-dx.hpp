@@ -20,23 +20,16 @@ namespace xna {
 			return _state.IsKeyUp(k);
 		}		
 
-	private:
+	public:
 		DirectX::Keyboard::State _state{};
 	};
 
 	class Keyboard : public IKeyboard {
 	public:
-		friend class IKeyboard;
-		friend class GameWindow;
-
 		Keyboard() = default;
 
-	private:
-		inline static sptr<DirectX::Keyboard> initializeKeyboard() {
-			return New<DirectX::Keyboard>();
-		}
-
-		inline static sptr<DirectX::Keyboard> _dxKeyboard = initializeKeyboard();
+	public:
+		inline static sptr<DirectX::Keyboard> _dxKeyboard = New<DirectX::Keyboard>();
 	};
 
 	inline KeyboardState IKeyboard::GetState() {
