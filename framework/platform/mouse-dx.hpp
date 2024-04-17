@@ -10,14 +10,14 @@ namespace xna {
 
 		constexpr MouseState(DirectX::Mouse::State const& dxMouseState) {
 			LeftButton = static_cast<ButtonState>(dxMouseState.leftButton);
-			RightButton = static_cast<ButtonState>(dxMouseState.leftButton);
-			MiddleButton = static_cast<ButtonState>(dxMouseState.leftButton);
-			XButton1 = static_cast<ButtonState>(dxMouseState.leftButton);
-			XButton2 = static_cast<ButtonState>(dxMouseState.leftButton);
+			RightButton = static_cast<ButtonState>(dxMouseState.rightButton);
+			MiddleButton = static_cast<ButtonState>(dxMouseState.middleButton);
+			XButton1 = static_cast<ButtonState>(dxMouseState.xButton1);
+			XButton2 = static_cast<ButtonState>(dxMouseState.xButton2);
 			X = dxMouseState.x;
 			Y = dxMouseState.y;
 			ScroolWheelValue = dxMouseState.scrollWheelValue;
-		}		
+		}				
 	};
 
 	struct Mouse : public IMouse {

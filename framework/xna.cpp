@@ -36,7 +36,7 @@ public:
 
 	void Update(GameTime const& gameTime) override {
 
-		const auto state = Keyboard::GetState();
+		const auto state = Keyboard::GetState();		
 
 		if (state.IsKeyDown(Keys::Right)) {
 			position.X += 1 * gameTime.ElapsedGameTime.TotalMilliseconds();
@@ -49,12 +49,13 @@ public:
 		}
 		if (state.IsKeyDown(Keys::Down)) {
 			position.Y += 1 * gameTime.ElapsedGameTime.TotalMilliseconds();
-		}		
+		}			
+		
 
 		oldState = currentState;
-		const auto currentState = Mouse::GetState();
+		currentState = Mouse::GetState();
 
-		if (currentState.LeftButton == ButtonState::Pressed && oldState.LeftButton == ButtonState::Released) {
+		if (currentState.LeftButton == ButtonState::Pressed && oldState.LeftButton == ButtonState::Released) {			
 			points.push_back(Vector2(currentState.X, currentState.Y));
 		}
 
@@ -81,8 +82,8 @@ private:
 	PTexture2D texture = nullptr;
 	Vector2 position{};
 	std::vector<Vector2> points;
-	MouseState currentState;
-	MouseState oldState;
+	MouseState currentState{};
+	MouseState oldState{};
 	float vel = 1;
 };
 
