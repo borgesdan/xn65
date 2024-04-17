@@ -208,13 +208,23 @@ namespace xna {
 		ButtonState _bigButton{};
 	};
 
+	struct GamePadId {
+#ifdef USING_GAMEINPUT
+		APP_LOCAL_DEVICE_ID id;
+#elif defined(USING_WINDOWS_GAMING_INPUT)
+		std::wstring        id;
+#else
+		uint64_t            id;
+#endif
+	};
+
 	struct GamePadCapabilities : public IGamePadCapabilities {
 		constexpr GamePadCapabilities() = default;		
 
 		constexpr GamePadCapabilities(DirectX::GamePad::Capabilities const& capabilities) {
 			_type = static_cast<GamePadCapabilitiesType>(capabilities.gamepadType);
 			_connected = capabilities.connected;
-			_id = capabilities.id;
+			_id.id = capabilities.id;
 			_vid = capabilities.vid;
 			_pid = capabilities.pid;
 		}
@@ -227,8 +237,8 @@ namespace xna {
 			return _connected;
 		}
 
-		virtual String Id() const override {
-			return XnaHToString(_id);
+		virtual GamePadId Id() const override {
+			return _id;
 		}
 
 		virtual constexpr Ushort Vid() const override {
@@ -242,7 +252,7 @@ namespace xna {
 	private:
 		GamePadCapabilitiesType _type{};
 		bool _connected{ false };
-		std::wstring _id{ 0 };
+		GamePadId _id{ 0 };
 		Ushort _vid{ 0 };
 		Ushort _pid{ 0 };
 	};

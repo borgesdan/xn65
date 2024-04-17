@@ -38,10 +38,12 @@ namespace xna {
 		virtual ButtonState BigButton() const = 0;
 	};
 
+	struct GamePadId;
+
 	struct IGamePadCapabilities {
 		virtual GamePadCapabilitiesType GamePadType() const = 0;
 		virtual bool IsConnected() const = 0;
-		virtual String Id() const = 0;
+		virtual GamePadId Id() const = 0;
 		virtual Ushort Vid() const = 0;
 		virtual Ushort Pid() const = 0;
 	};
