@@ -133,6 +133,20 @@ namespace xna {
 	using PViewport						= std::shared_ptr<Viewport>;
 
 	//Input
+	class GamePad;
+	using PGamePad						= std::shared_ptr<GamePad>;
+	struct GamePadTriggers;
+	using PGamePagTriggers				= std::shared_ptr<GamePadTriggers>;
+	struct GamePadThumbSticks;
+	using PGamePadThumbSticks			= std::shared_ptr<GamePadThumbSticks>;
+	struct GamePadDPad;
+	using PGamePadDPad					= std::shared_ptr<GamePadDPad>;
+	struct GamePadCapabilities;
+	using PGamePadCapabilities			= std::shared_ptr<GamePadCapabilities>;
+	struct GamePadButtons;
+	using PGamePadButtons				= std::shared_ptr<GamePadButtons>;
+	struct GamePadState;
+	using PGamePadState					= std::shared_ptr<GamePadState>;
 	struct KeyboardState;
 	using PKeyboardState				= std::shared_ptr<KeyboardState>;
 	struct MouseState;

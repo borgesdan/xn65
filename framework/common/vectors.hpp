@@ -14,6 +14,28 @@ namespace xna {
 		constexpr bool operator==(const Vector2& other) const {
 			return X == other.X && Y == other.Y;
 		}
+
+		static constexpr Vector2 One() {
+			return Vector2(1, 1);
+		}
+
+		static constexpr Vector2 Min(Vector2 const& value1, Vector2 const& value2) {
+			Vector2 vector2;
+			vector2.X = value1.X < value2.X ? value1.X : value2.X;
+			vector2.Y = value1.Y < value2.Y ? value1.Y : value2.Y;
+			return vector2;
+		}
+
+		static constexpr Vector2 Max(Vector2 const& value1, Vector2 const& value2) {
+			Vector2 vector2;
+			vector2.X = value1.X > value2.X ? value1.X : value2.X;
+			vector2.Y = value1.Y > value2.Y ? value1.Y : value2.Y;
+			return vector2;
+		}
+
+		constexpr Vector2 operator-() const {
+			return Vector2(-X, -Y);
+		}
 	};
 
 	struct Vector3 {

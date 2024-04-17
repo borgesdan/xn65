@@ -35,29 +35,12 @@ public:
 	}
 
 	void Update(GameTime const& gameTime) override {
-
-		const auto state = Keyboard::GetState();		
-
-		if (state.IsKeyDown(Keys::Right)) {
-			position.X += 1 * gameTime.ElapsedGameTime.TotalMilliseconds();
-		}
-		if (state.IsKeyDown(Keys::Left)) {
-			position.X -= 1 * gameTime.ElapsedGameTime.TotalMilliseconds();
-		}
-		if (state.IsKeyDown(Keys::Up)) {
-			position.Y -= 1 * gameTime.ElapsedGameTime.TotalMilliseconds();
-		}
-		if (state.IsKeyDown(Keys::Down)) {
-			position.Y += 1 * gameTime.ElapsedGameTime.TotalMilliseconds();
-		}			
+		auto state = GamePad::GetState(PlayerIndex::One);
 		
-
-		oldState = currentState;
-		currentState = Mouse::GetState();
-
-		if (currentState.LeftButton == ButtonState::Pressed && oldState.LeftButton == ButtonState::Released) {			
-			points.push_back(Vector2(currentState.X, currentState.Y));
-		}
+		if (state.IsButtonDown(Buttons::DPadRight))
+			position.X += 1.0F * gameTime.ElapsedGameTime.TotalMilliseconds();
+		if (state.IsButtonDown(Buttons::DPadLeft))
+			position.X -= 1.0F * gameTime.ElapsedGameTime.TotalMilliseconds();
 
 		Game::Update(gameTime);
 	}
@@ -66,11 +49,7 @@ public:
 		_graphicsDevice->Clear(Colors::CornflowerBlue);
 
 		spriteBatch->Begin();
-		// spriteBatch->Draw(*texture, position, nullptr, Colors::White, 0, { 0,0 }, 0.5F, SpriteEffects::None, 0);
-		for (size_t i = 0; i < points.size(); ++i) {
-			spriteBatch->Draw(*texture, points[i], nullptr, Colors::White, 0, {0,0}, 0.5F, SpriteEffects::None, 0);
-		}
-
+		spriteBatch->Draw(*texture, position, nullptr, Colors::White, 0, { 0,0 }, 0.5F, SpriteEffects::None, 0);		
 		spriteBatch->End();
 
 		Game::Draw(gameTime);
