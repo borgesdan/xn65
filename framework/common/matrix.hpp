@@ -587,6 +587,19 @@ namespace xna {
 			return Matrix::Divide(matrix, divider);
 		}		
 	};
+
+	constexpr Vector2 Vector2::Transform(Vector2 const& position, Matrix const& matrix) {
+		const auto posx = (position.X * matrix.M11 + position.Y * matrix.M21) + matrix.M41;
+		const auto posy = (position.X * matrix.M12 + position.Y * matrix.M22) + matrix.M42;
+		
+		return{ posx, posy };
+	}
+
+	constexpr Vector2 Vector2::TransformNormal(Vector2 const& normal, Matrix const& matrix) {
+		const auto posx = normal.X * matrix.M11 + normal.Y * matrix.M21;
+		const auto posy = normal.X * matrix.M12 + normal.Y * matrix.M22;
+		return { posx, posy };
+	}
 }
 
 #endif
