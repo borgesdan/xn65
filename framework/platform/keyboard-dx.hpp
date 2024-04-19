@@ -25,20 +25,27 @@ namespace xna {
 	};
 
 	class Keyboard : public IKeyboard {
-	public:
-		Keyboard() = default;
+	private:
+		constexpr Keyboard() = default;
+		constexpr Keyboard(Keyboard&&) = default;
+		constexpr Keyboard(const Keyboard&) = default;
 
 	public:
-		inline static sptr<DirectX::Keyboard> _dxKeyboard = New<DirectX::Keyboard>();
+		inline static uptr<DirectX::Keyboard> _dxKeyboard = nullptr;
 	};
 
 	inline KeyboardState IKeyboard::GetState() {
-		
+		if (!Keyboard::_dxKeyboard)
+			return KeyboardState();
+
 		const auto state = Keyboard::_dxKeyboard->GetState();
 		return KeyboardState(state);
 	}
 
 	inline bool IKeyboard::IsConnected() {
+		if (!Keyboard::_dxKeyboard)
+			return false;
+
 		return Keyboard::_dxKeyboard->IsConnected();
 	}
 }

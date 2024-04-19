@@ -252,7 +252,7 @@ namespace xna {
 	private:
 		GamePadCapabilitiesType _type{};
 		bool _connected{ false };
-		GamePadId _id{ 0 };
+		GamePadId _id;
 		Ushort _vid{ 0 };
 		Ushort _pid{ 0 };
 	};
@@ -359,10 +359,22 @@ namespace xna {
 
 	class GamePad : public IGamePad {
 	public:
-		inline static sptr<DirectX::GamePad> _dxGamePad = New<DirectX::GamePad>();
+		static void Initialize() {
+			_dxGamePad = uNew<DirectX::GamePad>();
+		}
+
+		inline static uptr<DirectX::GamePad> _dxGamePad = nullptr;
+
+	private:
+		constexpr GamePad() = default;
+		constexpr GamePad(GamePad&&) = default;
+		constexpr GamePad(const GamePad&) = default;
 	};
 
 	inline GamePadState IGamePad::GetState(PlayerIndex index) {
+		if (!GamePad::_dxGamePad)
+			return GamePadState();
+
 		const auto state = GamePad::_dxGamePad->GetState(
 			static_cast<int>(index)
 		);
@@ -370,6 +382,9 @@ namespace xna {
 	}
 
 	inline GamePadState IGamePad::GetState(PlayerIndex index, GamePadDeadZone deadZone) {
+		if (!GamePad::_dxGamePad)
+			return GamePadState();
+
 		const auto state = GamePad::_dxGamePad->GetState(
 			static_cast<int>(index),
 			static_cast<DirectX::GamePad::DeadZone>(deadZone)
@@ -378,11 +393,17 @@ namespace xna {
 	}
 
 	inline GamePadCapabilities IGamePad::GetCapabilities(PlayerIndex index) {
+		if (!GamePad::_dxGamePad)
+			return GamePadCapabilities();
+
 		const auto capabilities = GamePad::_dxGamePad->GetCapabilities(static_cast<int>(index));
 		return GamePadCapabilities(capabilities);
 	}
 
 	inline bool IGamePad::SetVibration(PlayerIndex index, float leftMotor, float rightMotor, float leftTrigger, float rightTrigger) {
+		if (!GamePad::_dxGamePad)
+			return false;
+
 		return GamePad::_dxGamePad->SetVibration(static_cast<int>(index), leftMotor, rightMotor, leftTrigger, rightTrigger);
 	}	
 }

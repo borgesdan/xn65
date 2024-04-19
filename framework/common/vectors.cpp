@@ -56,6 +56,8 @@ namespace xna {
             destinationArray[destinationIndex].X = (source.X * matrix.M11 + source.Y * matrix.M21);
             destinationArray[destinationIndex].Y = (source.X * matrix.M12 + source.Y * matrix.M22);            
         }
+
+        return true;
     }
 
     bool Vector2::Transform(Vector2 const* sourceArray, size_t sourceArrayLength, Quaternion const& rotation, Vector2* destinationArray, size_t destinationArrayLength) {
@@ -111,5 +113,7 @@ namespace xna {
             ++sourceIndex;
             ++destinationIndex;
         }
+
+        return true;
     }
 }

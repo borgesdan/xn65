@@ -23,6 +23,7 @@ public:
 		graphics->Initialize();
 
 		Game::Initialize();
+		GamePad::Initialize();
 	}
 
 	void LoadContent() override {

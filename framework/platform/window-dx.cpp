@@ -134,6 +134,9 @@ namespace xna {
 
 	LRESULT GameWindow::WinProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	{
+		if (!Keyboard::_dxKeyboard) Keyboard::_dxKeyboard = uNew<DirectX::Keyboard>();
+		if (!Mouse::_dxMouse) Mouse::_dxMouse = uNew<DirectX::Mouse>();
+
 		switch (msg) {
 		case WM_DESTROY:
 			PostQuitMessage(0);

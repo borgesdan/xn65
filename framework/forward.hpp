@@ -4,6 +4,12 @@
 #include "types.hpp"
 
 namespace xna {
+	//Audio
+	class SoundEffect;
+	using PSoundEffect					= std::shared_ptr<SoundEffect>;
+	class AudioEngine;
+	using PAudioEngine					= std::shared_ptr<AudioEngine>;
+
 	//CShap
 	struct TimeSpan;
 	using PTimeSpan						= std::shared_ptr<TimeSpan>;

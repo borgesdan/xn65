@@ -22,7 +22,12 @@ namespace xna {
 
 	struct Mouse : public IMouse {
 	public:
-		inline static sptr<DirectX::Mouse> _dxMouse = New<DirectX::Mouse>();
+		inline static uptr<DirectX::Mouse> _dxMouse = nullptr;
+
+	private:
+		constexpr Mouse() = default;
+		constexpr Mouse(Mouse&&) = default;
+		constexpr Mouse(const Mouse&) = default;
 	};
 
 	inline MouseState IMouse::GetState() {

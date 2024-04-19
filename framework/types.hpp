@@ -47,10 +47,17 @@ namespace xna {
 	
 	template <typename T>
 	using sptr		= std::shared_ptr<T>;
+	template <typename T>
+	using uptr = std::unique_ptr<T>;
 
 	template <class _Ty, class... _Types>
 	inline std::shared_ptr<_Ty> New(_Types&&... _Args) {
 		return std::make_shared<_Ty>(std::forward<_Types>(_Args)...);
+	}
+
+	template <class _Ty, class... _Types>
+	inline std::unique_ptr<_Ty> uNew(_Types&&... _Args) {
+		return std::make_unique<_Ty>(std::forward<_Types>(_Args)...);
 	}
 
 #define PLATFORM_DEVELOPMENT
