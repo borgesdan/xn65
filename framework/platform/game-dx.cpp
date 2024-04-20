@@ -4,26 +4,52 @@
 #include "Windows.h"
 #include "../game/time.hpp"
 #include "gdevicemanager-dx.hpp"
+#include "keyboard-dx.hpp"
+#include "mouse-dx.hpp"
+#include "audioengine-dx.hpp"
 
 namespace xna {
 	Game::Game() {
 		_gameWindow = New<GameWindow>();
 		_gameWindow->Color(255, 155, 55);
-		_gameWindow->Title("Teste de título");
+		_gameWindow->Title("XN65");
 		_gameWindow->Size(
 			GraphicsDeviceManager::DefaultBackBufferWidth,
 			GraphicsDeviceManager::DefaultBackBufferHeight, false);
+
+		//CoInitializeEx é requisito para inicialização correta de AudioEngine
+		const auto hr = CoInitializeEx(nullptr, COINIT_MULTITHREADED);
+
+		if (FAILED(hr)) {
+			MessageBox(nullptr, "Ocorreu um erro ao executar a função CoInitializeEx", "XN65", MB_OK);
+		}
+
+		_audioEngine = New<AudioEngine>();
+		Keyboard::_dxKeyboard = uNew<DirectX::Keyboard>();
+		Mouse::_dxMouse = uNew<DirectX::Mouse>();
 	}
 
-	int Game::Run() {		
+	static void intializeAudioEngine() {
+
+	}
+
+	int Game::Run() {	
 		Initialize();
 
 		if (_graphicsDevice == nullptr) {
-			MessageBox(nullptr, "O dispositivo gráfico não foi inicializado corretamente", "Xna Game Engine", MB_OK);
+			MessageBox(nullptr, "O dispositivo gráfico não foi inicializado corretamente", "XN65", MB_OK);
 			return EXIT_FAILURE;
 		}
 
 		return startLoop();
+	}
+
+	void Game::Initialize() {
+		LoadContent();
+	}
+
+	void Game::Update(GameTime const& gameTime) {
+		_audioEngine->Update();
 	}
 	
 	int Game::startLoop() {

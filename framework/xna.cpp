@@ -23,7 +23,6 @@ public:
 		graphics->Initialize();
 
 		Game::Initialize();
-		GamePad::Initialize();
 	}
 
 	void LoadContent() override {
@@ -32,16 +31,12 @@ public:
 		XnaErrorCode err;
 		texture = Texture2D::FromStream(*_graphicsDevice, "D:\\sprite.jpg", &err);
 
+		auto audio = AudioEngine();
+
 		Game::LoadContent();
 	}
 
-	void Update(GameTime const& gameTime) override {
-		auto state = GamePad::GetState(PlayerIndex::One);
-		
-		if (state.IsButtonDown(Buttons::DPadRight))
-			position.X += 1.0F * gameTime.ElapsedGameTime.TotalMilliseconds();
-		if (state.IsButtonDown(Buttons::DPadLeft))
-			position.X -= 1.0F * gameTime.ElapsedGameTime.TotalMilliseconds();
+	void Update(GameTime const& gameTime) override {		
 
 		Game::Update(gameTime);
 	}
@@ -68,6 +63,7 @@ private:
 };
 
 int APIENTRY WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPSTR lpCmdLine, _In_ int nCmdShow) {
+	
 	auto game = Game1();
 	const auto result = game.Run();
 	return result;

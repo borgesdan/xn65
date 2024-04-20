@@ -1,6 +1,7 @@
 #ifndef XNA_PLATFORM_GAME_DX_HPP
 #define XNA_PLATFORM_GAME_DX_HPP
 
+#include "../default.hpp"
 #include "../game/game.hpp"
 #include "clock-dx.hpp"
 #include "dxgi.h"
@@ -27,15 +28,19 @@ namespace xna {
 
 	protected:
 		virtual void Draw(GameTime const& gameTime) override{}
-		virtual void Initialize() override { LoadContent(); }
+		
+		virtual void Initialize() override;
+
 		virtual void LoadContent() override{}
-		virtual void Update(GameTime const& gameTime) override{}		
+		
+		virtual void Update(GameTime const& gameTime) override;
 
 	public:
 		PGraphicsDevice _graphicsDevice{ nullptr };		
 
 	protected:		
 		PGameWindow _gameWindow{ nullptr };
+		PAudioEngine _audioEngine = nullptr;
 		
 		GameClock _clock{};
 		GameTime _currentGameTime{};

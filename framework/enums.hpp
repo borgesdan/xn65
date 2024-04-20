@@ -2,6 +2,41 @@
 #define XNA_ENUMS_HPP
 
 namespace xna {
+    enum  class AudioReverb {
+        Off,
+        Default,
+        Generic,
+        Forest,
+        PaddedCell,
+        Room,
+        Bathroom,
+        LivingRoom,
+        StoneRoom,
+        Auditorium,
+        ConcertHall,
+        Cave,
+        Arena,
+        Hangar,
+        CarpetedHallway,
+        Hallway,
+        StoneCorridor,
+        Alley,
+        City,
+        Mountains,
+        Quarry,
+        Plain,
+        ParkingLot,
+        SewerPipe,
+        Underwater,
+        SmallRoom,
+        MediumRoom,
+        LargeRoom,
+        MediumHall,
+        LargeHall,
+        Plate,
+        Max
+    };
+
 	enum class Blend {
 		Zero,
 		One,

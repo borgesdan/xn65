@@ -7,8 +7,12 @@ namespace xna {
 	//Audio
 	class SoundEffect;
 	using PSoundEffect					= std::shared_ptr<SoundEffect>;
+	struct SoundEffectInstance;
+	using PSoundEffectInstance			= std::shared_ptr<SoundEffectInstance>;
 	class AudioEngine;
 	using PAudioEngine					= std::shared_ptr<AudioEngine>;
+	struct WaveFormat;
+	using PWaveFormat					= std::shared_ptr<WaveFormat>;
 
 	//CShap
 	struct TimeSpan;
