@@ -214,16 +214,4 @@ namespace xna {
 
 		return nullptr;
 	}
-
-	UDisplayMode GraphicsAdapter::CurrentDisplayMode() const {
-		if (!_adapter) return nullptr;
-		IDXGIOutput* pOutput = nullptr;
-
-		if (_adapter->EnumOutputs(0, &pOutput) != DXGI_ERROR_NOT_FOUND) {
-			pOutput->Release();
-		}
-
-		return nullptr;
-	}
-
 }

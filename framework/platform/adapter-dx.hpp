@@ -28,7 +28,6 @@ namespace xna {
 		virtual Uint VendorId() const override;
 		virtual UDisplayModeCollection SupportedDisplayModes() const override;
 		virtual constexpr bool IsDefaultAdapter() const { return _index == 0; }		
-		virtual UDisplayMode CurrentDisplayMode() const override;
 
 	public:
 		IDXGIAdapter1* _adapter{ nullptr };	
