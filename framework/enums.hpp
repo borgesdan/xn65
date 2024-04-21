@@ -145,6 +145,19 @@ namespace xna {
 		Portrait = 4,
 	};
 
+    enum class DisplayModeScanlineOrder {
+        Unspecified = 0,
+        Progressive = 1,
+        UpperFieldFirst = 2,
+        LowerFieldFirst = 3
+    };
+
+    enum class DisplayModeScaling {
+        Unspecified = 0,
+        Centered = 1,
+        Stretched = 2
+    };
+
 	enum class FillMode
 	{
 		Solid,
@@ -421,6 +434,7 @@ namespace xna {
 		HalfVector2 = 17,
 		HalfVector4 = 18,
 		HdrBlendable = 19,
+        Unknown,
 	};
 
 	enum class TextureAddressMode {

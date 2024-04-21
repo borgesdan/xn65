@@ -19,5 +19,6 @@
 #include "platform/mouse-dx.hpp"
 #include "platform/gamepad-dx.hpp"
 #include "platform/audioengine-dx.hpp"
+#include "platform/adapter-dx.hpp"
 
 // TODO: Reference additional headers your program requires here.

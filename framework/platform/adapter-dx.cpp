@@ -26,7 +26,7 @@ namespace xna {
 		return nullptr;
 	}
 
-	void IGraphicsAdapter::GetAllAdapters(std::vector<PGraphicsAdapter>& adapters){
+	void IGraphicsAdapter::Adapters(std::vector<PGraphicsAdapter>& adapters){
 		IDXGIFactory1* pFactory = nullptr;
 
 		if FAILED(CreateDXGIFactory1(__uuidof(IDXGIFactory1), (void**)&pFactory))
@@ -48,7 +48,7 @@ namespace xna {
 		pFactory = nullptr;
 	}
 
-	void IGraphicsAdapter::GetAllAdapters(std::vector<UGraphicsAdapter>& adapters) {
+	void IGraphicsAdapter::Adapters(std::vector<UGraphicsAdapter>& adapters) {
 		IDXGIFactory1* pFactory = nullptr;
 
 		if FAILED(CreateDXGIFactory1(__uuidof(IDXGIFactory1), (void**)&pFactory))
@@ -180,18 +180,50 @@ namespace xna {
 
 			pOutput->Release();			
 			
-			auto collection = uNew<DisplayModeCollection>(totalModes);
+			auto collection = uNew<DisplayModeCollection>();
+			DisplayMode currentDisplayMode{};
+			std::vector<PDisplayMode> displayList;
+			PDisplayMode pDisplay = nullptr;
+			size_t displayCount = 0;
 
 			for (size_t i = 0; i < totalModes; ++i) {
-				const auto& modedesc = buffer[i];
-				const auto surface = GraphicsAdapter::ToSurface(modedesc.Format);
+				auto& modedesc = buffer[i];
 
-				collection->_displayModes[i] = DisplayMode(modedesc.Width, modedesc.Height, surface);
-			}
+				DisplayModeDescription description;
+				description._refreshRate = modedesc.RefreshRate;
+				description._scaling = static_cast<DisplayModeScaling>(modedesc.Scaling);
+				description._scanlineOrdering = static_cast<DisplayModeScanlineOrder>(modedesc.ScanlineOrdering);
+
+				if (pDisplay && pDisplay->_width == modedesc.Width && pDisplay->_height == modedesc.Height && pDisplay->_format == GraphicsAdapter::ToSurface(modedesc.Format)) {
+					pDisplay->_descriptions.push_back(description);
+				}
+				else {
+					pDisplay = New<DisplayMode>();
+					pDisplay->_width = modedesc.Width;
+					pDisplay->_height = modedesc.Height;
+					pDisplay->_format = GraphicsAdapter::ToSurface(modedesc.Format);
+					pDisplay->_descriptions.push_back(description);
+					displayList.push_back(pDisplay);
+				}
+			}	
+
+			collection->_displayModes = displayList;
 			
 			return std::move(collection);
 		}
 
 		return nullptr;
-	}	
+	}
+
+	UDisplayMode GraphicsAdapter::CurrentDisplayMode() const {
+		if (!_adapter) return nullptr;
+		IDXGIOutput* pOutput = nullptr;
+
+		if (_adapter->EnumOutputs(0, &pOutput) != DXGI_ERROR_NOT_FOUND) {
+			pOutput->Release();
+		}
+
+		return nullptr;
+	}
+
 }

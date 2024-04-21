@@ -3,6 +3,12 @@
 
 #include "../graphics/device.hpp"
 #include "../graphics/presentparams.hpp"
+#include "adapter-dx.hpp"
+#include "gdeviceinfo-dx.hpp"
+#include "../common/color.hpp"
+#include "window-dx.hpp"
+#include "../graphics/viewport.hpp"
+#include "swapchain-dx.hpp"
 #include "dxgi.h"
 #include "d3d11.h"
 

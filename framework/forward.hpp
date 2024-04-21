@@ -98,6 +98,7 @@ namespace xna {
 	using PDepthStencilState			= std::shared_ptr<DepthStencilState>;
 	class DisplayMode;
 	using PDisplayMode					= std::shared_ptr<DisplayMode>;
+	using UDisplayMode					= std::unique_ptr<DisplayMode>;
 	class DisplayModeCollection;
 	using PDisplayModeCollection		= std::shared_ptr<DisplayModeCollection>;
 	using UDisplayModeCollection		= std::unique_ptr<DisplayModeCollection>;

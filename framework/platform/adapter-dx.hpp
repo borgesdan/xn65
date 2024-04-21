@@ -2,6 +2,7 @@
 #define XNA_PLATFORM_ADAPTER_DX_HPP
 
 #include "../graphics/adapter.hpp"
+#include "displaymode-dx.hpp"
 #include "dxheaders.hpp"
 
 namespace xna {
@@ -27,6 +28,7 @@ namespace xna {
 		virtual Uint VendorId() const override;
 		virtual UDisplayModeCollection SupportedDisplayModes() const override;
 		virtual constexpr bool IsDefaultAdapter() const { return _index == 0; }		
+		virtual UDisplayMode CurrentDisplayMode() const override;
 
 	public:
 		IDXGIAdapter1* _adapter{ nullptr };	
@@ -123,7 +125,7 @@ namespace xna {
 			case DXGI_FORMAT_R16G16B16A16_FLOAT:
 				return SurfaceFormat::HalfVector4;
 			default:
-				return SurfaceFormat::Color;
+				return SurfaceFormat::Unknown;
 			}
 		}
 	};			
