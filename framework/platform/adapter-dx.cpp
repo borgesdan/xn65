@@ -176,42 +176,43 @@ namespace xna {
 				pOutput->GetDisplayModeList(format, 0, &numModes, buffer.data() + totalModes);
 
 				totalModes += numModes;
-			}
-
-			pOutput->Release();			
-			
-			auto collection = uNew<DisplayModeCollection>();
-			DisplayMode currentDisplayMode{};
-			std::vector<PDisplayMode> displayList;
-			PDisplayMode pDisplay = nullptr;
-			size_t displayCount = 0;
-
-			for (size_t i = 0; i < totalModes; ++i) {
-				auto& modedesc = buffer[i];
-
-				DisplayModeDescription description;
-				description._refreshRate = modedesc.RefreshRate;
-				description._scaling = static_cast<DisplayModeScaling>(modedesc.Scaling);
-				description._scanlineOrdering = static_cast<DisplayModeScanlineOrder>(modedesc.ScanlineOrdering);
-
-				if (pDisplay && pDisplay->_width == modedesc.Width && pDisplay->_height == modedesc.Height && pDisplay->_format == GraphicsAdapter::ToSurface(modedesc.Format)) {
-					pDisplay->_descriptions.push_back(description);
-				}
-				else {
-					pDisplay = New<DisplayMode>();
-					pDisplay->_width = modedesc.Width;
-					pDisplay->_height = modedesc.Height;
-					pDisplay->_format = GraphicsAdapter::ToSurface(modedesc.Format);
-					pDisplay->_descriptions.push_back(description);
-					displayList.push_back(pDisplay);
-				}
-			}	
-
-			collection->_displayModes = displayList;
-			
-			return std::move(collection);
+			}			
 		}
 
-		return nullptr;
+		if (!pOutput)
+			return nullptr;
+
+		pOutput->Release();
+		pOutput = nullptr;
+
+		auto collection = uNew<DisplayModeCollection>();
+		DisplayMode currentDisplayMode;
+		std::vector<PDisplayMode> displayList;
+		PDisplayMode pDisplay = nullptr;
+
+		for (size_t i = 0; i < totalModes; ++i) {
+			auto& modedesc = buffer[i];
+
+			DisplayModeDescription description;
+			description._refreshRate = modedesc.RefreshRate;
+			description._scaling = static_cast<DisplayModeScaling>(modedesc.Scaling);
+			description._scanlineOrdering = static_cast<DisplayModeScanlineOrder>(modedesc.ScanlineOrdering);
+
+			if (pDisplay && pDisplay->_width == modedesc.Width && pDisplay->_height == modedesc.Height && pDisplay->_format == GraphicsAdapter::ToSurface(modedesc.Format)) {
+				pDisplay->_descriptions.push_back(description);
+			}
+			else {
+				pDisplay = New<DisplayMode>();
+				pDisplay->_width = modedesc.Width;
+				pDisplay->_height = modedesc.Height;
+				pDisplay->_format = GraphicsAdapter::ToSurface(modedesc.Format);
+				pDisplay->_descriptions.push_back(description);
+				displayList.push_back(pDisplay);
+			}
+		}
+
+		collection->_displayModes = displayList;
+
+		return std::move(collection);
 	}
 }
