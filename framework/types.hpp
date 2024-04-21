@@ -60,8 +60,6 @@ namespace xna {
 		return std::make_unique<_Ty>(std::forward<_Types>(_Args)...);
 	}
 
-#define PLATFORM_DEVELOPMENT
-
 //See ref: https://en.cppreference.com/w/cpp/error/assert
 #define assertm(exp, msg) assert(((void)msg, exp))
 }

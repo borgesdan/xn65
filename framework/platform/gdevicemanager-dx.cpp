@@ -11,8 +11,9 @@ namespace xna {
 	bool GraphicsDeviceManager::Initialize() {
 		GraphicsDeviceInformation information;
 
-		const auto adp = GraphicsAdapter::DefaultAdapter();
-		information.Adapter(adp);
+		auto adp = GraphicsAdapter::DefaultAdapter();
+		const PGraphicsAdapter sadp = std::move(adp);
+		information.Adapter(sadp);
 		information.GraphicsProfile(xna::GraphicsProfile::HiDef);
 
 		PresentationParameters parameters;

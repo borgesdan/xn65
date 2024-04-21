@@ -100,8 +100,10 @@ namespace xna {
 	using PDisplayMode					= std::shared_ptr<DisplayMode>;
 	class DisplayModeCollection;
 	using PDisplayModeCollection		= std::shared_ptr<DisplayModeCollection>;
+	using UDisplayModeCollection		= std::unique_ptr<DisplayModeCollection>;
 	class GraphicsAdapter;
 	using PGraphicsAdapter				= std::shared_ptr<GraphicsAdapter>;
+	using UGraphicsAdapter				= std::unique_ptr<GraphicsAdapter>;
 	class GraphicsDevice;
 	using PGraphicsDevice				= std::shared_ptr<GraphicsDevice>;
 	class GraphicsDeviceInformation;

@@ -85,7 +85,7 @@ namespace xna {
 			if (!_dxAudioEngine) return;
 
 			const auto reverb = static_cast<DirectX::AUDIO_ENGINE_REVERB>(value);
-			_dxAudioEngine->SetMasterVolume(reverb);
+			_dxAudioEngine->SetReverb(reverb);
 		}
 
 	public:

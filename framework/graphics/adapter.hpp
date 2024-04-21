@@ -19,7 +19,11 @@ namespace xna {
 		virtual Uint Revision() const = 0;
 		virtual Uint SubSystemId() const = 0;
 		virtual Uint VendorId() const = 0;
-		virtual PDisplayModeCollection SupportedDisplayModes() const = 0;
+		virtual UDisplayModeCollection SupportedDisplayModes() const = 0;
+
+		static UGraphicsAdapter DefaultAdapter();
+		static void GetAllAdapters(std::vector<PGraphicsAdapter>& adapters);
+		static void GetAllAdapters(std::vector<UGraphicsAdapter>& adapters);
 	};
 }
 

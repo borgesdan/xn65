@@ -2,12 +2,13 @@
 #define XNA_PLATFORM_ADAPTER_DX_HPP
 
 #include "../graphics/adapter.hpp"
-#include "dxgi.h"
-#include "d3d11.h"
+#include "dxheaders.hpp"
 
 namespace xna {
 	class GraphicsAdapter : public IGraphicsAdapter {
 	public:
+		friend class IGraphicsAdapter;
+
 		GraphicsAdapter() {}
 
 		virtual ~GraphicsAdapter() override {
@@ -24,31 +25,16 @@ namespace xna {
 		virtual Uint Revision() const override;
 		virtual Uint SubSystemId() const override;
 		virtual Uint VendorId() const override;
-		virtual PDisplayModeCollection SupportedDisplayModes() const override;		
-		virtual constexpr bool IsDefaultAdapter() const { return _index == _defaultAdapterIndex; }
-
-		static PGraphicsAdapter DefaultAdapter();
-
-		static constexpr void DefaultAdapter(size_t index) {
-			_defaultAdapterIndex = index;
-		}
-
-		static constexpr std::vector<PGraphicsAdapter> Adapters() {
-			return _adaptersList;
-		}
+		virtual UDisplayModeCollection SupportedDisplayModes() const override;
+		virtual constexpr bool IsDefaultAdapter() const { return _index == 0; }		
 
 	public:
-		IDXGIAdapter1* _adapter{ nullptr };
-
+		IDXGIAdapter1* _adapter{ nullptr };	
 	private:
-		Uint _index{ 0 };
-		inline static size_t _defaultAdapterIndex = 0;
-		static std::vector<PGraphicsAdapter> getAllAdapters();
-		inline static std::vector<PGraphicsAdapter> _adaptersList = getAllAdapters();
-	};		
+		Uint _index{ 0 };	
 
-	struct SurfaceFormatMapper {
-		static constexpr DXGI_FORMAT ParseToDXGI(SurfaceFormat format)
+	public:
+		static constexpr DXGI_FORMAT ToDXGI(SurfaceFormat format)
 		{
 			switch (format)
 			{
@@ -97,7 +83,7 @@ namespace xna {
 			}
 		}
 
-		static constexpr SurfaceFormat ParseToSurface(DXGI_FORMAT format) {
+		static constexpr SurfaceFormat ToSurface(DXGI_FORMAT format) {
 			switch (format)
 			{
 			case DXGI_FORMAT_B8G8R8A8_UNORM:
@@ -140,7 +126,7 @@ namespace xna {
 				return SurfaceFormat::Color;
 			}
 		}
-	};
+	};			
 }
 
 #endif
