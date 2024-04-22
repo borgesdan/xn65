@@ -4,27 +4,31 @@
 #include "device-dx.hpp"
 
 namespace xna {
-	RenderTarget2D::RenderTarget2D(GraphicsDevice* device) {
-		_device = device;
-	}
+	bool RenderTarget2D::Initialize(GraphicsDevice& device) {
+		if (!device._device)
+			return false;
 
-	bool RenderTarget2D::Bind() {
 		if (_texture2D) {
 			_texture2D->Release();
 			_texture2D = nullptr;
 		}
 
-		if (!_device->GetSwapChainBackBuffer(_texture2D))
+		if (!device._swapChain->GetBackBuffer(_texture2D))
 			return false;
 
-		auto& device = _device->_device;
+		auto& dxdevice = device._device;
 		
-		if FAILED(device->CreateRenderTargetView(_texture2D, NULL, &_renderTargetView))
-			return false;
+		const auto hr = dxdevice->CreateRenderTargetView(_texture2D, NULL, &_renderTargetView);
 
-		auto& context = _device->_context;
+		if (FAILED(hr))
+			return false;		
+
+		return true;
+	}
+
+	bool RenderTarget2D::Apply(GraphicsDevice& device) {
+		auto& context = device._context;
 		context->OMSetRenderTargets(1, &_renderTargetView, nullptr);
-
 		return true;
 	}
 }

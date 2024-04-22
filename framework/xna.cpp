@@ -21,7 +21,6 @@ public:
 
 	void Initialize() override {
 		graphics->Initialize();		
-		const auto modes= _graphicsDevice->Adapter()->SupportedDisplayModes();
 
 		Game::Initialize();
 	}

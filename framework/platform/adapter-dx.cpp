@@ -152,9 +152,9 @@ namespace xna {
 		return static_cast<Uint>(desc.VendorId);
 	}
 
-	static UINT getDisplayModesCount(IDXGIAdapter* adapter) {
+	static size_t getDisplayModesCount(IDXGIAdapter* adapter) {
 		IDXGIOutput* pOutput = nullptr;
-		UINT numModes = 0;
+		size_t numModes = 0;
 
 		if (adapter->EnumOutputs(0, &pOutput) != DXGI_ERROR_NOT_FOUND) {
 			for (size_t f = 0; f < SURFACE_FORMAT_COUNT; ++f) {
@@ -177,11 +177,14 @@ namespace xna {
 	UDisplayModeCollection GraphicsAdapter::SupportedDisplayModes() const {
 		if (!_adapter) return nullptr;
 
-		IDXGIOutput* pOutput = nullptr;
-		UINT numModes = 0;
-		UINT totalModes = 0;
-
 		const auto totalDisplay = getDisplayModesCount(_adapter);
+
+		if (totalDisplay == 0)
+			return nullptr;
+
+		IDXGIOutput* pOutput = nullptr;		
+		UINT bufferOffset = 0;
+		
 		std::vector<DXGI_MODE_DESC> buffer(totalDisplay);		
 		
 		if (_adapter->EnumOutputs(0, &pOutput) != DXGI_ERROR_NOT_FOUND) {
@@ -189,14 +192,15 @@ namespace xna {
 				const auto currentSurface = static_cast<SurfaceFormat>(f);
 				DXGI_FORMAT format = GraphicsAdapter::ToDXGI(currentSurface);
 
+				UINT numModes = 0;
 				pOutput->GetDisplayModeList(format, 0, &numModes, nullptr);
 
 				if (numModes == 0)
 					continue;				
 
-				pOutput->GetDisplayModeList(format, 0, &numModes, buffer.data() + totalModes);
+				pOutput->GetDisplayModeList(format, 0, &numModes, buffer.data() + bufferOffset);
 
-				totalModes += numModes;
+				bufferOffset += numModes;
 			}			
 		}
 
@@ -211,7 +215,7 @@ namespace xna {
 		std::vector<PDisplayMode> displayList;
 		PDisplayMode pDisplay = nullptr;
 
-		for (size_t i = 0; i < totalModes; ++i) {
+		for (size_t i = 0; i < totalDisplay; ++i) {
 			auto& modedesc = buffer[i];
 
 			DisplayModeDescription description;

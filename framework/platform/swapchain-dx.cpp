@@ -1,53 +1,66 @@
 #include "swapchain-dx.hpp"
-#include "../graphics/device.hpp"
 #include "adapter-dx.hpp"
 #include "device-dx.hpp"
 
 namespace xna {
-    SwapChain::SwapChain(GraphicsDevice* device){
-        _device = device;
-	}	
+    static bool internalInit(GraphicsDevice& device, GameWindow const& gameWindow, IDXGISwapChain1*& swapChain, DXGI_SWAP_CHAIN_DESC1 const& desc, DXGI_SWAP_CHAIN_FULLSCREEN_DESC const& fdesc) {
+        if (!device._device || !gameWindow.WindowHandle())
+            return false;
+        
+        if (swapChain) {
+            swapChain->Release();
+            swapChain = nullptr;
+        }
 
-    bool SwapChain::Initialize(GameWindow const& gameWindow) {
-        const auto bounds = gameWindow.ClientBounds();        
+        auto adapter = device.Adapter();
+        auto dxAdapter = adapter->_adapter;
 
-        _swapDescription.BufferDesc.Width = static_cast<UINT>(bounds.Width);
-        _swapDescription.BufferDesc.Height = static_cast<UINT>(bounds.Height);
-        _swapDescription.BufferDesc.RefreshRate.Numerator = 60;
-        _swapDescription.BufferDesc.RefreshRate.Denominator = 1;
-        _swapDescription.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-        _swapDescription.SampleDesc.Count = 1;
-        _swapDescription.SampleDesc.Quality = 0;
-        _swapDescription.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-        _swapDescription.BufferCount = 2;
-        _swapDescription.OutputWindow = gameWindow.WindowHandle();
-        _swapDescription.Windowed = gameWindow.Mode() != GameWindowMode::Fullscreen;
-        _swapDescription.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;
-        _swapDescription.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
+        IDXGIFactory1* dxFactory1 = nullptr;
+        auto hr = dxAdapter->GetParent(IID_IDXGIFactory1, (void**)&dxFactory1);
+
+        if (FAILED(hr)) return false;
+
+        IDXGIFactory2* dxFactory2 = nullptr;
+        hr = dxFactory1->QueryInterface(IID_IDXGIFactory2, (void**)&dxFactory2);
+
+        if (FAILED(hr)) return false;
+
+        dxFactory2->CreateSwapChainForHwnd(
+            device._device,
+            gameWindow.WindowHandle(),
+            &desc,
+            &fdesc,
+            nullptr,
+            &swapChain);
+
 
         return true;
     }
 
-	bool SwapChain::Apply() {        
-        auto adapter = _device->Adapter();
-        auto dxAdapter = adapter->_adapter;
+    bool SwapChain::Initialize(GraphicsDevice& device, GameWindow const& gameWindow) {
+        const auto bounds = gameWindow.ClientBounds();        
 
-        IDXGIFactory* dxFactory = nullptr;
-        if FAILED(dxAdapter->GetParent(__uuidof(IDXGIFactory), (void**)&dxFactory))
-            return false;
+        _description.Width = static_cast<UINT>(bounds.Width);
+        _description.Height = static_cast<UINT>(bounds.Height);
+        _description.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+        _description.SampleDesc.Count = 1;
+        _description.SampleDesc.Quality = 0;
+        _description.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
+        _description.BufferCount = 2;
+        _description.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;
+        _description.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
+        _description.AlphaMode = DXGI_ALPHA_MODE::DXGI_ALPHA_MODE_UNSPECIFIED;
+        _fullScreenDescription.RefreshRate.Numerator = 60;        
+        _fullScreenDescription.RefreshRate.Denominator = 1;        
+        _fullScreenDescription.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
+        _fullScreenDescription.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
+        _fullScreenDescription.Windowed = gameWindow.Mode() != GameWindowMode::Fullscreen;
 
-        auto dxdevice = _device->_device;
+        return internalInit(device, gameWindow, _swapChain, _description, _fullScreenDescription);
+    }
 
-        if FAILED(dxFactory->CreateSwapChain(dxdevice, &_swapDescription, &_swapChain))
-        {
-            dxFactory->Release();
-            dxFactory = nullptr;
-            return false;
-        }
-
-        dxFactory->Release();
-        dxFactory = nullptr;
-
-        return true;
-	}
+    bool SwapChain::Initialize(GraphicsDevice& device, GameWindow const& gameWindow, DXGI_SWAP_CHAIN_DESC1 const& desc, DXGI_SWAP_CHAIN_FULLSCREEN_DESC const& fullScreenDesc)
+    {
+        return internalInit(device, gameWindow, _swapChain, _description, _fullScreenDescription);
+    }
 }

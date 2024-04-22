@@ -9,8 +9,6 @@
 namespace xna {
 	class RenderTarget2D : public IRenderTarget2D, public Texture2D {
 	public:
-		RenderTarget2D(GraphicsDevice* device);
-
 		virtual ~RenderTarget2D() override {
 			if (_renderTargetView) {
 				_renderTargetView->Release();
@@ -18,12 +16,12 @@ namespace xna {
 			}
 		}
 
-		virtual bool Bind() override;
+		virtual bool Initialize(GraphicsDevice& device) override;
+		virtual bool Apply(GraphicsDevice& device) override;
 
 	public:
 		ID3D11RenderTargetView* _renderTargetView = nullptr;
 		D3D11_RENDER_TARGET_VIEW_DESC _renderTargetDesc{};
-		GraphicsDevice* _device{ nullptr };
 	};
 }
 

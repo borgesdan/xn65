@@ -74,6 +74,7 @@ namespace xna {
 		ID3D11Device* _device{ nullptr };
 		ID3D11DeviceContext* _context{ nullptr };
 		IDXGIFactory1* _factory = nullptr;
+		PSwapChain _swapChain{ nullptr };
 
 	private:
 		unsigned int _createDeviceFlags{ 0 };
@@ -81,7 +82,6 @@ namespace xna {
 		float _backgroundColor[4] = { 0, 0, 0, 0 };
 		xna::PresentationParameters _presentParameters;
 		PGraphicsAdapter _adapter{ nullptr };
-		PSwapChain _swapChain{ nullptr };
 		PRenderTarget2D _renderTarget2D{ nullptr };
 		xna::Viewport _viewport{};
 		PBlendState _blendState{ nullptr };

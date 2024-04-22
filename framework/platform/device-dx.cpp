@@ -63,22 +63,21 @@ namespace xna {
         _backgroundColor[3] = 1.0f;
 
         if (!_swapChain)
-            _swapChain = New<xna::SwapChain>(this);
+            _swapChain = New<xna::SwapChain>();
 
-        _swapChain->Initialize(gameWindow);
-
-        if (!_swapChain->Apply())
-            return false;        
+        _swapChain->Initialize(*this, gameWindow);        
 
         if FAILED(_factory->MakeWindowAssociation(gameWindow.WindowHandle(), DXGI_MWA_NO_ALT_ENTER))
             return false;
 
         if (!_renderTarget2D) {
-            _renderTarget2D = New<RenderTarget2D>(this);
+            _renderTarget2D = New<RenderTarget2D>();
         }
 
-        if (!_renderTarget2D->Bind())
+        if (!_renderTarget2D->Initialize(*this))
             return false;
+
+        _renderTarget2D->Apply(*this);
 
         D3D11_VIEWPORT view{};
         view.TopLeftX = _viewport.X;

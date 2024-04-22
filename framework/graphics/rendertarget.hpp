@@ -9,7 +9,8 @@ namespace xna {
 	public:
 		virtual ~IRenderTarget2D(){}
 
-		virtual bool Bind() = 0;
+		virtual bool Initialize(GraphicsDevice& device) = 0;
+		virtual bool Apply(GraphicsDevice& device) = 0;
 	};	
 }
 
