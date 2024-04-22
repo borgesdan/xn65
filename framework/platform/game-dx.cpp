@@ -33,7 +33,12 @@ namespace xna {
 
 	}
 
-	int Game::Run() {	
+	void Game::Exit()
+	{
+		_gameWindow->Close();
+	}
+
+	int Game::Run() {
 		Initialize();
 
 		if (_graphicsDevice == nullptr) {

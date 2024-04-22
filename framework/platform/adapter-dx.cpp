@@ -17,7 +17,7 @@ namespace xna {
 			adp->_index = 0;
 			adp->_adapter = pAdapter;
 
-			return std::move(adp);
+			return adp;
 		}
 
 		pFactory->Release();
@@ -239,5 +239,15 @@ namespace xna {
 		collection->_displayModes = displayList;
 
 		return std::move(collection);
+	}	
+
+	bool GraphicsAdapter::GetOutput(UINT slot, IDXGIOutput*& output) {
+		if (!_adapter) return false;
+
+
+		if (_adapter->EnumOutputs(slot, &output) != DXGI_ERROR_NOT_FOUND)
+			return true;
+
+		return false;
 	}
 }

@@ -37,14 +37,14 @@ namespace xna {
 		virtual void ChangeDevice() override;
 
 	public:
-		static constexpr int DefaultBackBufferWidth = 1280;//800;
-		static constexpr int DefaultBackBufferHeight = 720;// 480;
+		static constexpr int DefaultBackBufferWidth = 800;//800;
+		static constexpr int DefaultBackBufferHeight = 480;// 480;
 
 	private:
-		Game*& _game;
+		Game* _game;
 		Int _backBufferWidth{ DefaultBackBufferWidth };
 		Int _backBufferHeight{ DefaultBackBufferHeight };
-		bool _isDeviceDirty{ false };
+		bool _isDeviceDirty{ false };		
 		PGraphicsDevice _device;
 	};
 }

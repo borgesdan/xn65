@@ -15,7 +15,8 @@ namespace xna {
 		virtual ~Game() override {
 		}
 
-		virtual void Exit() override{}
+		virtual void Exit() override;
+
 		virtual int Run() override;
 		
 		virtual PGameWindow Window() override {

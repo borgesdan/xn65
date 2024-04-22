@@ -75,16 +75,16 @@ namespace xna {
 		ID3D11DeviceContext* _context{ nullptr };
 		IDXGIFactory1* _factory = nullptr;
 		PSwapChain _swapChain{ nullptr };
+		PGraphicsAdapter _adapter{ nullptr };
+		PRenderTarget2D _renderTarget2D{ nullptr };
+		PBlendState _blendState{ nullptr };
+		xna::Viewport _viewport{};
 
 	private:
 		unsigned int _createDeviceFlags{ 0 };
 		D3D_FEATURE_LEVEL _featureLevel{ D3D_FEATURE_LEVEL::D3D_FEATURE_LEVEL_11_0 };
 		float _backgroundColor[4] = { 0, 0, 0, 0 };
 		xna::PresentationParameters _presentParameters;
-		PGraphicsAdapter _adapter{ nullptr };
-		PRenderTarget2D _renderTarget2D{ nullptr };
-		xna::Viewport _viewport{};
-		PBlendState _blendState{ nullptr };
 		bool _usevsync{ true };
 
 		bool createDevice();

@@ -27,7 +27,8 @@ namespace xna {
 		virtual Uint SubSystemId() const override;
 		virtual Uint VendorId() const override;
 		virtual UDisplayModeCollection SupportedDisplayModes() const override;
-		virtual constexpr bool IsDefaultAdapter() const { return _index == 0; }		
+		virtual constexpr bool IsDefaultAdapter() const { return _index == 0; }	
+		bool GetOutput(UINT slot, IDXGIOutput*& output);
 
 	public:
 		IDXGIAdapter1* _adapter{ nullptr };	
