@@ -34,8 +34,8 @@ namespace xna {
 		static constexpr int64_t MinutesPerHour = TicksPerHour / TicksPerMinute;
 		static constexpr int64_t MinutesPerDay = TicksPerDay / TicksPerMinute;
 		static constexpr int64_t HoursPerDay = TicksPerDay / TicksPerHour;
-		static constexpr int64_t MinTicks = std::numeric_limits<int64_t>::min();
-		static constexpr int64_t MaxTicks = std::numeric_limits<int64_t>::max();
+		static constexpr int64_t MinTicks = (std::numeric_limits<int64_t>::min)();
+		static constexpr int64_t MaxTicks = (std::numeric_limits<int64_t>::max)();
 		static constexpr int64_t MinMicroseconds = MinTicks / TicksPerMicrosecond;
 		static constexpr int64_t MaxMicroseconds = MaxTicks / TicksPerMicrosecond;
 		static constexpr int64_t MinMilliseconds = MinTicks / TicksPerMillisecond;

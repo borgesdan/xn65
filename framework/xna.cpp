@@ -23,6 +23,7 @@ namespace xna {
 
 		void Initialize() override {
 			graphics->Initialize();
+			const auto modes = _graphicsDevice->_adapter->SupportedDisplayModes();
 			Game::Initialize();
 		}
 
@@ -40,18 +41,6 @@ namespace xna {
 		void Update(GameTime const& gameTime) override {
 			if (Keyboard::GetState().IsKeyDown(Keys::Escape) || GamePad::GetState(PlayerIndex::One).IsButtonDown(Buttons::Back))
 				Exit();
-
-			oldState = currentState;
-			currentState = Mouse::GetState();
-			const auto rec = Rectangle((graphics->PreferredBackBufferWidth() / 2) - 100, (graphics->PreferredBackBufferHeight() / 2) - 100, 200, 200);
-
-			if (currentState.LeftButton == ButtonState::Pressed && oldState.LeftButton == ButtonState::Released) {				
-				graphics->ToggleFullScreen();
-			}
-
-			if (currentState.RightButton == ButtonState::Pressed && oldState.RightButton == ButtonState::Released) {
-				position.X += 50;
-			}
 
 			Game::Update(gameTime);
 		}

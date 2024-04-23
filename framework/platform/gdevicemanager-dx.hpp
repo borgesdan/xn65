@@ -38,7 +38,7 @@ namespace xna {
 
 	public:
 		static constexpr int DefaultBackBufferWidth = 800;//800;
-		static constexpr int DefaultBackBufferHeight = 480;// 480;
+		static constexpr int DefaultBackBufferHeight = 600;// 480;
 
 	private:
 		Game* _game;
@@ -46,6 +46,7 @@ namespace xna {
 		Int _backBufferHeight{ DefaultBackBufferHeight };
 		bool _isDeviceDirty{ false };		
 		PGraphicsDevice _device;
+		bool _ifFullScreen{ false };
 	};
 }
 

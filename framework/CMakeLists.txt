@@ -11,6 +11,8 @@ endif()
 
 # TODO: Add tests and install targets if needed.
 
+
+
 # -- Biblioteca DirectxTK --
 # Url: https://github.com/microsoft/DirectXTK/wiki/DirectXTK
 #
@@ -29,5 +31,4 @@ endif()
 # }
 #
 find_package(directxtk CONFIG REQUIRED)
-
 target_link_libraries(${PROJECT_NAME} D3d11.lib dxgi.lib dxguid.lib d3dcompiler.lib Microsoft::DirectXTK)

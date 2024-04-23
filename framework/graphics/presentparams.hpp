@@ -1,8 +1,7 @@
 #ifndef XNA_GRAPHICS_PRESENTPARAMS_HPP
 #define XNA_GRAPHICS_PRESENTPARAMS_HPP
 
-#include "../types.hpp"
-#include "../enums.hpp"
+#include "../default.hpp"
 
 namespace xna {
 	class PresentationParameters {

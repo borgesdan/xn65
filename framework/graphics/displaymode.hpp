@@ -19,8 +19,6 @@ namespace xna {
 	class IDisplayModeCollection {
 	public:
 		virtual ~IDisplayModeCollection() {}
-		virtual std::vector<PDisplayMode> At(SurfaceFormat format) const = 0;
-		virtual void At(SurfaceFormat format, std::vector<PDisplayMode>& modes) const = 0;
 		virtual size_t SurfaceCount(SurfaceFormat format) const = 0;
 	};
 }

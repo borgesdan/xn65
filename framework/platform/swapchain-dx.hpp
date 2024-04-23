@@ -9,26 +9,23 @@ namespace xna {
 	class SwapChain : public ISwapChain{
 	public:
 		virtual ~SwapChain() override {
-			if (_swapChain) {
-				_swapChain->Release();
-				_swapChain = nullptr;
+			if (dxSwapChain) {
+				dxSwapChain->Release();
+				dxSwapChain = nullptr;
 			}
 		}
 
 		virtual bool Initialize(GraphicsDevice& device, GameWindow const& gameWindow) override;
 		bool Initialize(GraphicsDevice& device, GameWindow const& gameWindow, DXGI_SWAP_CHAIN_DESC1 const& desc, DXGI_SWAP_CHAIN_FULLSCREEN_DESC const& fullScreenDesc);
 
-		bool GetBackBuffer(ID3D11Texture2D*& texture2D) {
-			if FAILED(_swapChain->GetBuffer(0, __uuidof(texture2D), (void**)(&texture2D)))
-				return false;
+		bool GetBackBuffer(ID3D11Texture2D*& texture2D);
 
-			return true;
-		}
+		bool Present(bool vsync);
 
 	public:
-		IDXGISwapChain1* _swapChain{ nullptr };
-		DXGI_SWAP_CHAIN_DESC1 _description{};
-		DXGI_SWAP_CHAIN_FULLSCREEN_DESC _fullScreenDescription{};	
+		IDXGISwapChain1* dxSwapChain{ nullptr };
+		DXGI_SWAP_CHAIN_DESC1 dxDescription{};
+		DXGI_SWAP_CHAIN_FULLSCREEN_DESC dxFullScreenDescription{};	
 	};	
 }
 

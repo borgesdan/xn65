@@ -13,7 +13,7 @@ namespace xna {
         }
 
         auto adapter = device.Adapter();
-        auto dxAdapter = adapter->_adapter;
+        auto dxAdapter = adapter->dxadapter;
 
         IDXGIFactory1* dxFactory1 = nullptr;
         auto hr = dxAdapter->GetParent(IID_IDXGIFactory1, (void**)&dxFactory1);
@@ -40,27 +40,46 @@ namespace xna {
     bool SwapChain::Initialize(GraphicsDevice& device, GameWindow const& gameWindow) {
         const auto bounds = gameWindow.ClientBounds();        
 
-        _description.Width = static_cast<UINT>(bounds.Width);
-        _description.Height = static_cast<UINT>(bounds.Height);
-        _description.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-        _description.SampleDesc.Count = 1;
-        _description.SampleDesc.Quality = 0;
-        _description.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-        _description.BufferCount = 2;
-        _description.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;
-        _description.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
-        _description.AlphaMode = DXGI_ALPHA_MODE::DXGI_ALPHA_MODE_UNSPECIFIED;
-        _fullScreenDescription.RefreshRate.Numerator = 60;        
-        _fullScreenDescription.RefreshRate.Denominator = 1;        
-        _fullScreenDescription.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
-        _fullScreenDescription.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
-        _fullScreenDescription.Windowed = gameWindow.Mode() != GameWindowMode::Fullscreen;
+        dxDescription.Width = static_cast<UINT>(bounds.Width);
+        dxDescription.Height = static_cast<UINT>(bounds.Height);
+        dxDescription.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+        dxDescription.SampleDesc.Count = 1;
+        dxDescription.SampleDesc.Quality = 0;
+        dxDescription.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
+        dxDescription.BufferCount = 2;
+        dxDescription.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;
+        dxDescription.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
+        dxDescription.AlphaMode = DXGI_ALPHA_MODE::DXGI_ALPHA_MODE_UNSPECIFIED;
+        dxFullScreenDescription.RefreshRate.Numerator = 60;        
+        dxFullScreenDescription.RefreshRate.Denominator = 1;        
+        dxFullScreenDescription.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
+        dxFullScreenDescription.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
+        dxFullScreenDescription.Windowed = gameWindow.Mode() != GameWindowMode::Fullscreen;
 
-        return internalInit(device, gameWindow, _swapChain, _description, _fullScreenDescription);
+        return internalInit(device, gameWindow, dxSwapChain, dxDescription, dxFullScreenDescription);
     }
 
     bool SwapChain::Initialize(GraphicsDevice& device, GameWindow const& gameWindow, DXGI_SWAP_CHAIN_DESC1 const& desc, DXGI_SWAP_CHAIN_FULLSCREEN_DESC const& fullScreenDesc)
     {
-        return internalInit(device, gameWindow, _swapChain, _description, _fullScreenDescription);
+        dxDescription = desc;
+        dxFullScreenDescription = fullScreenDesc;
+        return internalInit(device, gameWindow, dxSwapChain, dxDescription, dxFullScreenDescription);
+    }
+
+    bool SwapChain::GetBackBuffer(ID3D11Texture2D*& texture2D) {
+        if (!dxSwapChain)
+            return false;
+
+        const auto hr = dxSwapChain->GetBuffer(0, __uuidof(texture2D), (void**)(&texture2D));
+
+        return !FAILED(hr);
+    }
+
+    bool SwapChain::Present(bool vsync) {
+        if (!dxSwapChain)
+            return false;
+
+        const auto hr = dxSwapChain->Present(vsync, NULL);
+        return !FAILED(hr);
     }
 }

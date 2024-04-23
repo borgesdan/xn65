@@ -13,9 +13,9 @@ namespace xna {
 		GraphicsAdapter() {}
 
 		virtual ~GraphicsAdapter() override {
-			if (_adapter) {
-				_adapter->Release();
-				_adapter = nullptr;
+			if (dxadapter) {
+				dxadapter->Release();
+				dxadapter = nullptr;
 			}
 		}
 
@@ -27,13 +27,17 @@ namespace xna {
 		virtual Uint SubSystemId() const override;
 		virtual Uint VendorId() const override;
 		virtual UDisplayModeCollection SupportedDisplayModes() const override;
+		virtual UDisplayModeCollection SupportedDisplayModes(SurfaceFormat surfaceFormat) const override;
+		virtual PDisplayMode CurrentDisplayMode() override;
+		virtual void CurrentDisplayMode(SurfaceFormat surfaceFormat, Uint width, Uint height) override;
 		virtual constexpr bool IsDefaultAdapter() const { return _index == 0; }	
 		bool GetOutput(UINT slot, IDXGIOutput*& output);
 
 	public:
-		IDXGIAdapter1* _adapter{ nullptr };	
+		IDXGIAdapter1* dxadapter{ nullptr };	
 	private:
-		Uint _index{ 0 };	
+		Uint _index{ 0 };
+		PDisplayMode _currentDisplayMode = nullptr;
 
 	public:
 		static constexpr DXGI_FORMAT ToDXGI(SurfaceFormat format)

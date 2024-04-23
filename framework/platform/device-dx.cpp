@@ -6,16 +6,19 @@
 #include "blendstate-dx.hpp"
 #include "gdeviceinfo-dx.hpp"
 #include "../common/color.hpp"
+#include "gdevicemanager-dx.hpp"
 
 namespace xna {
     GraphicsDevice::GraphicsDevice() {        
         _blendState = BlendState::NonPremultiplied();  
         _adapter = GraphicsAdapter::DefaultAdapter();  
+        _adapter->CurrentDisplayMode(SurfaceFormat::Color, GraphicsDeviceManager::DefaultBackBufferWidth, GraphicsDeviceManager::DefaultBackBufferHeight);
     }
 
     GraphicsDevice::GraphicsDevice(GraphicsDeviceInformation const& info) {
-        _adapter = info.Adapter();
+        _adapter = info.Adapter();                
         _presentParameters = info.PresentationParameters();
+        _adapter->CurrentDisplayMode(_presentParameters.BackBufferFormat, _presentParameters.BackBufferWidth, _presentParameters.BackBufferHeight);
     }
 
 	bool GraphicsDevice::Initialize(GameWindow& gameWindow) {	
@@ -95,18 +98,11 @@ namespace xna {
 	}
 
     bool GraphicsDevice::Present() {
-        _swapChain->_swapChain->Present(_usevsync, NULL);
+        const auto result = _swapChain->Present(_usevsync);
         _context->OMSetRenderTargets(1, &_renderTarget2D->_renderTargetView, nullptr);
 
-        return true;
-    }
-
-    bool GraphicsDevice::GetSwapChainBackBuffer(ID3D11Texture2D*& texture2D) {
-        if FAILED(_swapChain->_swapChain->GetBuffer(0, __uuidof(texture2D), (void**)(&texture2D)))
-            return false;
-
-        return true;
-    }
+        return result;
+    }    
 
     bool GraphicsDevice::createDevice() {
 #if _DEBUG
@@ -115,7 +111,7 @@ namespace xna {
 
         if FAILED(
             D3D11CreateDevice(
-                _adapter->_adapter,
+                _adapter->dxadapter,
                 D3D_DRIVER_TYPE_UNKNOWN,
                 NULL,
                 _createDeviceFlags,

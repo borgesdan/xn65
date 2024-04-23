@@ -4,8 +4,8 @@
 #include "../default.hpp"
 #include "../game/game.hpp"
 #include "clock-dx.hpp"
-#include "dxgi.h"
-#include "d3d11.h"
+#include "dxheaders.hpp"
+#include "dx/StepTimer.hpp"
 
 namespace xna {
 	class Game : public IGame {
@@ -28,7 +28,7 @@ namespace xna {
 		}
 
 	protected:
-		virtual void Draw(GameTime const& gameTime) override{}
+		virtual void Draw(GameTime const& gameTime) override;
 		
 		virtual void Initialize() override;
 
@@ -41,14 +41,14 @@ namespace xna {
 
 	protected:		
 		PGameWindow _gameWindow{ nullptr };
-		PAudioEngine _audioEngine = nullptr;
+		PAudioEngine _audioEngine = nullptr;		
 		
-		GameClock _clock{};
 		GameTime _currentGameTime{};
+		DX::StepTimer _stepTimer;
 		
 	private:
 		int startLoop();
-		void tick();
+		void step();
 	};
 }
 

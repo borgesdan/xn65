@@ -20,6 +20,8 @@ namespace xna {
 		PresentationParameters parameters;
 		parameters.BackBufferWidth = _backBufferWidth;
 		parameters.BackBufferHeight = _backBufferHeight;
+		parameters.BackBufferFormat = SurfaceFormat::Color;
+		parameters.IsFullScreen = false;
 		information.PresentationParameters(parameters);
 
 		information.Window(_game->Window());
@@ -39,13 +41,19 @@ namespace xna {
 		auto& swap = _game->_graphicsDevice->_swapChain;
 
 		BOOL state = false;
-		swap->_swapChain->GetFullscreenState(&state, nullptr);
-		swap->_swapChain->SetFullscreenState(!state, nullptr);	
+		auto hr = swap->dxSwapChain->GetFullscreenState(&state, nullptr);
+
+		if (FAILED(hr)) return;
+
+		hr = swap->dxSwapChain->SetFullscreenState(!state, nullptr);
+
+		if (FAILED(hr)) return;
+
+		_ifFullScreen = !state;
 	}
 
 	void GraphicsDeviceManager::CreateDevice(GraphicsDeviceInformation const& info) {
 		_device = New<GraphicsDevice>(info);
-		_device->Adapter(info.Adapter());
 		auto window = info.Window();		
 
 		window->Size(_backBufferWidth, _backBufferHeight);
