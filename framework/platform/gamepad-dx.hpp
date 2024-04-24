@@ -357,55 +357,34 @@ namespace xna {
 		DirectX::GamePad::State _dxState{};
 	};
 
-	class GamePad : public IGamePad {
+	class _GamePad : public IGamePad {
 	public:
-		static void Initialize() {
+		constexpr _GamePad() = default;
+
+		virtual ~_GamePad() override {
+			if (_dxGamePad) {
+				_dxGamePad->Suspend();				
+				_dxGamePad = nullptr;
+			}
+		}
+
+		void Initialize() {
 			_dxGamePad = uNew<DirectX::GamePad>();
 		}
 
-		inline static uptr<DirectX::GamePad> _dxGamePad = nullptr;
+		virtual GamePadState GetState(PlayerIndex index) override;
+		virtual GamePadState GetState(PlayerIndex index, GamePadDeadZone deadZone) override;
+		virtual GamePadCapabilities GetCapabilities(PlayerIndex index) override;
+		virtual bool SetVibration(PlayerIndex index, float leftMotor, float rightMotor, float leftTrigger, float rightTrigger) override;
 
-	private:
-		constexpr GamePad() = default;
-		constexpr GamePad(GamePad&&) = default;
-		constexpr GamePad(const GamePad&) = default;
+	public:
+		uptr<DirectX::GamePad> _dxGamePad = nullptr;
+
+	private:		
+		constexpr _GamePad(_GamePad&&) = default;
 	};
 
-	inline GamePadState IGamePad::GetState(PlayerIndex index) {
-		if (!GamePad::_dxGamePad)
-			return GamePadState();
-
-		const auto state = GamePad::_dxGamePad->GetState(
-			static_cast<int>(index)
-		);
-		return GamePadState(state);
-	}
-
-	inline GamePadState IGamePad::GetState(PlayerIndex index, GamePadDeadZone deadZone) {
-		if (!GamePad::_dxGamePad)
-			return GamePadState();
-
-		const auto state = GamePad::_dxGamePad->GetState(
-			static_cast<int>(index),
-			static_cast<DirectX::GamePad::DeadZone>(deadZone)
-		);
-		return GamePadState(state);
-	}
-
-	inline GamePadCapabilities IGamePad::GetCapabilities(PlayerIndex index) {
-		if (!GamePad::_dxGamePad)
-			return GamePadCapabilities();
-
-		const auto capabilities = GamePad::_dxGamePad->GetCapabilities(static_cast<int>(index));
-		return GamePadCapabilities(capabilities);
-	}
-
-	inline bool IGamePad::SetVibration(PlayerIndex index, float leftMotor, float rightMotor, float leftTrigger, float rightTrigger) {
-		if (!GamePad::_dxGamePad)
-			return false;
-
-		return GamePad::_dxGamePad->SetVibration(static_cast<int>(index), leftMotor, rightMotor, leftTrigger, rightTrigger);
-	}	
+	inline static _GamePad GamePad = _GamePad();		
 }
 
 #endif

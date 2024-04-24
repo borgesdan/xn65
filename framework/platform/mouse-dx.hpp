@@ -21,6 +21,10 @@ namespace xna {
 	};
 
 	struct Mouse : public IMouse {
+		inline static void Initialize() {
+			_dxMouse = uNew<DirectX::Mouse>();
+		}
+
 	public:
 		inline static uptr<DirectX::Mouse> _dxMouse = nullptr;
 

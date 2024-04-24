@@ -63,10 +63,10 @@ namespace xna {
 	public:
 		virtual ~IGamePad(){}
 
-		static GamePadState GetState(PlayerIndex index);
-		static GamePadState GetState(PlayerIndex index, GamePadDeadZone deadZone);
-		static GamePadCapabilities GetCapabilities(PlayerIndex index);
-		static bool SetVibration(PlayerIndex index, float leftMotor, float rightMotor, float leftTrigger = 0, float rightTrigger = 0);		
+		virtual GamePadState GetState(PlayerIndex index) = 0;
+		virtual GamePadState GetState(PlayerIndex index, GamePadDeadZone deadZone) = 0;
+		virtual GamePadCapabilities GetCapabilities(PlayerIndex index) = 0;
+		virtual bool SetVibration(PlayerIndex index, float leftMotor, float rightMotor, float leftTrigger = 0, float rightTrigger = 0) = 0;
 	};
 }
 

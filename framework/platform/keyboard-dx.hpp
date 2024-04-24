@@ -24,7 +24,11 @@ namespace xna {
 		DirectX::Keyboard::State _state{};
 	};
 
-	class Keyboard : public IKeyboard {
+	struct Keyboard : public IKeyboard {
+		inline static void Initialize() {
+			_dxKeyboard = uNew<DirectX::Keyboard>();
+		}
+
 	private:
 		constexpr Keyboard() = default;
 		constexpr Keyboard(Keyboard&&) = default;

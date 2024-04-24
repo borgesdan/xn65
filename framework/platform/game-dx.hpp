@@ -3,7 +3,6 @@
 
 #include "../default.hpp"
 #include "../game/game.hpp"
-#include "clock-dx.hpp"
 #include "dxheaders.hpp"
 #include "dx/StepTimer.hpp"
 

@@ -6,11 +6,6 @@
 using namespace std;
 using namespace xna;
 
-//int main()
-//{
-//	cout << "Hello CMake." << endl;
-//	return 0;
-//}
 namespace xna {
 	class Game1 : public Game {
 	public:
@@ -34,12 +29,12 @@ namespace xna {
 			texture = Texture2D::FromStream(*_graphicsDevice, "D:\\sprite.jpg", &err);
 
 			auto audio = AudioEngine();
-
+			
 			Game::LoadContent();
 		}
 
 		void Update(GameTime const& gameTime) override {
-			if (Keyboard::GetState().IsKeyDown(Keys::Escape) || GamePad::GetState(PlayerIndex::One).IsButtonDown(Buttons::Back))
+			if (Keyboard::GetState().IsKeyDown(Keys::Escape) || GamePad.GetState(PlayerIndex::One).IsButtonDown(Buttons::Back))
 				Exit();
 
 			Game::Update(gameTime);

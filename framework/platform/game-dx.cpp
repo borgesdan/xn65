@@ -8,30 +8,17 @@
 #include "keyboard-dx.hpp"
 #include "mouse-dx.hpp"
 #include "window-dx.hpp"
-#include "Windows.h"
+#include <Windows.h>
 
 namespace xna {
 	Game::Game() {
-		Keyboard::_dxKeyboard = uNew<DirectX::Keyboard>();
-		Mouse::_dxMouse = uNew<DirectX::Mouse>();
-		GamePad::_dxGamePad = uNew<DirectX::GamePad>();
-
 		_gameWindow = New<GameWindow>();
 		_gameWindow->Color(255, 155, 55);
 		_gameWindow->Title("XN65");
 		_gameWindow->Size(
 			GraphicsDeviceManager::DefaultBackBufferWidth,
 			GraphicsDeviceManager::DefaultBackBufferHeight, false);
-
-		//CoInitializeEx é requisito para inicialização correta de AudioEngine
-		const auto hr = CoInitializeEx(nullptr, COINIT_MULTITHREADED);
-
-		if (FAILED(hr)) {
-			MessageBox(nullptr, "Ocorreu um erro ao executar a função CoInitializeEx", "XN65", MB_OK);
-		}
-
-		_audioEngine = New<AudioEngine>();		
-	}	
+	}
 
 	void Game::Exit()
 	{
@@ -54,6 +41,25 @@ namespace xna {
 	}
 
 	void Game::Initialize() {
+		Keyboard::Initialize();
+		Mouse::Initialize();
+
+		//initialize é requisito para GamePad
+		Microsoft::WRL::Wrappers::RoInitializeWrapper initialize(RO_INIT_MULTITHREADED);
+
+		if (FAILED(initialize))
+			MessageBox(nullptr, "Ocorreu um erro ao executar Microsoft::WRL::Wrappers::RoInitializeWrapper. O GamePad não foi inicializado corretamente.", "XN65", MB_OK);
+
+		GamePad.Initialize();
+
+		//CoInitializeEx é requisito para AudioEngine
+		const auto hr = CoInitializeEx(nullptr, COINIT_MULTITHREADED);
+
+		if (FAILED(hr))
+			MessageBox(nullptr, "Ocorreu um erro ao executar CoInitializeEx. O AudioEngine não foi inicializado corretamente.", "XN65", MB_OK);
+
+		_audioEngine = New<AudioEngine>();
+
 		LoadContent();
 	}
 
@@ -78,19 +84,19 @@ namespace xna {
 		} while (msg.message != WM_QUIT);
 
 		return static_cast<int>(msg.wParam);
-	}	
+	}
 
 	void Game::step()
 	{
-		_stepTimer.Tick([&]() 
+		_stepTimer.Tick([&]()
 			{
 				const auto elapsed = _stepTimer.GetElapsedSeconds();
-				const auto total =_stepTimer.GetTotalSeconds();
+				const auto total = _stepTimer.GetTotalSeconds();
 				const auto elapsedTimeSpan = TimeSpan::FromSeconds(elapsed);
 				const auto totalTimeSpan = TimeSpan::FromSeconds(total);
 				_currentGameTime.ElapsedGameTime = elapsedTimeSpan;
 				_currentGameTime.TotalGameTime = totalTimeSpan;
-				Update(_currentGameTime);				
+				Update(_currentGameTime);
 			});
 
 		Draw(_currentGameTime);

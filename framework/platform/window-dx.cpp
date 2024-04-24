@@ -1,6 +1,7 @@
 #include "window-dx.hpp"
 #include "keyboard-dx.hpp"
 #include "mouse-dx.hpp"
+#include "gamepad-dx.hpp"
 
 namespace xna {
 	GameWindow::GameWindow() {
@@ -168,8 +169,13 @@ namespace xna {
 		case WM_MOUSEHOVER:
 			Mouse::_dxMouse->ProcessMessage(msg, wParam, lParam);
 			break;
+		case WM_KILLFOCUS:
+			if(GamePad._dxGamePad) GamePad._dxGamePad->Suspend();
+			break;
+		case WM_SETFOCUS:
+			if (GamePad._dxGamePad) GamePad._dxGamePad->Resume();
+			break;
 		}
-
 		return DefWindowProc(hWnd, msg, wParam, lParam);
 	}
 }
