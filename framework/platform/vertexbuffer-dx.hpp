@@ -2,8 +2,8 @@
 #define XNA_PLATFORM_VERTEXBUFFER_DX_HPP
 
 #include "../graphics/vertexbuffer.hpp"
-#include "dxheaders.hpp"
 #include "../graphics/vertexposition.hpp"
+#include "dxheaders.hpp"
 
 namespace xna {
 	class VertexBuffer : public IVertexBuffer {

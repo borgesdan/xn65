@@ -4,6 +4,7 @@
 #include "../graphics/constbuffer.hpp"
 #include "../common/matrix.hpp"
 #include "dxheaders.hpp"
+#include <BufferHelpers.h>
 
 namespace xna {
 	class ConstantBuffer : public IConstantBuffer {

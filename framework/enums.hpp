@@ -67,6 +67,13 @@ namespace xna {
 
 	using BlendOperation = BlendFunction;
 
+    enum class BufferUsage {
+        Static,
+        Dynamic,
+        Immutable,
+        Staging
+    };
+
     enum class Buttons {
         A = 4096, // 0x00001000
         B = 8192, // 0x00002000
@@ -107,7 +114,7 @@ namespace xna {
 		Blue,
 		Alpha,
 		All
-	};
+	};    
 
 	enum class ComparisonFunction {
 		Never,

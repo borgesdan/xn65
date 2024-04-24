@@ -40,7 +40,7 @@ namespace xna {
 
 		_dxspriteBatch->Begin(
 			sort,
-			blendState ? blendState->_blendState : nullptr,
+			blendState ? blendState->dxBlendState : nullptr,
 			samplerState ? samplerState->_samplerState : nullptr,
 			depthStencil ? depthStencil->_depthStencil : nullptr,
 			rasterizerState ? rasterizerState->_rasterizerState : nullptr,
