@@ -5,6 +5,7 @@
 #include "displaymode-dx.hpp"
 #include "dxheaders.hpp"
 
+
 namespace xna {
 	class GraphicsAdapter : public IGraphicsAdapter {
 	public:

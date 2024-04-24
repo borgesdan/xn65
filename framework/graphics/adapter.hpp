@@ -1,15 +1,12 @@
 #ifndef XNA_GRAPHICS_ADAPTER_HPP
 #define XNA_GRAPHICS_ADAPTER_HPP
 
-#include "../enums.hpp"
-#include "../types.hpp"
-#include "../forward.hpp"
-#include "displaymode.hpp"
+#include "../default.hpp"
 
 namespace xna {
 	class IGraphicsAdapter {
 	public:
-		virtual ~IGraphicsAdapter() {}					
+		virtual ~IGraphicsAdapter() {}
 
 		virtual String Description() const = 0;
 		virtual Uint DeviceId() const = 0;

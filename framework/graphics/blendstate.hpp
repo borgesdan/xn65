@@ -4,20 +4,7 @@
 #include "../default.hpp"
 
 namespace xna {
-	struct BlendRenderTarget {
-		bool Enabled{ true };
-		Blend Source{ Blend::SourceAlpha };
-		Blend Destination{ Blend::InverseSourceAlpha };
-		BlendOperation Operation{ BlendOperation::Add };
-		Blend SourceAlpha{ Blend::One };
-		Blend DestinationAlpha{ Blend::Zero };
-		BlendOperation OperationAlpha{ BlendOperation::Add };
-		ColorWriteChannels WriteMask{ ColorWriteChannels::All };
-
-		constexpr BlendRenderTarget() = default;
-	};
-
-	using PBlendRenderTarget = sptr<BlendRenderTarget>;
+	struct BlendRenderTarget;
 
 	class IBlendState {
 	public:

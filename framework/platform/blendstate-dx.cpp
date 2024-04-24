@@ -34,16 +34,16 @@ namespace xna {
 			const auto init = Initialize(device, err);
 			if (!init) return false;
 		}
-
-        device._context->OMSetBlendState(_blendState, nullptr, 0xffffffff);
+		
+        device._context->OMSetBlendState(_blendState, blendFactor, sampleMask);
 
         return true;
 	}
 
 	PBlendState IBlendState::Opaque() {
 		auto blendState = New<BlendState>();		
-		blendState->_description.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
-		blendState->_description.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_SRC_ALPHA;
+		blendState->_description.RenderTarget[0].SrcBlend = D3D11_BLEND_ONE;
+		blendState->_description.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ZERO;
 		blendState->_description.RenderTarget[0].DestBlend = D3D11_BLEND_DEST_ALPHA;
 		blendState->_description.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ZERO;
 
@@ -54,8 +54,8 @@ namespace xna {
 		auto blendState = New<BlendState>();
 		blendState->_description.RenderTarget[0].SrcBlend = D3D11_BLEND_ONE;
 		blendState->_description.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;
-		blendState->_description.RenderTarget[0].DestBlend = D3D11_BLEND_INV_DEST_ALPHA;
-		blendState->_description.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_INV_DEST_ALPHA;
+		blendState->_description.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
+		blendState->_description.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_INV_SRC_ALPHA;
 
 		return blendState;
 	}
@@ -74,8 +74,8 @@ namespace xna {
 		auto blendState = New<BlendState>();
 		blendState->_description.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
 		blendState->_description.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_SRC_ALPHA;
-		blendState->_description.RenderTarget[0].DestBlend = D3D11_BLEND_INV_DEST_ALPHA;
-		blendState->_description.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_INV_DEST_ALPHA;
+		blendState->_description.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
+		blendState->_description.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_INV_SRC_ALPHA;
 
 		return blendState;
 	}

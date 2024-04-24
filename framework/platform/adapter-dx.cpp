@@ -1,5 +1,4 @@
 #include "adapter-dx.hpp"
-#include "../helpers.hpp"
 #include "gdevicemanager-dx.hpp"
 
 namespace xna {

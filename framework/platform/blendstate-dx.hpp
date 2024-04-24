@@ -2,10 +2,22 @@
 #define XNA_PLATFORM_BLENDSTATE_HPP
 
 #include "../graphics/blendstate.hpp"
-#include "dxgi.h"
-#include "d3d11.h"
+#include "dxheaders.hpp"
 
 namespace xna {
+	struct BlendRenderTarget {
+		bool Enabled{ true };
+		Blend Source{ Blend::SourceAlpha };
+		Blend Destination{ Blend::InverseSourceAlpha };
+		BlendOperation Operation{ BlendOperation::Add };
+		Blend SourceAlpha{ Blend::One };
+		Blend DestinationAlpha{ Blend::Zero };
+		BlendOperation OperationAlpha{ BlendOperation::Add };
+		ColorWriteChannels WriteMask{ ColorWriteChannels::All };
+
+		constexpr BlendRenderTarget() = default;
+	};
+
 	class BlendState : public IBlendState {
 	public:
 		BlendState() = default;
@@ -44,6 +56,8 @@ namespace xna {
 	public:
 		ID3D11BlendState* _blendState{ nullptr };
 		D3D11_BLEND_DESC _description{};
+		float blendFactor[4] { 1.0F, 1.0F, 1.0F, 1.0F };
+		UINT sampleMask{ 0xffffffff };
 
 	public:
 		static constexpr D3D11_BLEND ConvertBlend(Blend blend) {
@@ -89,21 +103,7 @@ namespace xna {
 		}
 
 		static constexpr D3D11_BLEND_OP ConvertOperation(BlendOperation op) {
-			switch (op)
-			{
-			case BlendOperation::Add:
-				return D3D11_BLEND_OP_ADD;
-			case BlendOperation::Subtract:
-				return D3D11_BLEND_OP_SUBTRACT;
-			case BlendOperation::ReverseSubtract:
-				return D3D11_BLEND_OP_REV_SUBTRACT;
-			case BlendOperation::Min:
-				return D3D11_BLEND_OP_MIN;
-			case BlendOperation::Max:
-				return D3D11_BLEND_OP_MAX;
-			default:
-				return D3D11_BLEND_OP_ADD;
-			}
+			return static_cast<D3D11_BLEND_OP>(static_cast<int>(op) + 1);
 		}
 
 		static constexpr D3D11_COLOR_WRITE_ENABLE ConvertColorWrite(ColorWriteChannels colorWrite) {

@@ -252,7 +252,7 @@ namespace xna {
 	private:
 		GamePadCapabilitiesType _type{};
 		bool _connected{ false };
-		GamePadId _id;
+		GamePadId _id{};
 		Ushort _vid{ 0 };
 		Ushort _pid{ 0 };
 	};
