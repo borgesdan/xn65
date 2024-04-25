@@ -2,6 +2,7 @@
 #define XNA_PLATFORM_BLENDSTATE_HPP
 
 #include "../graphics/blendstate.hpp"
+#include "../graphics/gresource.hpp"
 #include "dxheaders.hpp"
 
 namespace xna {
@@ -18,9 +19,9 @@ namespace xna {
 		constexpr BlendRenderTarget() = default;
 	};
 
-	class BlendState : public IBlendState {
+	class BlendState : public IBlendState, public GraphicsResource {
 	public:
-		BlendState() = default;
+		BlendState(GraphicsDevice* device) : GraphicsResource(device) {};
 
 		virtual ~BlendState() override {
 			if (dxBlendState) {
@@ -28,7 +29,7 @@ namespace xna {
 				dxBlendState = nullptr;
 			}
 		}
-		virtual bool Initialize(GraphicsDevice& device, xna_error_nullarg) override;
+		virtual bool Initialize(xna_error_nullarg) override;
 		
 		virtual constexpr void AlphaToCoverageEnable(bool value) override {
 			dxDescription.AlphaToCoverageEnable = value;
@@ -51,13 +52,21 @@ namespace xna {
 			}
 		}
 
-		virtual bool Apply(GraphicsDevice& device, xna_error_nullarg) override;
+		virtual bool Apply(xna_error_nullarg) override;
+
+		static uptr<BlendState> Opaque();
+		static uptr<BlendState> AlphaBlend();
+		static uptr<BlendState> Additive();
+		static uptr<BlendState> NonPremultiplied();
 
 	public:
 		ID3D11BlendState* dxBlendState{ nullptr };
 		D3D11_BLEND_DESC dxDescription{};
 		float blendFactor[4] { 1.0F, 1.0F, 1.0F, 1.0F };
-		UINT sampleMask{ 0xffffffff }; 		
+		UINT sampleMask{ 0xffffffff }; 
+
+	private:
+		BlendState() : GraphicsResource(nullptr){}
 
 	public:
 		static constexpr D3D11_BLEND ConvertBlend(Blend blend) {

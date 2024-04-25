@@ -4,10 +4,13 @@
 #include "../graphics/swapchain.hpp"
 #include "window-dx.hpp"
 #include "dxheaders.hpp"
+#include "../graphics/gresource.hpp"
 
 namespace xna {
-	class SwapChain : public ISwapChain{
+	class SwapChain : public ISwapChain, public GraphicsResource {
 	public:
+		SwapChain(GraphicsDevice* device): GraphicsResource(device){}
+
 		virtual ~SwapChain() override {
 			if (dxSwapChain) {
 				dxSwapChain->Release();
@@ -15,8 +18,8 @@ namespace xna {
 			}
 		}
 
-		virtual bool Initialize(GraphicsDevice& device, GameWindow const& gameWindow) override;
-		bool Initialize(GraphicsDevice& device, GameWindow const& gameWindow, DXGI_SWAP_CHAIN_DESC1 const& desc, DXGI_SWAP_CHAIN_FULLSCREEN_DESC const& fullScreenDesc);
+		virtual bool Initialize(GameWindow const& gameWindow, xna_error_nullarg) override;
+		bool Initialize(GameWindow const& gameWindow, DXGI_SWAP_CHAIN_DESC1 const& desc, DXGI_SWAP_CHAIN_FULLSCREEN_DESC const& fullScreenDesc, xna_error_nullarg);
 
 		bool GetBackBuffer(ID3D11Texture2D*& texture2D);
 

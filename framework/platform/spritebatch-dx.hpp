@@ -44,27 +44,7 @@ namespace xna {
 
 	public:
 		static constexpr void ConvertSpriteSort(SpriteSortMode value, DirectX::SpriteSortMode& target) {
-			switch (value)
-			{
-			case xna::SpriteSortMode::Deferred:
-				target = DirectX::SpriteSortMode_Deferred;
-				break;
-			case xna::SpriteSortMode::Immediate:
-				target = DirectX::SpriteSortMode_Immediate;
-				break;
-			case xna::SpriteSortMode::Texture:
-				target = DirectX::SpriteSortMode_Texture;
-				break;
-			case xna::SpriteSortMode::BackToFront:
-				target = DirectX::SpriteSortMode_BackToFront;
-				break;
-			case xna::SpriteSortMode::FrontToBack:
-				target = DirectX::SpriteSortMode_FrontToBack;
-				break;
-			default:
-				target = DirectX::SpriteSortMode_Deferred;
-				break;
-			}
+			target = static_cast<DirectX::SpriteSortMode>(static_cast<int>(value));
 		}
 
 	public:

@@ -35,6 +35,7 @@ namespace xna {
 
         if (_blendState == nullptr)
             _blendState = BlendState::NonPremultiplied();
+        _blendState->Bind(this);
 
 	    _createDeviceFlags |= D3D11_CREATE_DEVICE_DEBUG;
 
@@ -66,9 +67,9 @@ namespace xna {
         _backgroundColor[3] = 1.0f;
 
         if (!_swapChain)
-            _swapChain = New<xna::SwapChain>();
+            _swapChain = New<xna::SwapChain>(this);
 
-        _swapChain->Initialize(*this, gameWindow);        
+        _swapChain->Initialize(gameWindow);        
 
         if FAILED(_factory->MakeWindowAssociation(gameWindow.WindowHandle(), DXGI_MWA_NO_ALT_ENTER))
             return false;
@@ -92,7 +93,7 @@ namespace xna {
 
         _context->RSSetViewports(1, &view);
 
-        _blendState->Apply(*this);
+        _blendState->Apply();
 
         return true;
 	}

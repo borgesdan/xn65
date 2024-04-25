@@ -68,36 +68,7 @@ namespace xna {
 		}
 
 		virtual constexpr void Comparison(ComparisonFunction value) override {
-			switch (value)
-			{
-			case xna::ComparisonFunction::Never:
-				_description.ComparisonFunc = D3D11_COMPARISON_NEVER;
-				break;
-			case xna::ComparisonFunction::Less:
-				_description.ComparisonFunc = D3D11_COMPARISON_LESS;
-				break;
-			case xna::ComparisonFunction::Equal:
-				_description.ComparisonFunc = D3D11_COMPARISON_EQUAL;
-				break;
-			case xna::ComparisonFunction::LessEquals:
-				_description.ComparisonFunc = D3D11_COMPARISON_LESS_EQUAL;
-				break;
-			case xna::ComparisonFunction::Greater:
-				_description.ComparisonFunc = D3D11_COMPARISON_GREATER;
-				break;
-			case xna::ComparisonFunction::NotEqual:
-				_description.ComparisonFunc = D3D11_COMPARISON_NOT_EQUAL;
-				break;
-			case xna::ComparisonFunction::GreaterEqual:
-				_description.ComparisonFunc = D3D11_COMPARISON_GREATER_EQUAL;
-				break;
-			case xna::ComparisonFunction::Always:
-				_description.ComparisonFunc = D3D11_COMPARISON_ALWAYS;
-				break;
-			default:
-				_description.ComparisonFunc = D3D11_COMPARISON_NEVER;
-				break;
-			}
+			_description.ComparisonFunc = static_cast<D3D11_COMPARISON_FUNC>(static_cast<int>(value) + 1);			
 		}
 
 		virtual constexpr void MipLODBias(float value) override {
@@ -161,27 +132,7 @@ namespace xna {
 		}
 
 		virtual ComparisonFunction Comparison() const override {
-			switch (_description.ComparisonFunc)
-			{
-			case D3D11_COMPARISON_NEVER :
-				return xna::ComparisonFunction::Never;
-			case D3D11_COMPARISON_LESS:
-				return xna::ComparisonFunction::Less;				
-			case D3D11_COMPARISON_EQUAL:
-				return xna::ComparisonFunction::Equal;
-			case D3D11_COMPARISON_LESS_EQUAL:
-				return xna::ComparisonFunction::LessEquals;				
-			case D3D11_COMPARISON_GREATER:
-				return xna::ComparisonFunction::Greater;				
-			case D3D11_COMPARISON_NOT_EQUAL:
-				return xna::ComparisonFunction::NotEqual;				
-			case D3D11_COMPARISON_GREATER_EQUAL:
-				return xna::ComparisonFunction::GreaterEqual;
-			case D3D11_COMPARISON_ALWAYS:
-				return xna::ComparisonFunction::Always;
-			default:
-				return xna::ComparisonFunction::Never;				
-			}
+			return static_cast<ComparisonFunction>(_description.ComparisonFunc - 1);			
 		}
 		
 		virtual constexpr float MipLODBias() const override {
@@ -206,46 +157,11 @@ namespace xna {
 
 	public:
 		static constexpr void ConvertAddressMode(TextureAddressMode value, D3D11_TEXTURE_ADDRESS_MODE& target) {
-			switch (value)
-			{
-			case xna::TextureAddressMode::Wrap:
-				target = D3D11_TEXTURE_ADDRESS_WRAP;
-				break;
-			case xna::TextureAddressMode::Clamp:
-				target = D3D11_TEXTURE_ADDRESS_CLAMP;
-				break;
-			case xna::TextureAddressMode::Mirror:
-				target = D3D11_TEXTURE_ADDRESS_MIRROR;
-				break;
-			case xna::TextureAddressMode::Border:
-				target = D3D11_TEXTURE_ADDRESS_BORDER;
-				break;
-			case xna::TextureAddressMode::MirrorOnce:
-				target = D3D11_TEXTURE_ADDRESS_MIRROR_ONCE;
-				break;
-			default:
-				target = D3D11_TEXTURE_ADDRESS_WRAP;				
-				break;
-			}			
+			target = static_cast<D3D11_TEXTURE_ADDRESS_MODE>(static_cast<int>(value) + 1);			
 		}
 
 		static constexpr void ConvertAddressMode(D3D11_TEXTURE_ADDRESS_MODE value, TextureAddressMode& target) {
-			switch (value)
-			{
-			case D3D11_TEXTURE_ADDRESS_WRAP:
-				target = TextureAddressMode::Wrap;
-			case D3D11_TEXTURE_ADDRESS_CLAMP:
-				target = TextureAddressMode::Clamp;
-			case D3D11_TEXTURE_ADDRESS_MIRROR:
-				target = TextureAddressMode::Mirror;
-			case D3D11_TEXTURE_ADDRESS_BORDER:
-				target = TextureAddressMode::Border;
-			case D3D11_TEXTURE_ADDRESS_MIRROR_ONCE:
-				target = TextureAddressMode::MirrorOnce;
-			default:
-				target = TextureAddressMode::Wrap;
-				break;
-			}
+			target = static_cast<TextureAddressMode>(value - 1);			
 		}
 	};
 }

@@ -7,7 +7,8 @@ namespace xna {
 	class IRasterizerState {
 	public:
 		virtual ~IRasterizerState() {}
-		virtual bool Initialize(GraphicsDevice& device, xna_error_nullarg) = 0;
+		virtual bool Initialize(xna_error_nullarg) = 0;
+		virtual bool Apply(xna_error_nullarg) = 0;
 		virtual xna::CullMode CullMode() const = 0;
 		virtual void CullMode(xna::CullMode value) = 0;
 		virtual xna::FillMode FillMode() const = 0;

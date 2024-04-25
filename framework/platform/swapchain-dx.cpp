@@ -37,7 +37,12 @@ namespace xna {
         return true;
     }
 
-    bool SwapChain::Initialize(GraphicsDevice& device, GameWindow const& gameWindow) {
+    bool SwapChain::Initialize(GameWindow const& gameWindow, xna_error_ptr_arg) {
+        if (!m_device || !m_device->_device) {
+            xna_error_apply(err, XnaErrorCode::INVALID_OPERATION);
+            return false;
+        }
+
         const auto bounds = gameWindow.ClientBounds();        
 
         dxDescription.Width = static_cast<UINT>(bounds.Width);
@@ -56,14 +61,19 @@ namespace xna {
         dxFullScreenDescription.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
         dxFullScreenDescription.Windowed = gameWindow.Mode() != GameWindowMode::Fullscreen;
 
-        return internalInit(device, gameWindow, dxSwapChain, dxDescription, dxFullScreenDescription);
+        return internalInit(*m_device, gameWindow, dxSwapChain, dxDescription, dxFullScreenDescription);
     }
 
-    bool SwapChain::Initialize(GraphicsDevice& device, GameWindow const& gameWindow, DXGI_SWAP_CHAIN_DESC1 const& desc, DXGI_SWAP_CHAIN_FULLSCREEN_DESC const& fullScreenDesc)
+    bool SwapChain::Initialize(GameWindow const& gameWindow, DXGI_SWAP_CHAIN_DESC1 const& desc, DXGI_SWAP_CHAIN_FULLSCREEN_DESC const& fullScreenDesc, xna_error_ptr_arg)
     {
+        if (!m_device || !m_device->_device) {
+            xna_error_apply(err, XnaErrorCode::INVALID_OPERATION);
+            return false;
+        }
+
         dxDescription = desc;
         dxFullScreenDescription = fullScreenDesc;
-        return internalInit(device, gameWindow, dxSwapChain, dxDescription, dxFullScreenDescription);
+        return internalInit(*m_device, gameWindow, dxSwapChain, dxDescription, dxFullScreenDescription);
     }
 
     bool SwapChain::GetBackBuffer(ID3D11Texture2D*& texture2D) {

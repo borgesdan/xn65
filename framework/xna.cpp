@@ -26,18 +26,6 @@ namespace xna {
 
 			XnaErrorCode err;
 			texture = Texture2D::FromStream(*_graphicsDevice, "D:\\sprite.jpg", &err);
-			
-			std::vector<VertexPositionColor> data(3);
-			data[0] = VertexPositionColor(Vector3(0.0F, 0.5F, 0.5F), Colors::AliceBlue);
-			data[0] = VertexPositionColor(Vector3(0.5F, -0.5F, 0.5F), Colors::Red);
-			data[0] = VertexPositionColor(Vector3(-0.5F, -0.5F, 0.5F), Colors::AliceBlue);
-
-			VertexBuffer<VertexPositionColor> vbuffer(_graphicsDevice.get(), data);
-			vbuffer.Initialize(&err);
-			
-			D3D11_BUFFER_DESC desc;
-			vbuffer.dxBuffer->GetDesc(&desc);			
-			
 
 			Game::LoadContent();
 		}

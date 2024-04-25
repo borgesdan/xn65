@@ -2,10 +2,10 @@
 #include "device-dx.hpp"
 
 namespace xna {
-	bool BlendState::Initialize(GraphicsDevice& device, xna_error_ptr_arg)
+	bool BlendState::Initialize(xna_error_ptr_arg)
 	{
-		if (!device._device) {
-			xna_error_apply(err, XnaErrorCode::ARGUMENT_IS_NULL);
+		if (!m_device || !m_device->_device) {
+			xna_error_apply(err, XnaErrorCode::INVALID_OPERATION);
 			return false;
 		}
 
@@ -14,7 +14,7 @@ namespace xna {
 			dxBlendState = nullptr;
 		}
 
-		const auto hr = device._device->CreateBlendState(&dxDescription, &dxBlendState);
+		const auto hr = m_device->_device->CreateBlendState(&dxDescription, &dxBlendState);
 
 		if (FAILED(hr)) {
 			xna_error_apply(err, XnaErrorCode::FAILED_OPERATION);
@@ -24,24 +24,24 @@ namespace xna {
 		return true;
 	}
 
-	bool BlendState::Apply(GraphicsDevice& device, xna_error_ptr_arg) {
-		if (!device._context) {
-			xna_error_apply(err, XnaErrorCode::ARGUMENT_IS_NULL);
+	bool BlendState::Apply(xna_error_ptr_arg) {
+		if (!m_device || !m_device->_context) {
+			xna_error_apply(err, XnaErrorCode::INVALID_OPERATION);
 			return false;
 		}
 
 		if (!dxBlendState) {
-			const auto init = Initialize(device, err);
-			if (!init) return false;
+			xna_error_apply(err, XnaErrorCode::UNINTIALIZED_RESOURCE);
+			return false;
 		}
 		
-        device._context->OMSetBlendState(dxBlendState, blendFactor, sampleMask);
+        m_device->_context->OMSetBlendState(dxBlendState, blendFactor, sampleMask);
 
         return true;
 	}
 
-	PBlendState IBlendState::Opaque() {
-		auto blendState = New<BlendState>();		
+	uptr<BlendState> BlendState::Opaque() {
+		auto blendState = std::unique_ptr<BlendState>(new BlendState());		
 		blendState->dxDescription.RenderTarget[0].SrcBlend = D3D11_BLEND_ONE;
 		blendState->dxDescription.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ZERO;
 		blendState->dxDescription.RenderTarget[0].DestBlend = D3D11_BLEND_DEST_ALPHA;
@@ -50,8 +50,8 @@ namespace xna {
 		return blendState;
 	}
 
-	PBlendState IBlendState::AlphaBlend() {
-		auto blendState = New<BlendState>();
+	uptr<BlendState> BlendState::AlphaBlend() {
+		auto blendState = std::unique_ptr<BlendState>(new BlendState());
 		blendState->dxDescription.RenderTarget[0].SrcBlend = D3D11_BLEND_ONE;
 		blendState->dxDescription.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;
 		blendState->dxDescription.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
@@ -60,8 +60,8 @@ namespace xna {
 		return blendState;
 	}
 
-	PBlendState IBlendState::Additive() {
-		auto blendState = New<BlendState>();
+	uptr<BlendState> BlendState::Additive() {
+		auto blendState = std::unique_ptr<BlendState>(new BlendState());
 		blendState->dxDescription.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
 		blendState->dxDescription.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_SRC_ALPHA;
 		blendState->dxDescription.RenderTarget[0].DestBlend = D3D11_BLEND_ONE;
@@ -70,8 +70,8 @@ namespace xna {
 		return blendState;
 	}
 
-	PBlendState IBlendState::NonPremultiplied() {
-		auto blendState = New<BlendState>();
+	uptr<BlendState> BlendState::NonPremultiplied() {
+		auto blendState = std::unique_ptr<BlendState>(new BlendState());
 		blendState->dxDescription.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
 		blendState->dxDescription.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_SRC_ALPHA;
 		blendState->dxDescription.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;

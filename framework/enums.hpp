@@ -166,9 +166,9 @@ namespace xna {
     };
 
 	enum class FillMode
-	{
-		Solid,
+	{		
 		WireFrame,
+        Solid,
 	};
 
     enum class GamePadCapabilitiesType
@@ -446,8 +446,8 @@ namespace xna {
 
 	enum class TextureAddressMode {
 		Wrap,
-		Clamp,
 		Mirror,
+		Clamp,
 		Border,
 		MirrorOnce
 	};

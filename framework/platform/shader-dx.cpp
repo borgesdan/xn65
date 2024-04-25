@@ -47,9 +47,9 @@ namespace xna {
         return hr;
 	}       
 
-    bool VertexShader::Initialize(GraphicsDevice& device, DataBuffer& buffer, xna_error_ptr_arg)
+    bool VertexShader::Initialize(DataBuffer& buffer, xna_error_ptr_arg)
     {
-        if (!device._device || !buffer._blob) {
+        if (!m_device || !m_device->_device || !buffer._blob) {
             xna_error_apply(err, XnaErrorCode::INVALID_OPERATION);
             return false;
         }
@@ -59,7 +59,7 @@ namespace xna {
             _vertexShader = nullptr;
         }
 
-        const auto hr = device._device->CreateVertexShader(
+        const auto hr = m_device->_device->CreateVertexShader(
             buffer._blob->GetBufferPointer(),
             buffer._blob->GetBufferSize(),
             NULL,
@@ -73,9 +73,9 @@ namespace xna {
         return true;
     }
 
-    bool PixelShader::Initialize(GraphicsDevice& device, DataBuffer& buffer, xna_error_ptr_arg)
+    bool PixelShader::Initialize(DataBuffer& buffer, xna_error_ptr_arg)
     {
-        if (!device._device || !buffer._blob) {
+        if (!m_device || !m_device->_device || !buffer._blob) {
             xna_error_apply(err, XnaErrorCode::INVALID_OPERATION);
             return false;
         }
@@ -85,7 +85,7 @@ namespace xna {
             _pixelShader = nullptr;
         }
 
-        const auto hr = device._device->CreatePixelShader(
+        const auto hr = m_device->_device->CreatePixelShader(
             buffer._blob->GetBufferPointer(),
             buffer._blob->GetBufferSize(),
             NULL,

@@ -11,7 +11,8 @@ namespace xna {
 		OVERFLOW_OPERATION,
 		NULL_CAST,
 		BAD_CAST,
-		STREAM_ERROR
+		STREAM_ERROR,
+		UNINTIALIZED_RESOURCE
 	};
 
 	inline void xna_error_apply(XnaErrorCode* source, XnaErrorCode const& value) {

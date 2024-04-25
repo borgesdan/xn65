@@ -2,19 +2,19 @@
 #include "device-dx.hpp"
 
 namespace xna {
-	bool DepthStencilState::Initialize(GraphicsDevice& device, xna_error_ptr_arg)
+	bool DepthStencilState::Initialize(xna_error_ptr_arg)
 	{
-		if (!device._device) {
-			xna_error_apply(err, XnaErrorCode::ARGUMENT_IS_NULL);
+		if (!m_device || !m_device->_device) {
+			xna_error_apply(err, XnaErrorCode::INVALID_OPERATION);
 			return false;
 		}
 
-		if (_depthStencil) {
-			_depthStencil->Release();
-			_depthStencil = nullptr;
+		if (dxDepthStencil) {
+			dxDepthStencil->Release();
+			dxDepthStencil = nullptr;
 		}
 
-		const auto hr = device._device->CreateDepthStencilState(&_description, &_depthStencil);
+		const auto hr = m_device->_device->CreateDepthStencilState(&dxDescription, &dxDepthStencil);
 
 		if (FAILED(hr)) {
 			xna_error_apply(err, XnaErrorCode::FAILED_OPERATION);
@@ -24,43 +24,43 @@ namespace xna {
 		return true;
 	}
 
-	bool DepthStencilState::Apply(GraphicsDevice& device, xna_error_ptr_arg)
+	bool DepthStencilState::Apply(xna_error_ptr_arg)
 	{
-		if (!device._context) {
-			xna_error_apply(err, XnaErrorCode::ARGUMENT_IS_NULL);
+		if (!m_device || !m_device->_context) {
+			xna_error_apply(err, XnaErrorCode::INVALID_OPERATION);
 			return false;
 		}
 
-		if (!_depthStencil) {
-			const auto init = Initialize(device, err);
-			if (!init) return false;
+		if (!dxDepthStencil) {
+			xna_error_apply(err, XnaErrorCode::UNINTIALIZED_RESOURCE);
+			return false;
 		}
 
-		device._context->OMSetDepthStencilState(_depthStencil, 0);
+		m_device->_context->OMSetDepthStencilState(dxDepthStencil, 0);
 
 		return true;
 	}
 
-	PDepthStencilState IDepthStencilState::None() {
-		auto stencil = New<DepthStencilState>();
-		stencil->_description.DepthEnable = false;
-		stencil->_description.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO;
+	uptr<DepthStencilState> DepthStencilState::None() {
+		auto stencil = std::unique_ptr<DepthStencilState>(new DepthStencilState());
+		stencil->dxDescription.DepthEnable = false;
+		stencil->dxDescription.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO;
 
 		return stencil;
 	}
 
-	PDepthStencilState IDepthStencilState::Default() {
-		auto stencil = New<DepthStencilState>();
-		stencil->_description.DepthEnable = true;
-		stencil->_description.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
+	uptr<DepthStencilState> DepthStencilState::Default() {
+		auto stencil = std::unique_ptr<DepthStencilState>(new DepthStencilState());
+		stencil->dxDescription.DepthEnable = true;
+		stencil->dxDescription.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
 
 		return stencil;
 	}
 
-	PDepthStencilState IDepthStencilState::DepthRead() {
-		auto stencil = New<DepthStencilState>();
-		stencil->_description.DepthEnable = true;
-		stencil->_description.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO;
+	uptr<DepthStencilState> DepthStencilState::DepthRead() {
+		auto stencil = std::unique_ptr<DepthStencilState>(new DepthStencilState());
+		stencil->dxDescription.DepthEnable = true;
+		stencil->dxDescription.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO;
 
 		return stencil;
 	}

@@ -7,8 +7,8 @@ namespace xna {
 	class IDepthStencilState {
 	public:
 		virtual ~IDepthStencilState(){}
-		virtual bool Initialize(GraphicsDevice& device, xna_error_nullarg) = 0;
-		virtual bool Apply(GraphicsDevice& device, xna_error_ptr_arg) = 0;
+		virtual bool Initialize(xna_error_nullarg) = 0;
+		virtual bool Apply(xna_error_ptr_arg) = 0;
 		
 		virtual void DepthEnabled(bool value) = 0;
 		virtual void DepthWriteEnabled(bool value) = 0;
@@ -38,11 +38,7 @@ namespace xna {
 		virtual StencilOperation StencilBackFacePass() = 0;
 		virtual StencilOperation StencilBackFaceFail() = 0;
 		virtual StencilOperation StencilBackFaceDepthFail() = 0;
-		virtual ComparisonFunction StencilBackFaceCompare() = 0;
-
-		static PDepthStencilState None();
-		static PDepthStencilState Default();
-		static PDepthStencilState DepthRead();
+		virtual ComparisonFunction StencilBackFaceCompare() = 0;		
 	};
 }
 

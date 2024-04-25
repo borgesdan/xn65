@@ -8,7 +8,7 @@ namespace xna {
 	class ISwapChain {
 	public:
 		virtual ~ISwapChain() {}
-		virtual bool Initialize(GraphicsDevice& device, GameWindow const& gameWindow) = 0;
+		virtual bool Initialize(GameWindow const& gameWindow, xna_error_nullarg) = 0;
 	};	
 }
 

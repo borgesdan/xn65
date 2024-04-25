@@ -17,6 +17,9 @@ using DirectX::GXMVECTOR;
 
 namespace xna {
 	SpriteBatch::SpriteBatch(GraphicsDevice& device) {
+		if (!device._context)
+			return;
+
 		_dxspriteBatch = New<DxSpriteBatch>(device._context);
 
 		Viewport(device.Viewport());
@@ -42,8 +45,8 @@ namespace xna {
 			sort,
 			blendState ? blendState->dxBlendState : nullptr,
 			samplerState ? samplerState->_samplerState : nullptr,
-			depthStencil ? depthStencil->_depthStencil : nullptr,
-			rasterizerState ? rasterizerState->_rasterizerState : nullptr,
+			depthStencil ? depthStencil->dxDepthStencil : nullptr,
+			rasterizerState ? rasterizerState->dxRasterizerState : nullptr,
 			nullptr,
 			matrix
 		);
