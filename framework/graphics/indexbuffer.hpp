@@ -7,7 +7,7 @@ namespace xna {
 	class IIndexBuffer {
 	public:
 		virtual ~IIndexBuffer() {}
-		virtual bool Initialize(GraphicsDevice& device, xna_error_nullarg) = 0;
+		virtual bool Initialize(xna_error_nullarg) = 0;
 	};
 }
 

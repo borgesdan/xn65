@@ -7,14 +7,15 @@
 #include <BufferHelpers.h>
 #include <VertexTypes.h>
 #include "device-dx.hpp"
+#include "../graphics/gresource.hpp"
 
 namespace xna {
 	template <typename T>
-	class VertexBuffer : public IVertexBuffer {
+	class VertexBuffer : public IVertexBuffer, public GraphicsResource {
 	public:
-		constexpr VertexBuffer() = default;
+		constexpr VertexBuffer(GraphicsDevice* device) : GraphicsResource(device){}
 
-		constexpr VertexBuffer(std::vector<T> const& vertices) : data(vertices) {}
+		constexpr VertexBuffer(GraphicsDevice* device, std::vector<T> const& vertices) : data(vertices), GraphicsResource(device) {}
 
 		virtual ~VertexBuffer() override {
 			if (dxBuffer) {
@@ -23,18 +24,13 @@ namespace xna {
 			}
 		}
 
-		virtual bool Initialize(GraphicsDevice& device, xna_error_nullarg) override {
-			if (!device._device) {
-				xna_error_apply(err, XnaErrorCode::ARGUMENT_IS_NULL);
-				return false;
-			}		
-
-			if (data.empty()) {
+		virtual bool Initialize(xna_error_ptr_arg) override {
+			if (!m_device || !m_device->_device || data.empty()) {
 				xna_error_apply(err, XnaErrorCode::INVALID_OPERATION);
 				return false;
-			}			
+			}					
 
-			const auto hr = DirectX::CreateStaticBuffer(device._device, data.data(), data.size(), sizeof(T), D3D11_BIND_VERTEX_BUFFER, &dxBuffer);
+			const auto hr = DirectX::CreateStaticBuffer(m_device->_device, data.data(), data.size(), sizeof(T), D3D11_BIND_VERTEX_BUFFER, &dxBuffer);
 
 			if (FAILED(hr)) {
 				xna_error_apply(err, XnaErrorCode::FAILED_OPERATION);
@@ -44,9 +40,23 @@ namespace xna {
 			return true;
 		}
 
+		virtual bool Apply(xna_error_ptr_arg) override {
+			if (!m_device || !m_device->_context || !dxBuffer) {
+				xna_error_apply(err, XnaErrorCode::INVALID_OPERATION);
+				return false;
+			}
+
+			UINT stride = sizeof(T);
+			UINT offset = 0;
+			m_device->_context->IASetVertexBuffers(0, 1,
+				&dxBuffer, &stride, &offset);
+
+			return true;
+		}
+
 	public:		
 		ID3D11Buffer* dxBuffer = nullptr;
-		std::vector<T> data;
+		std::vector<T> data;		
 	};
 }
 

@@ -32,8 +32,8 @@ namespace xna {
 			data[0] = VertexPositionColor(Vector3(0.5F, -0.5F, 0.5F), Colors::Red);
 			data[0] = VertexPositionColor(Vector3(-0.5F, -0.5F, 0.5F), Colors::AliceBlue);
 
-			VertexBuffer<VertexPositionColor> vbuffer(data);
-			vbuffer.Initialize(*_graphicsDevice, &err);
+			VertexBuffer<VertexPositionColor> vbuffer(_graphicsDevice.get(), data);
+			vbuffer.Initialize(&err);
 			
 			D3D11_BUFFER_DESC desc;
 			vbuffer.dxBuffer->GetDesc(&desc);			
