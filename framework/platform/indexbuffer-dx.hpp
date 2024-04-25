@@ -2,37 +2,50 @@
 #define XNA_PLATFORM_INDEXBUFFER_DX_HPP
 
 #include "../graphics/indexbuffer.hpp"
+#include "device-dx.hpp"
 #include "dxheaders.hpp"
+#include <BufferHelpers.h>
+#include <VertexTypes.h>
 
 namespace xna {
+	template <typename T>
 	class IndexBuffer : public IIndexBuffer {
 	public:
-		IndexBuffer() {			
-			_description.Usage = D3D11_USAGE_DEFAULT;
-			_description.BindFlags = D3D11_BIND_INDEX_BUFFER;			
-		}
-		
-		IndexBuffer(size_t size) {
-			_description.ByteWidth = static_cast<UINT>(size);
-			_description.Usage = D3D11_USAGE_DEFAULT;
-			_description.BindFlags = D3D11_BIND_INDEX_BUFFER;
-		}
+		constexpr IndexBuffer() = default;
 
-		IndexBuffer(D3D11_BUFFER_DESC desc) : _description(desc){}
+		constexpr IndexBuffer(std::vector<T> const& vertices) : data(vertices) {}
 
 		virtual ~IndexBuffer() override {
-			if (_buffer) {
-				_buffer->Release();
-				_buffer = nullptr;
+			if (dxBuffer) {
+				dxBuffer->Release();
+				dxBuffer = nullptr;
 			}
 		}
 
-		virtual bool Initialize(GraphicsDevice& device, xna_error_nullarg) override;
+		virtual bool Initialize(GraphicsDevice& device, xna_error_nullarg) override {
+			if (!device._device) {
+				xna_error_apply(err, XnaErrorCode::ARGUMENT_IS_NULL);
+				return false;
+			}
+
+			if (data.empty()) {
+				xna_error_apply(err, XnaErrorCode::INVALID_OPERATION);
+				return false;
+			}
+
+			const auto hr = DirectX::CreateStaticBuffer(device._device, data.data(), data.size(), sizeof(T), D3D11_BIND_INDEX_BUFFER, &dxBuffer);
+
+			if (FAILED(hr)) {
+				xna_error_apply(err, XnaErrorCode::FAILED_OPERATION);
+				return false;
+			}
+
+			return true;
+		}
 
 	public:
-		D3D11_BUFFER_DESC _description;
-		ID3D11Buffer* _buffer = nullptr;
-		D3D11_SUBRESOURCE_DATA _subResource{};
+		ID3D11Buffer* dxBuffer = nullptr;
+		std::vector<T> data;
 	};
 }
 

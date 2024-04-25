@@ -4,38 +4,49 @@
 #include "../graphics/vertexbuffer.hpp"
 #include "../graphics/vertexposition.hpp"
 #include "dxheaders.hpp"
+#include <BufferHelpers.h>
+#include <VertexTypes.h>
+#include "device-dx.hpp"
 
 namespace xna {
+	template <typename T>
 	class VertexBuffer : public IVertexBuffer {
 	public:
-		VertexBuffer() {
-			_description.Usage = D3D11_USAGE_DYNAMIC;
-			_description.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-			_description.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-		}
+		constexpr VertexBuffer() = default;
 
-		VertexBuffer(size_t size) {
-			_description.ByteWidth = static_cast<UINT>(size);
-			_description.Usage = D3D11_USAGE_DYNAMIC;
-			_description.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-			_description.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-		}
-
-		VertexBuffer(D3D11_BUFFER_DESC desc) : _description(desc){}
+		constexpr VertexBuffer(std::vector<T> const& vertices) : data(vertices) {}
 
 		virtual ~VertexBuffer() override {
-			if (_buffer) {
-				_buffer->Release();
-				_buffer = nullptr;
+			if (dxBuffer) {
+				dxBuffer->Release();
+				dxBuffer = nullptr;
 			}
 		}
 
-		virtual bool Initialize(GraphicsDevice& device, xna_error_nullarg) override;
+		virtual bool Initialize(GraphicsDevice& device, xna_error_nullarg) override {
+			if (!device._device) {
+				xna_error_apply(err, XnaErrorCode::ARGUMENT_IS_NULL);
+				return false;
+			}		
 
-	public:
-		D3D11_BUFFER_DESC _description{};
-		D3D11_SUBRESOURCE_DATA _subResource{};
-		ID3D11Buffer* _buffer = nullptr;
+			if (data.empty()) {
+				xna_error_apply(err, XnaErrorCode::INVALID_OPERATION);
+				return false;
+			}			
+
+			const auto hr = DirectX::CreateStaticBuffer(device._device, data.data(), data.size(), sizeof(T), D3D11_BIND_VERTEX_BUFFER, &dxBuffer);
+
+			if (FAILED(hr)) {
+				xna_error_apply(err, XnaErrorCode::FAILED_OPERATION);
+				return false;
+			}
+
+			return true;
+		}
+
+	public:		
+		ID3D11Buffer* dxBuffer = nullptr;
+		std::vector<T> data;
 	};
 }
 

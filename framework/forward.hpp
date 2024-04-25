@@ -128,11 +128,7 @@ namespace xna {
 	class SpriteBatch;
 	using PSpriteBatch					= std::shared_ptr<SpriteBatch>;
 	class SpriteFont;
-	using PSpriteFont					= std::shared_ptr<SpriteFont>;
-	class VertexBuffer;
-	using PVertexBuffer					= std::shared_ptr<VertexBuffer>;
-	class VertexInputLayout;
-	using PVertexInputLayout			= std::shared_ptr<VertexInputLayout>;
+	using PSpriteFont					= std::shared_ptr<SpriteFont>;	
 	struct VertexPositionColor;
 	using PVertexPositionColor			= std::shared_ptr<VertexPositionColor>;
 	class VertexShader;
@@ -140,25 +136,15 @@ namespace xna {
 	struct Viewport;	
 	using PViewport						= std::shared_ptr<Viewport>;
 
-	//Input
-	class GamePad;
-	using PGamePad						= std::shared_ptr<GamePad>;
+	//Input	
 	struct GamePadTriggers;
-	using PGamePagTriggers				= std::shared_ptr<GamePadTriggers>;
 	struct GamePadThumbSticks;
-	using PGamePadThumbSticks			= std::shared_ptr<GamePadThumbSticks>;
 	struct GamePadDPad;
-	using PGamePadDPad					= std::shared_ptr<GamePadDPad>;
 	struct GamePadCapabilities;
-	using PGamePadCapabilities			= std::shared_ptr<GamePadCapabilities>;
 	struct GamePadButtons;
-	using PGamePadButtons				= std::shared_ptr<GamePadButtons>;
 	struct GamePadState;
-	using PGamePadState					= std::shared_ptr<GamePadState>;
 	struct KeyboardState;
-	using PKeyboardState				= std::shared_ptr<KeyboardState>;
 	struct MouseState;
-	using PMouseState					= std::shared_ptr<MouseState>;
 }
 
 #endif

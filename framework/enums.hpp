@@ -68,10 +68,10 @@ namespace xna {
 	using BlendOperation = BlendFunction;
 
     enum class BufferUsage {
-        Static,
-        Dynamic,
+        Default,
         Immutable,
-        Staging
+        Dynamic,
+        Static,
     };
 
     enum class Buttons {

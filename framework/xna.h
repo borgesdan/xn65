@@ -18,6 +18,8 @@
 #include "platform/spritebatch-dx.hpp"
 #include "platform/texture-dx.hpp"
 #include "platform/window-dx.hpp"
+#include "graphics/vertexposition.hpp"
+#include "platform/vertexbuffer-dx.hpp"
 #include "Windows.h"
 #include <iostream>
 
