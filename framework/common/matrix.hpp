@@ -600,6 +600,29 @@ namespace xna {
 		const auto posy = normal.X * matrix.M12 + normal.Y * matrix.M22;
 		return { posx, posy };
 	}
+
+	constexpr Vector3 Vector3::Transform(Vector3 const& position, Matrix const& matrix) {
+		const auto num1 = (position.X * matrix.M11 + position.Y * matrix.M21 + position.Z * matrix.M31) + matrix.M41;
+		const auto num2 = (position.X * matrix.M12 + position.Y * matrix.M22 + position.Z * matrix.M32) + matrix.M42;
+		const auto num3 = (position.X * matrix.M13 + position.Y * matrix.M23 + position.Z * matrix.M33) + matrix.M43;
+		Vector3 vector3;
+		vector3.X = num1;
+		vector3.Y = num2;
+		vector3.Z = num3;
+		return vector3;
+	}
+
+	constexpr Vector3 Vector3::TransformNormal(Vector3 const& normal, Matrix const& matrix)
+	{
+		const auto num1 = normal.X * matrix.M11 + normal.Y * matrix.M21 + normal.Z * matrix.M31;
+		const auto num2 = normal.X * matrix.M12 + normal.Y * matrix.M22 + normal.Z * matrix.M32;
+		const auto num3 = normal.X * matrix.M13 + normal.Y * matrix.M23 + normal.Z * matrix.M33;
+		Vector3 vector3;
+		vector3.X = num1;
+		vector3.Y = num2;
+		vector3.Z = num3;
+		return vector3;
+	}	
 }
 
 #endif
