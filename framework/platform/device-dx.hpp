@@ -41,11 +41,11 @@ namespace xna {
 		virtual bool Initialize(GameWindow& gameWindow) override;
 		virtual bool Present() override;
 
-		virtual PGraphicsAdapter Adapter() const override {
+		virtual sptr<GraphicsAdapter> Adapter() const override {
 			return _adapter;
 		}
 
-		virtual void Adapter(PGraphicsAdapter const& adapter) override {
+		virtual void Adapter(sptr<GraphicsAdapter> const& adapter) override {
 			_adapter = adapter;
 		}
 
@@ -75,10 +75,10 @@ namespace xna {
 		ID3D11Device* _device{ nullptr };
 		ID3D11DeviceContext* _context{ nullptr };
 		IDXGIFactory1* _factory = nullptr;
-		PSwapChain _swapChain{ nullptr };
-		PGraphicsAdapter _adapter{ nullptr };
-		PRenderTarget2D _renderTarget2D{ nullptr };
-		PBlendState _blendState{ nullptr };
+		sptr<SwapChain> _swapChain{ nullptr };
+		sptr<GraphicsAdapter> _adapter{ nullptr };
+		sptr<RenderTarget2D> _renderTarget2D{ nullptr };
+		sptr<BlendState> _blendState{ nullptr };
 		xna::Viewport _viewport{};
 		xna::PresentationParameters _presentationParameters;
 

@@ -5,7 +5,6 @@
 #include "displaymode-dx.hpp"
 #include "dxheaders.hpp"
 
-
 namespace xna {
 	class GraphicsAdapter : public IGraphicsAdapter {
 	public:
@@ -27,9 +26,9 @@ namespace xna {
 		virtual Uint Revision() const override;
 		virtual Uint SubSystemId() const override;
 		virtual Uint VendorId() const override;
-		virtual UDisplayModeCollection SupportedDisplayModes() const override;
-		virtual UDisplayModeCollection SupportedDisplayModes(SurfaceFormat surfaceFormat) const override;
-		virtual PDisplayMode CurrentDisplayMode() override;
+		virtual uptr<DisplayModeCollection> SupportedDisplayModes() const override;
+		virtual uptr<DisplayModeCollection> SupportedDisplayModes(SurfaceFormat surfaceFormat) const override;
+		virtual sptr<DisplayMode> CurrentDisplayMode() override;
 		virtual void CurrentDisplayMode(SurfaceFormat surfaceFormat, Uint width, Uint height) override;
 		virtual constexpr bool IsDefaultAdapter() const { return _index == 0; }	
 		bool GetOutput(UINT slot, IDXGIOutput*& output);
@@ -38,7 +37,7 @@ namespace xna {
 		IDXGIAdapter1* dxadapter{ nullptr };	
 	private:
 		Uint _index{ 0 };
-		PDisplayMode _currentDisplayMode = nullptr;
+		sptr<DisplayMode> _currentDisplayMode = nullptr;
 
 	public:
 		static constexpr DXGI_FORMAT ConvertSurfaceToDXGIFORMAT(SurfaceFormat format)

@@ -16,14 +16,14 @@ namespace xna {
 		virtual Uint Revision() const = 0;
 		virtual Uint SubSystemId() const = 0;
 		virtual Uint VendorId() const = 0;
-		virtual UDisplayModeCollection SupportedDisplayModes() const = 0;
-		virtual UDisplayModeCollection SupportedDisplayModes(SurfaceFormat surfaceFormat) const = 0;
-		virtual PDisplayMode CurrentDisplayMode() = 0;
+		virtual uptr<DisplayModeCollection> SupportedDisplayModes() const = 0;
+		virtual uptr<DisplayModeCollection> SupportedDisplayModes(SurfaceFormat surfaceFormat) const = 0;
+		virtual sptr<DisplayMode> CurrentDisplayMode() = 0;
 		virtual void CurrentDisplayMode(SurfaceFormat surfaceFormat, Uint width, Uint height) = 0;
 
-		static UGraphicsAdapter DefaultAdapter();
-		static void Adapters(std::vector<PGraphicsAdapter>& adapters);
-		static void Adapters(std::vector<UGraphicsAdapter>& adapters);
+		static uptr<GraphicsAdapter> DefaultAdapter();
+		static void Adapters(std::vector<sptr<GraphicsAdapter>>& adapters);
+		static void Adapters(std::vector<uptr<GraphicsAdapter>>& adapters);
 	};
 }
 

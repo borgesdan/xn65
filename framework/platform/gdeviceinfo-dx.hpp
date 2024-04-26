@@ -11,11 +11,11 @@ namespace xna {
 	public:
 		virtual ~GraphicsDeviceInformation() override {}
 
-		inline virtual PGraphicsAdapter Adapter() const override {
+		inline virtual sptr<GraphicsAdapter> Adapter() const override {
 			return _adapter;
 		};
 
-		inline virtual void Adapter(PGraphicsAdapter const& value) override {
+		inline virtual void Adapter(sptr<GraphicsAdapter> const& value) override {
 			_adapter = value;
 		}
 
@@ -35,19 +35,19 @@ namespace xna {
 			_profile = value;
 		};
 
-		inline virtual PGameWindow Window() const override {
+		inline virtual sptr<GameWindow> Window() const override {
 			return _window;
 		}
 
-		inline virtual void Window(PGameWindow const& window) override {
+		inline virtual void Window(sptr<GameWindow> const& window) override {
 			_window = window;
 		}
 
 	public:
-		PGraphicsAdapter _adapter{ nullptr };
+		sptr<GraphicsAdapter> _adapter{ nullptr };
 		xna::GraphicsProfile _profile{xna::GraphicsProfile::Reach};
 		xna::PresentationParameters _parameters{};
-		PGameWindow _window{ nullptr };
+		sptr<GameWindow> _window{ nullptr };
 	};
 }
 

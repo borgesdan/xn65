@@ -48,9 +48,9 @@ namespace xna {
 		}
 
 	private:
-		PGraphicsDeviceManager graphics = nullptr;
-		PSpriteBatch spriteBatch = nullptr;
-		PTexture2D texture = nullptr; //200x200
+		sptr<GraphicsDeviceManager> graphics = nullptr;
+		sptr<SpriteBatch> spriteBatch = nullptr;
+		sptr<Texture2D> texture = nullptr; //200x200
 		Vector2 position{};
 		std::vector<Vector2> points;
 		MouseState currentState{};

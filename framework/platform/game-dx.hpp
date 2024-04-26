@@ -18,11 +18,11 @@ namespace xna {
 
 		virtual int Run() override;
 		
-		virtual PGameWindow Window() override {
+		virtual sptr<GameWindow> Window() override {
 			return _gameWindow;
 		}
 
-		virtual PGraphicsDevice GetGraphicsDevice() override {
+		virtual sptr<GraphicsDevice> GetGraphicsDevice() override {
 			return _graphicsDevice;
 		}
 
@@ -36,11 +36,11 @@ namespace xna {
 		virtual void Update(GameTime const& gameTime) override;
 
 	public:
-		PGraphicsDevice _graphicsDevice{ nullptr };		
+		sptr<GraphicsDevice> _graphicsDevice{ nullptr };
 
 	protected:		
-		PGameWindow _gameWindow{ nullptr };
-		PAudioEngine _audioEngine = nullptr;		
+		sptr<GameWindow> _gameWindow{ nullptr };
+		sptr<AudioEngine> _audioEngine = nullptr;		
 		
 		GameTime _currentGameTime{};
 		DX::StepTimer _stepTimer;

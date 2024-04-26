@@ -85,16 +85,16 @@ namespace xna {
 
 		DisplayModeCollection(size_t count) : _displayModes(count) {}
 
-		DisplayModeCollection(std::vector<PDisplayMode> const& displayModes) :
+		DisplayModeCollection(std::vector<sptr<DisplayMode>> const& displayModes) :
 			_displayModes(displayModes) {}
 
 		virtual size_t SurfaceCount(SurfaceFormat format) const override;
 
-		std::vector<PDisplayMode> Query(SurfaceFormat format) const;
-		PDisplayMode Query(SurfaceFormat format, Uint width, Uint height) const;
+		std::vector<sptr<DisplayMode>> Query(SurfaceFormat format) const;
+		sptr<DisplayMode> Query(SurfaceFormat format, Uint width, Uint height) const;
 
 	public:
-		std::vector<PDisplayMode> _displayModes;
+		std::vector<sptr<DisplayMode>> _displayModes;
 	};
 }
 

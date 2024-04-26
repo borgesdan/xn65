@@ -3,9 +3,9 @@
 
 namespace xna {
 	static size_t getDisplayModesCount(IDXGIAdapter* adapter);
-	static UDisplayModeCollection createDisplayModeCollection(std::vector<DXGI_MODE_DESC> const& source);
+	static uptr<DisplayModeCollection> createDisplayModeCollection(std::vector<DXGI_MODE_DESC> const& source);
 
-	UGraphicsAdapter IGraphicsAdapter::DefaultAdapter() {
+	uptr<GraphicsAdapter> IGraphicsAdapter::DefaultAdapter() {
 		IDXGIFactory1* pFactory = nullptr;
 
 		if FAILED(CreateDXGIFactory1(__uuidof(IDXGIFactory1), (void**)&pFactory))
@@ -28,7 +28,7 @@ namespace xna {
 		return nullptr;
 	}
 
-	void IGraphicsAdapter::Adapters(std::vector<PGraphicsAdapter>& adapters){
+	void IGraphicsAdapter::Adapters(std::vector<sptr<GraphicsAdapter>>& adapters){
 		IDXGIFactory1* pFactory = nullptr;
 
 		if FAILED(CreateDXGIFactory1(__uuidof(IDXGIFactory1), (void**)&pFactory))
@@ -50,7 +50,7 @@ namespace xna {
 		pFactory = nullptr;
 	}
 
-	void IGraphicsAdapter::Adapters(std::vector<UGraphicsAdapter>& adapters) {
+	void IGraphicsAdapter::Adapters(std::vector<uptr<GraphicsAdapter>>& adapters) {
 		IDXGIFactory1* pFactory = nullptr;
 
 		if FAILED(CreateDXGIFactory1(__uuidof(IDXGIFactory1), (void**)&pFactory))
@@ -154,7 +154,7 @@ namespace xna {
 		return static_cast<Uint>(desc.VendorId);
 	}	
 
-	UDisplayModeCollection GraphicsAdapter::SupportedDisplayModes() const {
+	uptr<DisplayModeCollection> GraphicsAdapter::SupportedDisplayModes() const {
 		if (!dxadapter) return nullptr;
 
 		const auto totalDisplay = getDisplayModesCount(dxadapter);
@@ -193,7 +193,7 @@ namespace xna {
 		return createDisplayModeCollection(buffer);
 	}
 
-	UDisplayModeCollection GraphicsAdapter::SupportedDisplayModes(SurfaceFormat surfaceFormat) const
+	uptr<DisplayModeCollection> GraphicsAdapter::SupportedDisplayModes(SurfaceFormat surfaceFormat) const
 	{
 		if (!dxadapter) return nullptr;				
 
@@ -222,7 +222,7 @@ namespace xna {
 		return uNew<DisplayModeCollection>();
 	}
 
-	PDisplayMode GraphicsAdapter::CurrentDisplayMode() {
+	sptr<DisplayMode> GraphicsAdapter::CurrentDisplayMode() {
 		if (!_currentDisplayMode) {
 			CurrentDisplayMode(SurfaceFormat::Color, GraphicsDeviceManager::DefaultBackBufferWidth, GraphicsDeviceManager::DefaultBackBufferHeight);
 		}
@@ -278,11 +278,11 @@ namespace xna {
 		return numModes;
 	}
 
-	static UDisplayModeCollection createDisplayModeCollection(std::vector<DXGI_MODE_DESC> const& source) {
+	static uptr<DisplayModeCollection> createDisplayModeCollection(std::vector<DXGI_MODE_DESC> const& source) {
 		auto collection = uNew<DisplayModeCollection>();
 		DisplayMode currentDisplayMode;
-		std::vector<PDisplayMode> displayList;
-		PDisplayMode pDisplay = nullptr;
+		std::vector<sptr<DisplayMode>> displayList;
+		sptr<DisplayMode> pDisplay = nullptr;
 
 		for (size_t i = 0; i < source.size(); ++i) {
 			auto& modedesc = source[i];

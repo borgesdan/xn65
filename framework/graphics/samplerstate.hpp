@@ -7,7 +7,8 @@ namespace xna {
 	class ISamplerState {
 	public:
 		virtual ~ISamplerState(){}
-		virtual bool Initialize(GraphicsDevice& device, xna_error_nullarg) = 0;
+		virtual bool Initialize(xna_error_nullarg) = 0;
+		virtual bool Apply(xna_error_nullarg) = 0;
 		virtual void Filter(TextureFilter value) = 0;
 		virtual void AddressU(TextureAddressMode value) = 0;
 		virtual void AddressV(TextureAddressMode value) = 0;
@@ -25,14 +26,7 @@ namespace xna {
 		virtual float MipLODBias() const = 0;
 		virtual float MinLOD() const = 0;
 		virtual float MaxLOD() const = 0;
-		virtual Uint MaxAnisotropy() const = 0;
-
-		static PSamplerState PoinWrap();
-		static PSamplerState PointClamp();
-		static PSamplerState LinearWrap();
-		static PSamplerState LinearClamp();
-		static PSamplerState AnisotropicWrap();
-		static PSamplerState AnisotropicClamp();
+		virtual Uint MaxAnisotropy() const = 0;		
 	};
 }
 

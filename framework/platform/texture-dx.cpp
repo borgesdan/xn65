@@ -7,7 +7,7 @@ namespace xna {
 	Texture2D::Texture2D() {		
 	}	
 
-	PTexture2D Texture2D::FromStream(GraphicsDevice& device, String const& fileName, xna_error_ptr_arg)
+	sptr<Texture2D> Texture2D::FromStream(GraphicsDevice& device, String const& fileName, xna_error_ptr_arg)
 	{		
 		auto texture2d = New<Texture2D>();
 		ID3D11Resource* resource = nullptr;		

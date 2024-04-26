@@ -19,8 +19,8 @@ namespace xna {
 		virtual void Clear(Color const& color) = 0;
 		virtual bool Initialize(GameWindow& gameWindow) = 0;
 		virtual bool Present() = 0;
-		virtual PGraphicsAdapter Adapter() const = 0;
-		virtual void Adapter(PGraphicsAdapter const& adapter) = 0;
+		virtual sptr<GraphicsAdapter> Adapter() const = 0;
+		virtual void Adapter(sptr<GraphicsAdapter> const& adapter) = 0;
 		virtual xna::Viewport Viewport() const = 0;
 		virtual void Viewport(xna::Viewport const& viewport) = 0;
 		virtual void UseVSync(bool use) = 0;		

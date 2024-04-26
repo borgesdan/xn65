@@ -31,7 +31,7 @@ namespace xna {
 			return _description.Height;
 		}
 
-		static PTexture2D FromStream(GraphicsDevice& device, String const& fileName, xna_error_nullarg);		
+		static sptr<Texture2D> FromStream(GraphicsDevice& device, String const& fileName, xna_error_nullarg);		
 
 	public:
 		ID3D11Texture2D* _texture2D{nullptr};

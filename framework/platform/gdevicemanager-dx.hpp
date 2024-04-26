@@ -39,7 +39,7 @@ namespace xna {
 		Int _backBufferWidth{ DefaultBackBufferWidth };
 		Int _backBufferHeight{ DefaultBackBufferHeight };
 		bool _isDeviceDirty{ false };		
-		PGraphicsDevice _device = nullptr;
+		sptr<GraphicsDevice> _device = nullptr;
 		bool _isFullScreen{ false };
 		GraphicsDeviceInformation _information{};
 

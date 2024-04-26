@@ -14,12 +14,12 @@ namespace xna {
 		return counter;
 	}
 
-	std::vector<PDisplayMode> DisplayModeCollection::Query(SurfaceFormat format) const
+	std::vector<sptr<DisplayMode>> DisplayModeCollection::Query(SurfaceFormat format) const
 	{
 		const auto count = SurfaceCount(format);
 		
 		size_t index = 0;
-		std::vector<PDisplayMode> modes(count);
+		std::vector<sptr<DisplayMode>> modes(count);
 
 		for (size_t i = 0; i < _displayModes.size(); ++i) {
 			if (_displayModes[i]->Format() == format) {
@@ -34,9 +34,9 @@ namespace xna {
 		return modes;
 	}
 
-	PDisplayMode DisplayModeCollection::Query(SurfaceFormat format, Uint width, Uint height) const
+	sptr<DisplayMode> DisplayModeCollection::Query(SurfaceFormat format, Uint width, Uint height) const
 	{
-		PDisplayMode matched = nullptr;
+		sptr<DisplayMode> matched = nullptr;
 
 		for (size_t i = 0; i < _displayModes.size(); ++i) {
 			const auto& mode = _displayModes[i];

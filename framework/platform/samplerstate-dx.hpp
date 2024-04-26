@@ -2,13 +2,14 @@
 #define XNA_PLATFORM_SAMPLERSTATE_DX_HPP
 
 #include "../graphics/samplerstate.hpp"
+#include "../graphics/gresource.hpp"
 #include "dxheaders.hpp"
 
 namespace xna {
-	class SamplerState : public ISamplerState {
+	class SamplerState : public ISamplerState, public GraphicsResource {
 	public:
-		SamplerState() {
-			_description.MaxAnisotropy = 4;			
+		SamplerState(GraphicsDevice* device) : GraphicsResource(device) {
+			_description.MaxAnisotropy = 4;
 		}
 
 		virtual ~SamplerState() override {
@@ -18,7 +19,8 @@ namespace xna {
 			}
 		}
 
-		virtual bool Initialize(GraphicsDevice& device, xna_error_nullarg) override;
+		virtual bool Initialize(xna_error_nullarg) override;
+		virtual bool Apply(xna_error_nullarg) override;
 
 		virtual constexpr void Filter(TextureFilter value) override {
 			switch (value)
@@ -50,7 +52,7 @@ namespace xna {
 			case xna::TextureFilter::MinPointMagLinearMipPoint:
 				_description.Filter = D3D11_FILTER::D3D11_FILTER_MIN_POINT_MAG_LINEAR_MIP_POINT;
 				break;
-			default:				
+			default:
 				break;
 			}
 		}
@@ -68,7 +70,7 @@ namespace xna {
 		}
 
 		virtual constexpr void Comparison(ComparisonFunction value) override {
-			_description.ComparisonFunc = static_cast<D3D11_COMPARISON_FUNC>(static_cast<int>(value) + 1);			
+			_description.ComparisonFunc = static_cast<D3D11_COMPARISON_FUNC>(static_cast<int>(value) + 1);
 		}
 
 		virtual constexpr void MipLODBias(float value) override {
@@ -91,26 +93,26 @@ namespace xna {
 			switch (_description.Filter)
 			{
 			case D3D11_FILTER::D3D11_FILTER_MIN_MAG_MIP_LINEAR:
-				return xna::TextureFilter::Linear;				
+				return xna::TextureFilter::Linear;
 			case D3D11_FILTER_MIN_MAG_MIP_POINT:
 				return xna::TextureFilter::Point;
-			case D3D11_FILTER_ANISOTROPIC:				
+			case D3D11_FILTER_ANISOTROPIC:
 				return xna::TextureFilter::Anisotropic;
-			case D3D11_FILTER_MIN_MAG_LINEAR_MIP_POINT:				
-				return xna::TextureFilter::LinearMipPoint;			
-			case D3D11_FILTER_MIN_MAG_POINT_MIP_LINEAR:				
+			case D3D11_FILTER_MIN_MAG_LINEAR_MIP_POINT:
+				return xna::TextureFilter::LinearMipPoint;
+			case D3D11_FILTER_MIN_MAG_POINT_MIP_LINEAR:
 				return xna::TextureFilter::PointMipLinear;
-			case D3D11_FILTER_MIN_LINEAR_MAG_POINT_MIP_LINEAR:				
-				return xna::TextureFilter::MinLinearMagPointMipLinear;				
-			case D3D11_FILTER_MIN_LINEAR_MAG_MIP_POINT:				
+			case D3D11_FILTER_MIN_LINEAR_MAG_POINT_MIP_LINEAR:
+				return xna::TextureFilter::MinLinearMagPointMipLinear;
+			case D3D11_FILTER_MIN_LINEAR_MAG_MIP_POINT:
 				return xna::TextureFilter::MinLinearMagPointMipPoint;
-			case D3D11_FILTER_MIN_POINT_MAG_MIP_LINEAR:				
-				return xna::TextureFilter::MinPointMagLinearMipLinear;				
-			case D3D11_FILTER_MIN_POINT_MAG_LINEAR_MIP_POINT:				
+			case D3D11_FILTER_MIN_POINT_MAG_MIP_LINEAR:
+				return xna::TextureFilter::MinPointMagLinearMipLinear;
+			case D3D11_FILTER_MIN_POINT_MAG_LINEAR_MIP_POINT:
 				return xna::TextureFilter::MinPointMagLinearMipPoint;
 			default:
-				return xna::TextureFilter::Linear;				
-			}			
+				return xna::TextureFilter::Linear;
+			}
 		}
 
 		virtual constexpr TextureAddressMode AddressU() const override {
@@ -118,7 +120,7 @@ namespace xna {
 			ConvertAddressMode(_description.AddressU, mode);
 			return mode;
 		}
-		
+
 		virtual constexpr TextureAddressMode AddressV() const override {
 			TextureAddressMode mode;
 			ConvertAddressMode(_description.AddressV, mode);
@@ -132,17 +134,17 @@ namespace xna {
 		}
 
 		virtual ComparisonFunction Comparison() const override {
-			return static_cast<ComparisonFunction>(_description.ComparisonFunc - 1);			
+			return static_cast<ComparisonFunction>(_description.ComparisonFunc - 1);
 		}
-		
+
 		virtual constexpr float MipLODBias() const override {
 			return _description.MipLODBias;
 		}
-		
+
 		virtual constexpr float MinLOD() const override {
 			return _description.MinLOD;
 		}
-		
+
 		virtual constexpr float MaxLOD() const override {
 			return _description.MaxLOD;
 		}
@@ -151,18 +153,28 @@ namespace xna {
 			return _description.MaxAnisotropy;
 		}
 
+		static uptr<SamplerState> PoinWrap();
+		static uptr<SamplerState> PointClamp();
+		static uptr<SamplerState> LinearWrap();
+		static uptr<SamplerState> LinearClamp();
+		static uptr<SamplerState> AnisotropicWrap();
+		static uptr<SamplerState> AnisotropicClamp();
+
 	public:
 		ID3D11SamplerState* _samplerState = nullptr;
 		D3D11_SAMPLER_DESC _description{};
 
 	public:
 		static constexpr void ConvertAddressMode(TextureAddressMode value, D3D11_TEXTURE_ADDRESS_MODE& target) {
-			target = static_cast<D3D11_TEXTURE_ADDRESS_MODE>(static_cast<int>(value) + 1);			
+			target = static_cast<D3D11_TEXTURE_ADDRESS_MODE>(static_cast<int>(value) + 1);
 		}
 
 		static constexpr void ConvertAddressMode(D3D11_TEXTURE_ADDRESS_MODE value, TextureAddressMode& target) {
-			target = static_cast<TextureAddressMode>(value - 1);			
+			target = static_cast<TextureAddressMode>(value - 1);
 		}
+
+	private:
+		SamplerState() : GraphicsResource(nullptr) {}
 	};
 }
 
