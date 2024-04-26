@@ -18,7 +18,7 @@ namespace xna {
 			}
 		}
 
-		virtual bool Initialize(GameWindow const& gameWindow, xna_error_nullarg) override;
+		virtual bool Initialize(xna_error_nullarg) override;
 		bool Initialize(GameWindow const& gameWindow, DXGI_SWAP_CHAIN_DESC1 const& desc, DXGI_SWAP_CHAIN_FULLSCREEN_DESC const& fullScreenDesc, xna_error_nullarg);
 
 		bool GetBackBuffer(ID3D11Texture2D*& texture2D);

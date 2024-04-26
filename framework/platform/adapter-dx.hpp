@@ -41,7 +41,7 @@ namespace xna {
 		PDisplayMode _currentDisplayMode = nullptr;
 
 	public:
-		static constexpr DXGI_FORMAT ToDXGI(SurfaceFormat format)
+		static constexpr DXGI_FORMAT ConvertSurfaceToDXGIFORMAT(SurfaceFormat format)
 		{
 			switch (format)
 			{
@@ -90,7 +90,7 @@ namespace xna {
 			}
 		}
 
-		static constexpr SurfaceFormat ToSurface(DXGI_FORMAT format) {
+		static constexpr SurfaceFormat ConvertDXGIFORMATToSurface(DXGI_FORMAT format) {
 			switch (format)
 			{
 			case DXGI_FORMAT_B8G8R8A8_UNORM:

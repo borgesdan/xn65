@@ -4,6 +4,7 @@
 #include "../game/gdeviceinfo.hpp"
 #include "adapter-dx.hpp"
 #include "window-dx.hpp"
+#include "presentparameters-dx.hpp"
 
 namespace xna {
 	class GraphicsDeviceInformation : public IGraphicsDeviceInformation {
@@ -42,7 +43,7 @@ namespace xna {
 			_window = window;
 		}
 
-	private:
+	public:
 		PGraphicsAdapter _adapter{ nullptr };
 		xna::GraphicsProfile _profile{xna::GraphicsProfile::Reach};
 		xna::PresentationParameters _parameters{};

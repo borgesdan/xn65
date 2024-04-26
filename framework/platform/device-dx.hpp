@@ -1,16 +1,17 @@
 #ifndef XNA_PLATFORM_DEVICE_DX_HPP
 #define XNA_PLATFORM_DEVICE_DX_HPP
 
+#include "../common/color.hpp"
 #include "../graphics/device.hpp"
 #include "../graphics/presentparams.hpp"
-#include "adapter-dx.hpp"
-#include "gdeviceinfo-dx.hpp"
-#include "../common/color.hpp"
-#include "window-dx.hpp"
 #include "../graphics/viewport.hpp"
-#include "swapchain-dx.hpp"
-#include "dxgi.h"
+#include "adapter-dx.hpp"
 #include "d3d11.h"
+#include "dxgi.h"
+#include "gdeviceinfo-dx.hpp"
+#include "swapchain-dx.hpp"
+#include "window-dx.hpp"
+#include "presentparameters-dx.hpp"
 
 namespace xna {
 	class GraphicsDevice : public IGraphicsDevice {
@@ -79,15 +80,16 @@ namespace xna {
 		PRenderTarget2D _renderTarget2D{ nullptr };
 		PBlendState _blendState{ nullptr };
 		xna::Viewport _viewport{};
+		xna::PresentationParameters _presentationParameters;
 
 	private:
 		unsigned int _createDeviceFlags{ 0 };
 		D3D_FEATURE_LEVEL _featureLevel{ D3D_FEATURE_LEVEL::D3D_FEATURE_LEVEL_11_0 };
 		float _backgroundColor[4] = { 0, 0, 0, 0 };
-		xna::PresentationParameters _presentParameters;
 		bool _usevsync{ true };
 
 		bool createDevice();
+		void reset();
 	};	
 }
 

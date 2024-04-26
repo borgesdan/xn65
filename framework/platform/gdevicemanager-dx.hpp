@@ -12,7 +12,7 @@ namespace xna {
 
 		virtual void ApplyChanges() override;
 		virtual bool Initialize() override;
-		virtual void ToggleFullScreen() override;
+		virtual bool ToggleFullScreen() override;
 		
 		virtual constexpr Int PreferredBackBufferWidth() const {
 			return _backBufferWidth;
@@ -22,18 +22,11 @@ namespace xna {
 			return _backBufferHeight;
 		}
 
-		virtual void PreferredBackBufferWidth(Int value) {
-			_backBufferWidth = value;
-			_isDeviceDirty = true;
-		}
-
-		virtual void PreferredBackBufferHeight(Int value) {
-			_backBufferHeight = value;
-			_isDeviceDirty = true;
-		}
+		virtual void PreferredBackBufferWidth(Int value);
+		virtual void PreferredBackBufferHeight(Int value);
 
 	protected:
-		virtual void CreateDevice(GraphicsDeviceInformation const& info) override;
+		virtual bool CreateDevice() override;
 		virtual void ChangeDevice() override;
 
 	public:
@@ -45,8 +38,13 @@ namespace xna {
 		Int _backBufferWidth{ DefaultBackBufferWidth };
 		Int _backBufferHeight{ DefaultBackBufferHeight };
 		bool _isDeviceDirty{ false };		
-		PGraphicsDevice _device;
-		bool _ifFullScreen{ false };
+		PGraphicsDevice _device = nullptr;
+		bool _isFullScreen{ false };
+		GraphicsDeviceInformation _information{};
+
+		bool initWindow();
+		bool initDevice();
+
 	};
 }
 

@@ -444,6 +444,13 @@ namespace xna {
         Unknown,
 	};
 
+    enum class SwapEffect {
+        Discard,
+        Sequential,
+        FlipSequential,
+        FlipDiscard
+    };
+
 	enum class TextureAddressMode {
 		Wrap,
 		Mirror,

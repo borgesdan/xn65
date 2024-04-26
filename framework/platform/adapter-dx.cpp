@@ -170,7 +170,7 @@ namespace xna {
 		if (dxadapter->EnumOutputs(0, &pOutput) != DXGI_ERROR_NOT_FOUND) {
 			for (size_t f = 0; f < SURFACE_FORMAT_COUNT; ++f) {
 				const auto currentSurface = static_cast<SurfaceFormat>(f);
-				DXGI_FORMAT format = GraphicsAdapter::ToDXGI(currentSurface);
+				DXGI_FORMAT format = GraphicsAdapter::ConvertSurfaceToDXGIFORMAT(currentSurface);
 
 				UINT numModes = 0;
 				pOutput->GetDisplayModeList(format, 0, &numModes, nullptr);
@@ -201,7 +201,7 @@ namespace xna {
 		UINT bufferOffset = 0;		
 
 		if (dxadapter->EnumOutputs(0, &pOutput) != DXGI_ERROR_NOT_FOUND) {			
-			DXGI_FORMAT format = GraphicsAdapter::ToDXGI(surfaceFormat);
+			DXGI_FORMAT format = GraphicsAdapter::ConvertSurfaceToDXGIFORMAT(surfaceFormat);
 
 			UINT numModes = 0;
 
@@ -263,7 +263,7 @@ namespace xna {
 		if (adapter->EnumOutputs(0, &pOutput) != DXGI_ERROR_NOT_FOUND) {
 			for (size_t f = 0; f < SURFACE_FORMAT_COUNT; ++f) {
 				const auto currentSurface = static_cast<SurfaceFormat>(f);
-				DXGI_FORMAT format = GraphicsAdapter::ToDXGI(currentSurface);
+				DXGI_FORMAT format = GraphicsAdapter::ConvertSurfaceToDXGIFORMAT(currentSurface);
 
 				UINT num = 0;
 				pOutput->GetDisplayModeList(format, 0, &num, nullptr);
@@ -292,14 +292,14 @@ namespace xna {
 			description._scaling = static_cast<DisplayModeScaling>(modedesc.Scaling);
 			description._scanlineOrdering = static_cast<DisplayModeScanlineOrder>(modedesc.ScanlineOrdering);
 
-			if (pDisplay && pDisplay->_width == modedesc.Width && pDisplay->_height == modedesc.Height && pDisplay->_format == GraphicsAdapter::ToSurface(modedesc.Format)) {
+			if (pDisplay && pDisplay->_width == modedesc.Width && pDisplay->_height == modedesc.Height && pDisplay->_format == GraphicsAdapter::ConvertDXGIFORMATToSurface(modedesc.Format)) {
 				pDisplay->_descriptions.push_back(description);
 			}
 			else {
 				pDisplay = New<DisplayMode>();
 				pDisplay->_width = modedesc.Width;
 				pDisplay->_height = modedesc.Height;
-				pDisplay->_format = GraphicsAdapter::ToSurface(modedesc.Format);
+				pDisplay->_format = GraphicsAdapter::ConvertDXGIFORMATToSurface(modedesc.Format);
 				pDisplay->_descriptions.push_back(description);
 				displayList.push_back(pDisplay);
 			}

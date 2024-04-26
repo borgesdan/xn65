@@ -3,8 +3,8 @@
 #include "device-dx.hpp"
 
 namespace xna {
-    static bool internalInit(GraphicsDevice& device, GameWindow const& gameWindow, IDXGISwapChain1*& swapChain, DXGI_SWAP_CHAIN_DESC1 const& desc, DXGI_SWAP_CHAIN_FULLSCREEN_DESC const& fdesc) {
-        if (!device._device || !gameWindow.WindowHandle())
+    static bool internalInit(GraphicsDevice& device, HWND windowHandle, IDXGISwapChain1*& swapChain, DXGI_SWAP_CHAIN_DESC1 const& desc, DXGI_SWAP_CHAIN_FULLSCREEN_DESC const& fdesc) {
+        if (!device._device || !windowHandle)
             return false;
         
         if (swapChain) {
@@ -27,7 +27,7 @@ namespace xna {
 
         dxFactory2->CreateSwapChainForHwnd(
             device._device,
-            gameWindow.WindowHandle(),
+            windowHandle,
             &desc,
             &fdesc,
             nullptr,
@@ -37,31 +37,31 @@ namespace xna {
         return true;
     }
 
-    bool SwapChain::Initialize(GameWindow const& gameWindow, xna_error_ptr_arg) {
+    bool SwapChain::Initialize(xna_error_ptr_arg) {
         if (!m_device || !m_device->_device) {
             xna_error_apply(err, XnaErrorCode::INVALID_OPERATION);
             return false;
         }
+        
+        const auto parameters = m_device->_presentationParameters;
 
-        const auto bounds = gameWindow.ClientBounds();        
-
-        dxDescription.Width = static_cast<UINT>(bounds.Width);
-        dxDescription.Height = static_cast<UINT>(bounds.Height);
-        dxDescription.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+        dxDescription.Width = static_cast<UINT>(parameters.backBufferWidth);
+        dxDescription.Height = static_cast<UINT>(parameters.backBufferHeight);
+        dxDescription.Format = GraphicsAdapter::ConvertSurfaceToDXGIFORMAT(parameters.backBufferFormat);
         dxDescription.SampleDesc.Count = 1;
         dxDescription.SampleDesc.Quality = 0;
         dxDescription.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
         dxDescription.BufferCount = 2;
-        dxDescription.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;
+        dxDescription.SwapEffect = static_cast<DXGI_SWAP_EFFECT>(parameters.swapEffect);
         dxDescription.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
         dxDescription.AlphaMode = DXGI_ALPHA_MODE::DXGI_ALPHA_MODE_UNSPECIFIED;
         dxFullScreenDescription.RefreshRate.Numerator = 60;        
         dxFullScreenDescription.RefreshRate.Denominator = 1;        
         dxFullScreenDescription.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
         dxFullScreenDescription.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
-        dxFullScreenDescription.Windowed = gameWindow.Mode() != GameWindowMode::Fullscreen;
+        dxFullScreenDescription.Windowed = !parameters.fullscreen;
 
-        return internalInit(*m_device, gameWindow, dxSwapChain, dxDescription, dxFullScreenDescription);
+        return internalInit(*m_device, parameters.windowHandle, dxSwapChain, dxDescription, dxFullScreenDescription);
     }
 
     bool SwapChain::Initialize(GameWindow const& gameWindow, DXGI_SWAP_CHAIN_DESC1 const& desc, DXGI_SWAP_CHAIN_FULLSCREEN_DESC const& fullScreenDesc, xna_error_ptr_arg)
@@ -73,7 +73,7 @@ namespace xna {
 
         dxDescription = desc;
         dxFullScreenDescription = fullScreenDesc;
-        return internalInit(*m_device, gameWindow, dxSwapChain, dxDescription, dxFullScreenDescription);
+        return internalInit(*m_device, gameWindow.WindowHandle(), dxSwapChain, dxDescription, dxFullScreenDescription);
     }
 
     bool SwapChain::GetBackBuffer(ID3D11Texture2D*& texture2D) {
