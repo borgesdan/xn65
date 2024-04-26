@@ -41,13 +41,15 @@ namespace xna {
 		BOOL state = false;
 		auto hr = swap->dxSwapChain->GetFullscreenState(&state, nullptr);
 
-		if (FAILED(hr)) return;
+		if (FAILED(hr)) return false;
 
 		hr = swap->dxSwapChain->SetFullscreenState(!state, nullptr);
 
-		if (FAILED(hr)) return;
+		if (FAILED(hr)) return false;
 
 		_isFullScreen = !state;
+
+		return true;
 	}
 
 	void GraphicsDeviceManager::PreferredBackBufferWidth(Int value) {
@@ -66,10 +68,11 @@ namespace xna {
 			_information._parameters.backBufferHeight = _backBufferHeight;
 		}
 
-		initWindow();
-		initDevice();
+		auto result = initWindow();
+
+		if (!result) return false; 
 		
-		return true;
+		return initDevice();
 	}
 
 	void GraphicsDeviceManager::ChangeDevice() {
@@ -108,5 +111,7 @@ namespace xna {
 		}
 
 		_game->_graphicsDevice = _device;
+
+		return true;
 	}
 }

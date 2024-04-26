@@ -19,19 +19,19 @@ namespace xna {
 			_adapter = value;
 		}
 
-		constexpr virtual xna::PresentationParameters PresentationParameters() const override{
+		virtual xna::PresentationParameters PresentationParameters() const override{
 			return _parameters;
 		};
 
-		constexpr virtual void PresentationParameters(xna::PresentationParameters const& value) override{
+		virtual void PresentationParameters(xna::PresentationParameters const& value) override{
 			_parameters = value;
 		};
 
-		constexpr virtual xna::GraphicsProfile GraphicsProfile() const override {
+		virtual xna::GraphicsProfile GraphicsProfile() const override {
 			return _profile;
 		};
 
-		constexpr virtual void GraphicsProfile(xna::GraphicsProfile value) override {
+		virtual void GraphicsProfile(xna::GraphicsProfile value) override {
 			_profile = value;
 		};
 

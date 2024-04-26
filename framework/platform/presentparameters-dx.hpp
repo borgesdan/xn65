@@ -2,12 +2,13 @@
 #define XNA_PLATFORM_PRESENTPARAMETERS_DX_HPP
 
 #include "../graphics/presentparams.hpp"
-#include "gdevicemanager-dx.hpp"
 #include "dxheaders.hpp"
 
 namespace xna {
 	class PresentationParameters : public IPresentationParameters {
 	public:
+		PresentationParameters();
+
 		virtual constexpr Uint BackBufferWidth() const override {
 			return backBufferWidth;
 		}
@@ -37,8 +38,8 @@ namespace xna {
 		}
 
 	public:
-		Uint backBufferWidth { GraphicsDeviceManager::DefaultBackBufferWidth };
-		Uint backBufferHeight{ GraphicsDeviceManager::DefaultBackBufferHeight };
+		Uint backBufferWidth {0 };
+		Uint backBufferHeight{ 0 };
 		SurfaceFormat backBufferFormat{ SurfaceFormat::Color };
 		SwapEffect swapEffect{ SwapEffect::FlipDiscard };
 		HWND windowHandle = nullptr;
