@@ -104,84 +104,60 @@ namespace xna {
 
 	class GameComponentCollection {
 	public:
-		void InsertItem(size_t index, sptr<IGameComponent> const& item) {
+		constexpr void InsertItem(size_t index, sptr<IGameComponent> const& item) {
 			const auto it = components.begin();
 			components.insert(it + index, item);
 
-			std::sort(components.begin(), components.end(), UpdateOrderComparer);
+			if (AutoSort)
+				std::sort(components.begin(), components.end(), UpdateOrderComparer);
 		}
 
-		void RemoveItem(size_t index) {
+		constexpr void RemoveItem(size_t index) {
 			if (index >= components.size())
 				return;						
 
 			const auto it = components.begin();
 			components.erase(it + index);
 
-			std::sort(components.begin(), components.end(), UpdateOrderComparer);
+			if (AutoSort)
+				std::sort(components.begin(), components.end(), UpdateOrderComparer);
 		}
 
-		void ClearItems() {
+		constexpr  void ClearItems() {
 			components.clear();			
 		}
 
-		void Add(sptr<IGameComponent> const& item) {
+		constexpr void Add(sptr<IGameComponent> const& item) {
 			components.push_back(item);	
-			std::sort(components.begin(), components.end(), UpdateOrderComparer);
+			if(AutoSort) std::sort(components.begin(), components.end(), UpdateOrderComparer);
 		}
 
 		constexpr size_t Count() const {
 			return components.size();
 		}
 
-		sptr<IGameComponent> operator[](size_t index) const {
-			if (index >= components.size())
-				return nullptr;
+		sptr<IGameComponent> operator[](size_t index) const;
 
-			return components[index];
+		sptr<IGameComponent> At(size_t index) const;
+
+		constexpr void Sort() {
+			std::sort(components.begin(), components.end(), UpdateOrderComparer);
+		}				
+
+		static bool UpdateOrderComparer(sptr<IGameComponent> const& x, sptr<IGameComponent> const& y);
+		static bool DrawOrderComparer(sptr<IGameComponent> const& x, sptr<IGameComponent> const& y);
+
+		static constexpr void UpdateSort(std::vector<sptr<IGameComponent>>& components) {
+			std::sort(components.begin(), components.end(), UpdateOrderComparer);
 		}
 
-		sptr<IGameComponent> At(size_t index) const {
-			if (index >= components.size())
-				return nullptr;
-
-			return components[index];
-		}
-
-		static bool UpdateOrderComparer(sptr<IGameComponent> const& x, sptr<IGameComponent> const& y) {
-			auto comp1 = std::reinterpret_pointer_cast<GameComponent>(x);
-			auto comp2 = std::reinterpret_pointer_cast<GameComponent>(y);
-
-			if (!comp1 && !comp2)
-				return false;
-
-			if (!comp1)
-				return true;
-
-			if (!comp2)
-				return false;
-
-			return comp1->UpdateOrder() < comp2->UpdateOrder();
-		}
-
-		static bool DrawOrderComparer(sptr<IGameComponent> const& x, sptr<IGameComponent> const& y) {
-			auto comp1 = std::reinterpret_pointer_cast<GameComponent>(x);
-			auto comp2 = std::reinterpret_pointer_cast<GameComponent>(y);
-
-			if (!comp1 && !comp2)
-				return false;
-
-			if (!comp1)
-				return true;
-
-			if (!comp2)
-				return false;
-
-			return comp1->UpdateOrder() < comp2->UpdateOrder();
+		static constexpr void DrawSort(std::vector<sptr<IGameComponent>>& components) {
+			std::sort(components.begin(), components.end(), DrawOrderComparer);
 		}
 
 	public:
-		std::vector<sptr<IGameComponent>> components;			
+		std::vector<sptr<IGameComponent>> components;	
+		bool AutoSort{ false };
 	};	
 }
 

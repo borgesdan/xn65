@@ -30,8 +30,8 @@ namespace xna {
 			return _gameComponents;
 		}
 
-		void DisableGameComponets(bool value) override {
-			_disableGameComponent = value;
+		constexpr void EnableGameComponents(bool value) {
+			_enabledGameComponents = value;
 		}
 
 	protected:
@@ -58,7 +58,8 @@ namespace xna {
 		void step();
 		sptr<GameComponentCollection> _gameComponents = nullptr;
 		std::vector<sptr<IGameComponent>> _drawableGameComponents;
-		bool _disableGameComponent{ false };
+		Uint _drawableGameComponentsCount{ 0 };
+		bool _enabledGameComponents{ false };
 	};
 }
 

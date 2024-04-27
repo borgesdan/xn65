@@ -36,28 +36,7 @@ namespace xna {
 		}
 
 		return startLoop();
-	}
-
-	void Game::Draw(GameTime const& gameTime) {
-		if (!_disableGameComponent) {
-			std::sort(_drawableGameComponents.begin(), _drawableGameComponents.end(), GameComponentCollection::DrawOrderComparer);
-
-			for (size_t i = 0; i < _drawableGameComponents.size(); ++i) {
-				auto& component = _drawableGameComponents[i];
-
-				if (!component) continue;
-
-				auto drawable = reinterpret_pointer_cast<IDrawable>(component);
-
-				if(drawable && drawable->Visible())
-					drawable->Draw(gameTime);
-			}
-
-			_drawableGameComponents.clear();
-		}
-
-		_graphicsDevice->Present();
-	}
+	}	
 
 	void Game::Initialize() {
 		Keyboard::Initialize();
@@ -82,23 +61,51 @@ namespace xna {
 		LoadContent();
 	}
 
+	void Game::Draw(GameTime const& gameTime) {
+		if (_enabledGameComponents && !_drawableGameComponents.empty()) {
+			const auto count = _drawableGameComponents.size();
+			
+			if (count != _drawableGameComponentsCount && _gameComponents->AutoSort) {
+				GameComponentCollection::DrawSort(_drawableGameComponents);
+				_drawableGameComponentsCount = count;
+			}			
+
+			for (size_t i = 0; i < count; ++i) {
+				auto& component = _drawableGameComponents[i];
+
+				if (!component) continue;
+
+				auto drawable = reinterpret_pointer_cast<IDrawable>(component);
+
+				if (drawable && drawable->Visible())
+					drawable->Draw(gameTime);
+			}
+
+			_drawableGameComponents.clear();
+		}
+
+		_graphicsDevice->Present();
+	}
+
 	void Game::Update(GameTime const& gameTime) {
 		_audioEngine->Update();
 
-		if (!_disableGameComponent) {
-			for (size_t i = 0; i < _gameComponents->Count(); ++i) {
+		if (_enabledGameComponents && _gameComponents->Count() > 0) {
+			const auto count = _gameComponents->Count();
+			for (size_t i = 0; i < count; ++i) {
 				auto component = _gameComponents->At(i);
 
 				if (!component) continue;
 
-				if (component->Type() == GameComponentType::Drawable)
-					_drawableGameComponents.push_back(component);
+				if (component->Type() == GameComponentType::Drawable) {
+					_drawableGameComponents.push_back(component);					
+				}
 
 				auto updatable = reinterpret_pointer_cast<IUpdateable>(component);
 
 				if(updatable && updatable->Enabled())
 					updatable->Update(gameTime);
-			}
+			}			
 		}
 	}
 
