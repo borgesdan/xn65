@@ -13,7 +13,7 @@ namespace xna {
 			auto _game = reinterpret_cast<Game*>(this);
 			graphics = New<GraphicsDeviceManager>(_game);
 			graphics->PreferredBackBufferWidth(1280);
-			graphics->PreferredBackBufferHeight(720);
+			graphics->PreferredBackBufferHeight(720);			
 		}
 
 		void Initialize() override {

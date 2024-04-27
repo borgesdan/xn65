@@ -18,6 +18,8 @@ namespace xna {
 		_gameWindow->Size(
 			GraphicsDeviceManager::DefaultBackBufferWidth,
 			GraphicsDeviceManager::DefaultBackBufferHeight, false);
+
+		_gameComponents = New<GameComponentCollection>();
 	}
 
 	void Game::Exit()
@@ -37,6 +39,23 @@ namespace xna {
 	}
 
 	void Game::Draw(GameTime const& gameTime) {
+		if (!_disableGameComponent) {
+			std::sort(_drawableGameComponents.begin(), _drawableGameComponents.end(), GameComponentCollection::DrawOrderComparer);
+
+			for (size_t i = 0; i < _drawableGameComponents.size(); ++i) {
+				auto& component = _drawableGameComponents[i];
+
+				if (!component) continue;
+
+				auto drawable = reinterpret_pointer_cast<IDrawable>(component);
+
+				if(drawable && drawable->Visible())
+					drawable->Draw(gameTime);
+			}
+
+			_drawableGameComponents.clear();
+		}
+
 		_graphicsDevice->Present();
 	}
 
@@ -65,6 +84,22 @@ namespace xna {
 
 	void Game::Update(GameTime const& gameTime) {
 		_audioEngine->Update();
+
+		if (!_disableGameComponent) {
+			for (size_t i = 0; i < _gameComponents->Count(); ++i) {
+				auto component = _gameComponents->At(i);
+
+				if (!component) continue;
+
+				if (component->Type() == GameComponentType::Drawable)
+					_drawableGameComponents.push_back(component);
+
+				auto updatable = reinterpret_pointer_cast<IUpdateable>(component);
+
+				if(updatable && updatable->Enabled())
+					updatable->Update(gameTime);
+			}
+		}
 	}
 
 	int Game::startLoop() {

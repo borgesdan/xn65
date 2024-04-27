@@ -35,14 +35,16 @@ namespace xna {
 	struct Vector3;	
 	struct Vector4;	
 
-
 	//Game	
 	class Game;
+	class GameComponent;
 	class GameClock;
 	class GameTime;
 	class GameWindow;
 	class GraphicsDeviceInformation;
 	class GraphicsDeviceManager;
+	class IGameTime;
+	class IGameComponent;
 
 	//Graphics
 	class BlendState;

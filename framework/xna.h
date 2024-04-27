@@ -20,6 +20,7 @@
 #include "platform/window-dx.hpp"
 #include "graphics/vertexposition.hpp"
 #include "platform/vertexbuffer-dx.hpp"
+#include "game/component.hpp"
 #include "Windows.h"
 #include <iostream>
 

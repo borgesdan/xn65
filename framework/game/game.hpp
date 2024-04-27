@@ -6,6 +6,7 @@
 #include "../types.hpp"
 #include "time.hpp"
 #include "window.hpp"
+#include "../game/component.hpp"
 
 namespace xna {
 	class IGame {
@@ -16,6 +17,8 @@ namespace xna {
 		virtual int Run() = 0;
 		virtual sptr<GameWindow> Window() = 0;
 		virtual sptr<GraphicsDevice> GetGraphicsDevice() = 0;
+		virtual sptr<GameComponentCollection> Components() = 0;
+		virtual void DisableGameComponets(bool value) = 0;
 
 	protected:
 		virtual void Draw(GameTime const& gameTime) = 0;

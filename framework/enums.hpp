@@ -114,7 +114,7 @@ namespace xna {
 		Blue,
 		Alpha,
 		All
-	};    
+	};       
 
 	enum class ComparisonFunction {
 		Never,
@@ -170,6 +170,11 @@ namespace xna {
 		WireFrame,
         Solid,
 	};
+
+    enum class GameComponentType {
+        Updatable,
+        Drawable,
+    };
 
     enum class GamePadCapabilitiesType
     {

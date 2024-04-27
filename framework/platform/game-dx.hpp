@@ -26,6 +26,14 @@ namespace xna {
 			return _graphicsDevice;
 		}
 
+		sptr<GameComponentCollection> Components() override {
+			return _gameComponents;
+		}
+
+		void DisableGameComponets(bool value) override {
+			_disableGameComponent = value;
+		}
+
 	protected:
 		virtual void Draw(GameTime const& gameTime) override;
 		
@@ -48,6 +56,9 @@ namespace xna {
 	private:
 		int startLoop();
 		void step();
+		sptr<GameComponentCollection> _gameComponents = nullptr;
+		std::vector<sptr<IGameComponent>> _drawableGameComponents;
+		bool _disableGameComponent{ false };
 	};
 }
 
