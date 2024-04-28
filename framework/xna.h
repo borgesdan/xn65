@@ -23,5 +23,6 @@
 #include "game/component.hpp"
 #include "Windows.h"
 #include <iostream>
+#include "content/manager.hpp"
 
 // TODO: Reference additional headers your program requires here.

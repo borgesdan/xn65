@@ -58,7 +58,7 @@ namespace xna {
 		void step();
 		sptr<GameComponentCollection> _gameComponents = nullptr;
 		std::vector<sptr<IGameComponent>> _drawableGameComponents;
-		Uint _drawableGameComponentsCount{ 0 };
+		size_t _drawableGameComponentsCount{ 0 };
 		bool _enabledGameComponents{ false };
 	};
 }

@@ -16,6 +16,10 @@ namespace xna {
 	class FileStream;
 	class MemoryStream;
 
+	//Content
+	class ContentManager;
+	class ContentReader;
+
 	//Framework
 	class BoundingBox;
 	class BoundingFrustum;

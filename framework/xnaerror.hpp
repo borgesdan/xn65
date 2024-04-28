@@ -12,7 +12,8 @@ namespace xna {
 		NULL_CAST,
 		BAD_CAST,
 		STREAM_ERROR,
-		UNINTIALIZED_RESOURCE
+		UNINTIALIZED_RESOURCE,
+		END_OF_FILE
 	};
 
 	inline void xna_error_apply(XnaErrorCode* source, XnaErrorCode const& value) {

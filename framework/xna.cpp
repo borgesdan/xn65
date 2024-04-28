@@ -13,7 +13,12 @@ namespace xna {
 			auto _game = reinterpret_cast<Game*>(this);
 			graphics = New<GraphicsDeviceManager>(_game);
 			graphics->PreferredBackBufferWidth(1280);
-			graphics->PreferredBackBufferHeight(720);			
+			graphics->PreferredBackBufferHeight(720);	
+			
+			contentManager = New<ContentManager>("Content");
+			//const auto s = contentManager->_path.string();			
+			// const auto current = std::filesystem::current_path();
+			auto s = contentManager->OpenStream("file");
 		}
 
 		void Initialize() override {
@@ -57,6 +62,7 @@ namespace xna {
 		MouseState oldState{};
 		float vel = 1;
 		int var = 0;
+		sptr<ContentManager> contentManager;
 	};
 }
 
