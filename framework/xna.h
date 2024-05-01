@@ -24,5 +24,6 @@
 #include "Windows.h"
 #include <iostream>
 #include "content/manager.hpp"
+#include "content/decstream.hpp"
 
 // TODO: Reference additional headers your program requires here.

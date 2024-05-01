@@ -7,7 +7,7 @@
 namespace xna {
 	class BinaryReader {
 	public:
-		BinaryReader(Stream* const& input) {
+		BinaryReader(sptr<Stream> const& input) {
 			stream = input;
 			buffer = std::vector<Byte>(bufferLength);
 		}
@@ -28,18 +28,14 @@ namespace xna {
 		double ReadDouble(xna_error_nullarg);
 		std::string ReadString(xna_error_nullarg);
 
-		Int Read(std::vector<Char>& buffer, size_t index, size_t count, xna_error_nullarg) {
-			return -1;
-		}
+		Int Read(std::vector<Char>& buffer, size_t index, size_t count, xna_error_nullarg);
 
-		std::vector<Byte> ReadBytes(size_t count, xna_error_nullarg) {
-			return std::vector<Byte>();
-		}
+		std::vector<Byte> ReadBytes(size_t count, xna_error_nullarg);
 
 	private:
 		static constexpr int maxCharBytesSize = 128;
 		static constexpr int bufferLength = 16;
-		Stream* stream = nullptr;
+		sptr<Stream> stream = nullptr;
 		std::vector<Byte> charBytes;
 		std::vector<Char> singleChar;
 		std::vector<Byte> buffer;
@@ -51,34 +47,14 @@ namespace xna {
 
 		void FillBuffer(Int numBytes, xna_error_nullarg);
 
-		Int Read7BitEncodedInt(xna_error_nullarg)
-		{
-			Int num1 = 0;
-			Int num2 = 0;
+		Int Read7BitEncodedInt(xna_error_nullarg);
 
-			while (num2 != 35) {
-				auto num3 = ReadByte(err);
-
-				if (xna_error_haserros(err))
-					return -1;
-
-				num1 |= (static_cast<Int>(num3) & static_cast<Int>(SbyteMaxValue)) << num2;
-				num2 += 7;
-
-				if ((static_cast<Int>(num3) & 128) == 0)
-					return num1;
-			}
-
-			xna_error_apply(err, XnaErrorCode::INVALID_OPERATION);
-			return -1;
-		}
-
-		Int InternalReadChars(char* buffer, size_t bufferSize, Int index, Int count, xna_error_nullarg);
+		Int InternalReadChars(Char* buffer, size_t bufferSize, size_t index, size_t count, xna_error_nullarg);
 	};
 
 	class BinaryWriter {
 	public:
-		BinaryWriter(Stream* stream) : _stream(stream), _buffer(16) {
+		BinaryWriter(sptr<Stream> const& stream) : _stream(stream), _buffer(16) {
 		}
 
 		Long Seek(Int offset, SeekOrigin origin, xna_error_nullarg);
@@ -103,7 +79,7 @@ namespace xna {
 		void Write(const char* _string, size_t stringLength, xna_error_nullarg);
 
 	public:
-		Stream* _stream;
+		sptr<Stream> _stream = nullptr;
 
 	private:
 		std::vector<Byte> _buffer;

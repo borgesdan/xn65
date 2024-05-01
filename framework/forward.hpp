@@ -15,10 +15,14 @@ namespace xna {
 	class Stream;
 	class FileStream;
 	class MemoryStream;
+	class Object;
+	class Type;
 
 	//Content
 	class ContentManager;
 	class ContentReader;
+	class ContentTypeReader;
+	class ContentTypeReaderManager;
 
 	//Framework
 	class BoundingBox;

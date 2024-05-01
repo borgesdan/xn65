@@ -18,7 +18,8 @@ namespace xna {
 			contentManager = New<ContentManager>("Content");
 			//const auto s = contentManager->_path.string();			
 			// const auto current = std::filesystem::current_path();
-			auto s = contentManager->OpenStream("file");
+			//auto s = contentManager->OpenStream("file");
+			//DecompressStream::Decompress();
 		}
 
 		void Initialize() override {
@@ -30,7 +31,7 @@ namespace xna {
 			spriteBatch = New<SpriteBatch>(*_graphicsDevice);
 
 			XnaErrorCode err;
-			texture = Texture2D::FromStream(*_graphicsDevice, "D:\\sprite.jpg", &err);
+			texture = Texture2D::FromStream(*_graphicsDevice, "D:\\sprite.jpg", &err);			
 
 			Game::LoadContent();
 		}

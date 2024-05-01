@@ -10,6 +10,7 @@
 namespace xna {
 	class Stream {
 	public:
+		virtual ~Stream(){}
 		virtual Int Length() = 0;
 		virtual Long Position() = 0;		
 		virtual void Close() = 0;
@@ -47,13 +48,13 @@ namespace xna {
 			_buffer = std::vector<Byte>();
 		}
 
-		virtual Long Seek(Long offset, SeekOrigin const& origin, xna_error_ptr_arg) override;
-		virtual Int Read(Byte* buffer, Int bufferLength, Int offset, Int count, xna_error_ptr_arg) override;
-		virtual Int Read(std::vector<Byte>& buffer, Int offset, Int count, xna_error_ptr_arg) override;
-		virtual Int ReadByte(xna_error_ptr_arg) override;
-		virtual void Write(Byte const* buffer, Int bufferLength, Int offset, Int count, xna_error_ptr_arg) override;
-		virtual void Write(std::vector<Byte> const& buffer, Int offset, Int count, xna_error_ptr_arg) override;
-		virtual void WriteByte(Byte value, xna_error_ptr_arg) override;
+		virtual Long Seek(Long offset, SeekOrigin const& origin, xna_error_nullarg) override;
+		virtual Int Read(Byte* buffer, Int bufferLength, Int offset, Int count, xna_error_nullarg) override;
+		virtual Int Read(std::vector<Byte>& buffer, Int offset, Int count, xna_error_nullarg) override;
+		virtual Int ReadByte(xna_error_nullarg) override;
+		virtual void Write(Byte const* buffer, Int bufferLength, Int offset, Int count, xna_error_nullarg) override;
+		virtual void Write(std::vector<Byte> const& buffer, Int offset, Int count, xna_error_nullarg) override;
+		virtual void WriteByte(Byte value, xna_error_nullarg) override;
 
 	public:
 		Int _position{ 0 };
@@ -108,13 +109,13 @@ namespace xna {
 				_fstream.close();
 		}
 
-		virtual Long Seek(Long offset, SeekOrigin const& origin, xna_error_ptr_arg) override;
-		virtual Int Read(Byte* buffer, Int bufferLength, Int offset, Int count, xna_error_ptr_arg) override;
-		virtual Int Read(std::vector<Byte>& buffer, Int offset, Int count, xna_error_ptr_arg) override;
-		virtual Int ReadByte(xna_error_ptr_arg) override;
-		virtual void Write(Byte const* buffer, Int bufferLength, Int offset, Int count, xna_error_ptr_arg) override;
-		virtual void Write(std::vector<Byte> const& buffer, Int offset, Int count, xna_error_ptr_arg) override;
-		virtual void WriteByte(Byte value, xna_error_ptr_arg) override;
+		virtual Long Seek(Long offset, SeekOrigin const& origin, xna_error_nullarg) override;
+		virtual Int Read(Byte* buffer, Int bufferLength, Int offset, Int count, xna_error_nullarg) override;
+		virtual Int Read(std::vector<Byte>& buffer, Int offset, Int count, xna_error_nullarg) override;
+		virtual Int ReadByte(xna_error_nullarg) override;
+		virtual void Write(Byte const* buffer, Int bufferLength, Int offset, Int count, xna_error_nullarg) override;
+		virtual void Write(std::vector<Byte> const& buffer, Int offset, Int count, xna_error_nullarg) override;
+		virtual void WriteByte(Byte value, xna_error_nullarg) override;
 
 	public:
 		std::streampos _filesize{ 0 };

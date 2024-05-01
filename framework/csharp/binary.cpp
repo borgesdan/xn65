@@ -1,4 +1,5 @@
 #include "binary.hpp"
+#include "../csharp/buffer.hpp"
 
 namespace xna {
 	Int BinaryReader::PeekChar(xna_error_ptr_arg)
@@ -6,7 +7,7 @@ namespace xna {
 		if (!stream) {
 			xna_error_apply(err, XnaErrorCode::INVALID_OPERATION);
 			return -1;
-		}		
+		}
 
 		const auto position = stream->Position();
 		const auto num = Read(err);
@@ -267,7 +268,7 @@ namespace xna {
 	{
 		Int num1 = 0;
 		Long num2 = 0;
-		Long num3 = stream->Position();		
+		Long num3 = stream->Position();
 
 		if (charBytes.empty())
 			charBytes.resize(128);
@@ -352,7 +353,7 @@ namespace xna {
 		}
 	}
 
-	Int BinaryReader::InternalReadChars(char* buffer, size_t bufferSize, Int index, Int count, xna_error_ptr_arg)
+	Int BinaryReader::InternalReadChars(Char* buffer, size_t bufferSize, size_t index, size_t count, xna_error_ptr_arg)
 	{
 		auto charCount = count;
 
@@ -371,18 +372,18 @@ namespace xna {
 			if (count1 > 128)
 				count1 = 128;
 
-			Int num = 0;
+			Int position = 0;
 			Int byteCount;
 
 			std::vector<Byte> numArray;
 
-			byteCount = stream->Read(charBytes, 0, count1);
+			byteCount = stream->Read(charBytes, 0, static_cast<Int>(count1), err);
 			numArray = charBytes;
 
 			if (byteCount == 0)
-				return count - charCount;
+				return static_cast<Int>(count - charCount);
 
-			if (num < 0 || byteCount < 0 || (num + byteCount) > numArray.size()) {
+			if (position < 0 || byteCount < 0 || (position + byteCount) > numArray.size()) {
 				xna_error_apply(err, XnaErrorCode::ARGUMENT_OUT_OF_RANGE);
 				return -1;
 			}
@@ -393,22 +394,28 @@ namespace xna {
 			}
 
 			auto data = reinterpret_cast<char*>(charBytes.data());
-			const auto result = std::string((data + num), (data + num) + byteCount);
+			auto pChars = reinterpret_cast<char*>(buffer);
+			
+			//const auto result = std::string((data + position), (pChars + index) + byteCount);
+			const auto result = std::string((data + position), (data + position) + byteCount);
+			Buffer::BlockCopy(result.c_str(), position, pChars, index, byteCount);
 
-			const auto chars = result.size();
+			buffer = reinterpret_cast<Char*>(pChars);
 
-			charCount -= static_cast<Int>(chars);
-			index += static_cast<Int>(chars);
+			const auto chars = static_cast<Int>(result.size());
+
+			charCount -= chars;
+			index += chars;
 		}
 
-		return count - charCount;
+		return static_cast<Int>(count - charCount);
 	}
 
 	Long BinaryWriter::Seek(Int offset, SeekOrigin origin, xna_error_ptr_arg)
 	{
 		if (!_stream) {
 			xna_error_apply(err, XnaErrorCode::INVALID_OPERATION);
-			return - 1;
+			return -1;
 		}
 
 		return _stream->Seek(offset, origin);
@@ -647,5 +654,56 @@ namespace xna {
 		_buffer[6] = static_cast<Byte>(value >> 48);
 		_buffer[7] = static_cast<Byte>(value >> 56);
 		_stream->Write(_buffer, 0, 8);
+	}
+
+	Int BinaryReader::Read7BitEncodedInt(xna_error_ptr_arg)
+	{
+		Int num1 = 0;
+		Int num2 = 0;
+
+		while (num2 != 35) {
+			auto num3 = ReadByte(err);
+
+			if (xna_error_haserros(err))
+				return -1;
+
+			num1 |= (static_cast<Int>(num3) & static_cast<Int>(SbyteMaxValue)) << num2;
+			num2 += 7;
+
+			if ((static_cast<Int>(num3) & 128) == 0)
+				return num1;
+		}
+
+		xna_error_apply(err, XnaErrorCode::INVALID_OPERATION);
+		return -1;
+	}
+
+	Int BinaryReader::Read(std::vector<Char>& buffer, size_t index, size_t count, xna_error_ptr_arg)
+	{
+		return InternalReadChars(buffer.data(), buffer.size(), index, count, err);
+	}
+
+	std::vector<Byte> BinaryReader::ReadBytes(size_t count, xna_error_ptr_arg)
+	{
+		std::vector<Byte> result(count);
+		Int numRead = 0;
+
+		do {
+			const auto n = stream->Read(result, static_cast<Int>(numRead), static_cast<Int>(count), err);
+			
+			if (n == 0)
+				break;
+			
+			numRead += n;
+			count -= n;
+		} while (count > 0);
+
+		if (numRead != result.size()) {			
+			std::vector<Byte> copy(numRead);
+			Buffer::BlockCopy(result.data(), 0, copy.data(), 0, numRead);
+			result = copy;
+		}
+
+		return result;
 	}
 }
