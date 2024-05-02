@@ -1,6 +1,7 @@
 #include "reader.hpp"
 #include "manager.hpp"
 #include "lzx/decoderstream.hpp"
+#include "typereadermanager.hpp"
 
 namespace xna {
 	sptr<ContentReader> ContentReader::Create(ContentManager* contentManager, Stream* input, String const& assetName)
@@ -53,6 +54,6 @@ namespace xna {
 	}
 
 	Int ContentReader::ReadHeader() {
-		return Int();
+		//typeReaders = ContentTypeReaderManager::ReadTypeManifest(this->Read7BitEncodedInt(), this);
 	}
 }

@@ -6,7 +6,8 @@
 namespace xna {
 	class Object {
 	public:
-		virtual sptr<Type> GetType();
+		virtual sptr<Type> GetType() const;
+		virtual size_t GetHashCode() const;
 	};
 }
 

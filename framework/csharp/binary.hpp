@@ -43,6 +43,7 @@ namespace xna {
 
 		bool m2BytesPerChar{ false };
 
+	protected:
 		Int InternalReadOneChar(xna_error_nullarg);
 
 		void FillBuffer(Int numBytes, xna_error_nullarg);

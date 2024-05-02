@@ -23,7 +23,7 @@ namespace xna {
 	}
 
 	inline bool xna_error_haserros(XnaErrorCode* source) {
-		return source != nullptr;
+		return source != nullptr && *source != XnaErrorCode::NONE;
 	}
 
 #define xna_error_nullarg	XnaErrorCode* err = nullptr	

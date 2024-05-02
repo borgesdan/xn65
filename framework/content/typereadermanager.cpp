@@ -34,10 +34,12 @@ namespace xna {
 		return contentTypeReaderArray;
 	}
 
-	sptr<ContentTypeReader> ContentTypeReaderManager::GetTypeReader(String const& targetType, sptr<ContentReader>& contentReader, xna_error_ptr_arg)
+	sptr<ContentTypeReader> ContentTypeReaderManager::GetTypeReader(sptr<Type> const& targetType, sptr<ContentReader>& contentReader, xna_error_ptr_arg)
 	{
-		if (targetType.empty())
+		if (!targetType) {
+			xna_error_apply(err, XnaErrorCode::ARGUMENT_IS_NULL);
 			return nullptr;
+		}
 
 		sptr<ContentTypeReader> typeReader = nullptr;
 
@@ -57,9 +59,12 @@ namespace xna {
 	{
 		sptr<ContentTypeReader> reader = nullptr;
 
-		if (ContentTypeReaderManager::nameToReader.contains(readerTypeName) || !ContentTypeReaderManager::InstantiateTypeReader(readerTypeName, contentReader, reader)) {
+		if (ContentTypeReaderManager::nameToReader.contains(readerTypeName) || !ContentTypeReaderManager::InstantiateTypeReader(readerTypeName, contentReader, reader, err)) {
 			return ContentTypeReaderManager::nameToReader[readerTypeName];
 		}		
+
+		if (xna_error_haserros(err))
+			return nullptr;
 
 		ContentTypeReaderManager::AddTypeReader(readerTypeName, contentReader, reader, err);
 
@@ -70,15 +75,30 @@ namespace xna {
 		return reader;
 	}
 
-	bool ContentTypeReaderManager::InstantiateTypeReader(String const& readerTypeName, sptr<ContentReader>& contentReader, sptr<ContentTypeReader>& reader)
+	bool ContentTypeReaderManager::InstantiateTypeReader(String const& readerTypeName, sptr<ContentReader>& contentReader, sptr<ContentTypeReader>& reader, xna_error_ptr_arg)
 	{
-		if (ContentTypeReaderManager::readerTypeToReader.contains(readerTypeName)) {
-			reader = ContentTypeReaderManager::readerTypeToReader[readerTypeName];
+		sptr<Type> type = nullptr;
+
+		std::map<sptr<Type>, sptr<ContentTypeReader>>::iterator it;
+
+		for (it = readerTypeToReader.begin(); it != readerTypeToReader.end(); it++) {
+			if (it->first->FullName == readerTypeName)
+				type = it->first;
+		}
+
+		if (!type) {
+			xna_error_apply(err, XnaErrorCode::INVALID_OPERATION);
+			return false;
+		}
+
+		if (ContentTypeReaderManager::readerTypeToReader.contains(type)) {
+			reader = ContentTypeReaderManager::readerTypeToReader[type];
 			ContentTypeReaderManager::nameToReader.insert({ readerTypeName, reader });
 			return false;
 		}
 
-		reader = ContentTypeReaderActivador::CreateInstance(readerTypeName);
+		reader = ContentTypeReaderActivador::CreateInstance(type, err);
+		return true;
 	}
 
 	void ContentTypeReaderManager::AddTypeReader(String const& readerTypeName, sptr<ContentReader>& contentReader, sptr<ContentTypeReader>& reader, xna_error_ptr_arg)
@@ -106,18 +126,7 @@ namespace xna {
 			ContentTypeReaderManager::RollbackAddReader(ContentTypeReaderManager::targetTypeToReader, newTypeReader);
 			ContentTypeReaderManager::RollbackAddReader(ContentTypeReaderManager::readerTypeToReader, newTypeReader);
 		}
-	}
-
-	void ContentTypeReaderManager::RollbackAddReader(std::map<String, sptr<ContentTypeReader>>& dictionary, sptr<ContentTypeReader>& reader) {
-		std::map<String, sptr<ContentTypeReader>>::iterator it;
-
-		for (it = dictionary.begin(); it != dictionary.end(); it++) {
-			if (it->second == reader) {
-				dictionary.erase(it->first);
-				it = dictionary.begin();
-			}
-		}
-	}
+	}	
 
 	void ContentTypeReaderManager::initMaps()
 	{
@@ -125,8 +134,10 @@ namespace xna {
 			auto typeReader = New<ObjectReader>();
 			auto contentTypeReader = reinterpret_pointer_cast<ContentTypeReader>(typeReader);
 
-			targetTypeToReader.insert({ typeReader->TargetType(), contentTypeReader});
-			readerTypeToReader.insert({ typeReader->GetType(), contentTypeReader});
+			//targetTypeToReader.insert({ typeReader->TargetType(), contentTypeReader});
+			//readerTypeToReader.insert({ typeReader->GetType(), contentTypeReader});
+			targetTypeToReader.insert({ typeof<Object>(), contentTypeReader});
+			readerTypeToReader.insert({ typeof<ObjectReader>(), contentTypeReader});
 		}
 	}
 

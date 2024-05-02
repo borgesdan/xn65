@@ -2,6 +2,7 @@
 #define XNA_HELPERS_HPP
 
 #include <string>
+#include <utility>
 
 namespace xna {
 	inline std::wstring XnaHToWString(const std::string& str)
@@ -20,6 +21,12 @@ namespace xna {
 		str.resize(wstr.length());
 		wcstombs_s(&size, &str[0], str.size() + 1, wstr.c_str(), wstr.size());
 		return str;
+	}
+
+	template <class T>
+	static constexpr void XnaHHashCombine(std::size_t& seed, const T& v) {
+		std::hash<T> hasher;
+		seed ^= hasher(v) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
 	}
 }
 
