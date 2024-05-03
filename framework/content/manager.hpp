@@ -49,10 +49,13 @@ namespace xna {
 			return obj2;
 		}
 
-	public:
+	protected:
 		template <typename T>
 		sptr<T> ReadAsset(String const& assetName) {
 			auto input = OpenStream(assetName);
+			auto contentReader = ContentReader::Create(this, input, assetName);
+
+			return contentReader->ReadAsset<T>();
 		}
 
 		sptr<Stream> OpenStream(String const& assetName) {

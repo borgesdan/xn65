@@ -82,7 +82,7 @@ namespace xna {
 		std::map<sptr<Type>, sptr<ContentTypeReader>>::iterator it;
 
 		for (it = readerTypeToReader.begin(); it != readerTypeToReader.end(); it++) {
-			if (it->first->FullName == readerTypeName)
+			if (it->first->FullName() == readerTypeName)
 				type = it->first;
 		}
 
@@ -111,7 +111,8 @@ namespace xna {
 		}
 
 		ContentTypeReaderManager::targetTypeToReader.insert({ targetType, reader });
-		ContentTypeReaderManager::readerTypeToReader.insert({ reader->GetType(), reader });
+		//ContentTypeReaderManager::readerTypeToReader.insert({ reader->GetType(), reader });
+		ContentTypeReaderManager::readerTypeToReader.insert({ typeof(*reader), reader});
 		ContentTypeReaderManager::nameToReader.insert({ readerTypeName, reader });
 	}
 
@@ -139,10 +140,5 @@ namespace xna {
 			targetTypeToReader.insert({ typeof<Object>(), contentTypeReader});
 			readerTypeToReader.insert({ typeof<ObjectReader>(), contentTypeReader});
 		}
-	}
-
-	sptr<void> ObjectReader::Read(ContentReader input, sptr<void> existingInstance)
-	{
-		return nullptr;
-	}
+	}	
 }

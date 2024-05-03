@@ -5,42 +5,43 @@
 #include "../default.hpp"
 #include <algorithm>
 #include <map>
+#include <any>
 
 namespace xna {
 	//-------------------------------------------------------//
 	// 					 ContentTypeReader					 //
 	//-------------------------------------------------------//
-	class ContentTypeReader : public Object {
-	public:
-		ContentTypeReader(){}
-
+	class ContentTypeReader {
 	public:
 		virtual Int TypeVersion() { return 0; }
 		virtual bool CanDeserializeIntoExistingObject() { return false; }
 		virtual void Initialize(sptr<ContentTypeReaderManager>& manager) {}
 		
-		sptr<Type> TargetType() { return _targetType; }		
-
-		virtual sptr<Type> GetType() const override {
-			auto type = New<Type>();
-			type->FullName = "xna::ContentTypeReader";
-			type->Namespace = "xna";
-			type->IsClass = true;
-			return type;
-		}
+		sptr<Type> TargetType() { return _targetType; }				
+		virtual std::any Read(ContentReader& input, std::any& existingInstance) = 0;
 
 	protected:
 		ContentTypeReader(sptr<Type> const& targetType) : _targetType(targetType) 
-		{
-		}
-
-		virtual sptr<void> Read(ContentReader input, sptr<void> existingInstance) = 0;
+		{}	
 
 	public:
 		bool TargetIsValueType{ false };
 
 	private:
 		sptr<Type> _targetType = nullptr;
+	};	
+
+	template <class T>
+	class ContentTypeReaderT : public ContentTypeReader {
+	protected:
+		ContentTypeReaderT(sptr<Type> const& targetType) : ContentTypeReader(targetType){}
+
+	public:
+		virtual std::any Read(ContentReader& input, std::any& existingInstance) override{
+			return std::any();
+		}
+
+		virtual T Read(ContentReader& input, T existingInstance) = 0;
 	};
 
 	//-------------------------------------------------------//
@@ -165,24 +166,17 @@ namespace xna {
 	//-------------------------------------------------------//
 	//	 					ObjectReader					 //
 	//-------------------------------------------------------//
-	class ObjectReader : public ContentTypeReader {
+	class ObjectReader : public ContentTypeReaderT<Object> {
 	public:
-		ObjectReader() : ContentTypeReader(typeof(this)){
+		ObjectReader() : ContentTypeReaderT(typeof<Object>()) {
 			ContentTypeReaderActivador::SetActivador(typeof(this), []() -> sptr<ContentTypeReader> {
 				auto obj = New <ObjectReader>();
 				return reinterpret_pointer_cast<ContentTypeReader>(obj);
 				});
-		}
+		}		
 
-		// Inherited via ContentTypeReader
-		sptr<void> Read(ContentReader input, sptr<void> existingInstance) override;		
-
-		sptr<Type> GetType() const override{
-			auto type = New<Type>();
-			type->FullName = "xna::ObjectReader";
-			type->Namespace = "xna";
-			type->IsClass = true;
-			return type;
+		virtual Object Read(ContentReader& input, Object existingInstance) override {
+			return Object();
 		}
 	};
 }
