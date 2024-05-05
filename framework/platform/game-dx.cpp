@@ -42,19 +42,33 @@ namespace xna {
 		Keyboard::Initialize();
 		Mouse::Initialize();
 
-		//initialize é requisito para GamePad
+		////initialize é requisito para GamePad
+		//Microsoft::WRL::Wrappers::RoInitializeWrapper initialize(RO_INIT_MULTITHREADED);
+
+		//if (FAILED(initialize))
+		//	MessageBox(nullptr, "Ocorreu um erro ao executar Microsoft::WRL::Wrappers::RoInitializeWrapper. O GamePad não foi inicializado corretamente.", "XN65", MB_OK);
+
+		//GamePad.Initialize();
+
+		////CoInitializeEx é requisito para biblioteca DirectXTK
+		//const auto hr = CoInitializeEx(nullptr, COINIT_MULTITHREADED);
+
+		//if (FAILED(hr))
+		//	MessageBox(nullptr, "Ocorreu um erro ao executar CoInitializeEx. O AudioEngine não foi inicializado corretamente.", "XN65", MB_OK);
+
+#if (_WIN32_WINNT >= 0x0A00 /*_WIN32_WINNT_WIN10*/)
 		Microsoft::WRL::Wrappers::RoInitializeWrapper initialize(RO_INIT_MULTITHREADED);
-
 		if (FAILED(initialize))
-			MessageBox(nullptr, "Ocorreu um erro ao executar Microsoft::WRL::Wrappers::RoInitializeWrapper. O GamePad não foi inicializado corretamente.", "XN65", MB_OK);
+		{
 
-		GamePad.Initialize();
-
-		//CoInitializeEx é requisito para AudioEngine
-		const auto hr = CoInitializeEx(nullptr, COINIT_MULTITHREADED);
-
+		}
+#else
+		HRESULT hr = CoInitializeEx(nullptr, COINIT_MULTITHREADED);
 		if (FAILED(hr))
-			MessageBox(nullptr, "Ocorreu um erro ao executar CoInitializeEx. O AudioEngine não foi inicializado corretamente.", "XN65", MB_OK);
+		{
+
+		}
+#endif
 
 		_audioEngine = New<AudioEngine>();
 

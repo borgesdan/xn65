@@ -14,7 +14,8 @@ namespace xna {
 		STREAM_ERROR,
 		UNINTIALIZED_RESOURCE,
 		END_OF_FILE,
-		BAD_TYPE
+		BAD_TYPE,
+		WARNING_INITIALIZED_RESOURCE
 	};
 
 	inline void xna_error_apply(XnaErrorCode* source, XnaErrorCode const& value) {

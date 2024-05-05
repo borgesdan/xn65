@@ -1,9 +1,7 @@
 #ifndef XNA_GRAPHICS_TEXTURE_HPP
 #define XNA_GRAPHICS_TEXTURE_HPP
 
-#include "../forward.hpp"
-#include "../types.hpp"
-#include "../enums.hpp"
+#include "../default.hpp"
 
 namespace xna {
 	class Texture {
@@ -14,6 +12,8 @@ namespace xna {
 		virtual ~ITexture2D(){}
 		virtual Int Width() const = 0;
 		virtual Int Height() const = 0;
+		virtual Rectangle Bounds() const = 0;
+		virtual bool Initialize(xna_error_nullarg) = 0;
 	};
 }
 

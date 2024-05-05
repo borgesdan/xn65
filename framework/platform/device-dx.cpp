@@ -47,10 +47,11 @@ namespace xna {
 		hr = _factory->MakeWindowAssociation(gameWindow.WindowHandle(), DXGI_MWA_NO_ALT_ENTER);
 		if (FAILED(hr)) return false;
 
-		_renderTarget2D = New<RenderTarget2D>();
-		if (!_renderTarget2D->Initialize(*this)) return false;
+		_renderTarget2D = New<RenderTarget2D>(this);
+		if (!_renderTarget2D->Initialize())
+			return false;
 
-		_renderTarget2D->Apply(*this);
+		_renderTarget2D->Apply();
 
 		D3D11_VIEWPORT view{};
 		view.TopLeftX = _viewport.X;

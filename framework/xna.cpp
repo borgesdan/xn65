@@ -14,12 +14,6 @@ namespace xna {
 			graphics = New<GraphicsDeviceManager>(_game);
 			graphics->PreferredBackBufferWidth(1280);
 			graphics->PreferredBackBufferHeight(720);	
-			
-			contentManager = New<ContentManager>("Content");
-			//const auto s = contentManager->_path.string();			
-			// const auto current = std::filesystem::current_path();
-			//auto s = contentManager->OpenStream("file");
-			//DecompressStream::Decompress();
 		}
 
 		void Initialize() override {
@@ -30,8 +24,13 @@ namespace xna {
 		void LoadContent() override {
 			spriteBatch = New<SpriteBatch>(*_graphicsDevice);
 
-			XnaErrorCode err;
-			texture = Texture2D::FromStream(*_graphicsDevice, "D:\\sprite.jpg", &err);			
+			XnaErrorCode err{0};
+			//texture = Texture2D::FromStream(*_graphicsDevice, "D:\\sprite.jpg", &err);			
+			texture = New<Texture2D>(_graphicsDevice.get(), 256, 256);
+			std::vector<Color> data(256 * 256, 4278190080U);
+			//std::vector<UINT> data(256 * 256, 0xffffffff);
+			//std::vector<Uint> data(256 * 256, 4278190080U);
+			texture->SetData(data, 0, data.size());
 
 			Game::LoadContent();
 		}
