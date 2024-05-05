@@ -1,15 +1,15 @@
 #ifndef XNA_CONTENT_READER_HPP
 #define XNA_CONTENT_READER_HPP
 
-#include "../default.hpp"
-#include "../csharp/binary.hpp"
-#include "../csharp/type.hpp"
-#include "typereadermanager.hpp"
-#include <any>
-#include "../common/vectors.hpp"
+#include "../common/color.hpp"
 #include "../common/matrix.hpp"
 #include "../common/quaternion.hpp"
-#include "../common/color.hpp"
+#include "../common/vectors.hpp"
+#include "../csharp/binary.hpp"
+#include "../csharp/type.hpp"
+#include "../default.hpp"
+#include "typereadermanager.hpp"
+#include <any>
 
 namespace xna {
 	class ContentReader : public BinaryReader, public std::enable_shared_from_this<ContentReader>{
@@ -33,6 +33,8 @@ namespace xna {
 		Color ReadColor();
 		float ReadSingle();
 		double ReadDouble();
+
+		std::vector<Byte> ReadByteBuffer(size_t size, xna_error_nullarg);
 
 	private:
 		ContentReader(ContentManager* contentManager, sptr<Stream>& input, String const& assetName, Int graphicsProfile)

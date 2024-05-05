@@ -1,15 +1,18 @@
 #ifndef XNA_CONTENT_MANAGER_HPP
 #define XNA_CONTENT_MANAGER_HPP
 
+#include "../csharp/stream.hpp"
 #include "../default.hpp"
+#include "reader.hpp"
+#include <algorithm>
 #include <filesystem>
 #include <map>
-#include <algorithm>
-#include "../csharp/stream.hpp"
 
 namespace xna {
 	class ContentManager {
 	public:
+		friend class ContentReader;
+
 		ContentManager(String const& rootDirectory) : 
 			_rootDirectory(rootDirectory),
 			_path(rootDirectory){};
@@ -35,7 +38,7 @@ namespace xna {
 		}
 
 		template <typename T>
-		sptr<T> Load(String const& assetName) {
+		T Load(String const& assetName) {
 			if (assetName.empty()) return nullptr;		
 
 			if (_loadedAssets.contains(assetName)) {
@@ -69,6 +72,7 @@ namespace xna {
 		std::filesystem::path _path;
 		std::map<String, sptr<void>> _loadedAssets;
 		inline const static String contentExtension = ".xnb";
+		std::vector<Byte> byteBuffer;
 	};
 }
 

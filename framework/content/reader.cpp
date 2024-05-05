@@ -2,6 +2,7 @@
 #include "manager.hpp"
 #include "lzx/decoderstream.hpp"
 #include "typereadermanager.hpp"
+#include "manager.hpp"
 
 namespace xna {
 	sptr<ContentReader> ContentReader::Create(ContentManager* contentManager, sptr<Stream>& input, String const& assetName)
@@ -86,6 +87,29 @@ namespace xna {
 	{
 		const auto int64 = ReadUInt64();
 		return *(double*)&int64;
+	}
+
+	std::vector<Byte> ContentReader::ReadByteBuffer(size_t size, xna_error_ptr_arg)
+	{
+		std::vector<Byte>& buffer = _contentManager->byteBuffer;
+		
+		if (buffer.empty() || buffer.size() < size)
+		{
+			buffer = std::vector<Byte>(size);
+			//_contentManager->byteBuffer = buffer;
+		}
+		
+		Int num = 0;
+		for (size_t index = 0; index < size; index += num)
+		{			
+			num = Read(buffer, index, size - index);
+			if (num == 0) {
+				xna_error_apply(err, XnaErrorCode::FAILED_OPERATION);
+				return std::vector<Byte>();
+			}
+		}
+
+		return buffer;
 	}
 
 	sptr<Stream> ContentReader::PrepareStream(sptr<Stream>& input, String const& assetName, Int& graphicsProfile)

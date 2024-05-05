@@ -683,6 +683,11 @@ namespace xna {
 		return InternalReadChars(buffer.data(), buffer.size(), index, count, err);
 	}
 
+	Int BinaryReader::Read(std::vector<Byte>& buffer, size_t index, size_t count, xna_error_ptr_arg)
+	{
+		auto data = reinterpret_cast<Char*>(buffer.data());
+		return InternalReadChars(data, buffer.size(), index, count, err);
+	}
 	std::vector<Byte> BinaryReader::ReadBytes(size_t count, xna_error_ptr_arg)
 	{
 		std::vector<Byte> result(count);

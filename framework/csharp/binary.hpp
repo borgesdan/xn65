@@ -29,6 +29,7 @@ namespace xna {
 		std::string ReadString(xna_error_nullarg);
 
 		Int Read(std::vector<Char>& buffer, size_t index, size_t count, xna_error_nullarg);
+		Int Read(std::vector<Byte>& buffer, size_t index, size_t count, xna_error_nullarg);
 
 		std::vector<Byte> ReadBytes(size_t count, xna_error_nullarg);
 
