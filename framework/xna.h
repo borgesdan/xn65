@@ -26,5 +26,6 @@
 #include "content/manager.hpp"
 #include "content/decstream.hpp"
 #include "platform/init-dx.hpp"
+#include "csharp/type.hpp"
 
 // TODO: Reference additional headers your program requires here.

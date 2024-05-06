@@ -15,15 +15,16 @@ namespace xna {
 		friend class ContentReader;
 
 		ContentManager(String const& rootDirectory, sptr<GameServiceContainer> const& services) : 
-			_rootDirectory(rootDirectory),
-			_services(services),
-			_path(rootDirectory){};
+			_rootDirectory(rootDirectory),			
+			_path(rootDirectory){
+			_services = services;
+		};
 
 		virtual ~ContentManager(){
 			Unload();
 		}
 
-		sptr<GameServiceContainer> Services() {
+		static sptr<GameServiceContainer> Services() {
 			return _services;
 		}
 
@@ -44,14 +45,14 @@ namespace xna {
 		}
 
 		template <typename T>
-		T Load(String const& assetName) {
+		sptr<T> Load(String const& assetName) {
 			if (assetName.empty()) return nullptr;		
 
 			if (_loadedAssets.contains(assetName)) {
 				auto& ptr = _loadedAssets[assetName];
 				auto obj1 = reinterpret_pointer_cast<T>(ptr);
 
-				return *obj1;
+				return obj1;
 			}
 
 			auto obj2 = ReadAsset<T>(assetName); 
@@ -61,7 +62,7 @@ namespace xna {
 
 	protected:
 		template <typename T>
-		T ReadAsset(String const& assetName) {
+		sptr<T> ReadAsset(String const& assetName) {
 			auto input = OpenStream(assetName);
 			auto contentReader = ContentReader::Create(this, input, assetName);
 
@@ -80,7 +81,8 @@ namespace xna {
 		std::map<String, sptr<void>> _loadedAssets;
 		inline const static String contentExtension = ".xnb";
 		std::vector<Byte> byteBuffer;
-		sptr<GameServiceContainer> _services = nullptr;
+		
+		inline static sptr<GameServiceContainer> _services = nullptr;
 	};
 }
 

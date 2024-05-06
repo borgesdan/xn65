@@ -17,13 +17,13 @@ namespace xna {
 		static sptr<ContentReader> Create(ContentManager* contentManager, sptr<Stream>& input, String const& assetName);
 
 		template <typename T>
-		T ReadAsset();
+		sptr<T> ReadAsset();
 
 		template <typename T>
-		T ReadObject();
+		sptr<T> ReadObject();
 
 		template <typename T>
-		T ReadObject(T existingInstance);
+		sptr<T> ReadObject(T existingInstance);
 
 		Vector2 ReadVector2();
 		Vector3 ReadVector3();
@@ -45,10 +45,10 @@ namespace xna {
 		Int ReadHeader();
 
 		template <typename T>
-		T ReadObjectInternal(std::any& existingInstance, xna_error_nullarg);
+		sptr<T> ReadObjectInternal(std::any& existingInstance, xna_error_nullarg);
 
 		template <typename T>
-		T InvokeReader(ContentTypeReader& reader, std::any& existingInstance, xna_error_nullarg);
+		sptr<T> InvokeReader(ContentTypeReader& reader, std::any& existingInstance, xna_error_nullarg);
 
 	private:
 		ContentManager* _contentManager = nullptr;
@@ -63,19 +63,19 @@ namespace xna {
 	};
 
 	template<typename T>
-	inline T ContentReader::ReadObjectInternal(std::any& existingInstance, xna_error_ptr_arg)
+	inline sptr<T> ContentReader::ReadObjectInternal(std::any& existingInstance, xna_error_ptr_arg)
 	{
 		const auto num = Read7BitEncodedInt();
 
 		if (num == 0) {
-			return T();
+			return New<T>();
 		}
 
 		const auto index = num - 1;
 
 		if (index >= typeReaders.size()) {
 			xna_error_apply(err, XnaErrorCode::ARGUMENT_OUT_OF_RANGE);
-			return T();
+			return New<T>();
 		}
 
 		auto reader = typeReaders[index];
@@ -83,38 +83,38 @@ namespace xna {
 	}
 
 	template<typename T>
-	inline T ContentReader::InvokeReader(ContentTypeReader& reader, std::any& existingInstance, xna_error_ptr_arg)
+	inline sptr<T> ContentReader::InvokeReader(ContentTypeReader& reader, std::any& existingInstance, xna_error_ptr_arg)
 	{
 		auto contentTypeReader = reinterpret_cast<ContentTypeReaderT<T>*>(&reader);
-		T objB = T();
+		sptr<T> objB = nullptr;
 
 		if (contentTypeReader) {
-			T existingInstance1 = existingInstance.has_value() ? std::any_cast<T>(existingInstance) : T();
-			objB = contentTypeReader->Read(*this, existingInstance1);
+			auto existingInstance1 = existingInstance.has_value() ? std::any_cast<sptr<T>>(existingInstance) : nullptr;
+			objB = contentTypeReader->Read(*this, *existingInstance1);
 			return objB;
 		}
 
-		return T();
+		return New<T>();
 	}
 
 	template<typename T>
-	inline T ContentReader::ReadAsset()
+	inline sptr<T> ContentReader::ReadAsset()
 	{
 		const auto sharedResourceCount = ReadHeader();
-		T obj = ReadObject<T>();
+		auto obj = ReadObject<T>();
 		//this.ReadSharedResources(sharedResourceCount);
 		return obj;
 	}
 
 	template<typename T>
-	inline T ContentReader::ReadObject()
+	inline sptr<T> ContentReader::ReadObject()
 	{
 		auto a = std::any();
 		return ReadObjectInternal<T>(a);
 	}
 
 	template<typename T>
-	inline T ContentReader::ReadObject(T existingInstance)
+	inline sptr<T> ContentReader::ReadObject(T existingInstance)
 	{
 		return ReadObjectInternal<T>(std::any(existingInstance));
 	}

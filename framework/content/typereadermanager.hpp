@@ -41,7 +41,7 @@ namespace xna {
 			return std::any();
 		}
 
-		virtual T Read(ContentReader& input, T& existingInstance) = 0;
+		virtual sptr<T> Read(ContentReader& input, T& existingInstance) = 0;
 	};
 
 	//-------------------------------------------------------//
@@ -175,8 +175,8 @@ namespace xna {
 				});
 		}		
 
-		virtual Object Read(ContentReader& input, Object& existingInstance) override {
-			return Object();
+		virtual sptr<Object> Read(ContentReader& input, Object& existingInstance) override {
+			return nullptr;
 		}
 	};
 }
