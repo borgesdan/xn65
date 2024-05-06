@@ -11,7 +11,11 @@ namespace xna {
 
 		for (size_t index = 0; index < typeCount; ++index)
 		{
-			auto typeReader = ContentTypeReaderManager::GetTypeReader(contentReader->ReadString(), contentReader, newTypeReaders);
+			const auto readerTypeName = contentReader->ReadString();
+			const auto xnaType = readerTypeName.substr(0, readerTypeName.find(","));
+
+
+			auto typeReader = ContentTypeReaderManager::GetTypeReader(xnaType.empty() ? readerTypeName : xnaType, contentReader, newTypeReaders);
 
 			if (contentReader->ReadInt32() != typeReader->TypeVersion()) {
 				xna_error_apply(err, XnaErrorCode::BAD_TYPE);
@@ -59,9 +63,12 @@ namespace xna {
 	{
 		sptr<ContentTypeReader> reader = nullptr;
 
-		if (ContentTypeReaderManager::nameToReader.contains(readerTypeName) || !ContentTypeReaderManager::InstantiateTypeReader(readerTypeName, contentReader, reader, err)) {
+		if (ContentTypeReaderManager::nameToReader.contains(readerTypeName)) {
 			return ContentTypeReaderManager::nameToReader[readerTypeName];
-		}		
+		}
+		else if (!ContentTypeReaderManager::InstantiateTypeReader(readerTypeName, contentReader, reader, err)) {
+			return reader;
+		}
 
 		if (xna_error_haserros(err))
 			return nullptr;
@@ -79,12 +86,8 @@ namespace xna {
 	{
 		sptr<Type> type = nullptr;
 
-		std::map<sptr<Type>, sptr<ContentTypeReader>>::iterator it;
-
-		for (it = readerTypeToReader.begin(); it != readerTypeToReader.end(); it++) {
-			if (it->first->FullName() == readerTypeName)
-				type = it->first;
-		}
+		if (Type::NameOfRegisteredTypes.contains(readerTypeName))
+			type = Type::NameOfRegisteredTypes[readerTypeName];		
 
 		if (!type) {
 			xna_error_apply(err, XnaErrorCode::INVALID_OPERATION);

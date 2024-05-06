@@ -120,20 +120,21 @@ namespace xna {
 			return nullptr;
 
 		Int num1 = 0;
-		if (binaryReader.ReadByte() == 'w')
+		auto _byte = binaryReader.ReadByte(); //desfazer
+		if (_byte == 'w')
 			num1 = binaryReader.ReadUInt16();
 		else
 			return nullptr;
 
-		graphicsProfile = (num1 & 32512) >> 8;
+		graphicsProfile = (num1 & XnbVersionProfileMask) >> XnbVersionProfileShift;
 		bool flag = false;
 
 		switch (num1 & -32513)
 		{
-		case 5:
+		case XnbVersion:
 			flag = false;
 			break;
-		case 32773:
+		case XnbCompressedVersion:
 			flag = true;
 			break;
 		default:

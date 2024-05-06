@@ -42,19 +42,20 @@ namespace xna {
 			if (assetName.empty()) return nullptr;		
 
 			if (_loadedAssets.contains(assetName)) {
-				const auto& ptr = _loadedAssets[assetName];
-				const auto obj1 = reinterpret_pointer_cast<T>(ptr);
+				auto& ptr = _loadedAssets[assetName];
+				auto obj1 = reinterpret_pointer_cast<T>(ptr);
 
-				return obj1;
+				return *obj1;
 			}
 
-			const auto obj2 = ReadAsset<T>(assetName);
+			auto obj2 = ReadAsset<T>(assetName); 
+			//auto obj3 = reinterpret_pointer_cast<T>(obj2);
 			return obj2;
 		}
 
 	protected:
 		template <typename T>
-		sptr<T> ReadAsset(String const& assetName) {
+		T ReadAsset(String const& assetName) {
 			auto input = OpenStream(assetName);
 			auto contentReader = ContentReader::Create(this, input, assetName);
 

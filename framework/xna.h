@@ -25,5 +25,6 @@
 #include <iostream>
 #include "content/manager.hpp"
 #include "content/decstream.hpp"
+#include "platform/init-dx.hpp"
 
 // TODO: Reference additional headers your program requires here.

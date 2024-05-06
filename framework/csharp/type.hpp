@@ -5,6 +5,7 @@
 #include "object.hpp"
 #include <type_traits>
 #include <typeinfo>
+#include <map>
 
 namespace xna {
 	class Type : public Object {
@@ -33,12 +34,15 @@ namespace xna {
 		template <class T>
 		friend sptr<Type> typeof();
 
+	public:
+		inline static auto NameOfRegisteredTypes = std::map<std::string, sptr<Type>>();
+
 	private:
 		String fullName;						
 		bool isClass{ false };
 		bool isEnum{ false };
 		bool isValueType{ false };
-		bool isPrimitive{ false };				
+		bool isPrimitive{ false };	
 	};
 
 	template <class T>

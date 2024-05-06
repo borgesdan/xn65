@@ -261,7 +261,7 @@ namespace xna {
 
 		} while (num < val1);
 
-		return empty;
+		return sb;
 	}
 
 	Int BinaryReader::InternalReadOneChar(xna_error_ptr_arg)

@@ -10,6 +10,10 @@
 namespace xna {
 	class Texture2D : public ITexture2D, public GraphicsResource {
 	public:
+		Texture2D() : GraphicsResource(nullptr){
+			setDefaultDesc();
+		}
+
 		Texture2D(GraphicsDevice* device);
 		Texture2D(GraphicsDevice* device, size_t width, size_t height);
 		Texture2D(GraphicsDevice* device, size_t width, size_t height, size_t mipMap, SurfaceFormat format);

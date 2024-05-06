@@ -32,7 +32,9 @@ namespace xna {
 			//std::vector<UINT> data(256 * 256, 0xffffffff);
 			//std::vector<Uint> data(256 * 256, 4278190080U);
 			//texture->SetData(data, 0, data.size());
-			//Texture2D tx = contentManager->Load<Texture2D>("Idle");
+			tx = contentManager->Load<Texture2D>("Idle");
+			tx.Bind(_graphicsDevice.get());
+			tx.Initialize(&err);
 
 			Game::LoadContent();
 		}
@@ -48,7 +50,7 @@ namespace xna {
 			_graphicsDevice->Clear(Colors::CornflowerBlue);
 
 			spriteBatch->Begin();
-			//spriteBatch->Draw(*texture, position, Colors::White);
+			spriteBatch->Draw(tx, position, Colors::White);
 			spriteBatch->End();
 
 			Game::Draw(gameTime);
@@ -65,12 +67,14 @@ namespace xna {
 		float vel = 1;
 		int var = 0;
 		sptr<ContentManager> contentManager;
+		Texture2D tx;
 	};
 }
 
 
 int APIENTRY WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPSTR lpCmdLine, _In_ int nCmdShow) {
-	
+	xna::InitPlatform::Init();
+
 	auto game = xna::Game1();
 	const auto result = game.Run();
 	return result;

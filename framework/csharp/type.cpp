@@ -11,5 +11,5 @@ namespace xna {
 		XnaHHashCombine(seed, isPrimitive);
 
 		return seed;
-	}
+	}	
 }

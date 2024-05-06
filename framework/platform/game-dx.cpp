@@ -9,6 +9,7 @@
 #include "mouse-dx.hpp"
 #include "window-dx.hpp"
 #include <Windows.h>
+#include "../csharp/type.hpp"
 
 namespace xna {
 	Game::Game() {
@@ -156,5 +157,5 @@ namespace xna {
 			});
 
 		Draw(_currentGameTime);
-	}
+	}	
 }

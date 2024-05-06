@@ -45,7 +45,7 @@ namespace xna {
 			switch (format)
 			{
 			case SurfaceFormat::Color://21                
-				return DXGI_FORMAT_B8G8R8A8_UNORM;
+				return DXGI_FORMAT_R8G8B8A8_UNORM;
 			case SurfaceFormat::Bgr565: //23                
 				return DXGI_FORMAT_B5G6R5_UNORM;
 			case SurfaceFormat::Bgra5551://25                
@@ -92,6 +92,7 @@ namespace xna {
 		static constexpr SurfaceFormat ConvertDXGIFORMATToSurface(DXGI_FORMAT format) {
 			switch (format)
 			{
+			case DXGI_FORMAT_R8G8B8A8_UNORM:
 			case DXGI_FORMAT_B8G8R8A8_UNORM:
 				return SurfaceFormat::Color;
 			case DXGI_FORMAT_B5G6R5_UNORM:

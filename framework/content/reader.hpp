@@ -12,13 +12,13 @@
 #include <any>
 
 namespace xna {
-	class ContentReader : public BinaryReader, public std::enable_shared_from_this<ContentReader>{
+	class ContentReader : public BinaryReader, public std::enable_shared_from_this<ContentReader> {
 	public:
 		static sptr<ContentReader> Create(ContentManager* contentManager, sptr<Stream>& input, String const& assetName);
-		
+
 		template <typename T>
-		sptr<T> ReadAsset();
-		
+		T ReadAsset();
+
 		template <typename T>
 		T ReadObject();
 
@@ -38,7 +38,7 @@ namespace xna {
 
 	private:
 		ContentReader(ContentManager* contentManager, sptr<Stream>& input, String const& assetName, Int graphicsProfile)
-			: BinaryReader(input), _contentManager(contentManager), _assetName(assetName){}
+			: BinaryReader(input), _contentManager(contentManager), _assetName(assetName) {}
 
 		static sptr<Stream> PrepareStream(sptr<Stream>& input, String const& assetName, Int& graphicsProfile);
 
@@ -46,7 +46,7 @@ namespace xna {
 
 		template <typename T>
 		T ReadObjectInternal(std::any& existingInstance, xna_error_nullarg);
-		
+
 		template <typename T>
 		T InvokeReader(ContentTypeReader& reader, std::any& existingInstance, xna_error_nullarg);
 
@@ -55,6 +55,11 @@ namespace xna {
 		String _assetName;
 		std::vector<sptr<ContentTypeReader>> typeReaders;
 		Int graphicsProfile{ 0 };
+
+		static constexpr Ushort XnbVersionProfileMask = 32512;
+		static constexpr Ushort XnbCompressedVersion = 32773;
+		static constexpr Ushort XnbVersion = 5;
+		static constexpr Int XnbVersionProfileShift = 8;
 	};
 
 	template<typename T>
@@ -65,7 +70,7 @@ namespace xna {
 		if (num == 0) {
 			return T();
 		}
-			
+
 		const auto index = num - 1;
 
 		if (index >= typeReaders.size()) {
@@ -73,9 +78,10 @@ namespace xna {
 			return T();
 		}
 
-		return InvokeReader(typeReaders[index], existingInstance);
+		auto reader = typeReaders[index];
+		return InvokeReader<T>(*reader, existingInstance, err);
 	}
-	
+
 	template<typename T>
 	inline T ContentReader::InvokeReader(ContentTypeReader& reader, std::any& existingInstance, xna_error_ptr_arg)
 	{
@@ -85,13 +91,14 @@ namespace xna {
 		if (contentTypeReader) {
 			T existingInstance1 = existingInstance.has_value() ? std::any_cast<T>(existingInstance) : T();
 			objB = contentTypeReader->Read(*this, existingInstance1);
+			return objB;
 		}
 
 		return T();
 	}
-	
-	template<typename T>	
-	inline sptr<T> ContentReader::ReadAsset()
+
+	template<typename T>
+	inline T ContentReader::ReadAsset()
 	{
 		const auto sharedResourceCount = ReadHeader();
 		T obj = ReadObject<T>();
@@ -102,14 +109,15 @@ namespace xna {
 	template<typename T>
 	inline T ContentReader::ReadObject()
 	{
-		return ReadObjectInternal<T>(nullptr);
+		auto a = std::any();
+		return ReadObjectInternal<T>(a);
 	}
 
 	template<typename T>
 	inline T ContentReader::ReadObject(T existingInstance)
 	{
 		return ReadObjectInternal<T>(std::any(existingInstance));
-	}	
+	}
 }
 
 #endif
