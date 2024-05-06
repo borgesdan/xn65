@@ -9,7 +9,7 @@
 namespace xna {
 	class SwapChain : public ISwapChain, public GraphicsResource {
 	public:
-		SwapChain(GraphicsDevice* device): GraphicsResource(device){}
+		SwapChain(sptr<GraphicsDevice> const& device): GraphicsResource(device){}
 
 		virtual ~SwapChain() override {
 			if (dxSwapChain) {

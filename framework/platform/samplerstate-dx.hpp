@@ -8,7 +8,7 @@
 namespace xna {
 	class SamplerState : public ISamplerState, public GraphicsResource {
 	public:
-		SamplerState(GraphicsDevice* device) : GraphicsResource(device) {
+		SamplerState(sptr<GraphicsDevice> const& device) : GraphicsResource(device) {
 			_description.MaxAnisotropy = 4;
 		}
 

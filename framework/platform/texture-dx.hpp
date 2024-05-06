@@ -14,9 +14,9 @@ namespace xna {
 			setDefaultDesc();
 		}
 
-		Texture2D(GraphicsDevice* device);
-		Texture2D(GraphicsDevice* device, size_t width, size_t height);
-		Texture2D(GraphicsDevice* device, size_t width, size_t height, size_t mipMap, SurfaceFormat format);
+		Texture2D(sptr<GraphicsDevice> const& device);
+		Texture2D(sptr<GraphicsDevice> const& device, size_t width, size_t height);
+		Texture2D(sptr<GraphicsDevice> const& device, size_t width, size_t height, size_t mipMap, SurfaceFormat format);
 
 		virtual ~Texture2D() override {
 			if (dxTexture2D) {

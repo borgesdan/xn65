@@ -22,6 +22,8 @@ namespace xna {
 
 	bool GraphicsDevice::Initialize(GameWindow& gameWindow) {
 		reset();
+
+		auto _this = shared_from_this();
 		
 		if (!createDevice()) return false;
 
@@ -41,13 +43,13 @@ namespace xna {
 		_backgroundColor[2] = GetBValue(color) / 255.0f;
 		_backgroundColor[3] = 1.0f;
 
-		_swapChain = New<xna::SwapChain>(this);
+		_swapChain = New<xna::SwapChain>(_this);
 		_swapChain->Initialize();
 
 		hr = _factory->MakeWindowAssociation(gameWindow.WindowHandle(), DXGI_MWA_NO_ALT_ENTER);
 		if (FAILED(hr)) return false;
 
-		_renderTarget2D = New<RenderTarget2D>(this);
+		_renderTarget2D = New<RenderTarget2D>(_this);
 		if (!_renderTarget2D->Initialize())
 			return false;
 
@@ -64,7 +66,7 @@ namespace xna {
 		_context->RSSetViewports(1, &view);
 
 		_blendState = BlendState::NonPremultiplied();
-		_blendState->Bind(this);
+		_blendState->Bind(_this);
 		_blendState->Apply();
 
 		return true;

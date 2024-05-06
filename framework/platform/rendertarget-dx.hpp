@@ -9,7 +9,7 @@
 namespace xna {
 	class RenderTarget2D : public IRenderTarget2D, public Texture2D {
 	public:
-		RenderTarget2D(GraphicsDevice* device) : Texture2D(device){}
+		RenderTarget2D(sptr<GraphicsDevice> const& device) : Texture2D(device){}
 
 		virtual ~RenderTarget2D() override {
 			if (_renderTargetView) {

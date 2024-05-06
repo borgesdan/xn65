@@ -8,7 +8,7 @@
 namespace xna {
 	class Shader : public IShader, public GraphicsResource {
 	public:
-		Shader(GraphicsDevice* device) : GraphicsResource(device){}
+		Shader(sptr<GraphicsDevice> const& device) : GraphicsResource(device){}
 
 		virtual ~Shader() override {}
 
@@ -19,7 +19,7 @@ namespace xna {
 
 	class VertexShader : public Shader {
 	public:
-		VertexShader(GraphicsDevice* device) : Shader(device){}
+		VertexShader(sptr<GraphicsDevice> const& device) : Shader(device){}
 
 		virtual ~VertexShader() override {
 			if (_vertexShader) {
@@ -36,7 +36,7 @@ namespace xna {
 
 	class PixelShader : public Shader {
 	public:
-		PixelShader(GraphicsDevice* device) : Shader(device) {}
+		PixelShader(sptr<GraphicsDevice> const& device) : Shader(device) {}
 
 		virtual ~PixelShader() override {
 			if (_pixelShader) {

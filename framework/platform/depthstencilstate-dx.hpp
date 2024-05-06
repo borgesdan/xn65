@@ -8,7 +8,7 @@
 namespace xna {
 	class DepthStencilState : public IDepthStencilState, public GraphicsResource {
 	public:
-		DepthStencilState(GraphicsDevice* device) : GraphicsResource(device) {
+		DepthStencilState(sptr<GraphicsDevice> const& device) : GraphicsResource(device) {
 			dxDescription = defaultDesc();
 		}
 

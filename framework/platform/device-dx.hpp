@@ -14,7 +14,7 @@
 #include "presentparameters-dx.hpp"
 
 namespace xna {
-	class GraphicsDevice : public IGraphicsDevice {
+	class GraphicsDevice : public IGraphicsDevice, public std::enable_shared_from_this<GraphicsDevice> {
 	public:
 		GraphicsDevice();
 		GraphicsDevice(GraphicsDeviceInformation const& info);

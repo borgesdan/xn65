@@ -5,7 +5,8 @@
 namespace xna {	
 	sptr<Texture2D> Texture2D::FromStream(GraphicsDevice& device, String const& fileName, xna_error_ptr_arg)
 	{		
-		auto texture2d = New<Texture2D>(&device);
+		auto _this = device.shared_from_this();
+		auto texture2d = New<Texture2D>(_this);
 		ID3D11Resource* resource = nullptr;		
 		auto wstr = XnaHToWString(fileName);
 		
@@ -94,17 +95,17 @@ namespace xna {
 		return true;
 	}
 
-	Texture2D::Texture2D(GraphicsDevice* device, size_t width, size_t height) : GraphicsResource(device) {
+	Texture2D::Texture2D(sptr<GraphicsDevice> const& device, size_t width, size_t height) : GraphicsResource(device) {
 		setDefaultDesc();
 		dxDescription.Width = static_cast<UINT>(width);
 		dxDescription.Height = static_cast<UINT>(height);
 	}
 
-	Texture2D::Texture2D(GraphicsDevice* device) : GraphicsResource(device) {
+	Texture2D::Texture2D(sptr<GraphicsDevice> const& device) : GraphicsResource(device) {
 		setDefaultDesc();
 	}
 
-	Texture2D::Texture2D(GraphicsDevice* device, size_t width, size_t height, size_t mipMap, SurfaceFormat format) : GraphicsResource(device)
+	Texture2D::Texture2D(sptr<GraphicsDevice> const& device, size_t width, size_t height, size_t mipMap, SurfaceFormat format) : GraphicsResource(device)
 	{
 		setDefaultDesc();
 		dxDescription.Width = static_cast<UINT>(width);
@@ -235,7 +236,8 @@ namespace xna {
 
 	sptr<Texture2D> Texture2D::FromMemory(GraphicsDevice& device, std::vector<Byte> const& data, xna_error_ptr_arg)
 	{
-		auto texture2d = New<Texture2D>(&device);
+		auto _this = device.shared_from_this();
+		auto texture2d = New<Texture2D>(_this);
 		ID3D11Resource* resource = nullptr;
 
 		auto hr = DirectX::CreateWICTextureFromMemory(

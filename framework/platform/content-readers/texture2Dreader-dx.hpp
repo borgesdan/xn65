@@ -20,7 +20,7 @@ namespace xna {
 			auto a_device =  ContentManager::Services()->GetService(*typeof<GraphicsDevice>());
 			auto device = std::any_cast<sptr<GraphicsDevice>>(a_device);
 
-			auto texture2D = New<Texture2D>(device.get(), width, height, mipMaps, format);
+			auto texture2D = New<Texture2D>(device, width, height, mipMaps, format);
 
 			for (size_t level = 0; level < mipMaps; ++level) {
 				auto elementCount = input.ReadInt32();
