@@ -13,6 +13,8 @@
 
 namespace xna {
 	Game::Game() {
+		_services = New<GameServiceContainer>();
+
 		_gameWindow = New<GameWindow>();
 		_gameWindow->Color(255, 155, 55);
 		_gameWindow->Title("XN65");

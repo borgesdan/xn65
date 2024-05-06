@@ -5,6 +5,7 @@
 #include "../game/game.hpp"
 #include "dxheaders.hpp"
 #include "dx/StepTimer.hpp"
+#include "../content/manager.hpp"
 
 namespace xna {
 	class Game : public IGame {
@@ -30,6 +31,14 @@ namespace xna {
 			return _gameComponents;
 		}
 
+		sptr<GameServiceContainer> Services() override {
+			return _services;
+		}
+
+		sptr<ContentManager> Content() {
+			return contentManager;
+		}
+
 		constexpr void EnableGameComponents(bool value) {
 			_enabledGameComponents = value;
 		}
@@ -52,14 +61,16 @@ namespace xna {
 		
 		GameTime _currentGameTime{};
 		DX::StepTimer _stepTimer;
-		
+		sptr<ContentManager> contentManager;
+		sptr<GameServiceContainer> _services = nullptr;
+
 	private:
 		int startLoop();
 		void step();
 		sptr<GameComponentCollection> _gameComponents = nullptr;
 		std::vector<sptr<IGameComponent>> _drawableGameComponents;
 		size_t _drawableGameComponentsCount{ 0 };
-		bool _enabledGameComponents{ false };
+		bool _enabledGameComponents{ false };		
 	};
 }
 

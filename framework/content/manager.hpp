@@ -7,18 +7,24 @@
 #include <algorithm>
 #include <filesystem>
 #include <map>
+#include "../game/servicecontainer.hpp"
 
 namespace xna {
 	class ContentManager {
 	public:
 		friend class ContentReader;
 
-		ContentManager(String const& rootDirectory) : 
+		ContentManager(String const& rootDirectory, sptr<GameServiceContainer> const& services) : 
 			_rootDirectory(rootDirectory),
+			_services(services),
 			_path(rootDirectory){};
 
 		virtual ~ContentManager(){
 			Unload();
+		}
+
+		sptr<GameServiceContainer> Services() {
+			return _services;
 		}
 
 		constexpr String RootDirectory() const {
@@ -74,6 +80,7 @@ namespace xna {
 		std::map<String, sptr<void>> _loadedAssets;
 		inline const static String contentExtension = ".xnb";
 		std::vector<Byte> byteBuffer;
+		sptr<GameServiceContainer> _services = nullptr;
 	};
 }
 

@@ -39,7 +39,7 @@ add_executable (xna WIN32
 "content/manager.cpp"
 "content/reader.cpp"
 "csharp/binary.cpp"
-"content/decstream.cpp" "content/lzx/decoder.cpp" "content/lzx/decoderstream.cpp" "content/typereadermanager.cpp" "csharp/object.cpp" "csharp/type.cpp" "platform/init-dx.cpp")
+"content/decstream.cpp" "content/lzx/decoder.cpp" "content/lzx/decoderstream.cpp" "content/typereadermanager.cpp" "csharp/object.cpp" "csharp/type.cpp" "platform/init-dx.cpp" "game/servicecontainer.cpp")
 
 if (CMAKE_VERSION VERSION_GREATER 3.12)
   set_property(TARGET xna PROPERTY CXX_STANDARD 20)

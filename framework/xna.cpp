@@ -9,12 +9,12 @@ using namespace xna;
 namespace xna {
 	class Game1 : public Game {
 	public:
-		Game1() {
+		Game1() : Game() {
 			auto _game = reinterpret_cast<Game*>(this);
 			graphics = New<GraphicsDeviceManager>(_game);
 			graphics->PreferredBackBufferWidth(1280);
 			graphics->PreferredBackBufferHeight(720);	
-			contentManager = New<ContentManager>("Content");
+			contentManager = New<ContentManager>("Content", _services);
 		}
 
 		void Initialize() override {
@@ -65,8 +65,7 @@ namespace xna {
 		MouseState currentState{};
 		MouseState oldState{};
 		float vel = 1;
-		int var = 0;
-		sptr<ContentManager> contentManager;
+		int var = 0;		
 		Texture2D tx;
 	};
 }
