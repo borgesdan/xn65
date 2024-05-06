@@ -15,8 +15,7 @@ namespace xna {
 		friend class ContentReader;
 
 		ContentManager(String const& rootDirectory, sptr<GameServiceContainer> const& services) : 
-			_rootDirectory(rootDirectory),			
-			_path(rootDirectory){
+			_rootDirectory(rootDirectory){
 			_services = services;
 		};
 
@@ -34,7 +33,6 @@ namespace xna {
 
 		void RootDirectory(String const& value) {
 			_rootDirectory = value;
-			_path = value;
 		}
 
 		virtual void Unload() {
@@ -56,7 +54,9 @@ namespace xna {
 			}
 
 			auto obj2 = ReadAsset<T>(assetName); 
-			//auto obj3 = reinterpret_pointer_cast<T>(obj2);
+			//auto voidAsset = reinterpret_pointer_cast<void>(obj2);
+			_loadedAssets.insert({ assetName , obj2 });
+
 			return obj2;
 		}
 
@@ -77,7 +77,6 @@ namespace xna {
 
 	private:
 		String _rootDirectory;
-		std::filesystem::path _path;
 		std::map<String, sptr<void>> _loadedAssets;
 		inline const static String contentExtension = ".xnb";
 		std::vector<Byte> byteBuffer;

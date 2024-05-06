@@ -1,4 +1,4 @@
-#define NOMINMAX
+#include "../csharp/type.hpp"
 #include "../game/time.hpp"
 #include "audioengine-dx.hpp"
 #include "device-dx.hpp"
@@ -8,15 +8,14 @@
 #include "keyboard-dx.hpp"
 #include "mouse-dx.hpp"
 #include "window-dx.hpp"
-#include <Windows.h>
-#include "../csharp/type.hpp"
 
 namespace xna {
 	Game::Game() {
-		_services = New<GameServiceContainer>();
+		services = New<GameServiceContainer>();
+		_contentManager = New<ContentManager>("", services);
 
 		_gameWindow = New<GameWindow>();
-		_gameWindow->Color(255, 155, 55);
+		_gameWindow->Color(146, 150, 154);
 		_gameWindow->Title("XN65");
 		_gameWindow->Size(
 			GraphicsDeviceManager::DefaultBackBufferWidth,
@@ -25,15 +24,14 @@ namespace xna {
 		_gameComponents = New<GameComponentCollection>();
 	}
 
-	void Game::Exit()
-	{
+	void Game::Exit() {
 		_gameWindow->Close();
 	}
 
 	int Game::Run() {
 		Initialize();
 
-		if (_graphicsDevice == nullptr) {
+		if (graphicsDevice == nullptr) {
 			MessageBox(nullptr, "O dispositivo gráfico não foi inicializado corretamente", "XN65", MB_OK);
 			return EXIT_FAILURE;
 		}
@@ -43,33 +41,19 @@ namespace xna {
 
 	void Game::Initialize() {
 		Keyboard::Initialize();
-		Mouse::Initialize();
-
-		////initialize é requisito para GamePad
-		//Microsoft::WRL::Wrappers::RoInitializeWrapper initialize(RO_INIT_MULTITHREADED);
-
-		//if (FAILED(initialize))
-		//	MessageBox(nullptr, "Ocorreu um erro ao executar Microsoft::WRL::Wrappers::RoInitializeWrapper. O GamePad não foi inicializado corretamente.", "XN65", MB_OK);
-
-		//GamePad.Initialize();
-
-		////CoInitializeEx é requisito para biblioteca DirectXTK
-		//const auto hr = CoInitializeEx(nullptr, COINIT_MULTITHREADED);
-
-		//if (FAILED(hr))
-		//	MessageBox(nullptr, "Ocorreu um erro ao executar CoInitializeEx. O AudioEngine não foi inicializado corretamente.", "XN65", MB_OK);
+		Mouse::Initialize();	
 
 #if (_WIN32_WINNT >= 0x0A00 /*_WIN32_WINNT_WIN10*/)
 		Microsoft::WRL::Wrappers::RoInitializeWrapper initialize(RO_INIT_MULTITHREADED);
 		if (FAILED(initialize))
 		{
-
+			MessageBox(nullptr, "Ocorreu um erro ao chamar Microsoft::WRL::Wrappers::RoInitializeWrapper.", "XN65", MB_OK);
 		}
 #else
 		HRESULT hr = CoInitializeEx(nullptr, COINIT_MULTITHREADED);
 		if (FAILED(hr))
 		{
-
+			MessageBox(nullptr, "Ocorreu um erro ao chamar CoInitializeEx.", "XN65", MB_OK);
 		}
 #endif
 
@@ -101,7 +85,7 @@ namespace xna {
 			_drawableGameComponents.clear();
 		}
 
-		_graphicsDevice->Present();
+		graphicsDevice->Present();
 	}
 
 	void Game::Update(GameTime const& gameTime) {

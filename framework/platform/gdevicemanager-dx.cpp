@@ -33,10 +33,10 @@ namespace xna {
 	}
 
 	bool GraphicsDeviceManager::ToggleFullScreen() {
-		if (!_game || !_game->_graphicsDevice || !_game->_graphicsDevice->_swapChain)
+		if (!_game || !_game->graphicsDevice || !_game->graphicsDevice->_swapChain)
 			return false;
 
-		auto& swap = _game->_graphicsDevice->_swapChain;
+		auto& swap = _game->graphicsDevice->_swapChain;
 
 		BOOL state = false;
 		auto hr = swap->dxSwapChain->GetFullscreenState(&state, nullptr);
@@ -110,7 +110,7 @@ namespace xna {
 			return false;
 		}
 
-		_game->_graphicsDevice = _device;
+		_game->graphicsDevice = _device;
 
 		return true;
 	}

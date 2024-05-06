@@ -12,25 +12,22 @@ namespace xna {
 		Game1() : Game() {
 			auto _game = reinterpret_cast<Game*>(this);
 			graphics = New<GraphicsDeviceManager>(_game);
-			graphics->PreferredBackBufferWidth(1280);
-			graphics->PreferredBackBufferHeight(720);	
-			contentManager = New<ContentManager>("Content", _services);
+			
+			Content()->RootDirectory("Content");
 		}
 
 		void Initialize() override {
 			graphics->Initialize();
 
-			std::any device = _graphicsDevice;
-			_services->AddService(*typeof<GraphicsDevice>(), device);
+			std::any device = graphicsDevice;
+			services->AddService(*typeof<GraphicsDevice>(), device);
 
 			Game::Initialize();
 		}
 
 		void LoadContent() override {
-			spriteBatch = New<SpriteBatch>(*_graphicsDevice);
+			spriteBatch = New<SpriteBatch>(*graphicsDevice);
 
-			XnaErrorCode err{0};			
-			texture = contentManager->Load<Texture2D>("Idle");
 			Game::LoadContent();
 		}
 
@@ -42,11 +39,9 @@ namespace xna {
 		}
 
 		void Draw(GameTime const& gameTime) override {
-			_graphicsDevice->Clear(Colors::CornflowerBlue);
+			graphicsDevice->Clear(Colors::CornflowerBlue);
 
-			spriteBatch->Begin();
-			spriteBatch->Draw(*texture, position, Colors::White);
-			spriteBatch->End();
+			
 
 			Game::Draw(gameTime);
 		}
@@ -54,14 +49,6 @@ namespace xna {
 	private:
 		sptr<GraphicsDeviceManager> graphics = nullptr;
 		sptr<SpriteBatch> spriteBatch = nullptr;
-		sptr<Texture2D> texture = nullptr; //200x200
-		Vector2 position{};
-		std::vector<Vector2> points;
-		MouseState currentState{};
-		MouseState oldState{};
-		float vel = 1;
-		int var = 0;		
-		//Texture2D tx;
 	};
 }
 
