@@ -1,10 +1,10 @@
 #ifndef XNA_PLATFORM_CONTENTREADERS_TEXTURE2D_HPP
 #define XNA_PLATFORM_CONTENTREADERS_TEXTURE2D_HPP
 
-#include "../../content/reader.hpp"
-#include "../texture-dx.hpp"
 #include "../../content/manager.hpp"
+#include "../../content/reader.hpp"
 #include "../../csharp/type.hpp"
+#include "../texture-dx.hpp"
 
 namespace xna {
 	class Texture2DReader : public ContentTypeReaderT<Texture2D> {
@@ -18,7 +18,10 @@ namespace xna {
 			const auto mipMaps = input.ReadInt32();	
 
 			auto a_device =  ContentManager::Services()->GetService(*typeof<GraphicsDevice>());
-			auto device = std::any_cast<sptr<GraphicsDevice>>(a_device);
+			sptr<GraphicsDevice> device = nullptr;
+
+			if(a_device.has_value())
+				device = std::any_cast<sptr<GraphicsDevice>>(a_device);
 
 			auto texture2D = New<Texture2D>(device, width, height, mipMaps, format);
 
@@ -26,7 +29,7 @@ namespace xna {
 				auto elementCount = input.ReadInt32();
 				std::vector<Byte> data = input.ReadByteBuffer(elementCount);
 
-				texture2D->SetData(level, nullptr, data, 0, elementCount);
+				texture2D->SetData(static_cast<Int>(level), nullptr, data, 0, elementCount);
 			}			
 
 			return texture2D;

@@ -15,7 +15,7 @@ namespace xna {
 	public:
 		virtual Int TypeVersion() { return 0; }
 		virtual bool CanDeserializeIntoExistingObject() { return false; }
-		virtual void Initialize(sptr<ContentTypeReaderManager>& manager) {}
+		virtual void Initialize(sptr<ContentTypeReaderManager> const& manager) {}
 		
 		sptr<Type> TargetType() { return _targetType; }				
 		virtual std::any Read(ContentReader& input, std::any& existingInstance) = 0;

@@ -57,6 +57,55 @@ namespace xna {
 		vector3.Z = num15;
 		return vector3;
 	}
+
+	constexpr Vector4 Vector4::Transform(Vector2 const& value, Quaternion const& rotation)
+	{
+		const auto num1 = rotation.X + rotation.X;
+		const auto num2 = rotation.Y + rotation.Y;
+		const auto num3 = rotation.Z + rotation.Z;
+		const auto num4 = rotation.W * num1;
+		const auto num5 = rotation.W * num2;
+		const auto num6 = rotation.W * num3;
+		const auto num7 = rotation.X * num1;
+		const auto num8 = rotation.X * num2;
+		const auto num9 = rotation.X * num3;
+		const auto num10 = rotation.Y * num2;
+		const auto num11 = rotation.Y * num3;
+		const auto num12 = rotation.Z * num3;
+		const auto num13 = (value.X * (1.0F - num10 - num12) + value.Y * (num8 - num6));
+		const auto num14 = (value.X * (num8 + num6) + value.Y * (1.0F - num7 - num12));
+		const auto num15 = (value.X * (num9 - num5) + value.Y * (num11 + num4));
+		Vector4 vector4;
+		vector4.X = num13;
+		vector4.Y = num14;
+		vector4.Z = num15;
+		vector4.W = 1.0f;
+		return vector4;
+	}
+
+	constexpr Vector4 Vector4::Transform(Vector3 const& value, Quaternion const& rotation) {
+		const auto num1 = rotation.X + rotation.X;
+		const auto num2 = rotation.Y + rotation.Y;
+		const auto num3 = rotation.Z + rotation.Z;
+		const auto num4 = rotation.W * num1;
+		const auto num5 = rotation.W * num2;
+		const auto num6 = rotation.W * num3;
+		const auto num7 = rotation.X * num1;
+		const auto num8 = rotation.X * num2;
+		const auto num9 = rotation.X * num3;
+		const auto num10 = rotation.Y * num2;
+		const auto num11 = rotation.Y * num3;
+		const auto num12 = rotation.Z * num3;
+		const auto num13 = (value.X * (1.0F - num10 - num12) + value.Y * (num8 - num6) + value.Z * (num9 + num5));
+		const auto num14 = (value.X * (num8 + num6) + value.Y * (1.0F - num7 - num12) + value.Z * (num11 - num4));
+		const auto num15 = (value.X * (num9 - num5) + value.Y * (num11 + num4) + value.Z * (1.0F - num7 - num10));
+		Vector4 vector4;
+		vector4.X = num13;
+		vector4.Y = num14;
+		vector4.Z = num15;
+		vector4.W = 1.0f;
+		return vector4;
+	}
 }
 
 #endif

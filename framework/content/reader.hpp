@@ -25,6 +25,12 @@ namespace xna {
 		template <typename T>
 		sptr<T> ReadObject(T existingInstance);
 
+		template <typename T>
+		sptr<T> ReadObject(ContentTypeReader& typeReader);
+
+		template <typename T>
+		sptr<T> ReadObject(ContentTypeReader& typeReader, T existingInstance);
+
 		Vector2 ReadVector2();
 		Vector3 ReadVector3();
 		Vector4 ReadVector4();
@@ -46,6 +52,9 @@ namespace xna {
 
 		template <typename T>
 		sptr<T> ReadObjectInternal(std::any& existingInstance, xna_error_nullarg);
+		
+		template <typename T>
+		sptr<T> ReadObjectInternal(ContentTypeReader& typeReader, std::any& existingInstance, xna_error_nullarg);
 
 		template <typename T>
 		sptr<T> InvokeReader(ContentTypeReader& reader, std::any& existingInstance, xna_error_nullarg);
@@ -102,7 +111,6 @@ namespace xna {
 	{
 		const auto sharedResourceCount = ReadHeader();
 		auto obj = ReadObject<T>();
-		//this.ReadSharedResources(sharedResourceCount);
 		return obj;
 	}
 
@@ -118,6 +126,27 @@ namespace xna {
 	{
 		return ReadObjectInternal<T>(std::any(existingInstance));
 	}
+
+	template<typename T>
+	inline sptr<T> ContentReader::ReadObject(ContentTypeReader& typeReader)
+	{
+		auto obj = std::any();
+		return ReadObjectInternal<T>(typeReader, obj);
+	}
+
+	template<typename T>
+	inline sptr<T> ContentReader::ReadObject(ContentTypeReader& typeReader, T existingInstance)
+	{
+		return ReadObjectInternal<T>(typeReader, std::any(existingInstance));
+	}
+
+	template<typename T>
+	inline sptr<T> ContentReader::ReadObjectInternal(ContentTypeReader& typeReader, std::any& existingInstance, xna_error_ptr_arg)
+	{
+		return typeReader.TargetIsValueType
+			? InvokeReader<T>(typeReader, existingInstance, err)
+			: ReadObjectInternal<T>(existingInstance, err);
+	}	
 }
 
 #endif
