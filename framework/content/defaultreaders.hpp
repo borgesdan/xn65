@@ -12,7 +12,7 @@ namespace xna {
 			elementReader = manager->GetTypeReader(typeof<T>());
 		}
 
-		sptr<std::vector<T>> Read(ContentReader& input, std::vector<T>& existingInstance) override {
+		std::vector<T> Read(ContentReader& input, std::vector<T>& existingInstance) override {
 			const auto length = input.ReadInt32();
 			std::vector<T> objArray(length);
 
@@ -27,7 +27,7 @@ namespace xna {
 	};
 
 	class BooleanReader : public ContentTypeReaderT<bool> {
-		sptr<bool> Read(ContentReader& input, bool& existingInstance) override {
+		bool Read(ContentReader& input, bool& existingInstance) override {
 			auto value = input.ReadBoolean();
 			auto b = New<bool>(value);
 			return b;

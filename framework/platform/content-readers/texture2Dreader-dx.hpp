@@ -7,11 +7,11 @@
 #include "../texture-dx.hpp"
 
 namespace xna {
-	class Texture2DReader : public ContentTypeReaderT<Texture2D> {
+	class Texture2DReader : public ContentTypeReaderT<PTexture2D> {
 	public:
 		Texture2DReader() : ContentTypeReaderT(typeof<Texture2D>()){}
 
-		sptr<Texture2D> Read(ContentReader& input, Texture2D& existingInstance) override{
+		PTexture2D Read(ContentReader& input, PTexture2D& existingInstance) override{
 			const auto format = static_cast<SurfaceFormat>(input.ReadInt32());
 			const auto width = input.ReadInt32();
 			const auto height = input.ReadInt32();

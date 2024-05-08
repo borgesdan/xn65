@@ -10,9 +10,9 @@ namespace xna {
 		Type::NameOfRegisteredTypes.insert({ "Texture2D", typeof<Texture2D>() });
 
 		//Texture2DReader
-		Type::NameOfRegisteredTypes.insert({ "Texture2DReader", typeof<Texture2DReader>() });
-		Type::NameOfRegisteredTypes.insert({ "xna::Texture2DReader", typeof<Texture2DReader>() });
-		Type::NameOfRegisteredTypes.insert({ "Microsoft.Xna.Framework.Content.Texture2DReader", typeof<Texture2DReader>() });
+		const auto textureReader = typeof<Texture2DReader>();
+		Type::NameOfRegisteredTypes.insert({ "xna::Texture2DReader", textureReader });
+		Type::NameOfRegisteredTypes.insert({ "Microsoft.Xna.Framework.Content.Texture2DReader", textureReader });		
 	}
 
 	void InitPlatform::InitActivadors()
@@ -25,6 +25,6 @@ namespace xna {
 		ContentTypeReaderActivador::SetActivador(typeof<Texture2DReader>(), []() -> sptr<ContentTypeReader> {
 			auto obj = New <Texture2DReader>();
 			return reinterpret_pointer_cast<ContentTypeReader>(obj);
-			});
+			});		
 	}
 }

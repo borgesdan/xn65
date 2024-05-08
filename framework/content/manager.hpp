@@ -43,26 +43,26 @@ namespace xna {
 		}
 
 		template <typename T>
-		sptr<T> Load(String const& assetName) {
-			if (assetName.empty()) return nullptr;		
+		T Load(String const& assetName) {
+			if (assetName.empty()) return T();
 
-			if (_loadedAssets.contains(assetName)) {
+			/*if (_loadedAssets.contains(assetName)) {
 				auto& ptr = _loadedAssets[assetName];
 				auto obj1 = reinterpret_pointer_cast<T>(ptr);
 
 				return obj1;
-			}
+			}*/
 
 			auto obj2 = ReadAsset<T>(assetName); 
 			//auto voidAsset = reinterpret_pointer_cast<void>(obj2);
-			_loadedAssets.insert({ assetName , obj2 });
+			//_loadedAssets.insert({ assetName , obj2 });
 
 			return obj2;
 		}
 
 	protected:
 		template <typename T>
-		sptr<T> ReadAsset(String const& assetName) {
+		T ReadAsset(String const& assetName) {
 			auto input = OpenStream(assetName);
 			auto contentReader = ContentReader::Create(this, input, assetName);
 
