@@ -637,11 +637,149 @@ namespace xna {
 		LzxState m_state;
 
 		Int MakeDecodeTable(Uint nsyms, Uint nbits, std::vector<Byte>& length, std::vector<Ushort>& table) {
+			Ushort sym = 0;
+			Uint leaf = 0;
+			Byte bit_num = 1;
+			Uint fill;
+			Uint pos = 0; /* the current position in the decode table */
+			Uint table_mask = static_cast<Uint>(1 << static_cast<Int>(nbits));
+			Uint bit_mask = table_mask >> 1; /* don't do 0 length codes */
+			Uint next_symbol = bit_mask;	/* base of allocation for long codes */
+
+			/* fill entries for codes short enough for a direct mapping */
+			while (bit_num <= nbits)
+			{
+				for (sym = 0; sym < nsyms; sym++)
+				{
+					if (length[sym] == bit_num)
+					{
+						leaf = pos;
+
+						if ((pos += bit_mask) > table_mask) return 1; /* table overrun */
+
+						/* fill all possible lookups of this symbol with the symbol itself */
+						fill = bit_mask;
+						while (fill-- > 0) table[leaf++] = sym;
+					}
+				}
+				bit_mask >>= 1;
+				bit_num++;
+			}
+
+			/* if there are any codes longer than nbits */
+			if (pos != table_mask)
+			{
+				/* clear the remainder of the table */
+				for (sym = static_cast<Ushort>(pos);
+					sym < table_mask; sym++) table[sym] = 0;
+
+				/* give ourselves room for codes to grow by up to 16 more bits */
+				pos <<= 16;
+				table_mask <<= 16;
+				bit_mask = 1 << 15;
+
+				while (bit_num <= 16)
+				{
+					for (sym = 0; sym < nsyms; sym++)
+					{
+						if (length[sym] == bit_num)
+						{
+							leaf = pos >> 16;
+							for (fill = 0; fill < bit_num - nbits; fill++)
+							{
+								/* if this path hasn't been taken yet, 'allocate' two entries */
+								if (table[leaf] == 0)
+								{
+									table[(next_symbol << 1)] = 0;
+									table[(next_symbol << 1) + 1] = 0;
+									table[leaf] = static_cast<Ushort>(next_symbol++);
+								}
+								/* follow the path and select either left or right for next bit */
+								leaf = static_cast<Uint>(table[leaf] << 1);
+								if (((pos >> static_cast<Int>(15 - fill)) & 1) == 1) leaf++;
+							}
+							table[leaf] = sym;
+
+							if ((pos += bit_mask) > table_mask) return 1;
+						}
+					}
+					bit_mask >>= 1;
+					bit_num++;
+				}
+			}
+
+			/* full talbe? */
+			if (pos == table_mask) return 0;
+
+			/* either erroneous table, or all elements are 0 - let's find out. */
+			for (sym = 0; sym < nsyms; sym++) if (length[sym] != 0) return 1;
 			return 0;
 		}
-		void ReadLengths(std::vector<Byte> const& lens, Uint first, Uint last, BitBuffer& bitbuf) {}
+		void ReadLengths(std::vector<Byte>& lens, Uint first, Uint last, BitBuffer& bitbuf) {
+			Uint x = 0;
+			Uint y = 0;
+			Int z = 0;
+
+			// hufftbl pointer here?
+
+			for (x = 0; x < 20; x++)
+			{
+				y = bitbuf.ReadBits(4);
+				m_state.PRETREE_len[x] = static_cast<Byte>(y);
+			}
+
+			MakeDecodeTable(LzxConstants::PRETREE_MAXSYMBOLS, LzxConstants::PRETREE_TABLEBITS,
+				m_state.PRETREE_len, m_state.PRETREE_table);
+
+			for (x = first; x < last;)
+			{
+				z = (int)ReadHuffSym(m_state.PRETREE_table, m_state.PRETREE_len,
+					LzxConstants::PRETREE_MAXSYMBOLS, LzxConstants::PRETREE_TABLEBITS, bitbuf);
+				if (z == 17)
+				{
+					y = bitbuf.ReadBits(4); y += 4;
+					while (y-- != 0) lens[x++] = 0;
+				}
+				else if (z == 18)
+				{
+					y = bitbuf.ReadBits(5); y += 20;
+					while (y-- != 0) lens[x++] = 0;
+				}
+				else if (z == 19)
+				{
+					y = bitbuf.ReadBits(1); y += 4;
+					z = static_cast<Int>(ReadHuffSym(m_state.PRETREE_table, m_state.PRETREE_len,
+						LzxConstants::PRETREE_MAXSYMBOLS, LzxConstants::PRETREE_TABLEBITS, bitbuf));
+					z = lens[x] - z; if (z < 0) z += 17;
+					while (y-- != 0) lens[x++] = static_cast<Byte>(z);
+				}
+				else
+				{
+					z = lens[x] - z; if (z < 0) z += 17;
+					lens[x++] = static_cast<Byte>(z);
+				}
+			}
+		}
+
 		Uint ReadHuffSym(std::vector<Ushort>& table, std::vector<Byte>& lengths, Uint nsyms, Uint nbits, BitBuffer& bitbuf) {
-			return 0;
+			Uint i = 0;
+			Uint j = 0;
+
+			bitbuf.EnsureBits(16);
+
+			if ((i = table[bitbuf.PeekBits(static_cast<Byte>(nbits))]) >= nsyms)
+			{
+				j = static_cast<Uint>(1 << static_cast<Int>((sizeof(Uint) * 8) - nbits));
+				do
+				{
+					j >>= 1; i <<= 1; i |= (bitbuf.GetBuffer() & j) != 0 ? static_cast<Uint>(1) : 0;
+					if (j == 0) return 0; // TODO throw proper exception
+				} while ((i = table[i]) >= nsyms);
+			}
+			j = lengths[i];
+			bitbuf.RemoveBits(static_cast<Byte>(j));
+
+			return i;
 		}
 	};
 }
