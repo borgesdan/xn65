@@ -42,18 +42,7 @@ namespace xna {
 		}
 
 		virtual T Read(ContentReader& input, T& existingInstance) = 0;
-	};
-
-	//-------------------------------------------------------//
-	// 						TypeComparator					 //
-	//-------------------------------------------------------//
-	struct TypeComparator
-	{
-		bool operator()(sptr<Type> t1, sptr<Type> t2) const
-		{
-			return t1->GetHashCode() < t2->GetHashCode();
-		}		
-	};
+	};	
 
 	//-------------------------------------------------------//
 	// 				ContentTypeReaderActivador				 //
@@ -94,7 +83,6 @@ namespace xna {
 		}
 
 	private:
-		//inline static auto activators = std::map<size_t, Activador, TypeComparator>();
 		inline static auto activators = std::map<size_t, Activador>();
 
 		ContentTypeReaderActivador();
@@ -155,29 +143,10 @@ namespace xna {
 		sptr<ContentReader> contentReader = nullptr;
 
 		inline static auto nameToReader = std::map<String, PContentTypeReader>();
-		//inline static auto targetTypeToReader = std::map<PType, PContentTypeReader, TypeComparator>();
-		//inline static auto readerTypeToReader = std::map<PType, PContentTypeReader, TypeComparator>();
 		inline static auto targetTypeToReader = std::map<PType, PContentTypeReader>();
 		inline static auto readerTypeToReader = std::map<PType, PContentTypeReader>();
 		
 		static void initMaps();
-	};
-
-	//-------------------------------------------------------//
-	//	 					ObjectReader					 //
-	//-------------------------------------------------------//
-	class ObjectReader : public ContentTypeReaderT<Object> {
-	public:
-		ObjectReader() : ContentTypeReaderT(typeof<Object>()) {
-			ContentTypeReaderActivador::SetActivador(typeof(this), []() -> sptr<ContentTypeReader> {
-				auto obj = New <ObjectReader>();
-				return reinterpret_pointer_cast<ContentTypeReader>(obj);
-				});
-		}		
-
-		virtual Object Read(ContentReader& input, Object& existingInstance) override {
-			return Object();
-		}
 	};
 }
 

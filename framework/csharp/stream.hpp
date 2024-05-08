@@ -118,8 +118,10 @@ namespace xna {
 		virtual void WriteByte(Byte value, xna_error_nullarg) override;
 
 	public:
-		std::streampos _filesize{ 0 };
 		std::fstream _fstream;
+
+	private:
+		std::streampos _filesize{ 0 };
 		bool _closed{ false };
 
 		Int endOfFile() {

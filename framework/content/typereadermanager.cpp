@@ -1,5 +1,6 @@
 #include "typereadermanager.hpp"
 #include "reader.hpp"
+#include "defaultreaders.hpp"
 
 namespace xna {
 	std::vector<PContentTypeReader> ContentTypeReaderManager::ReadTypeManifest(Int typeCount, sptr<ContentReader>& contentReader, xna_error_ptr_arg)

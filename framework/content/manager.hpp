@@ -3,11 +3,11 @@
 
 #include "../csharp/stream.hpp"
 #include "../default.hpp"
+#include "../game/servicecontainer.hpp"
 #include "reader.hpp"
 #include <algorithm>
 #include <filesystem>
 #include <map>
-#include "../game/servicecontainer.hpp"
 
 namespace xna {
 	class ContentManager {
@@ -17,11 +17,7 @@ namespace xna {
 		ContentManager(String const& rootDirectory, sptr<GameServiceContainer> const& services) : 
 			_rootDirectory(rootDirectory){
 			_services = services;
-		};
-
-		virtual ~ContentManager(){
-			Unload();
-		}
+		};		
 
 		static sptr<GameServiceContainer> Services() {
 			return _services;
@@ -35,30 +31,14 @@ namespace xna {
 			_rootDirectory = value;
 		}
 
-		virtual void Unload() {
-			if (_loadedAssets.empty())
-				return;	
-			
-			_loadedAssets.clear();
-		}
-
 		template <typename T>
 		T Load(String const& assetName) {
-			if (assetName.empty()) return T();
-
-			/*if (_loadedAssets.contains(assetName)) {
-				auto& ptr = _loadedAssets[assetName];
-				auto obj1 = reinterpret_pointer_cast<T>(ptr);
-
-				return obj1;
-			}*/
+			if (assetName.empty()) return T();			
 
 			auto obj2 = ReadAsset<T>(assetName); 
-			//auto voidAsset = reinterpret_pointer_cast<void>(obj2);
-			//_loadedAssets.insert({ assetName , obj2 });
 
 			return obj2;
-		}
+		}		
 
 	protected:
 		template <typename T>
@@ -76,11 +56,10 @@ namespace xna {
 		}
 
 	private:
-		String _rootDirectory;
-		std::map<String, sptr<void>> _loadedAssets;
-		inline const static String contentExtension = ".xnb";
+		String _rootDirectory;		
 		std::vector<Byte> byteBuffer;
 		
+		inline const static String contentExtension = ".xnb";
 		inline static sptr<GameServiceContainer> _services = nullptr;
 	};
 }
