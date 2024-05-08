@@ -212,7 +212,7 @@ namespace xna {
     }    
 
     Matrix Matrix::CreatePerspectiveFieldOfView(float fieldOfView, float aspectRatio, float nearPlaneDistance, float farPlaneDistance) {
-        if (fieldOfView <= 0.0 || fieldOfView >= Math::PI || nearPlaneDistance <= 0.0 || farPlaneDistance <= 0.0 || nearPlaneDistance >= farPlaneDistance) {           
+        if (fieldOfView <= 0.0 || fieldOfView >= MathHelper::PI || nearPlaneDistance <= 0.0 || farPlaneDistance <= 0.0 || nearPlaneDistance >= farPlaneDistance) {           
             return Matrix();
         }
 
