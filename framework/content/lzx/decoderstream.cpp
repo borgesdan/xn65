@@ -1,4 +1,4 @@
-#include "decoderstream.hpp"
+#include "content/lzx/decoderstream.hpp"
 
 namespace xna {
 	Int LzxDecoderStream::Length()

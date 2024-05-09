@@ -1,5 +1,5 @@
-#include "soundeffect-dx.hpp"
-#include "audioengine-dx.hpp"
+#include "platform-dx/soundeffect-dx.hpp"
+#include "platform-dx/audioengine-dx.hpp"
 
 using DxSoundEffect = DirectX::SoundEffect;
 

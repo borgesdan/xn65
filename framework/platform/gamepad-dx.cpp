@@ -1,4 +1,4 @@
-#include "gamepad-dx.hpp"
+#include "platform-dx/gamepad-dx.hpp"
 
 namespace xna {
 	GamePadState _GamePad::GetState(PlayerIndex index) {

@@ -1,7 +1,7 @@
-#include "window-dx.hpp"
-#include "keyboard-dx.hpp"
-#include "mouse-dx.hpp"
-#include "gamepad-dx.hpp"
+#include "platform-dx/window-dx.hpp"
+#include "platform-dx/keyboard-dx.hpp"
+#include "platform-dx/mouse-dx.hpp"
+#include "platform-dx/gamepad-dx.hpp"
 
 namespace xna {
 	GameWindow::GameWindow() {

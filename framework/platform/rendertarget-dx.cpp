@@ -1,7 +1,7 @@
-#include "rendertarget-dx.hpp"
-#include "../graphics/device.hpp"
-#include "swapchain-dx.hpp"
-#include "device-dx.hpp"
+#include "platform-dx/rendertarget-dx.hpp"
+#include "graphics/device.hpp"
+#include "platform-dx/swapchain-dx.hpp"
+#include "platform-dx/device-dx.hpp"
 
 namespace xna {
 	bool RenderTarget2D::Initialize(xna_error_ptr_arg) {

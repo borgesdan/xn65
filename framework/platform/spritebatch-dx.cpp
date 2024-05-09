@@ -1,10 +1,10 @@
-#include "blendstate-dx.hpp"
-#include "device-dx.hpp"
-#include "rasterizerstate-dx.hpp"
-#include "depthstencilstate-dx.hpp"
-#include "samplerstate-dx.hpp"
-#include "spritebatch-dx.hpp"
-#include "texture-dx.hpp"
+#include "platform-dx/blendstate-dx.hpp"
+#include "platform-dx/device-dx.hpp"
+#include "platform-dx/rasterizerstate-dx.hpp"
+#include "platform-dx/depthstencilstate-dx.hpp"
+#include "platform-dx/samplerstate-dx.hpp"
+#include "platform-dx/spritebatch-dx.hpp"
+#include "platform-dx/texture-dx.hpp"
 
 using DxSpriteBatch = DirectX::SpriteBatch;
 using DxSpriteSortMode = DirectX::SpriteSortMode;

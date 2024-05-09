@@ -1,4 +1,4 @@
-#include "clock-dx.hpp"
+#include "platform-dx/clock-dx.hpp"
 #include <Windows.h>
 
 namespace xna {

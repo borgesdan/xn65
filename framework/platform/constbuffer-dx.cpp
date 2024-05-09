@@ -1,5 +1,5 @@
-#include "constbuffer-dx.hpp"
-#include "device-dx.hpp"
+#include "platform-dx/constbuffer-dx.hpp"
+#include "platform-dx/device-dx.hpp"
 
 namespace xna {
 	bool ConstantBuffer::Initialize(GraphicsDevice& device, xna_error_ptr_arg)

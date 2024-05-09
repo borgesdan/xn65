@@ -1,4 +1,4 @@
-#include "displaymode-dx.hpp"
+#include "platform-dx/displaymode-dx.hpp"
 
 namespace xna {
 	size_t DisplayModeCollection::SurfaceCount(SurfaceFormat format) const

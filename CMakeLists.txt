@@ -10,8 +10,12 @@ if (POLICY CMP0141)
 endif()
 
 set(ENV{VCPKG_ROOT} C:\\vcpkg)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/inc)
+MESSAGE(${CMAKE_CURRENT_SOURCE_DIR}/inc)
 
 project ("xna")
 
 # Include sub-projects.
 add_subdirectory ("framework")
+
+

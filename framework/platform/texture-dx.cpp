@@ -1,6 +1,6 @@
-#include "texture-dx.hpp"
-#include "device-dx.hpp"
-#include "adapter-dx.hpp"
+#include "platform-dx/texture-dx.hpp"
+#include "platform-dx/device-dx.hpp"
+#include "platform-dx/adapter-dx.hpp"
 
 namespace xna {	
 	sptr<Texture2D> Texture2D::FromStream(GraphicsDevice& device, String const& fileName, xna_error_ptr_arg)

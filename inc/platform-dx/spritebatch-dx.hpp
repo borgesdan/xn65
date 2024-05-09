@@ -28,7 +28,7 @@ namespace xna {
 
 		virtual void End() override;
 		virtual void Draw(Texture2D& texture, Vector2 const& position, Color const& color) override;
-		virtual void Draw(Texture2D& texture, Vector2 const& position, Rectangle const * sourceRectangle, Color const& color) override;
+		virtual void Draw(Texture2D& texture, Vector2 const& position, Rectangle const* sourceRectangle, Color const& color) override;
 		virtual void Draw(Texture2D& texture, Vector2 const& position, Rectangle const* sourceRectangle, Color const& color,
 			float rotation, Vector2 const& origin, float scale, SpriteEffects effects, float layerDepth) override;
 		virtual void Draw(Texture2D& texture, Vector2 const& position, Rectangle const* sourceRectangle, Color const& color,
@@ -37,7 +37,7 @@ namespace xna {
 		virtual void Draw(Texture2D& texture, Rectangle const& destinationRectangle, Rectangle const* sourceRectangle, Color const& color) override;
 		virtual void Draw(Texture2D& texture, Rectangle const& destinationRectangle, Rectangle const* sourceRectangle, Color const& color,
 			float rotation, Vector2 const& origin, SpriteEffects effects, float layerDepth) override;
-		virtual void Viewport(xna::Viewport const& value) override;	
+		virtual void Viewport(xna::Viewport const& value) override;
 		virtual void DrawString(SpriteFont& spriteFont, String const& text, Vector2 const& position, Color const& color) override;
 		virtual void DrawString(SpriteFont& spriteFont, String const& text, Vector2 const& position, Color const& color,
 			float rotation, Vector2 const& origin, float scale, SpriteEffects effects, float layerDepth) override;
@@ -48,7 +48,7 @@ namespace xna {
 		}
 
 	public:
-		sptr<DirectX::SpriteBatch> _dxspriteBatch = nullptr;		
+		sptr<DirectX::SpriteBatch> _dxspriteBatch = nullptr;
 	};
 }
 

@@ -1,4 +1,4 @@
-#include "spritefont-dx.hpp"
+#include "platform-dx/spritefont-dx.hpp"
 
 using DxSpriteFont = DirectX::SpriteFont;
 

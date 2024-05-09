@@ -39,7 +39,14 @@ add_executable (xna WIN32
 "content/manager.cpp"
 "content/reader.cpp"
 "csharp/binary.cpp"
- "content/lzx/decoder.cpp" "content/lzx/decoderstream.cpp" "content/typereadermanager.cpp" "csharp/object.cpp" "csharp/type.cpp" "platform/init-dx.cpp" "game/servicecontainer.cpp" "common/color.cpp")
+ "content/lzx/decoder.cpp"
+ "content/lzx/decoderstream.cpp"
+ "content/typereadermanager.cpp"
+ "csharp/object.cpp"
+ "csharp/type.cpp"
+ "platform/init-dx.cpp"
+ "game/servicecontainer.cpp"
+ "common/color.cpp")
 
 if (CMAKE_VERSION VERSION_GREATER 3.12)
   set_property(TARGET xna PROPERTY CXX_STANDARD 20)
@@ -70,9 +77,7 @@ endif()
 #
 find_package(directxtk CONFIG REQUIRED)
 
-include_directories($ENV{VCPKG_ROOT}\\packages\\libmspack_x64-windows\\include)
 
 target_link_libraries(${PROJECT_NAME} 
 	D3d11.lib dxgi.lib dxguid.lib d3dcompiler.lib Microsoft::DirectXTK
-	$ENV{VCPKG_ROOT}\\packages\\libmspack_x64-windows\\lib\\libmspack.lib	
 )
