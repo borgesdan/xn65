@@ -1,6 +1,6 @@
-#include "vectors.hpp"
-#include "matrix.hpp"
-#include "quaternion.hpp"
+#include "common/vectors.hpp"
+#include "common/matrix.hpp"
+#include "common/quaternion.hpp"
 
 namespace xna {
     bool Vector2::Transform(Vector2 const* sourceArray, size_t sourceArrayLength, Matrix const& matrix, Vector2* destinationArray, size_t destinationArrayLength) {

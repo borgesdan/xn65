@@ -1,5 +1,5 @@
-#include "samplerstate-dx.hpp"
-#include "device-dx.hpp"
+#include "platform-dx/samplerstate-dx.hpp"
+#include "platform-dx/device-dx.hpp"
 
 namespace xna {
 	bool SamplerState::Apply(xna_error_ptr_arg)

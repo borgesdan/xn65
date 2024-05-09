@@ -1,4 +1,4 @@
-#include "matrix.hpp"
+#include "common/matrix.hpp"
 
 namespace xna {
     Matrix Matrix::CreateBillboard(Vector3 const& objectPosition, Vector3 const& cameraPosition, Vector3 const& cameraUpVector, Vector3* cameraForwardVector)

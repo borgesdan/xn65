@@ -1,5 +1,5 @@
-#include "binary.hpp"
-#include "../csharp/buffer.hpp"
+#include "csharp/binary.hpp"
+#include "csharp/buffer.hpp"
 
 namespace xna {
 	Int BinaryReader::PeekChar(xna_error_ptr_arg)

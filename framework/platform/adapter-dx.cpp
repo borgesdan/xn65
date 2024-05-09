@@ -1,5 +1,5 @@
-#include "adapter-dx.hpp"
-#include "gdevicemanager-dx.hpp"
+#include "platform-dx/adapter-dx.hpp"
+#include "platform-dx/gdevicemanager-dx.hpp"
 
 namespace xna {
 	static size_t getDisplayModesCount(IDXGIAdapter* adapter);

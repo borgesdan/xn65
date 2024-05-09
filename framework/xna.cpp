@@ -1,7 +1,7 @@
 ﻿// xna.cpp : Defines the entry point for the application.
 //
 
-#include "xna.h"
+#include "xna.hpp"
 
 using namespace std;
 using namespace xna;

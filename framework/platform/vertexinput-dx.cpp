@@ -1,9 +1,7 @@
-#include "vertexinput-dx.hpp"
-#include "device-dx.hpp"
-#include <d3dcompiler.h>
-#include "dxgi.h"
-#include "d3d11.h"
-#include "databuffer-dx.hpp"
+#include "platform-dx/vertexinput-dx.hpp"
+#include "platform-dx/device-dx.hpp"
+#include "platform-dx/dxheaders.hpp"
+#include "platform-dx/databuffer-dx.hpp"
 
 namespace xna {
 	bool VertexInputLayout::Initialize(GraphicsDevice& device, DataBuffer& blob, xna_error_ptr_arg){

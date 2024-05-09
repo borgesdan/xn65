@@ -1,5 +1,5 @@
-#include "stream.hpp"
-#include "buffer.hpp"
+#include "csharp/stream.hpp"
+#include "csharp/buffer.hpp"
 
 namespace xna {
 	Long MemoryStream::Seek(Long offset, SeekOrigin const& origin, xna_error_ptr_arg) {

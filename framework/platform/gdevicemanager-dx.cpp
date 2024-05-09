@@ -1,10 +1,10 @@
-#include "gdevicemanager-dx.hpp"
-#include "device-dx.hpp"
-#include "game-dx.hpp"
-#include "window-dx.hpp"
-#include "gdeviceinfo-dx.hpp"
-#include "adapter-dx.hpp"
-#include "presentparameters-dx.hpp"
+#include "platform-dx/gdevicemanager-dx.hpp"
+#include "platform-dx/device-dx.hpp"
+#include "platform-dx/game-dx.hpp"
+#include "platform-dx/window-dx.hpp"
+#include "platform-dx/gdeviceinfo-dx.hpp"
+#include "platform-dx/adapter-dx.hpp"
+#include "platform-dx/presentparameters-dx.hpp"
 
 namespace xna {
 	GraphicsDeviceManager::GraphicsDeviceManager(Game*& game) : _game(game) {		

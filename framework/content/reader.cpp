@@ -1,8 +1,8 @@
-#include "reader.hpp"
-#include "manager.hpp"
-#include "lzx/decoderstream.hpp"
-#include "typereadermanager.hpp"
-#include "manager.hpp"
+#include "content/reader.hpp"
+#include "content/manager.hpp"
+#include "content/lzx/decoderstream.hpp"
+#include "content/typereadermanager.hpp"
+#include "content/manager.hpp"
 
 namespace xna {
 	sptr<ContentReader> ContentReader::Create(ContentManager* contentManager, sptr<Stream>& input, String const& assetName)

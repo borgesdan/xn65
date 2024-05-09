@@ -1,4 +1,4 @@
-#include "mouse-dx.hpp"
+#include "platform-dx/mouse-dx.hpp"
 
 namespace xna {
 

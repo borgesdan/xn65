@@ -1,6 +1,6 @@
-#include "shader-dx.hpp"
-#include "device-dx.hpp"
-#include "databuffer-dx.hpp"
+#include "platform-dx/shader-dx.hpp"
+#include "platform-dx/device-dx.hpp"
+#include "platform-dx/databuffer-dx.hpp"
 
 namespace xna {
     HRESULT Shader::CompileFromFile(_In_ LPCWSTR srcFile, _In_ LPCSTR entryPoint, _In_ LPCSTR profile, _Outptr_ ID3DBlob** blob)

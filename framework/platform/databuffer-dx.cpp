@@ -1,4 +1,4 @@
-#include "databuffer-dx.hpp"
+#include "platform-dx/databuffer-dx.hpp"
 
 namespace xna {
 

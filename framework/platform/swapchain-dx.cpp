@@ -1,6 +1,6 @@
-#include "swapchain-dx.hpp"
-#include "adapter-dx.hpp"
-#include "device-dx.hpp"
+#include "platform-dx/swapchain-dx.hpp"
+#include "platform-dx/adapter-dx.hpp"
+#include "platform-dx/device-dx.hpp"
 
 namespace xna {
     static bool internalInit(GraphicsDevice& device, HWND windowHandle, IDXGISwapChain1*& swapChain, DXGI_SWAP_CHAIN_DESC1 const& desc, DXGI_SWAP_CHAIN_FULLSCREEN_DESC const& fdesc) {

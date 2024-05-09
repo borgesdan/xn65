@@ -1,4 +1,4 @@
-#include "type.hpp"
+#include "csharp/type.hpp"
 
 namespace xna {
 	size_t Type::GetHashCode() const

@@ -1,4 +1,4 @@
-#include "component.hpp"
+#include "game/component.hpp"
 
 namespace xna {
 	sptr<IGameComponent> GameComponentCollection::operator[](size_t index) const

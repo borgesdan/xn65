@@ -1,5 +1,5 @@
-#include "depthstencilstate-dx.hpp"
-#include "device-dx.hpp"
+#include "platform-dx/depthstencilstate-dx.hpp"
+#include "platform-dx/device-dx.hpp"
 
 namespace xna {
 	bool DepthStencilState::Initialize(xna_error_ptr_arg)

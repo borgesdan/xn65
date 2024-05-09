@@ -1,5 +1,5 @@
-#include "blendstate-dx.hpp"
-#include "device-dx.hpp"
+#include "platform-dx/blendstate-dx.hpp"
+#include "platform-dx/device-dx.hpp"
 
 namespace xna {
 	bool BlendState::Initialize(xna_error_ptr_arg)

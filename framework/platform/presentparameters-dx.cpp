@@ -1,5 +1,5 @@
-#include "presentparameters-dx.hpp"
-#include "gdevicemanager-dx.hpp"
+#include "platform-dx/presentparameters-dx.hpp"
+#include "platform-dx/gdevicemanager-dx.hpp"
 
 namespace xna {
 	PresentationParameters::PresentationParameters() :

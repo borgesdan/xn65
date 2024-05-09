@@ -1,13 +1,13 @@
-#include "../csharp/type.hpp"
-#include "../game/time.hpp"
-#include "audioengine-dx.hpp"
-#include "device-dx.hpp"
-#include "game-dx.hpp"
-#include "gamepad-dx.hpp"
-#include "gdevicemanager-dx.hpp"
-#include "keyboard-dx.hpp"
-#include "mouse-dx.hpp"
-#include "window-dx.hpp"
+#include "csharp/type.hpp"
+#include "game/time.hpp"
+#include "platform-dx/audioengine-dx.hpp"
+#include "platform-dx/device-dx.hpp"
+#include "platform-dx/game-dx.hpp"
+#include "platform-dx/gamepad-dx.hpp"
+#include "platform-dx/gdevicemanager-dx.hpp"
+#include "platform-dx/keyboard-dx.hpp"
+#include "platform-dx/mouse-dx.hpp"
+#include "platform-dx/window-dx.hpp"
 
 namespace xna {
 	Game::Game() {

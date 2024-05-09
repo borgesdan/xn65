@@ -1,5 +1,5 @@
-#include "rasterizerstate-dx.hpp"
-#include "device-dx.hpp"
+#include "platform-dx/rasterizerstate-dx.hpp"
+#include "platform-dx/device-dx.hpp"
 
 namespace xna {
 	bool RasterizerState::Initialize(xna_error_ptr_arg)
