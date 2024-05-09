@@ -82,6 +82,7 @@ namespace xna {
         void Write(Byte const* buffer, Int bufferLength, Int offset, Int count, xna_error_nullarg) override;
         void Write(std::vector<Byte> const& buffer, Int offset, Int count, xna_error_nullarg) override;
         void WriteByte(Byte value, xna_error_nullarg) override;
+        virtual constexpr bool IsClosed() override { return false; }
     };
 }
 

@@ -44,6 +44,10 @@ namespace xna {
 		template <typename T>
 		T ReadAsset(String const& assetName) {
 			auto input = OpenStream(assetName);
+
+			if (input->IsClosed())
+				return T();
+
 			auto contentReader = ContentReader::Create(this, input, assetName);
 
 			return contentReader->ReadAsset<T>();
@@ -51,7 +55,8 @@ namespace xna {
 
 		sptr<Stream> OpenStream(String const& assetName) {
 			String filePath = _rootDirectory + "\\" + assetName + contentExtension;
-			const auto stream = New<FileStream>(filePath);
+			const auto stream = New<FileStream>(filePath, FileMode::Open);
+			//const auto stream = New<FileStream>(filePath);
 			return reinterpret_pointer_cast<Stream>(stream);
 		}
 

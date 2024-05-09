@@ -165,6 +165,15 @@ namespace xna {
         Stretched = 2
     };
 
+    enum class FileMode {
+        CreateNew,
+        Create,
+        Append,
+        Open,
+        OpenOrCreate,
+        Truncate
+    };
+
 	enum class FillMode
 	{		
 		WireFrame,
