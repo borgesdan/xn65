@@ -24,7 +24,6 @@
 #include "Windows.h"
 #include <iostream>
 #include "content/manager.hpp"
-#include "content/decstream.hpp"
 #include "platform/init-dx.hpp"
 #include "csharp/type.hpp"
 
