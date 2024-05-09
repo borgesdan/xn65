@@ -9,28 +9,26 @@ using namespace xna;
 namespace xna {
 	class Game1 : public Game {
 	public:
-		Game1() {
+		Game1() : Game() {
 			auto _game = reinterpret_cast<Game*>(this);
 			graphics = New<GraphicsDeviceManager>(_game);
-			graphics->PreferredBackBufferWidth(1280);
-			graphics->PreferredBackBufferHeight(720);	
 			
-			contentManager = New<ContentManager>("Content");
-			//const auto s = contentManager->_path.string();			
-			// const auto current = std::filesystem::current_path();
-			auto s = contentManager->OpenStream("file");
+			Content()->RootDirectory("Content");
 		}
 
 		void Initialize() override {
 			graphics->Initialize();
+
+			std::any device = graphicsDevice;
+			services->AddService(*typeof<GraphicsDevice>(), device);
+
 			Game::Initialize();
 		}
 
 		void LoadContent() override {
-			spriteBatch = New<SpriteBatch>(*_graphicsDevice);
+			spriteBatch = New<SpriteBatch>(*graphicsDevice);
 
-			XnaErrorCode err;
-			texture = Texture2D::FromStream(*_graphicsDevice, "D:\\sprite.jpg", &err);
+			texture = Content()->Load<PTexture2D>("idle");
 
 			Game::LoadContent();
 		}
@@ -43,10 +41,10 @@ namespace xna {
 		}
 
 		void Draw(GameTime const& gameTime) override {
-			_graphicsDevice->Clear(Colors::CornflowerBlue);
+			graphicsDevice->Clear(Colors::CornflowerBlue);			
 
 			spriteBatch->Begin();
-			spriteBatch->Draw(*texture, position, Colors::White);
+			spriteBatch->Draw(*texture, Vector2(10, 10), Colors::White);
 			spriteBatch->End();
 
 			Game::Draw(gameTime);
@@ -55,20 +53,14 @@ namespace xna {
 	private:
 		sptr<GraphicsDeviceManager> graphics = nullptr;
 		sptr<SpriteBatch> spriteBatch = nullptr;
-		sptr<Texture2D> texture = nullptr; //200x200
-		Vector2 position{};
-		std::vector<Vector2> points;
-		MouseState currentState{};
-		MouseState oldState{};
-		float vel = 1;
-		int var = 0;
-		sptr<ContentManager> contentManager;
+		PTexture2D texture = nullptr;
 	};
 }
 
 
 int APIENTRY WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPSTR lpCmdLine, _In_ int nCmdShow) {
-	
+	xna::InitPlatform::Init();
+
 	auto game = xna::Game1();
 	const auto result = game.Run();
 	return result;

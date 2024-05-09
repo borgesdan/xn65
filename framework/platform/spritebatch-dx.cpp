@@ -63,7 +63,7 @@ namespace xna {
 		if (!_dxspriteBatch)
 			return;
 
-		if (!texture._textureView)
+		if (!texture.dxShaderResource)
 			return;
 
 		const auto _position = XMFLOAT2(position.X, position.Y);
@@ -71,7 +71,7 @@ namespace xna {
 		XMVECTORF32 _color = { v4.X, v4.Y, v4.Z, v4.W };
 
 		_dxspriteBatch->Draw(
-			texture._textureView,
+			texture.dxShaderResource,
 			_position,
 			_color
 		);
@@ -81,7 +81,7 @@ namespace xna {
 		if (!_dxspriteBatch)
 			return;
 
-		if (!texture._textureView)
+		if (!texture.dxShaderResource)
 			return;
 
 		const auto _position = XMFLOAT2(position.X, position.Y);
@@ -98,7 +98,7 @@ namespace xna {
 		};
 
 		_dxspriteBatch->Draw(
-			texture._textureView,
+			texture.dxShaderResource,
 			_position,
 			sourceRectangle ? &_sourceRect : nullptr,
 			_color);
@@ -108,7 +108,7 @@ namespace xna {
 		if (!_dxspriteBatch)
 			return;
 
-		if (!texture._textureView)
+		if (!texture.dxShaderResource)
 			return;
 
 		const auto _position = XMFLOAT2(position.X, position.Y);
@@ -128,7 +128,7 @@ namespace xna {
 		const DxSpriteEffects _effects = static_cast<DxSpriteEffects>(effects);
 
 		_dxspriteBatch->Draw(
-			texture._textureView,
+			texture.dxShaderResource,
 			_position,
 			sourceRectangle ? &_sourceRect : nullptr,
 			_color,
@@ -143,7 +143,7 @@ namespace xna {
 		if (!_dxspriteBatch)
 			return;
 
-		if (!texture._textureView)
+		if (!texture.dxShaderResource)
 			return;
 
 		const auto _position = XMFLOAT2(position.X, position.Y);
@@ -164,7 +164,7 @@ namespace xna {
 		const XMFLOAT2 _scale = { scale.X, scale.Y };
 
 		_dxspriteBatch->Draw(
-			texture._textureView,
+			texture.dxShaderResource,
 			_position,
 			sourceRectangle ? &_sourceRect : nullptr,
 			_color,
@@ -179,7 +179,7 @@ namespace xna {
 		if (!_dxspriteBatch)
 			return;
 
-		if (!texture._textureView)
+		if (!texture.dxShaderResource)
 			return;
 
 		RECT _destinationRect{};
@@ -191,14 +191,14 @@ namespace xna {
 		const auto v4 = color.ToVector4();
 		const XMVECTORF32 _color = { v4.X, v4.Y, v4.Z, v4.W };
 
-		_dxspriteBatch->Draw(texture._textureView, _destinationRect, _color);
+		_dxspriteBatch->Draw(texture.dxShaderResource, _destinationRect, _color);
 	}
 
 	void SpriteBatch::Draw(Texture2D& texture, Rectangle const& destinationRectangle, Rectangle const* sourceRectangle, Color const& color) {
 		if (!_dxspriteBatch)
 			return;
 
-		if (!texture._textureView)
+		if (!texture.dxShaderResource)
 			return;
 
 		RECT _destinationRect{};
@@ -219,14 +219,14 @@ namespace xna {
 			_sourceRect.bottom = sourceRectangle->Y + sourceRectangle->Height;
 		};
 
-		_dxspriteBatch->Draw(texture._textureView, _destinationRect, sourceRectangle ? &_sourceRect : nullptr, _color);
+		_dxspriteBatch->Draw(texture.dxShaderResource, _destinationRect, sourceRectangle ? &_sourceRect : nullptr, _color);
 	}
 
 	void SpriteBatch::Draw(Texture2D& texture, Rectangle const& destinationRectangle, Rectangle const* sourceRectangle, Color const& color, float rotation, Vector2 const& origin, SpriteEffects effects, float layerDepth) {
 		if (!_dxspriteBatch)
 			return;
 
-		if (!texture._textureView)
+		if (!texture.dxShaderResource)
 			return;
 
 		RECT _destinationRect{};
@@ -251,7 +251,7 @@ namespace xna {
 		const auto _effects = static_cast<DxSpriteEffects>(effects);
 
 		_dxspriteBatch->Draw(
-			texture._textureView,
+			texture.dxShaderResource,
 			_destinationRect,
 			sourceRectangle ? &_sourceRect : nullptr,
 			_color,

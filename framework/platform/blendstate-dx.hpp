@@ -21,7 +21,7 @@ namespace xna {
 
 	class BlendState : public IBlendState, public GraphicsResource {
 	public:
-		BlendState(GraphicsDevice* device) : GraphicsResource(device) {};
+		BlendState(sptr<GraphicsDevice> const& device) : GraphicsResource(device) {};
 
 		virtual ~BlendState() override {
 			if (dxBlendState) {

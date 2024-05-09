@@ -1,65 +1,52 @@
 #ifndef XNA_PLATFORM_GAME_DX_HPP
 #define XNA_PLATFORM_GAME_DX_HPP
 
+#include "../content/manager.hpp"
 #include "../default.hpp"
 #include "../game/game.hpp"
-#include "dxheaders.hpp"
 #include "dx/StepTimer.hpp"
+#include "dxheaders.hpp"
 
 namespace xna {
 	class Game : public IGame {
 	public:
-		Game();
+		Game();		
 
-		virtual ~Game() override {
-		}
-
-		virtual void Exit() override;
-
-		virtual int Run() override;
+		void Exit() override;
+		int Run() override;
 		
-		virtual sptr<GameWindow> Window() override {
-			return _gameWindow;
-		}
-
-		virtual sptr<GraphicsDevice> GetGraphicsDevice() override {
-			return _graphicsDevice;
-		}
-
-		sptr<GameComponentCollection> Components() override {
-			return _gameComponents;
-		}
-
-		constexpr void EnableGameComponents(bool value) {
-			_enabledGameComponents = value;
-		}
+		inline sptr<GameWindow> Window() override {	return _gameWindow; }
+		inline sptr<GraphicsDevice> GetGraphicsDevice() override { return graphicsDevice; }
+		inline sptr<GameComponentCollection> Components() override { return _gameComponents; }
+		inline sptr<GameServiceContainer> Services() override { return services; }
+		inline sptr<ContentManager> Content() override { return _contentManager; }
+		constexpr void EnableGameComponents(bool value) { _enabledGameComponents = value; }
 
 	protected:
-		virtual void Draw(GameTime const& gameTime) override;
-		
+		virtual void Draw(GameTime const& gameTime) override;		
 		virtual void Initialize() override;
-
-		virtual void LoadContent() override{}
-		
+		virtual void LoadContent() override{}		
 		virtual void Update(GameTime const& gameTime) override;
 
 	public:
-		sptr<GraphicsDevice> _graphicsDevice{ nullptr };
+		sptr<GraphicsDevice> graphicsDevice = nullptr;
 
-	protected:		
-		sptr<GameWindow> _gameWindow{ nullptr };
-		sptr<AudioEngine> _audioEngine = nullptr;		
-		
-		GameTime _currentGameTime{};
-		DX::StepTimer _stepTimer;
-		
-	private:
-		int startLoop();
-		void step();
+	protected:
+		sptr<GameServiceContainer> services = nullptr;
+
+	private:		
 		sptr<GameComponentCollection> _gameComponents = nullptr;
+		sptr<GameWindow> _gameWindow{ nullptr };
+		sptr<AudioEngine> _audioEngine = nullptr;
+		sptr<ContentManager> _contentManager;
 		std::vector<sptr<IGameComponent>> _drawableGameComponents;
 		size_t _drawableGameComponentsCount{ 0 };
-		bool _enabledGameComponents{ false };
+		bool _enabledGameComponents{ false };		
+		GameTime _currentGameTime{};
+		DX::StepTimer _stepTimer{};
+
+		int startLoop();
+		void step();
 	};
 }
 

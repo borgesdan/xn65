@@ -24,5 +24,7 @@
 #include "Windows.h"
 #include <iostream>
 #include "content/manager.hpp"
+#include "platform/init-dx.hpp"
+#include "csharp/type.hpp"
 
 // TODO: Reference additional headers your program requires here.

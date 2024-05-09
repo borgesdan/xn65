@@ -15,10 +15,14 @@ namespace xna {
 	class Stream;
 	class FileStream;
 	class MemoryStream;
+	class Object;
+	class Type;
 
 	//Content
 	class ContentManager;
 	class ContentReader;
+	class ContentTypeReader;
+	class ContentTypeReaderManager;
 
 	//Framework
 	class BoundingBox;
@@ -49,6 +53,7 @@ namespace xna {
 	class GraphicsDeviceManager;
 	class IGameTime;
 	class IGameComponent;
+	class GameServiceContainer;
 
 	//Graphics
 	class BlendState;
@@ -83,6 +88,9 @@ namespace xna {
 	struct GamePadState;
 	struct KeyboardState;
 	struct MouseState;
+
+	//Pointer
+	using PTexture2D = std::shared_ptr<Texture2D>;
 }
 
 #endif

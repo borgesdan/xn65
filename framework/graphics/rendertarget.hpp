@@ -1,7 +1,7 @@
 #ifndef XNA_GRAPHICS_RENDERTARGET_HPP
 #define XNA_GRAPHICS_RENDERTARGET_HPP
 
-#include "texture.hpp"
+#include "../default.hpp"
 
 
 namespace xna {
@@ -9,8 +9,8 @@ namespace xna {
 	public:
 		virtual ~IRenderTarget2D(){}
 
-		virtual bool Initialize(GraphicsDevice& device) = 0;
-		virtual bool Apply(GraphicsDevice& device) = 0;
+		virtual bool Initialize(xna_error_nullarg) = 0;
+		virtual bool Apply(xna_error_nullarg) = 0;
 	};	
 }
 

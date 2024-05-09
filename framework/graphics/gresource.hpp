@@ -6,11 +6,11 @@
 namespace xna {
 	class GraphicsResource {
 	public:
-		GraphicsResource(GraphicsDevice* device) : m_device(device){}
+		GraphicsResource(sptr<GraphicsDevice> const& device) : m_device(device){}
 
 		virtual ~GraphicsResource(){}
 
-		virtual bool Bind(GraphicsDevice* device) {
+		virtual bool Bind(sptr<GraphicsDevice> const& device) {
 			if (device == m_device)
 				return false;
 
@@ -20,7 +20,7 @@ namespace xna {
 		}
 
 	protected:
-		GraphicsDevice* m_device = nullptr;
+		sptr<GraphicsDevice> m_device = nullptr;
 	};
 }
 

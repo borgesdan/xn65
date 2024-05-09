@@ -623,6 +623,47 @@ namespace xna {
 		vector3.Z = num3;
 		return vector3;
 	}	
+
+	constexpr Vector4 Vector4::Transform(Vector2 const& position, Matrix const& matrix)
+	{
+		const auto num1 = (position.X * matrix.M11 + position.Y * matrix.M21) + matrix.M41;
+		const auto num2 = (position.X * matrix.M12 + position.Y * matrix.M22) + matrix.M42;
+		const auto num3 = (position.X * matrix.M13 + position.Y * matrix.M23) + matrix.M43;
+		const auto num4 = (position.X * matrix.M14 + position.Y * matrix.M24) + matrix.M44;
+		Vector4 vector4;
+		vector4.X = num1;
+		vector4.Y = num2;
+		vector4.Z = num3;
+		vector4.W = num4;
+		return vector4;
+	}
+
+	constexpr Vector4 Vector4::Transform(Vector3 const& position, Matrix const& matrix)
+	{
+		const auto num1 = (position.X * matrix.M11 + position.Y * matrix.M21 + position.Z * matrix.M31) + matrix.M41;
+		const auto num2 = (position.X * matrix.M12 + position.Y * matrix.M22 + position.Z * matrix.M32) + matrix.M42;
+		const auto num3 = (position.X * matrix.M13 + position.Y * matrix.M23 + position.Z * matrix.M33) + matrix.M43;
+		const auto num4 = (position.X * matrix.M14 + position.Y * matrix.M24 + position.Z * matrix.M34) + matrix.M44;
+		Vector4 vector4;
+		vector4.X = num1;
+		vector4.Y = num2;
+		vector4.Z = num3;
+		vector4.W = num4;
+		return vector4;
+	}	
+
+	constexpr Vector4 Vector4::Transform(Vector4 const& vector, Matrix const& matrix) {
+		const auto num1 = (vector.X * matrix.M11 + vector.Y * matrix.M21 + vector.Z * matrix.M31 + vector.W * matrix.M41);
+		const auto num2 = (vector.X * matrix.M12 + vector.Y * matrix.M22 + vector.Z * matrix.M32 + vector.W * matrix.M42);
+		const auto num3 = (vector.X * matrix.M13 + vector.Y * matrix.M23 + vector.Z * matrix.M33 + vector.W * matrix.M43);
+		const auto num4 = (vector.X * matrix.M14 + vector.Y * matrix.M24 + vector.Z * matrix.M34 + vector.W * matrix.M44);
+		Vector4 vector4;
+		vector4.X = num1;
+		vector4.Y = num2;
+		vector4.Z = num3;
+		vector4.W = num4;
+		return vector4;
+	}
 }
 
 #endif

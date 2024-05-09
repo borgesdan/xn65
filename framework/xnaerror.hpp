@@ -13,7 +13,9 @@ namespace xna {
 		BAD_CAST,
 		STREAM_ERROR,
 		UNINTIALIZED_RESOURCE,
-		END_OF_FILE
+		END_OF_FILE,
+		BAD_TYPE,
+		WARNING_INITIALIZED_RESOURCE
 	};
 
 	inline void xna_error_apply(XnaErrorCode* source, XnaErrorCode const& value) {
@@ -22,7 +24,7 @@ namespace xna {
 	}
 
 	inline bool xna_error_haserros(XnaErrorCode* source) {
-		return source != nullptr;
+		return source != nullptr && *source != XnaErrorCode::NONE;
 	}
 
 #define xna_error_nullarg	XnaErrorCode* err = nullptr	

@@ -8,7 +8,7 @@
 namespace xna {
 	class RasterizerState : public IRasterizerState, public GraphicsResource {
 	public:
-		RasterizerState(GraphicsDevice* device) : GraphicsResource(device){}
+		RasterizerState(sptr<GraphicsDevice> const& device) : GraphicsResource(device){}
 
 		virtual ~RasterizerState() override {
 			if (dxRasterizerState) {

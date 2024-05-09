@@ -165,7 +165,7 @@ namespace xna {
 			return -1;
 		}
 		
-		if (_closed)
+		if (_closed || _truncated)
 			return 0; 
 
 		auto _buff = reinterpret_cast<char*>(buffer);
@@ -184,7 +184,7 @@ namespace xna {
 	}
 
 	Int FileStream::ReadByte(xna_error_ptr_arg){
-		if (_closed)
+		if (_closed || _truncated)
 			return 0;
 
 		char c = 0;

@@ -1,21 +1,26 @@
 #ifndef XNA_CONTENT_MANAGER_HPP
 #define XNA_CONTENT_MANAGER_HPP
 
+#include "../csharp/stream.hpp"
 #include "../default.hpp"
+#include "../game/servicecontainer.hpp"
+#include "reader.hpp"
+#include <algorithm>
 #include <filesystem>
 #include <map>
-#include <algorithm>
-#include "../csharp/stream.hpp"
 
 namespace xna {
 	class ContentManager {
 	public:
-		ContentManager(String const& rootDirectory) : 
-			_rootDirectory(rootDirectory),
-			_path(rootDirectory){};
+		friend class ContentReader;
 
-		virtual ~ContentManager(){
-			Unload();
+		ContentManager(String const& rootDirectory, sptr<GameServiceContainer> const& services) : 
+			_rootDirectory(rootDirectory){
+			_services = services;
+		};		
+
+		static sptr<GameServiceContainer> Services() {
+			return _services;
 		}
 
 		constexpr String RootDirectory() const {
@@ -24,48 +29,43 @@ namespace xna {
 
 		void RootDirectory(String const& value) {
 			_rootDirectory = value;
-			_path = value;
-		}
-
-		virtual void Unload() {
-			if (_loadedAssets.empty())
-				return;	
-			
-			_loadedAssets.clear();
 		}
 
 		template <typename T>
-		sptr<T> Load(String const& assetName) {
-			if (assetName.empty()) return nullptr;		
+		T Load(String const& assetName) {
+			if (assetName.empty()) return T();			
 
-			if (_loadedAssets.contains(assetName)) {
-				const auto& ptr = _loadedAssets[assetName];
-				const auto obj1 = reinterpret_pointer_cast<T>(ptr);
+			auto obj2 = ReadAsset<T>(assetName); 
 
-				return obj1;
-			}
-
-			const auto obj2 = ReadAsset<T>(assetName);
 			return obj2;
-		}
+		}		
 
-	public:
+	protected:
 		template <typename T>
-		sptr<T> ReadAsset(String const& assetName) {
+		T ReadAsset(String const& assetName) {
 			auto input = OpenStream(assetName);
+
+			if (input->IsClosed())
+				return T();
+
+			auto contentReader = ContentReader::Create(this, input, assetName);
+
+			return contentReader->ReadAsset<T>();
 		}
 
 		sptr<Stream> OpenStream(String const& assetName) {
 			String filePath = _rootDirectory + "\\" + assetName + contentExtension;
-			const auto stream = New<FileStream>(filePath);
+			const auto stream = New<FileStream>(filePath, FileMode::Open);
+			//const auto stream = New<FileStream>(filePath);
 			return reinterpret_pointer_cast<Stream>(stream);
 		}
 
 	private:
-		String _rootDirectory;
-		std::filesystem::path _path;
-		std::map<String, sptr<void>> _loadedAssets;
+		String _rootDirectory;		
+		std::vector<Byte> byteBuffer;
+		
 		inline const static String contentExtension = ".xnb";
+		inline static sptr<GameServiceContainer> _services = nullptr;
 	};
 }
 

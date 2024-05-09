@@ -189,6 +189,10 @@ namespace xna {
 			return Color::Multiply(value, scale);
 		}
 
+		constexpr operator Uint() const { 
+			return _packedValue; 
+		}
+
 	private:
 		Uint _packedValue{ 0 };
 

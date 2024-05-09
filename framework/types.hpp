@@ -44,6 +44,7 @@ namespace xna {
 	constexpr double    DoubleMinValue	= std::numeric_limits<double>::min();
 
 	using String	= std::string;
+	using WString	= std::wstring;
 	
 	template <typename T>
 	using sptr		= std::shared_ptr<T>;

@@ -1,23 +1,21 @@
 #ifndef XNA_GAME_GAME_HPP
 #define XNA_GAME_GAME_HPP
 
-#include "../enums.hpp"
-#include "../forward.hpp"
-#include "../types.hpp"
+#include "../default.hpp"
 #include "time.hpp"
-#include "window.hpp"
-#include "../game/component.hpp"
+#include "component.hpp"
+#include "servicecontainer.hpp"
 
 namespace xna {
 	class IGame {
 	public:
-		virtual ~IGame(){}
-
 		virtual void Exit() = 0;
 		virtual int Run() = 0;
 		virtual sptr<GameWindow> Window() = 0;
 		virtual sptr<GraphicsDevice> GetGraphicsDevice() = 0;
 		virtual sptr<GameComponentCollection> Components() = 0;
+		virtual sptr<GameServiceContainer> Services() = 0;
+		virtual sptr<ContentManager> Content() = 0;
 
 	protected:
 		virtual void Draw(GameTime const& gameTime) = 0;
