@@ -1,9 +1,9 @@
 #ifndef CXNA_COMMON_PACKEDVECTOR_HPP
 #define CXNA_COMMON_PACKEDVECTOR_HPP
 
+#include "../default.hpp"
 #include "vectors.hpp"
 #include <cmath>
-#include "../default.hpp"
 
 namespace xna {
 	class IPackedVector {
