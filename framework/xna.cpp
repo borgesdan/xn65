@@ -26,9 +26,7 @@ namespace xna {
 		}
 
 		void LoadContent() override {
-			spriteBatch = New<SpriteBatch>(*graphicsDevice);
-
-			texture = Content()->Load<PTexture2D>("idle");
+			spriteBatch = New<SpriteBatch>(*graphicsDevice);			
 
 			Game::LoadContent();
 		}
@@ -43,17 +41,12 @@ namespace xna {
 		void Draw(GameTime const& gameTime) override {
 			graphicsDevice->Clear(Colors::CornflowerBlue);			
 
-			spriteBatch->Begin();
-			spriteBatch->Draw(*texture, Vector2(10, 10), Colors::White);
-			spriteBatch->End();
-
 			Game::Draw(gameTime);
 		}
 
 	private:
 		sptr<GraphicsDeviceManager> graphics = nullptr;
 		sptr<SpriteBatch> spriteBatch = nullptr;
-		PTexture2D texture = nullptr;
 	};
 }
 

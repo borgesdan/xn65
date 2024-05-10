@@ -54,30 +54,6 @@ endif()
 
 # TODO: Add tests and install targets if needed.
 
-
-# -- Biblioteca DirectxTK --
-# Url: https://github.com/microsoft/DirectXTK/wiki/DirectXTK
-#
-# -- Instalação via vcpkg --
-# Para efetuar o download do vcpkg verifique o caminho abaixo
-# Url: https://learn.microsoft.com/pt-br/vcpkg/get_started/get-started?pivots=shell-cmd
-#
-# Siga os procedimentos da página oficial do DirectxTK para instalação via vcpkg
-# $- vcpkg install directxtk[tools,spectre,xaudio2-9]
-#
-# [!] Atualize o arquivo CMakePresets.json, nos 'presets' necessários,
-# para que find_package execute corretamente
-#
-# "cacheVariables": {
-#    "CMAKE_TOOLCHAIN_FILE": "{VCPKG_DIR}\\scripts\\buildsystems\\vcpkg.cmake"
-# }
-#
-# Instalaçao do libmspack
-# $- vcpkg install libmspack
-#
 find_package(directxtk CONFIG REQUIRED)
 
-
-target_link_libraries(${PROJECT_NAME} 
-	D3d11.lib dxgi.lib dxguid.lib d3dcompiler.lib Microsoft::DirectXTK
-)
+target_link_libraries(${PROJECT_NAME} D3d11.lib dxgi.lib dxguid.lib d3dcompiler.lib Microsoft::DirectXTK)
