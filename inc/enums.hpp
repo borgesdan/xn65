@@ -114,7 +114,13 @@ namespace xna {
 		Blue,
 		Alpha,
 		All
-	};       
+	};    
+
+    enum class ContainmentType {
+        Disjoint,
+        Contains,
+        Intersects,
+    };
 
 	enum class ComparisonFunction {
 		Never,
@@ -377,6 +383,12 @@ namespace xna {
     enum class KeyState {
         Up,
         Down,
+    };
+
+    enum class PlaneIntersectionType {
+        Front,
+        Back,
+        Intersecting,
     };
 
     enum class PlayerIndex

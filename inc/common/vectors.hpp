@@ -263,7 +263,7 @@ namespace xna {
 			return x * x + y * y + z * z;
 		}
 
-		static float Dot(Vector3 const& vector1, Vector3 const& vector2) {
+		static constexpr float Dot(Vector3 const& vector1, Vector3 const& vector2) {
 			return vector1.X * vector2.X + vector1.Y * vector2.Y + vector1.Z * vector2.Z;
 		}
 
@@ -486,6 +486,20 @@ namespace xna {
 
 		friend constexpr Vector3 operator/(float divider, Vector3 const& value) {
 			return Vector3::Divide(value, divider);
+		}
+
+		friend constexpr Vector3 operator+=(Vector3 const& value1, Vector3 const& value2) {
+			auto vec = value1;
+			vec.X += value2.X;
+			vec.Y += value2.Y;
+			return vec;
+		}
+
+		friend constexpr Vector3 operator-=(Vector3 const& value1, Vector3 const& value2) {
+			auto vec = value1;
+			vec.X -= value2.X;
+			vec.Y -= value2.Y;
+			return vec;
 		}
 	};
 

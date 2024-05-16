@@ -24,20 +24,20 @@ namespace xna {
 	class ContentTypeReader;
 	class ContentTypeReaderManager;
 
-	//Framework
-	class BoundingBox;
-	class BoundingFrustum;
-	class BoundinSphere;
+	//Common
+	struct BoundingBox;
+	struct BoundingFrustum;
+	struct BoundingSphere;
 	struct Color;
-	class Curve;
-	class CurveContinuity;
-	class CurveKey;
-	class CurveKeyCollection;
+	struct Curve;
+	struct CurveContinuity;
+	struct CurveKey;
+	struct CurveKeyCollection;
 	struct Matrix;
-	class Plane;
+	struct Plane;
 	struct Point;
 	struct Quaternion;
-	class Ray;
+	struct Ray;
 	struct Rectangle;
 	struct Vector2;	
 	struct Vector3;	

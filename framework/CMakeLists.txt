@@ -47,7 +47,11 @@ add_executable (xna WIN32
 "platform/init-dx.cpp"
 "game/servicecontainer.cpp"
 "common/color.cpp"
-"common/math.cpp" "common/quaternion.cpp")
+"common/math.cpp" 
+"common/quaternion.cpp" 
+"common/collision.cpp" 
+"common/gjk.cpp"
+)
 
 if (CMAKE_VERSION VERSION_GREATER 3.12)
   set_property(TARGET xna PROPERTY CXX_STANDARD 20)

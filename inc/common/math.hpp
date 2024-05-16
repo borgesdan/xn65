@@ -6,16 +6,16 @@
 
 namespace xna {
 	struct MathHelper {
-		static constexpr double E = 2.7182818284590452354;
-		static constexpr double PI = 3.14159265358979323846;
-		static constexpr double TAU = PI * 2;		
-		static constexpr double EPSILON = std::numeric_limits<double>::epsilon();
+		static constexpr double E = 2.7182818284590451;
+		static constexpr double PI = 3.1415926535897931;
+		static constexpr double TAU = 6.2831853071795862;
+		static constexpr double EPSILON = 4.94065645841247E-324;
 
 		static constexpr float ToRadians(float degrees) { return degrees * (static_cast<float>(PI) / 180.0f); }
 		static constexpr float ToDegrees(float radians) { return radians * 57.2957764F; }
 		static float Distance(float value1, float value2) { return std::abs(value1 - value2); }
-		static float Min(float value1, float value2) { return (std::min)(value1, value2); }
-		static float Max(float value1, float value2) { return (std::max)(value1, value2); }
+		static constexpr float Min(float value1, float value2) { return (std::min)(value1, value2); }
+		static constexpr float Max(float value1, float value2) { return (std::max)(value1, value2); }
 
 		static constexpr float Clamp(float value, float min, float max) {
 			value = value > max ? max : value;
