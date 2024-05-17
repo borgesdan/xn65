@@ -6,11 +6,14 @@
 #include "matrix.hpp"
 #include "gjk.hpp"
 #include <optional>
+#include "math.hpp"
 
 namespace xna {
 	struct Plane {
 		Vector3 Normal{ 0 };
 		float D{ 0 };
+
+		
 	};
 
 	struct BoundingFrustum {
@@ -54,8 +57,10 @@ namespace xna {
 		constexpr ContainmentType Contains(BoundingSphere const& box) const;
 		constexpr void SupportMapping(Vector3 const& v, Vector3& result) const;	
 
-	private:
+	public:
 		std::vector<Vector3> corners{ 8 };
+
+	private:
 		std::vector<Plane> planes{ 6 };
 		Matrix matrix{ Matrix::Identity() };
 		Gjk gjk{};
@@ -83,7 +88,7 @@ namespace xna {
 
 		static constexpr BoundingBox CreateMerged(BoundingBox const& original, BoundingBox const& additional);
 		static constexpr BoundingBox CreateFromSphere(BoundingSphere const& sphere);
-		static constexpr BoundingBox CreateFromPoints(std::vector<Vector3> const& points);
+		static constexpr BoundingBox CreateFromPoints(std::vector<Vector3> const& points);		
 
 		constexpr bool Intersects(BoundingBox const& box) const;
 		bool Intersects(BoundingFrustum& frustum) const;
@@ -103,9 +108,32 @@ namespace xna {
 		Vector3 Center{};
 		float Radius{ 0 };
 
-		void SupportMapping(Vector3 const& v, Vector3& result) const {
-			//TODO
+		constexpr BoundingSphere() = default;
+		constexpr BoundingSphere(Vector3 const& center, float radius):
+			Center(center), Radius(radius < 0 ? 0 : radius){}
+
+		constexpr bool operator==(BoundingSphere const& other) const {
+			return Center == other.Center && Radius == other.Radius;
 		}
+
+		static BoundingSphere CreateMerged(BoundingSphere const& original, BoundingSphere const& additional);
+		static BoundingSphere CreateFromBoundingBox(BoundingBox const& box);
+		static BoundingSphere CreateFromPoints(std::vector<Vector3> const& points);
+		static BoundingSphere CreateFromFrustum(BoundingFrustum const& points);
+
+		constexpr bool Intersects(BoundingBox const& box) const;
+		bool Intersects(BoundingFrustum& frustum) const;
+		constexpr PlaneIntersectionType Intersects(Plane const& plane) const;
+		std::optional<float> Intersects(Ray const& ray) const;
+		constexpr bool Intersects(BoundingSphere const& sphere) const;
+
+		ContainmentType Contains(BoundingBox const& box) const;
+		ContainmentType Contains(BoundingFrustum& frustum) const;
+		ContainmentType Contains(Vector3 const& point) const;
+		ContainmentType Contains(BoundingSphere const& sphere) const;
+		BoundingSphere Transform(Matrix const& matrix) const;
+
+		void SupportMapping(Vector3 const& v, Vector3& result) const;
 	};
 
 	struct Ray {
@@ -397,7 +425,33 @@ namespace xna {
 		result.X = v.X >= 0.0 ? Max.X : Min.X;
 		result.Y = v.Y >= 0.0 ? Max.Y : Min.Y;
 		result.Z = v.Z >= 0.0 ? Max.Z : Min.Z;
+	}	
+
+	constexpr bool BoundingSphere::Intersects(BoundingBox const& box) const {
+		Vector3 result1 = Vector3::Clamp(Center, box.Min, box.Max);
+		float result2 =	Vector3::DistanceSquared(Center, result1);
+		return result2 <= Radius * Radius;
 	}
+
+	inline bool BoundingSphere::Intersects(BoundingFrustum& frustum) const {
+		return frustum.Intersects(*this);
+	}
+
+	constexpr PlaneIntersectionType BoundingSphere::Intersects(Plane const& plane) const {
+		const auto num = (Center.X * plane.Normal.X + Center.Y * plane.Normal.Y + Center.Z * plane.Normal.Z) + plane.D;
+		
+		if (num > Radius)
+			return PlaneIntersectionType::Front;
+
+		return num < -Radius ? PlaneIntersectionType::Back : PlaneIntersectionType::Intersecting;
+	}	
+
+	constexpr bool BoundingSphere::Intersects(BoundingSphere const& sphere) const {
+		const auto result = Vector3::DistanceSquared(Center, sphere.Center);
+		const auto radius1 = Radius;
+		const auto radius2 = sphere.Radius;
+		return radius1 * radius1 + 2.0F * radius1 * radius2 + radius2 * radius2 > result;
+	}	
 }
 
 #endif
