@@ -17,6 +17,11 @@ namespace xna {
 		inline static constexpr int CornerCount = 8;
 		inline static constexpr int PlaneCount = 6;
 
+		constexpr BoundingFrustum() = default;
+		constexpr BoundingFrustum(Matrix const& matrix) {
+			SetMatrix(matrix);
+		}
+
 		Plane Near() { return planes[0]; }
 		Plane Far() { return planes[1]; }
 		Plane Left() { return planes[2]; }
@@ -26,6 +31,13 @@ namespace xna {
 
 		constexpr bool operator==(BoundingFrustum const& other) const {
 			return matrix == other.matrix;
+		}
+
+		constexpr Vector3 operator[](size_t index) const {
+			if (index >= CornerCount)
+				index = CornerCount - 1;
+
+			return corners[index];
 		}
 
 		constexpr void GetCorners(std::vector<Vector3>& destination) const;
@@ -40,11 +52,11 @@ namespace xna {
 		ContainmentType Contains(BoundingFrustum const& box);
 		constexpr ContainmentType Contains(Vector3 const& point) const;
 		constexpr ContainmentType Contains(BoundingSphere const& box) const;
-		constexpr void SupportMapping(Vector3 const& v, Vector3& result) const;
+		constexpr void SupportMapping(Vector3 const& v, Vector3& result) const;	
 
 	private:
-		std::vector<Plane> planes{ 6 };
 		std::vector<Vector3> corners{ 8 };
+		std::vector<Plane> planes{ 6 };
 		Matrix matrix{ Matrix::Identity() };
 		Gjk gjk{};
 
@@ -54,16 +66,37 @@ namespace xna {
 	};
 
 	struct BoundingBox {
+		inline static constexpr int CornerCount = 8;
+
 		Vector3 Min{};
 		Vector3 Max{};
 
-		constexpr PlaneIntersectionType Intersects(Plane const& plane) const {
-			return PlaneIntersectionType::Intersecting;
+		constexpr BoundingBox() = default;
+		constexpr BoundingBox(Vector3 const& min, Vector3 const& max):
+			Min(min), Max(max){}
+
+		constexpr bool operator==(BoundingBox const& other) const {
+			return Min == other.Min && Max == other.Max;
 		}
 
-		void SupportMapping(Vector3 const& v, Vector3& result) const {
+		constexpr void GetCorners(std::vector<Vector3>& corners) const;
 
-		}
+		static constexpr BoundingBox CreateMerged(BoundingBox const& original, BoundingBox const& additional);
+		static constexpr BoundingBox CreateFromSphere(BoundingSphere const& sphere);
+		static constexpr BoundingBox CreateFromPoints(std::vector<Vector3> const& points);
+
+		constexpr bool Intersects(BoundingBox const& box) const;
+		bool Intersects(BoundingFrustum& frustum) const;
+		constexpr PlaneIntersectionType Intersects(Plane const& plane) const;
+		std::optional<float> Intersects(Ray const& ray) const;
+		constexpr bool Intersects(BoundingSphere const& sphere) const;
+		
+		constexpr ContainmentType Contains(BoundingBox const& box) const;
+		ContainmentType Contains(BoundingFrustum& frustum) const;
+		constexpr ContainmentType Contains(Vector3 const& point) const;
+		constexpr ContainmentType Contains(BoundingSphere const& sphere) const;
+
+		constexpr void SupportMapping(Vector3 const& v, Vector3& result) const;
 	};
 
 	struct BoundingSphere {
@@ -233,6 +266,137 @@ namespace xna {
 		intersectionLine2 = BoundingFrustum::ComputeIntersectionLine(planes[1], planes[3]);
 		corners[5] = BoundingFrustum::ComputeIntersection(planes[4], intersectionLine2);
 		corners[6] = BoundingFrustum::ComputeIntersection(planes[5], intersectionLine2);
+	}
+
+
+	constexpr void BoundingBox::GetCorners(std::vector<Vector3>& corners) const {
+		if (corners.size() < 8)
+			corners.resize(CornerCount);
+
+		corners[0].X = Min.X;
+		corners[0].Y = Max.Y;
+		corners[0].Z = Max.Z;
+		corners[1].X = Max.X;
+		corners[1].Y = Max.Y;
+		corners[1].Z = Max.Z;
+		corners[2].X = Max.X;
+		corners[2].Y = Min.Y;
+		corners[2].Z = Max.Z;
+		corners[3].X = Min.X;
+		corners[3].Y = Min.Y;
+		corners[3].Z = Max.Z;
+		corners[4].X = Min.X;
+		corners[4].Y = Max.Y;
+		corners[4].Z = Min.Z;
+		corners[5].X = Max.X;
+		corners[5].Y = Max.Y;
+		corners[5].Z = Min.Z;
+		corners[6].X = Max.X;
+		corners[6].Y = Min.Y;
+		corners[6].Z = Min.Z;
+		corners[7].X = Min.X;
+		corners[7].Y = Min.Y;
+		corners[7].Z = Min.Z;
+	}
+
+	constexpr BoundingBox BoundingBox::CreateMerged(BoundingBox const& original, BoundingBox const& additional) {
+		BoundingBox merged;
+		merged.Min = Vector3::Min(original.Min, additional.Min);
+		merged.Max = Vector3::Max(original.Max, additional.Max);
+		return merged;
+	}
+
+	constexpr BoundingBox BoundingBox::CreateFromSphere(BoundingSphere const& sphere) {
+		BoundingBox fromSphere;
+		fromSphere.Min.X = sphere.Center.X - sphere.Radius;
+		fromSphere.Min.Y = sphere.Center.Y - sphere.Radius;
+		fromSphere.Min.Z = sphere.Center.Z - sphere.Radius;
+		fromSphere.Max.X = sphere.Center.X + sphere.Radius;
+		fromSphere.Max.Y = sphere.Center.Y + sphere.Radius;
+		fromSphere.Max.Z = sphere.Center.Z + sphere.Radius;
+		return fromSphere;
+	}
+
+	constexpr BoundingBox BoundingBox::CreateFromPoints(std::vector<Vector3> const& points) {
+		Vector3 result1 = Vector3(FloatMaxValue);
+		Vector3 result2 = Vector3(FloatMinValue);
+		
+		for (size_t i = 0; i < points.size(); ++i) {
+			const auto& point = points[i];
+			result1 = Vector3::Min(result1, point);
+			result2 = Vector3::Max(result2, point);
+		}
+
+		return BoundingBox(result1, result2);
+	}
+
+	constexpr bool BoundingBox::Intersects(BoundingBox const& box) const {
+		return Max.X >= box.Min.X 
+			&& Min.X <= box.Max.X 
+			&& Max.Y >= box.Min.Y 
+			&& Min.Y <= box.Max.Y 
+			&& Max.Z >= box.Min.Z 
+			&& Min.Z <= box.Max.Z;
+	}
+
+	inline bool BoundingBox::Intersects(BoundingFrustum& frustum) const {
+		return frustum.Intersects(*this);
+	}
+
+	constexpr PlaneIntersectionType BoundingBox::Intersects(Plane const& plane) const {
+		Vector3 vector3_1;
+		vector3_1.X = plane.Normal.X >= 0.0 ? Min.X : Max.X;
+		vector3_1.Y = plane.Normal.Y >= 0.0 ? Min.Y : Max.Y;
+		vector3_1.Z = plane.Normal.Z >= 0.0 ? Min.Z : Max.Z;
+		Vector3 vector3_2;
+		vector3_2.X = plane.Normal.X >= 0.0 ? Max.X : Min.X;
+		vector3_2.Y = plane.Normal.Y >= 0.0 ? Max.Y : Min.Y;
+		vector3_2.Z = plane.Normal.Z >= 0.0 ? Max.Z : Min.Z;
+		if (plane.Normal.X * vector3_1.X + plane.Normal.Y * vector3_1.Y + plane.Normal.Z * vector3_1.Z + plane.D > 0.0)
+			return PlaneIntersectionType::Front;
+
+		return plane.Normal.X * vector3_2.X + plane.Normal.Y * vector3_2.Y + plane.Normal.Z * vector3_2.Z + plane.D < 0.0 
+			? PlaneIntersectionType::Back 
+			: PlaneIntersectionType::Intersecting;
+	}	
+
+	constexpr bool BoundingBox::Intersects(BoundingSphere const& sphere) const {
+		const auto result1 = Vector3::Clamp(sphere.Center, Min, Max);
+		const auto result2 =  Vector3::DistanceSquared(sphere.Center, result1);
+		return result2 <= sphere.Radius * sphere.Radius;
+	}
+
+	constexpr ContainmentType BoundingBox::Contains(BoundingBox const& box) const {
+		if (Max.X < box.Min.X || Min.X > box.Max.X || Max.Y < box.Min.Y || Min.Y > box.Max.Y || Max.Z < box.Min.Z || Min.Z > box.Max.Z)
+			return ContainmentType::Disjoint;
+		return Min.X > box.Min.X || box.Max.X > Max.X || Min.Y > box.Min.Y || box.Max.Y > Max.Y || Min.Z > box.Min.Z || box.Max.Z > Max.Z 
+			? ContainmentType::Intersects
+			: ContainmentType::Contains;
+	}	
+
+	constexpr ContainmentType BoundingBox::Contains(Vector3 const& point) const {
+		return Min.X >  point.X || point.X > Max.X || Min.Y > point.Y || point.Y > Max.Y || Min.Z > point.Z || point.Z > Max.Z 
+			? ContainmentType::Disjoint 
+			: ContainmentType::Contains;
+	}
+
+	constexpr ContainmentType BoundingBox::Contains(BoundingSphere const& sphere) const {
+		Vector3 result1 = Vector3::Clamp(sphere.Center, Min, Max);
+		float result2 = Vector3::DistanceSquared(sphere.Center, result1);
+		float radius = sphere.Radius;
+		
+		if (result2 > radius * radius)
+			return ContainmentType::Disjoint;
+
+		return Min.X + radius > sphere.Center.X || sphere.Center.X > Max.X - radius || Max.X - Min.X <= radius || Min.Y + radius > sphere.Center.Y || sphere.Center.Y > Max.Y - radius || Max.Y - Min.Y <= radius || Min.Z + radius > sphere.Center.Z || sphere.Center.Z > Max.Z - radius || Max.X - Min.X <= radius 
+			? ContainmentType::Intersects 
+			: ContainmentType::Contains;
+	}
+
+	constexpr void BoundingBox::SupportMapping(Vector3 const& v, Vector3& result) const {
+		result.X = v.X >= 0.0 ? Max.X : Min.X;
+		result.Y = v.Y >= 0.0 ? Max.Y : Min.Y;
+		result.Z = v.Z >= 0.0 ? Max.Z : Min.Z;
 	}
 }
 
