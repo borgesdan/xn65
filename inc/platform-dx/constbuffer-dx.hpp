@@ -2,7 +2,7 @@
 #define XNA_PLATFORM_CONSTBUFFER_DX_HPP
 
 #include "../graphics/constbuffer.hpp"
-#include "../common/matrix.hpp"
+#include "../common/numerics.hpp"
 #include "dxheaders.hpp"
 #include <BufferHelpers.h>
 

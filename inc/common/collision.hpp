@@ -3,8 +3,6 @@
 
 #include "default.hpp"
 #include "numerics.hpp"
-#include "matrix.hpp"
-#include "quaternion.hpp"
 #include "gjk.hpp"
 #include <optional>
 #include "math.hpp"

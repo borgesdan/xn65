@@ -4,7 +4,6 @@
 #include "reader.hpp"
 #include "../default.hpp"
 #include "../common/color.hpp"
-#include "../common/matrix.hpp"
 #include "../common/numerics.hpp"
 #include "../csharp/timespan.hpp"
 

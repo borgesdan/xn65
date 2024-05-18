@@ -21,7 +21,6 @@ add_executable (xna WIN32
 "platform/rasterizerstate-dx.cpp"
 "platform/vertexbuffer-dx.cpp"
 "platform/indexbuffer-dx.cpp"
-"common/matrix.cpp"
 "platform/constbuffer-dx.cpp"
 "platform/databuffer-dx.cpp"
 "platform/samplerstate-dx.cpp"
@@ -31,7 +30,6 @@ add_executable (xna WIN32
 "platform/keyboard-dx.cpp"
 "platform/mouse-dx.cpp"
 "platform/gamepad-dx.cpp"
-
 "platform/soundeffect-dx.cpp"
 "platform/displaymode-dx.cpp"
 "platform/presentparameters-dx.cpp"
@@ -47,11 +45,9 @@ add_executable (xna WIN32
 "platform/init-dx.cpp"
 "game/servicecontainer.cpp"
 "common/color.cpp"
-"common/math.cpp" 
-"common/quaternion.cpp" 
 "common/collision.cpp" 
 "common/gjk.cpp"
-  "common/numerics.cpp")
+"common/numerics.cpp")
 
 if (CMAKE_VERSION VERSION_GREATER 3.12)
   set_property(TARGET xna PROPERTY CXX_STANDARD 20)

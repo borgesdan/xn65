@@ -2,7 +2,7 @@
 #define XNA_GRAPHICS_SPRITEBATCH_HPP
 
 #include "../default.hpp"
-#include "../common/matrix.hpp"
+#include "../common/numerics.hpp"
 
 namespace xna {
 	class ISpriteBatch {
