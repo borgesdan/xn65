@@ -41,6 +41,7 @@ namespace xna {
 		constexpr PlaneIntersectionType Intersects(BoundingBox const& box) const;
 		constexpr PlaneIntersectionType Intersects(BoundingFrustum const& frustum) const;
 		constexpr PlaneIntersectionType Intersects(BoundingSphere const& sphere) const;
+		std::optional<float> Intersects(Ray const& ray) const;
 	};
 
 	struct BoundingFrustum {
@@ -166,6 +167,30 @@ namespace xna {
 	struct Ray {
 		Vector3 Position{};
 		Vector3 Direction{};
+
+		constexpr Ray() = default;
+		constexpr Ray(Vector3 const& position, Vector3 const& direction):
+			Position(position), Direction(direction){}
+
+		constexpr bool operator==(Ray const& other) const {
+			return Position == other.Position && Direction == other.Direction;
+		}
+
+		std::optional<float> Intersects(BoundingBox const& box) const {
+			return box.Intersects(*this);
+		}
+
+		std::optional<float> Intersects(BoundingFrustum const& frustum) const {
+			return frustum.Intersects(*this);
+		}
+
+		std::optional<float> Intersects(Plane const& plane) const {
+			return plane.Intersects(*this);
+		}
+
+		std::optional<float> Sphere(BoundingSphere const& sphere) const {
+			return sphere.Intersects(*this);
+		}
 	};
 
 	//---------------------------------------------------------------------------------//
@@ -570,7 +595,7 @@ namespace xna {
 		
 		return num < -sphere.Radius 
 			? PlaneIntersectionType::Back : PlaneIntersectionType::Intersecting;
-	}
+	}	
 }
 
 #endif

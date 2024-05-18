@@ -38,6 +38,24 @@ namespace xna {
 		return p;
 	}
 
+	std::optional<float> Plane::Intersects(Ray const& ray) const {
+		const auto num1 = (Normal.X * ray.Direction.X + Normal.Y * ray.Direction.Y + Normal.Z * ray.Direction.Z);
+
+		if (std::abs(num1) < 9.9999997473787516E-06)
+			return {};
+
+		const auto num2 = (Normal.X * ray.Position.X + Normal.Y * ray.Position.Y + Normal.Z * ray.Position.Z);
+		auto num3 = (-D - num2) / num1;
+
+		if (num3 < 0.0)
+		{
+			if (num3 < -9.9999997473787516E-06)
+				return {};
+			num3 = 0.0f;
+		}
+
+		return num3;
+	}
 
 	bool BoundingFrustum::Intersects(BoundingBox const& box) {
 		gjk.Reset();
