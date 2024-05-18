@@ -3,8 +3,12 @@
 #include "platform-dx/rasterizerstate-dx.hpp"
 #include "platform-dx/depthstencilstate-dx.hpp"
 #include "platform-dx/samplerstate-dx.hpp"
-#include "platform-dx/spritebatch-dx.hpp"
 #include "platform-dx/texture-dx.hpp"
+#include "common/color.hpp"
+#include "common/numerics.hpp"
+#include "graphics/spritebatch.hpp"
+#include "graphics/viewport.hpp"
+#include "platform-dx/spritefont-dx.hpp"
 
 using DxSpriteBatch = DirectX::SpriteBatch;
 using DxSpriteSortMode = DirectX::SpriteSortMode;
@@ -16,18 +20,30 @@ using DirectX::XMVECTORF32;
 using DirectX::GXMVECTOR;
 
 namespace xna {
+	struct SpriteBatch::PlatformImplementation {
+		sptr<DirectX::SpriteBatch> _dxspriteBatch = nullptr;
+	};
+
+	static constexpr void ConvertSpriteSort(SpriteSortMode value, DirectX::SpriteSortMode& target) {
+		target = static_cast<DirectX::SpriteSortMode>(static_cast<int>(value));
+	}
+
 	SpriteBatch::SpriteBatch(GraphicsDevice& device) {
 		if (!device._context)
 			return;
 
-		_dxspriteBatch = New<DxSpriteBatch>(device._context);
+		implementation = uNew<PlatformImplementation>();
+		implementation->_dxspriteBatch = New<DxSpriteBatch>(device._context);
 
 		Viewport(device.Viewport());
+	}
+
+	SpriteBatch::~SpriteBatch() {
 	}
 	
 	void SpriteBatch::Begin(SpriteSortMode sortMode, BlendState* blendState, SamplerState* samplerState, DepthStencilState* depthStencil, RasterizerState* rasterizerState, Matrix const& transformMatrix) {
 
-		if (!_dxspriteBatch)
+		if (!implementation->_dxspriteBatch)
 			return;
 
 		DxSpriteSortMode sort;
@@ -41,7 +57,7 @@ namespace xna {
 			t.M41, t.M42, t.M43, t.M44);
 		
 
-		_dxspriteBatch->Begin(
+		implementation->_dxspriteBatch->Begin(
 			sort,
 			blendState ? blendState->dxBlendState : nullptr,
 			samplerState ? samplerState->_samplerState : nullptr,
@@ -53,14 +69,14 @@ namespace xna {
 	}
 
 	void SpriteBatch::End() {
-		if (!_dxspriteBatch)
+		if (!implementation->_dxspriteBatch)
 			return;
 
-		_dxspriteBatch->End();
+		implementation->_dxspriteBatch->End();
 	}
 
 	void SpriteBatch::Draw(Texture2D& texture, Vector2 const& position, Color const& color) {
-		if (!_dxspriteBatch)
+		if (!implementation->_dxspriteBatch)
 			return;
 
 		if (!texture.dxShaderResource)
@@ -70,7 +86,7 @@ namespace xna {
 		const auto v4 = color.ToVector4();
 		XMVECTORF32 _color = { v4.X, v4.Y, v4.Z, v4.W };
 
-		_dxspriteBatch->Draw(
+		implementation->_dxspriteBatch->Draw(
 			texture.dxShaderResource,
 			_position,
 			_color
@@ -78,7 +94,7 @@ namespace xna {
 	}
 
 	void SpriteBatch::Draw(Texture2D& texture, Vector2 const& position, Rectangle const* sourceRectangle, Color const& color) {
-		if (!_dxspriteBatch)
+		if (!implementation->_dxspriteBatch)
 			return;
 
 		if (!texture.dxShaderResource)
@@ -97,7 +113,7 @@ namespace xna {
 			_sourceRect.bottom = sourceRectangle->Y + sourceRectangle->Height;
 		};
 
-		_dxspriteBatch->Draw(
+		implementation->_dxspriteBatch->Draw(
 			texture.dxShaderResource,
 			_position,
 			sourceRectangle ? &_sourceRect : nullptr,
@@ -105,7 +121,7 @@ namespace xna {
 	}
 
 	void SpriteBatch::Draw(Texture2D& texture, Vector2 const& position, Rectangle const* sourceRectangle, Color const& color, float rotation, Vector2 const& origin, float scale, SpriteEffects effects, float layerDepth) {
-		if (!_dxspriteBatch)
+		if (!implementation->_dxspriteBatch)
 			return;
 
 		if (!texture.dxShaderResource)
@@ -127,7 +143,7 @@ namespace xna {
 
 		const DxSpriteEffects _effects = static_cast<DxSpriteEffects>(effects);
 
-		_dxspriteBatch->Draw(
+		implementation->_dxspriteBatch->Draw(
 			texture.dxShaderResource,
 			_position,
 			sourceRectangle ? &_sourceRect : nullptr,
@@ -140,7 +156,7 @@ namespace xna {
 	}
 
 	void SpriteBatch::Draw(Texture2D& texture, Vector2 const& position, Rectangle const* sourceRectangle, Color const& color, float rotation, Vector2 const& origin, Vector2 const& scale, SpriteEffects effects, float layerDepth) {
-		if (!_dxspriteBatch)
+		if (!implementation->_dxspriteBatch)
 			return;
 
 		if (!texture.dxShaderResource)
@@ -163,7 +179,7 @@ namespace xna {
 		const auto _effects = static_cast<DxSpriteEffects>(effects);
 		const XMFLOAT2 _scale = { scale.X, scale.Y };
 
-		_dxspriteBatch->Draw(
+		implementation->_dxspriteBatch->Draw(
 			texture.dxShaderResource,
 			_position,
 			sourceRectangle ? &_sourceRect : nullptr,
@@ -176,7 +192,7 @@ namespace xna {
 	}
 
 	void SpriteBatch::Draw(Texture2D& texture, Rectangle const& destinationRectangle, Color const& color) {
-		if (!_dxspriteBatch)
+		if (!implementation->_dxspriteBatch)
 			return;
 
 		if (!texture.dxShaderResource)
@@ -191,11 +207,11 @@ namespace xna {
 		const auto v4 = color.ToVector4();
 		const XMVECTORF32 _color = { v4.X, v4.Y, v4.Z, v4.W };
 
-		_dxspriteBatch->Draw(texture.dxShaderResource, _destinationRect, _color);
+		implementation->_dxspriteBatch->Draw(texture.dxShaderResource, _destinationRect, _color);
 	}
 
 	void SpriteBatch::Draw(Texture2D& texture, Rectangle const& destinationRectangle, Rectangle const* sourceRectangle, Color const& color) {
-		if (!_dxspriteBatch)
+		if (!implementation->_dxspriteBatch)
 			return;
 
 		if (!texture.dxShaderResource)
@@ -219,11 +235,11 @@ namespace xna {
 			_sourceRect.bottom = sourceRectangle->Y + sourceRectangle->Height;
 		};
 
-		_dxspriteBatch->Draw(texture.dxShaderResource, _destinationRect, sourceRectangle ? &_sourceRect : nullptr, _color);
+		implementation->_dxspriteBatch->Draw(texture.dxShaderResource, _destinationRect, sourceRectangle ? &_sourceRect : nullptr, _color);
 	}
 
 	void SpriteBatch::Draw(Texture2D& texture, Rectangle const& destinationRectangle, Rectangle const* sourceRectangle, Color const& color, float rotation, Vector2 const& origin, SpriteEffects effects, float layerDepth) {
-		if (!_dxspriteBatch)
+		if (!implementation->_dxspriteBatch)
 			return;
 
 		if (!texture.dxShaderResource)
@@ -250,7 +266,7 @@ namespace xna {
 		auto _origin = XMFLOAT2(origin.X, origin.Y);
 		const auto _effects = static_cast<DxSpriteEffects>(effects);
 
-		_dxspriteBatch->Draw(
+		implementation->_dxspriteBatch->Draw(
 			texture.dxShaderResource,
 			_destinationRect,
 			sourceRectangle ? &_sourceRect : nullptr,
@@ -262,7 +278,7 @@ namespace xna {
 	}
 
 	void SpriteBatch::Viewport(xna::Viewport const& value)	{
-		if (!_dxspriteBatch)
+		if (!implementation->_dxspriteBatch)
 			return;
 
 		D3D11_VIEWPORT _view{};
@@ -273,11 +289,11 @@ namespace xna {
 		_view.MinDepth = value.MinDetph;
 		_view.MaxDepth = value.MaxDepth;
 
-		_dxspriteBatch->SetViewport(_view);
+		implementation->_dxspriteBatch->SetViewport(_view);
 	}
 
 	void SpriteBatch::DrawString(SpriteFont& spriteFont, String const& text, Vector2 const& position, Color const& color) {
-		if (!_dxspriteBatch || !spriteFont._dxSpriteFont)
+		if (!implementation->_dxspriteBatch || !spriteFont._dxSpriteFont)
 			return;
 
 		const auto _position = XMFLOAT2(position.X, position.Y);
@@ -285,7 +301,7 @@ namespace xna {
 		const XMVECTORF32 _color = { v4.X, v4.Y, v4.Z, v4.W };
 
 		spriteFont._dxSpriteFont->DrawString(
-			_dxspriteBatch.get(),
+			implementation->_dxspriteBatch.get(),
 			text.c_str(),
 			_position,
 			_color
@@ -294,7 +310,7 @@ namespace xna {
 	
 	void SpriteBatch::DrawString(SpriteFont& spriteFont, String const& text, Vector2 const& position,
 		Color const& color, float rotation, Vector2 const& origin, float scale, SpriteEffects effects, float layerDepth) {
-		if (!_dxspriteBatch || !spriteFont._dxSpriteFont)
+		if (!implementation->_dxspriteBatch || !spriteFont._dxSpriteFont)
 			return;
 
 		const auto _position = XMFLOAT2(position.X, position.Y);
@@ -304,7 +320,7 @@ namespace xna {
 		const auto _effects = static_cast<DxSpriteEffects>(effects);
 
 		spriteFont._dxSpriteFont->DrawString(
-			_dxspriteBatch.get(),
+			implementation->_dxspriteBatch.get(),
 			text.c_str(),
 			_position,
 			_color, 

@@ -22,7 +22,6 @@
 #include "samplerstate-dx.hpp"
 #include "shader-dx.hpp"
 #include "soundeffect-dx.hpp"
-#include "spritebatch-dx.hpp"
 #include "spritefont-dx.hpp"
 #include "swapchain-dx.hpp"
 #include "texture-dx.hpp"
