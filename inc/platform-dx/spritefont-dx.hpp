@@ -2,7 +2,7 @@
 #define XNA_PLATFORM_SPRITEFONT_DX_HPP
 
 #include "../graphics/spritefont.hpp"
-#include "../common/vectors.hpp"
+#include "../common/numerics.hpp"
 #include "SpriteFont.h"
 #include "device-dx.hpp"
 

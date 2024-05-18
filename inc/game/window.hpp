@@ -2,7 +2,7 @@
 #define XNA_GAME_WINDOW_HPP
 
 #include "../enums.hpp"
-#include "../common/rectangle.hpp"
+#include "../common/numerics.hpp"
 
 namespace xna {
 	class IGameWindow {

@@ -2,7 +2,7 @@
 #define XNA_INPUT_GAMEPAD_HPP
 
 #include "../default.hpp"
-#include "../common/vectors.hpp"
+#include "../common/numerics.hpp"
 
 namespace xna {
 	struct IGamePadTriggers {

@@ -115,7 +115,7 @@ namespace xna {
 		std::vector<CurveKey> Keys;
 
 	private:
-		friend class Curve;
+		friend struct Curve;
 
 		float TimeRange{ 0.0F };
 		float InvTimeRange{ 0.0F };

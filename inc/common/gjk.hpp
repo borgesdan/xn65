@@ -2,7 +2,7 @@
 #define XNA_COMMON_GDK_HPP
 
 #include "default.hpp"
-#include "vectors.hpp"
+#include "numerics.hpp"
 #include "math.hpp"
 
 namespace xna {	

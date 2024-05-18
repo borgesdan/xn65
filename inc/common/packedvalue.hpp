@@ -2,7 +2,7 @@
 #define CXNA_COMMON_PACKEDVECTOR_HPP
 
 #include "../default.hpp"
-#include "vectors.hpp"
+#include "numerics.hpp"
 #include <cmath>
 
 namespace xna {

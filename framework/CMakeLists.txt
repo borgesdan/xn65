@@ -31,7 +31,7 @@ add_executable (xna WIN32
 "platform/keyboard-dx.cpp"
 "platform/mouse-dx.cpp"
 "platform/gamepad-dx.cpp"
-"common/vectors.cpp"
+
 "platform/soundeffect-dx.cpp"
 "platform/displaymode-dx.cpp"
 "platform/presentparameters-dx.cpp"
@@ -51,7 +51,7 @@ add_executable (xna WIN32
 "common/quaternion.cpp" 
 "common/collision.cpp" 
 "common/gjk.cpp"
- )
+  "common/numerics.cpp")
 
 if (CMAKE_VERSION VERSION_GREATER 3.12)
   set_property(TARGET xna PROPERTY CXX_STANDARD 20)

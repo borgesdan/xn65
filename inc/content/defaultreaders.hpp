@@ -5,8 +5,7 @@
 #include "../default.hpp"
 #include "../common/color.hpp"
 #include "../common/matrix.hpp"
-#include "../common/point.hpp"
-#include "../common/rectangle.hpp"
+#include "../common/numerics.hpp"
 #include "../csharp/timespan.hpp"
 
 namespace xna {

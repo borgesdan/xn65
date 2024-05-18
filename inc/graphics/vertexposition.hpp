@@ -1,7 +1,7 @@
 #ifndef XNA_GRAPHICS_VERTEXPOSITION_HPP
 #define XNA_GRAPHICS_VERTEXPOSITION_HPP
 
-#include "../common/vectors.hpp"
+#include "../common/numerics.hpp"
 #include "../common/color.hpp"
 #include "../default.hpp"
 

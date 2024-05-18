@@ -1,7 +1,7 @@
 #ifndef XNA_COMMON_QUATERNION_HPP
 #define XNA_COMMON_QUATERNION_HPP
 
-#include "vectors.hpp"
+#include "numerics.hpp"
 
 namespace xna {
 	struct Quaternion {

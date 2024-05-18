@@ -2,8 +2,7 @@
 #define XNA_PLATFORM_SPRITEBATCH_DX_HPP
 
 #include "../common/color.hpp"
-#include "../common/rectangle.hpp"
-#include "../common/vectors.hpp"
+#include "../common/numerics.hpp"
 #include "../graphics/spritebatch.hpp"
 #include "../graphics/viewport.hpp"
 #include "SpriteBatch.h"

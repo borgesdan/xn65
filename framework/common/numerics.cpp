@@ -1,4 +1,4 @@
-#include "common/vectors.hpp"
+#include "common/numerics.hpp"
 #include "common/matrix.hpp"
 #include "common/quaternion.hpp"
 
@@ -27,14 +27,14 @@ namespace xna {
 
     bool Vector2::Transform(Vector2 const* sourceArray, size_t sourceArrayLength, size_t sourceIndex, Matrix const& matrix,
         Vector2* destinationArray, size_t destinationArrayLength, size_t destinationIndex, size_t length) {
-        if (!sourceArray || !destinationArray || destinationArrayLength < sourceArrayLength 
+        if (!sourceArray || !destinationArray || destinationArrayLength < sourceArrayLength
             || sourceArrayLength < sourceIndex + length || destinationArrayLength < destinationIndex + length)
             return false;
 
         for (size_t i = 0; i < length; ++i) {
-            const auto& source = sourceArray[sourceIndex + i];            
+            const auto& source = sourceArray[sourceIndex + i];
             destinationArray[destinationIndex + i].X = (source.X * matrix.M11 + source.Y * matrix.M21) + matrix.M41;
-            destinationArray[destinationIndex + i].Y = (source.X * matrix.M12 + source.Y * matrix.M22) + matrix.M42;            
+            destinationArray[destinationIndex + i].Y = (source.X * matrix.M12 + source.Y * matrix.M22) + matrix.M42;
         }
 
         return true;
@@ -68,7 +68,7 @@ namespace xna {
 
         return TransformNormal(sourceArray.data(), sourceArray.size(), matrix, destinationArray.data(), destinationArray.size());
     }
-    
+
     bool Vector2::TransformNormal(Vector2 const* sourceArray, size_t sourceArrayLength, size_t sourceIndex, Matrix const& matrix, Vector2* destinationArray, size_t destinationArrayLength, size_t destinationIndex, size_t length) {
         if (!sourceArray || !destinationArray || destinationArrayLength < sourceArrayLength
             || sourceArrayLength < sourceIndex + length || destinationArrayLength < destinationIndex + length)
@@ -78,7 +78,7 @@ namespace xna {
         {
             const auto& source = sourceArray[sourceIndex + i];
             destinationArray[destinationIndex].X = (source.X * matrix.M11 + source.Y * matrix.M21);
-            destinationArray[destinationIndex].Y = (source.X * matrix.M12 + source.Y * matrix.M22);            
+            destinationArray[destinationIndex].Y = (source.X * matrix.M12 + source.Y * matrix.M22);
         }
 
         return true;
@@ -144,12 +144,12 @@ namespace xna {
         const auto b = rxy - rwz;
         const auto c = rxy + rwz;
         const auto d = 1.0f - rxx - rzz;
-        
+
         for (size_t i = 0; i < length; ++i) {
             const auto& source = sourceArray[sourceIndex = i];
 
-            destinationArray[destinationIndex].X = source.X * a + source.Y* b;
-            destinationArray[destinationIndex].Y = source.X * c +source.Y * d;
+            destinationArray[destinationIndex].X = source.X * a + source.Y * b;
+            destinationArray[destinationIndex].Y = source.X * c + source.Y * d;
             ++sourceIndex;
             ++destinationIndex;
         }
@@ -163,7 +163,7 @@ namespace xna {
             destinationArray.resize(sourceArray.size());
 
         return Transform(sourceArray.data(), sourceArray.size(), sourceIndex, rotation, destinationArray.data(), destinationArray.size(), destinationIndex, length);
-    }        
+    }
 
     bool Vector3::Transform(Vector3 const* sourceArray, size_t sourceArrayLength, Matrix const& matrix, Vector3* destinationArray, size_t destinationLength)
     {
@@ -428,7 +428,7 @@ namespace xna {
         const auto num19 = num9 - num5;
         const auto num20 = num11 + num4;
         const auto num21 = 1.0f - num7 - num10;
-        
+
         for (size_t index = 0; index < sourceLength; ++index)
         {
             const auto& source = sourceArray[index];

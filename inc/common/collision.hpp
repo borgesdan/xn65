@@ -2,7 +2,7 @@
 #define XNA_COMMON_SHAPES_HPP
 
 #include "default.hpp"
-#include "vectors.hpp"
+#include "numerics.hpp"
 #include "matrix.hpp"
 #include "quaternion.hpp"
 #include "gjk.hpp"

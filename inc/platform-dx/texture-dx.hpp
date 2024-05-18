@@ -1,7 +1,7 @@
 #ifndef XNA_PLATFORM_TEXTURE_DX_HPP
 #define XNA_PLATFORM_TEXTURE_DX_HPP
 
-#include "../common/rectangle.hpp"
+#include "../common/numerics.hpp"
 #include "../graphics/gresource.hpp"
 #include "../graphics/texture.hpp"
 #include "dxheaders.hpp"

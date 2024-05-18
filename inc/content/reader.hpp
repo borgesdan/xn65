@@ -4,7 +4,7 @@
 #include "../common/color.hpp"
 #include "../common/matrix.hpp"
 #include "../common/quaternion.hpp"
-#include "../common/vectors.hpp"
+#include "../common/numerics.hpp"
 #include "../csharp/binary.hpp"
 #include "../csharp/type.hpp"
 #include "../default.hpp"

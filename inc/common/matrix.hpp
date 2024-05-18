@@ -3,7 +3,7 @@
 
 #include "../default.hpp"
 #include "math.hpp"
-#include "vectors.hpp"
+#include "numerics.hpp"
 
 namespace xna {
 	struct Matrix {
