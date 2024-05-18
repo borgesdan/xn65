@@ -4,6 +4,7 @@
 #include "default.hpp"
 #include "vectors.hpp"
 #include "matrix.hpp"
+#include "quaternion.hpp"
 #include "gjk.hpp"
 #include <optional>
 #include "math.hpp"
@@ -13,7 +14,33 @@ namespace xna {
 		Vector3 Normal{ 0 };
 		float D{ 0 };
 
-		
+		constexpr Plane() = default;
+		constexpr Plane(float a, float b, float c, float d):
+			Normal({a,b,c}), D(d){}
+		constexpr Plane(Vector3 const& normal, float d):
+			Normal(normal), D(d){}
+		constexpr Plane(Vector4 const& value):
+			Normal({value.X, value.Y, value.Z}), D(value.W){}
+
+		Plane(Vector3 const& point1, Vector3 const& point2, Vector3 const& point3);
+
+		constexpr bool operator==(Plane const& other) const {
+			return Normal == other.Normal && D == other.D;
+		}
+
+		void Normalize();
+		static Plane Normalize(Plane const& value);
+
+		static constexpr Plane Transform(Plane const& plane, Matrix const& matrix);
+		static constexpr Plane Transform(Plane const& plane, Quaternion const& rotation);
+
+		constexpr float Dot(Vector4 const& value) const;
+		constexpr float DotCoordinate(Vector3 const& value) const;
+		constexpr float DotNormal(Vector3 const& value) const;
+
+		constexpr PlaneIntersectionType Intersects(BoundingBox const& box) const;
+		constexpr PlaneIntersectionType Intersects(BoundingFrustum const& frustum) const;
+		constexpr PlaneIntersectionType Intersects(BoundingSphere const& sphere) const;
 	};
 
 	struct BoundingFrustum {
@@ -427,6 +454,7 @@ namespace xna {
 		result.Z = v.Z >= 0.0 ? Max.Z : Min.Z;
 	}	
 
+
 	constexpr bool BoundingSphere::Intersects(BoundingBox const& box) const {
 		Vector3 result1 = Vector3::Clamp(Center, box.Min, box.Max);
 		float result2 =	Vector3::DistanceSquared(Center, result1);
@@ -451,7 +479,98 @@ namespace xna {
 		const auto radius1 = Radius;
 		const auto radius2 = sphere.Radius;
 		return radius1 * radius1 + 2.0F * radius1 * radius2 + radius2 * radius2 > result;
-	}	
+	}
+
+
+	constexpr Plane Plane::Transform(Plane const& plane, Matrix const& matrix) {
+		Matrix result =	Matrix::Invert(matrix);
+		const auto x = plane.Normal.X;
+		const auto y = plane.Normal.Y;
+		const auto z = plane.Normal.Z;
+		const auto d = plane.D;
+		Plane plane1;
+		plane1.Normal.X = (x * result.M11 + y * result.M12 + z * result.M13 + d * result.M14);
+		plane1.Normal.Y = (x * result.M21 + y * result.M22 + z * result.M23 + d * result.M24);
+		plane1.Normal.Z = (x * result.M31 + y * result.M32 + z * result.M33 + d * result.M34);
+		plane1.D = (x * result.M41 + y * result.M42 + z * result.M43 + d * result.M44);
+		return plane1;
+	}
+
+	constexpr Plane Plane::Transform(Plane const& plane, Quaternion const& rotation) {
+		const auto num1 = rotation.X + rotation.X;
+		const auto num2 = rotation.Y + rotation.Y;
+		const auto num3 = rotation.Z + rotation.Z;
+		const auto num4 = rotation.W * num1;
+		const auto num5 = rotation.W * num2;
+		const auto num6 = rotation.W * num3;
+		const auto num7 = rotation.X * num1;
+		const auto num8 = rotation.X * num2;
+		const auto num9 = rotation.X * num3;
+		const auto num10 = rotation.Y * num2;
+		const auto num11 = rotation.Y * num3;
+		const auto num12 = rotation.Z * num3;
+		const auto num13 = 1.0f - num10 - num12;
+		const auto num14 = num8 - num6;
+		const auto num15 = num9 + num5;
+		const auto num16 = num8 + num6;
+		const auto num17 = 1.0f - num7 - num12;
+		const auto num18 = num11 - num4;
+		const auto num19 = num9 - num5;
+		const auto num20 = num11 + num4;
+		const auto num21 = 1.0f - num7 - num10;
+		const auto x = plane.Normal.X;
+		const auto y = plane.Normal.Y;
+		const auto z = plane.Normal.Z;
+		Plane plane1;
+		plane1.Normal.X = (x * num13 + y * num14 + z * num15);
+		plane1.Normal.Y = (x * num16 + y * num17 + z * num18);
+		plane1.Normal.Z = (x * num19 + y * num20 + z * num21);
+		plane1.D = plane.D;
+		return plane1;
+	}
+
+	constexpr float Plane::Dot(Vector4 const& value) const {
+		return (Normal.X * value.X + Normal.Y * value.Y + Normal.Z * value.Z + D * value.W);
+	}
+
+	constexpr float Plane::DotCoordinate(Vector3 const& value) const {
+		return (Normal.X * value.X + Normal.Y * value.Y + Normal.Z * value.Z) + D;
+	}
+
+	constexpr float Plane::DotNormal(Vector3 const& value) const {
+		return (Normal.X * value.X + Normal.Y * value.Y + Normal.Z * value.Z);
+	}
+
+	constexpr PlaneIntersectionType Plane::Intersects(BoundingBox const& box) const {
+		Vector3 vector3_1;
+		vector3_1.X = Normal.X >= 0.0f ? box.Min.X : box.Max.X;
+		vector3_1.Y = Normal.Y >= 0.0f ? box.Min.Y : box.Max.Y;
+		vector3_1.Z = Normal.Z >= 0.0f ? box.Min.Z : box.Max.Z;
+		Vector3 vector3_2;
+		vector3_2.X = Normal.X >= 0.0f ? box.Max.X : box.Min.X;
+		vector3_2.Y = Normal.Y >= 0.0f ? box.Max.Y : box.Min.Y;
+		vector3_2.Z = Normal.Z >= 0.0f ? box.Max.Z : box.Min.Z;
+		
+		if (Normal.X * vector3_1.X + Normal.Y * vector3_1.Y + Normal.Z * vector3_1.Z + D > 0.0F)
+			return PlaneIntersectionType::Front;
+
+		return Normal.X * vector3_2.X + Normal.Y * vector3_2.Y + Normal.Z * vector3_2.Z + D < 0.0F 
+			? PlaneIntersectionType::Back : PlaneIntersectionType::Intersecting;
+	}
+
+	constexpr PlaneIntersectionType Plane::Intersects(BoundingFrustum const& frustum) const {
+		return frustum.Intersects(*this);
+	}
+
+	constexpr PlaneIntersectionType Plane::Intersects(BoundingSphere const& sphere) const {
+		const auto num = (sphere.Center.X * Normal.X + sphere.Center.Y * Normal.Y + sphere.Center.Z * Normal.Z) + D;
+		
+		if (num >  sphere.Radius)
+			return PlaneIntersectionType::Front;
+		
+		return num < -sphere.Radius 
+			? PlaneIntersectionType::Back : PlaneIntersectionType::Intersecting;
+	}
 }
 
 #endif

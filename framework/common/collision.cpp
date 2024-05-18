@@ -1,6 +1,44 @@
 #include "common/collision.hpp"
 
 namespace xna {
+	Plane::Plane(Vector3 const& point1, Vector3 const& point2, Vector3 const& point3) {
+		const auto num1 = point2.X - point1.X;
+		const auto num2 = point2.Y - point1.Y;
+		const auto num3 = point2.Z - point1.Z;
+		const auto num4 = point3.X - point1.X;
+		const auto num5 = point3.Y - point1.Y;
+		const auto num6 = point3.Z - point1.Z;
+		const auto num7 = (num2 * num6 - num3 * num5);
+		const auto num8 = (num3 * num4 - num1 * num6);
+		const auto num9 = (num1 * num5 - num2 * num4);
+		const auto num10 = 1.0f / std::sqrt(num7 * num7 + num8 * num8 + num9 * num9);
+		Normal.X = num7 * num10;
+		Normal.Y = num8 * num10;
+		Normal.Z = num9 * num10;
+		D = -(Normal.X * point1.X + Normal.Y * point1.Y + Normal.Z * point1.Z);
+	}
+
+	void Plane::Normalize() {
+		const auto d = (Normal.X * Normal.X + Normal.Y * Normal.Y + Normal.Z * Normal.Z);
+		
+		if (std::abs(d - 1.0f) < 1.1920928955078125E-07)
+			return;
+
+		const auto num = 1.0f / std::sqrt(d);
+
+		Normal.X *= num;
+		Normal.Y *= num;
+		Normal.Z *= num;
+		D *= num;
+	}
+
+	Plane Plane::Normalize(Plane const& value) {
+		auto p = value;
+		p.Normalize();
+		return p;
+	}
+
+
 	bool BoundingFrustum::Intersects(BoundingBox const& box) {
 		gjk.Reset();
 		Vector3 result1 = Vector3::Subtract(corners[0], box.Min);
@@ -411,7 +449,7 @@ namespace xna {
 	BoundingSphere BoundingSphere::Transform(Matrix const& matrix) const {
 		BoundingSphere boundingSphere;
 		boundingSphere.Center = Vector3::Transform(Center, matrix);
-		float d = MathHelper::Max((matrix.M11 * matrix.M11 + matrix.M12 * matrix.M12 + matrix.M13 * matrix.M13), MathHelper::Max((float)(matrix.M21 * matrix.M21 + matrix.M22 * matrix.M22 + matrix.M23 * matrix.M23), (matrix.M31 * matrix.M31 + matrix.M32 * matrix.M32 + matrix.M33 * matrix.M33)));
+		float d = MathHelper::Max((matrix.M11 * matrix.M11 + matrix.M12 * matrix.M12 + matrix.M13 * matrix.M13), MathHelper::Max((matrix.M21 * matrix.M21 + matrix.M22 * matrix.M22 + matrix.M23 * matrix.M23), (matrix.M31 * matrix.M31 + matrix.M32 * matrix.M32 + matrix.M33 * matrix.M33)));
 		boundingSphere.Radius = Radius * std::sqrt(d);
 		return boundingSphere;
 	}
