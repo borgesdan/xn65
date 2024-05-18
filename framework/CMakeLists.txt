@@ -47,7 +47,7 @@ add_executable (xna WIN32
 "common/color.cpp"
 "common/collision.cpp" 
 "common/gjk.cpp"
-"common/numerics.cpp")
+"common/numerics.cpp" "common/packedvalue.cpp")
 
 if (CMAKE_VERSION VERSION_GREATER 3.12)
   set_property(TARGET xna PROPERTY CXX_STANDARD 20)
