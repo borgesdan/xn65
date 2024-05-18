@@ -51,7 +51,7 @@ add_executable (xna WIN32
 "common/quaternion.cpp" 
 "common/collision.cpp" 
 "common/gjk.cpp"
-)
+ )
 
 if (CMAKE_VERSION VERSION_GREATER 3.12)
   set_property(TARGET xna PROPERTY CXX_STANDARD 20)

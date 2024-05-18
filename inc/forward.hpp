@@ -30,7 +30,6 @@ namespace xna {
 	struct BoundingSphere;
 	struct Color;
 	struct Curve;
-	struct CurveContinuity;
 	struct CurveKey;
 	struct CurveKeyCollection;
 	struct Matrix;
