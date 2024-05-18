@@ -30,6 +30,6 @@ In the root CMakeLists.txt set the vcpkg CMAKE_TOOLCHAIN_FILE path
 include("C:/vcpkg/scripts/buildsystems/vcpkg.cmake")
 ```
 
-## 📝 Licença
+## 📝 License
 
 This project is under MIT license. See [LICENSE](LICENSE.md) for more details.
