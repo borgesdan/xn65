@@ -35,7 +35,7 @@ namespace xna {
 		void DrawString(SpriteFont& spriteFont, String const& text, Vector2 const& position, Color const& color,
 			float rotation, Vector2 const& origin, float scale, SpriteEffects effects, float layerDepth);
 
-	private:
+	public:
 		struct PlatformImplementation;
 		uptr<PlatformImplementation> implementation = nullptr;
 	};
@@ -46,7 +46,7 @@ namespace xna {
 		~SpriteFont();
 		Vector2 MeasureString(String const& text, bool ignoreWhiteSpace = true);
 
-	private:
+	public:
 		struct PlatformImplementation;
 		uptr<PlatformImplementation> implementation = nullptr;
 	};

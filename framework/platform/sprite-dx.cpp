@@ -8,6 +8,7 @@
 #include "common/numerics.hpp"
 #include "graphics/sprite.hpp"
 #include "graphics/viewport.hpp"
+#include "platform-dx/implementations.hpp"
 
 using DxSpriteBatch = DirectX::SpriteBatch;
 using DxSpriteSortMode = DirectX::SpriteSortMode;
@@ -20,10 +21,6 @@ using DirectX::GXMVECTOR;
 using DxSpriteFont = DirectX::SpriteFont;
 
 namespace xna {
-	struct SpriteFont::PlatformImplementation {
-		sptr<DirectX::SpriteFont> _dxSpriteFont = nullptr;
-	};
-
 	SpriteFont::SpriteFont(GraphicsDevice& device, String const& fontFileName)
 	{
 		const auto wString = XnaHToWString(fontFileName);
@@ -44,11 +41,7 @@ namespace xna {
 		vec2.Y = size.m128_f32[1];
 
 		return vec2;
-	}
-
-	struct SpriteBatch::PlatformImplementation {
-		sptr<DirectX::SpriteBatch> _dxspriteBatch = nullptr;
-	};
+	}	
 
 	static constexpr void ConvertSpriteSort(SpriteSortMode value, DirectX::SpriteSortMode& target) {
 		target = static_cast<DirectX::SpriteSortMode>(static_cast<int>(value));
