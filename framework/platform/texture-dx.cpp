@@ -1,6 +1,7 @@
 #include "platform-dx/texture-dx.hpp"
 #include "platform-dx/device-dx.hpp"
-#include "platform-dx/adapter-dx.hpp"
+#include "graphics/adapter.hpp"
+#include "platform-dx/implementations.hpp"
 
 namespace xna {	
 	sptr<Texture2D> Texture2D::FromStream(GraphicsDevice& device, String const& fileName, xna_error_ptr_arg)
@@ -111,7 +112,7 @@ namespace xna {
 		dxDescription.Width = static_cast<UINT>(width);
 		dxDescription.Height = static_cast<UINT>(height);
 		dxDescription.MipLevels = static_cast<UINT>(mipMap);
-		dxDescription.Format = GraphicsAdapter::ConvertSurfaceToDXGIFORMAT(format);
+		dxDescription.Format = GraphicsAdapter::PlatformImplementation::ConvertSurfaceToDXGIFORMAT(format);
 	}
 
 	void Texture2D::SetData(std::vector<Uint> const& data, size_t startIndex, size_t elementCount, xna_error_ptr_arg)

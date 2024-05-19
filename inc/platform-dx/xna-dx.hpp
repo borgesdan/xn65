@@ -1,4 +1,3 @@
-#include "adapter-dx.hpp"
 #include "audioengine-dx.hpp"
 #include "blendstate-dx.hpp"
 #include "clock-dx.hpp"

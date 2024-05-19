@@ -3,7 +3,6 @@
 #include "platform-dx/game-dx.hpp"
 #include "platform-dx/window-dx.hpp"
 #include "platform-dx/gdeviceinfo-dx.hpp"
-#include "platform-dx/adapter-dx.hpp"
 #include "platform-dx/presentparameters-dx.hpp"
 
 namespace xna {

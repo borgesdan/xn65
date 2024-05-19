@@ -2,11 +2,12 @@
 #include "platform-dx/window-dx.hpp"
 #include "platform-dx/swapchain-dx.hpp"
 #include "platform-dx/rendertarget-dx.hpp"
-#include "platform-dx/adapter-dx.hpp"
 #include "platform-dx/blendstate-dx.hpp"
 #include "platform-dx/gdeviceinfo-dx.hpp"
 #include "common/color.hpp"
 #include "platform-dx/gdevicemanager-dx.hpp"
+#include "graphics/adapter.hpp"
+#include "platform-dx/implementations.hpp"
 
 namespace xna {
 	GraphicsDevice::GraphicsDevice() {		
@@ -86,7 +87,7 @@ namespace xna {
 
 		if FAILED(
 			D3D11CreateDevice(
-				_adapter->dxadapter,
+				_adapter->impl->dxadapter,
 				D3D_DRIVER_TYPE_UNKNOWN,
 				NULL,
 				_createDeviceFlags,

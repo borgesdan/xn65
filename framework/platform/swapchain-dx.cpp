@@ -1,6 +1,7 @@
 #include "platform-dx/swapchain-dx.hpp"
-#include "platform-dx/adapter-dx.hpp"
 #include "platform-dx/device-dx.hpp"
+#include "graphics/adapter.hpp"
+#include "platform-dx/implementations.hpp"
 
 namespace xna {
     static bool internalInit(GraphicsDevice& device, HWND windowHandle, IDXGISwapChain1*& swapChain, DXGI_SWAP_CHAIN_DESC1 const& desc, DXGI_SWAP_CHAIN_FULLSCREEN_DESC const& fdesc) {
@@ -13,7 +14,7 @@ namespace xna {
         }
 
         auto adapter = device.Adapter();
-        auto dxAdapter = adapter->dxadapter;
+        auto dxAdapter = adapter->impl->dxadapter;
 
         IDXGIFactory1* dxFactory1 = nullptr;
         auto hr = dxAdapter->GetParent(IID_IDXGIFactory1, (void**)&dxFactory1);
@@ -47,7 +48,7 @@ namespace xna {
 
         dxDescription.Width = static_cast<UINT>(parameters.backBufferWidth);
         dxDescription.Height = static_cast<UINT>(parameters.backBufferHeight);
-        dxDescription.Format = GraphicsAdapter::ConvertSurfaceToDXGIFORMAT(parameters.backBufferFormat);
+        dxDescription.Format = GraphicsAdapter::PlatformImplementation::ConvertSurfaceToDXGIFORMAT(parameters.backBufferFormat);
         dxDescription.SampleDesc.Count = 1;
         dxDescription.SampleDesc.Quality = 0;
         dxDescription.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;

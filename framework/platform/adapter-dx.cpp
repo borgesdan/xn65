@@ -1,11 +1,22 @@
-#include "platform-dx/adapter-dx.hpp"
 #include "platform-dx/gdevicemanager-dx.hpp"
+#include "platform-dx/implementations.hpp"
+#include "graphics/adapter.hpp"
+#include "platform-dx/displaymode-dx.hpp"
+#include "platform-dx/dxheaders.hpp"
 
 namespace xna {
 	static size_t getDisplayModesCount(IDXGIAdapter* adapter);
 	static uptr<DisplayModeCollection> createDisplayModeCollection(std::vector<DXGI_MODE_DESC> const& source);
 
-	uptr<GraphicsAdapter> IGraphicsAdapter::DefaultAdapter() {
+	GraphicsAdapter::GraphicsAdapter() {
+		impl = uNew<PlatformImplementation>();
+	}
+
+	GraphicsAdapter::~GraphicsAdapter() {
+		impl = nullptr;
+	}
+
+	uptr<GraphicsAdapter> GraphicsAdapter::DefaultAdapter() {
 		IDXGIFactory1* pFactory = nullptr;
 
 		if FAILED(CreateDXGIFactory1(__uuidof(IDXGIFactory1), (void**)&pFactory))
@@ -16,8 +27,8 @@ namespace xna {
 		if (pFactory->EnumAdapters1(0, &pAdapter) != DXGI_ERROR_NOT_FOUND) {
 			auto adp = uNew<GraphicsAdapter>();
 
-			adp->_index = 0;
-			adp->dxadapter = pAdapter;
+			adp->impl->_index = 0;
+			adp->impl->dxadapter = pAdapter;
 
 			return adp;
 		}
@@ -28,7 +39,7 @@ namespace xna {
 		return nullptr;
 	}
 
-	void IGraphicsAdapter::Adapters(std::vector<sptr<GraphicsAdapter>>& adapters){
+	void GraphicsAdapter::Adapters(std::vector<sptr<GraphicsAdapter>>& adapters){
 		IDXGIFactory1* pFactory = nullptr;
 
 		if FAILED(CreateDXGIFactory1(__uuidof(IDXGIFactory1), (void**)&pFactory))
@@ -40,8 +51,8 @@ namespace xna {
 		for (; pFactory->EnumAdapters1(count, &pAdapter) != DXGI_ERROR_NOT_FOUND; ++count) {
 			auto adp = New<GraphicsAdapter>();
 
-			adp->_index = count;
-			adp->dxadapter = pAdapter;
+			adp->impl->_index = count;
+			adp->impl->dxadapter = pAdapter;
 
 			adapters.push_back(adp);
 		}
@@ -50,7 +61,7 @@ namespace xna {
 		pFactory = nullptr;
 	}
 
-	void IGraphicsAdapter::Adapters(std::vector<uptr<GraphicsAdapter>>& adapters) {
+	void GraphicsAdapter::Adapters(std::vector<uptr<GraphicsAdapter>>& adapters) {
 		IDXGIFactory1* pFactory = nullptr;
 
 		if FAILED(CreateDXGIFactory1(__uuidof(IDXGIFactory1), (void**)&pFactory))
@@ -62,41 +73,41 @@ namespace xna {
 		for (; pFactory->EnumAdapters1(count, &pAdapter) != DXGI_ERROR_NOT_FOUND; ++count) {
 			auto adp = uNew<GraphicsAdapter>();
 
-			adp->_index = count;
-			adp->dxadapter = pAdapter;
+			adp->impl->_index = count;
+			adp->impl->dxadapter = pAdapter;
 
 			adapters.push_back(std::move(adp));
 		}
 
 		pFactory->Release();
 		pFactory = nullptr;
-	}
+	}	
 
 	String GraphicsAdapter::Description() const {
-		if (!dxadapter) return String();
+		if (!impl->dxadapter) return String();
 
 		DXGI_ADAPTER_DESC1 desc;
-		dxadapter->GetDesc1(&desc);
+		impl->dxadapter->GetDesc1(&desc);
 		String description = XnaHToString(desc.Description);
 		return description;
 	}
 
 	Uint GraphicsAdapter::DeviceId() const {
-		if (!dxadapter) return 0;
+		if (!impl->dxadapter) return 0;
 
 		DXGI_ADAPTER_DESC1 desc;
-		dxadapter->GetDesc1(&desc);
+		impl->dxadapter->GetDesc1(&desc);
 
 		return static_cast<Uint>(desc.DeviceId);
 	}
 
 	String GraphicsAdapter::DeviceName() const {
-		if (!dxadapter) return String();
+		if (!impl->dxadapter) return String();
 
 		IDXGIOutput* pOutput = nullptr;
 		DXGI_OUTPUT_DESC outputDesc;
 		
-		if (dxadapter->EnumOutputs(0, &pOutput) != DXGI_ERROR_NOT_FOUND) {
+		if (impl->dxadapter->EnumOutputs(0, &pOutput) != DXGI_ERROR_NOT_FOUND) {
 			pOutput->GetDesc(&outputDesc);
 			String deviceName = XnaHToString(outputDesc.DeviceName);
 			
@@ -110,12 +121,12 @@ namespace xna {
 	}
 
 	intptr_t GraphicsAdapter::MonitorHandle() const {
-		if (!dxadapter) return 0;
+		if (!impl->dxadapter) return 0;
 
 		IDXGIOutput* pOutput = nullptr;
 		DXGI_OUTPUT_DESC outputDesc;
 
-		if (dxadapter->EnumOutputs(0, &pOutput) != DXGI_ERROR_NOT_FOUND) {
+		if (impl->dxadapter->EnumOutputs(0, &pOutput) != DXGI_ERROR_NOT_FOUND) {
 			pOutput->GetDesc(&outputDesc);			
 
 			pOutput->Release();
@@ -128,36 +139,36 @@ namespace xna {
 	}
 
 	Uint GraphicsAdapter::Revision() const {
-		if (!dxadapter) return 0;
+		if (!impl->dxadapter) return 0;
 
 		DXGI_ADAPTER_DESC1 desc;
-		dxadapter->GetDesc1(&desc);
+		impl->dxadapter->GetDesc1(&desc);
 
 		return static_cast<Uint>(desc.Revision);
 	}
 
 	Uint GraphicsAdapter::SubSystemId() const {
-		if (!dxadapter) return 0;
+		if (!impl->dxadapter) return 0;
 
 		DXGI_ADAPTER_DESC1 desc;
-		dxadapter->GetDesc1(&desc);
+		impl->dxadapter->GetDesc1(&desc);
 
 		return static_cast<Uint>(desc.SubSysId);
 	}
 
 	Uint GraphicsAdapter::VendorId() const {
-		if (!dxadapter) return 0;
+		if (!impl->dxadapter) return 0;
 
 		DXGI_ADAPTER_DESC1 desc;
-		dxadapter->GetDesc1(&desc);
+		impl->dxadapter->GetDesc1(&desc);
 
 		return static_cast<Uint>(desc.VendorId);
 	}	
 
 	uptr<DisplayModeCollection> GraphicsAdapter::SupportedDisplayModes() const {
-		if (!dxadapter) return nullptr;
+		if (!impl->dxadapter) return nullptr;
 
-		const auto totalDisplay = getDisplayModesCount(dxadapter);
+		const auto totalDisplay = getDisplayModesCount(impl->dxadapter);
 
 		if (totalDisplay == 0)
 			return nullptr;
@@ -167,10 +178,10 @@ namespace xna {
 		
 		std::vector<DXGI_MODE_DESC> buffer(totalDisplay);		
 		
-		if (dxadapter->EnumOutputs(0, &pOutput) != DXGI_ERROR_NOT_FOUND) {
+		if (impl->dxadapter->EnumOutputs(0, &pOutput) != DXGI_ERROR_NOT_FOUND) {
 			for (size_t f = 0; f < SURFACE_FORMAT_COUNT; ++f) {
 				const auto currentSurface = static_cast<SurfaceFormat>(f);
-				DXGI_FORMAT format = GraphicsAdapter::ConvertSurfaceToDXGIFORMAT(currentSurface);
+				DXGI_FORMAT format = GraphicsAdapter::PlatformImplementation::ConvertSurfaceToDXGIFORMAT(currentSurface);
 
 				UINT numModes = 0;
 				pOutput->GetDisplayModeList(format, 0, &numModes, nullptr);
@@ -195,13 +206,13 @@ namespace xna {
 
 	uptr<DisplayModeCollection> GraphicsAdapter::SupportedDisplayModes(SurfaceFormat surfaceFormat) const
 	{
-		if (!dxadapter) return nullptr;				
+		if (!impl->dxadapter) return nullptr;				
 
 		IDXGIOutput* pOutput = nullptr;
 		UINT bufferOffset = 0;		
 
-		if (dxadapter->EnumOutputs(0, &pOutput) != DXGI_ERROR_NOT_FOUND) {			
-			DXGI_FORMAT format = GraphicsAdapter::ConvertSurfaceToDXGIFORMAT(surfaceFormat);
+		if (impl->dxadapter->EnumOutputs(0, &pOutput) != DXGI_ERROR_NOT_FOUND) {			
+			DXGI_FORMAT format = GraphicsAdapter::PlatformImplementation::ConvertSurfaceToDXGIFORMAT(surfaceFormat);
 
 			UINT numModes = 0;
 
@@ -223,11 +234,11 @@ namespace xna {
 	}
 
 	sptr<DisplayMode> GraphicsAdapter::CurrentDisplayMode() {
-		if (!_currentDisplayMode) {
+		if (!impl->_currentDisplayMode) {
 			CurrentDisplayMode(SurfaceFormat::Color, GraphicsDeviceManager::DefaultBackBufferWidth, GraphicsDeviceManager::DefaultBackBufferHeight);
 		}
 
-		return _currentDisplayMode;
+		return impl->_currentDisplayMode;
 	}
 
 	void GraphicsAdapter::CurrentDisplayMode(SurfaceFormat surfaceFormat, Uint width, Uint height) {
@@ -237,15 +248,15 @@ namespace xna {
 			auto& m = modes->_displayModes[i];
 			
 			if (m->_format == surfaceFormat && m->_width == width && m->_height == height) {
-				_currentDisplayMode = m;
+				impl->_currentDisplayMode = m;
 			}
 			else if(i + 1 == modes->_displayModes.size()) {
-				_currentDisplayMode = m;
+				impl->_currentDisplayMode = m;
 			}
 		}
 	}
 
-	bool GraphicsAdapter::GetOutput(UINT slot, IDXGIOutput*& output) {
+	bool GraphicsAdapter::PlatformImplementation::GetOutput(UINT slot, IDXGIOutput*& output) {
 		if (!dxadapter) return false;
 
 		if (dxadapter->EnumOutputs(slot, &output) != DXGI_ERROR_NOT_FOUND)
@@ -263,7 +274,7 @@ namespace xna {
 		if (adapter->EnumOutputs(0, &pOutput) != DXGI_ERROR_NOT_FOUND) {
 			for (size_t f = 0; f < SURFACE_FORMAT_COUNT; ++f) {
 				const auto currentSurface = static_cast<SurfaceFormat>(f);
-				DXGI_FORMAT format = GraphicsAdapter::ConvertSurfaceToDXGIFORMAT(currentSurface);
+				DXGI_FORMAT format = GraphicsAdapter::PlatformImplementation::ConvertSurfaceToDXGIFORMAT(currentSurface);
 
 				UINT num = 0;
 				pOutput->GetDisplayModeList(format, 0, &num, nullptr);
@@ -292,14 +303,14 @@ namespace xna {
 			description._scaling = static_cast<DisplayModeScaling>(modedesc.Scaling);
 			description._scanlineOrdering = static_cast<DisplayModeScanlineOrder>(modedesc.ScanlineOrdering);
 
-			if (pDisplay && pDisplay->_width == modedesc.Width && pDisplay->_height == modedesc.Height && pDisplay->_format == GraphicsAdapter::ConvertDXGIFORMATToSurface(modedesc.Format)) {
+			if (pDisplay && pDisplay->_width == modedesc.Width && pDisplay->_height == modedesc.Height && pDisplay->_format == GraphicsAdapter::PlatformImplementation::ConvertDXGIFORMATToSurface(modedesc.Format)) {
 				pDisplay->_descriptions.push_back(description);
 			}
 			else {
 				pDisplay = New<DisplayMode>();
 				pDisplay->_width = modedesc.Width;
 				pDisplay->_height = modedesc.Height;
-				pDisplay->_format = GraphicsAdapter::ConvertDXGIFORMATToSurface(modedesc.Format);
+				pDisplay->_format = GraphicsAdapter::PlatformImplementation::ConvertDXGIFORMATToSurface(modedesc.Format);
 				pDisplay->_descriptions.push_back(description);
 				displayList.push_back(pDisplay);
 			}

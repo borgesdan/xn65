@@ -2,7 +2,6 @@
 #define XNA_PLATFORM_GDEVICEINFOR_DX_HPP
 
 #include "../game/gdeviceinfo.hpp"
-#include "adapter-dx.hpp"
 #include "window-dx.hpp"
 #include "presentparameters-dx.hpp"
 
