@@ -6,9 +6,8 @@
 #include "platform-dx/texture-dx.hpp"
 #include "common/color.hpp"
 #include "common/numerics.hpp"
-#include "graphics/spritebatch.hpp"
+#include "graphics/sprite.hpp"
 #include "graphics/viewport.hpp"
-#include "platform-dx/spritefont-dx.hpp"
 
 using DxSpriteBatch = DirectX::SpriteBatch;
 using DxSpriteSortMode = DirectX::SpriteSortMode;
@@ -18,8 +17,35 @@ using DirectX::XMFLOAT2;
 using DirectX::FXMVECTOR;
 using DirectX::XMVECTORF32;
 using DirectX::GXMVECTOR;
+using DxSpriteFont = DirectX::SpriteFont;
 
 namespace xna {
+	struct SpriteFont::PlatformImplementation {
+		sptr<DirectX::SpriteFont> _dxSpriteFont = nullptr;
+	};
+
+	SpriteFont::SpriteFont(GraphicsDevice& device, String const& fontFileName)
+	{
+		const auto wString = XnaHToWString(fontFileName);
+		implementation = uNew<PlatformImplementation>();
+		implementation->_dxSpriteFont = New<DxSpriteFont>(device._device, wString.c_str());
+	}
+
+	SpriteFont::~SpriteFont() {}
+
+	Vector2 SpriteFont::MeasureString(String const& text, bool ignoreWhiteSpace)
+	{
+		if (!implementation->_dxSpriteFont)
+			return Vector2();
+
+		const auto size = implementation->_dxSpriteFont->MeasureString(text.c_str(), ignoreWhiteSpace);
+		Vector2 vec2{};
+		vec2.X = size.m128_f32[0];
+		vec2.Y = size.m128_f32[1];
+
+		return vec2;
+	}
+
 	struct SpriteBatch::PlatformImplementation {
 		sptr<DirectX::SpriteBatch> _dxspriteBatch = nullptr;
 	};
@@ -290,17 +316,17 @@ namespace xna {
 		_view.MaxDepth = value.MaxDepth;
 
 		implementation->_dxspriteBatch->SetViewport(_view);
-	}
+	}	
 
 	void SpriteBatch::DrawString(SpriteFont& spriteFont, String const& text, Vector2 const& position, Color const& color) {
-		if (!implementation->_dxspriteBatch || !spriteFont._dxSpriteFont)
+		if (!implementation->_dxspriteBatch || !spriteFont.implementation->_dxSpriteFont)
 			return;
 
 		const auto _position = XMFLOAT2(position.X, position.Y);
 		const auto v4 = color.ToVector4();
 		const XMVECTORF32 _color = { v4.X, v4.Y, v4.Z, v4.W };
 
-		spriteFont._dxSpriteFont->DrawString(
+		spriteFont.implementation->_dxSpriteFont->DrawString(
 			implementation->_dxspriteBatch.get(),
 			text.c_str(),
 			_position,
@@ -310,7 +336,7 @@ namespace xna {
 	
 	void SpriteBatch::DrawString(SpriteFont& spriteFont, String const& text, Vector2 const& position,
 		Color const& color, float rotation, Vector2 const& origin, float scale, SpriteEffects effects, float layerDepth) {
-		if (!implementation->_dxspriteBatch || !spriteFont._dxSpriteFont)
+		if (!implementation->_dxspriteBatch || !spriteFont.implementation->_dxSpriteFont)
 			return;
 
 		const auto _position = XMFLOAT2(position.X, position.Y);
@@ -319,7 +345,7 @@ namespace xna {
 		const XMVECTORF32 _color = { v4.X, v4.Y, v4.Z, v4.W };
 		const auto _effects = static_cast<DxSpriteEffects>(effects);
 
-		spriteFont._dxSpriteFont->DrawString(
+		spriteFont.implementation->_dxSpriteFont->DrawString(
 			implementation->_dxspriteBatch.get(),
 			text.c_str(),
 			_position,

@@ -1,8 +1,9 @@
-#ifndef XNA_GRAPHICS_SPRITEBATCH_HPP
-#define XNA_GRAPHICS_SPRITEBATCH_HPP
+#ifndef XNA_GRAPHICS_SPRITE_HPP
+#define XNA_GRAPHICS_SPRITE_HPP
 
 #include "../default.hpp"
 #include "../common/numerics.hpp"
+#include "common/color.hpp"
 
 namespace xna {
 	class SpriteBatch {
@@ -33,6 +34,17 @@ namespace xna {
 		void DrawString(SpriteFont& spriteFont, String const& text, Vector2 const& position, Color const& color);
 		void DrawString(SpriteFont& spriteFont, String const& text, Vector2 const& position, Color const& color,
 			float rotation, Vector2 const& origin, float scale, SpriteEffects effects, float layerDepth);
+
+	private:
+		struct PlatformImplementation;
+		uptr<PlatformImplementation> implementation = nullptr;
+	};
+
+	class SpriteFont {
+	public:
+		SpriteFont(GraphicsDevice& device, String const& fontFileName);
+		~SpriteFont();
+		Vector2 MeasureString(String const& text, bool ignoreWhiteSpace = true);
 
 	private:
 		struct PlatformImplementation;

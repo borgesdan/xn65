@@ -24,8 +24,8 @@ add_executable (xna WIN32
 "platform/constbuffer-dx.cpp"
 "platform/databuffer-dx.cpp"
 "platform/samplerstate-dx.cpp"
-"platform/spritebatch-dx.cpp"
-"platform/spritefont-dx.cpp"
+"platform/sprite-dx.cpp"
+
 "platform/depthstencilstate-dx.cpp"
 "platform/keyboard-dx.cpp"
 "platform/mouse-dx.cpp"
