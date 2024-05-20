@@ -1,9 +1,9 @@
-#include "platform-dx/gdevicemanager-dx.hpp"
-#include "platform-dx/implementations.hpp"
 #include "graphics/adapter.hpp"
-#include "platform-dx/displaymode-dx.hpp"
+#include "graphics/displaymode.hpp"
 #include "platform-dx/dxheaders.hpp"
 #include "platform-dx/dxhelpers.hpp"
+#include "platform-dx/gdevicemanager-dx.hpp"
+#include "platform-dx/implementations.hpp"
 
 namespace xna {
 	static size_t getDisplayModesCount(IDXGIAdapter* adapter);
@@ -245,13 +245,13 @@ namespace xna {
 	void GraphicsAdapter::CurrentDisplayMode(SurfaceFormat surfaceFormat, Uint width, Uint height) {
 		const auto modes = SupportedDisplayModes(surfaceFormat);
 
-		for (size_t i = 0; i < modes->_displayModes.size(); ++i) {
-			auto& m = modes->_displayModes[i];
+		for (size_t i = 0; i < modes->DisplayModes.size(); ++i) {
+			auto& m = modes->DisplayModes[i];
 			
-			if (m->_format == surfaceFormat && m->_width == width && m->_height == height) {
+			if (m->Format == surfaceFormat && m->Width == width && m->Height == height) {
 				impl->_currentDisplayMode = m;
 			}
-			else if(i + 1 == modes->_displayModes.size()) {
+			else if(i + 1 == modes->DisplayModes.size()) {
 				impl->_currentDisplayMode = m;
 			}
 		}
@@ -304,20 +304,20 @@ namespace xna {
 			description._scaling = static_cast<DisplayModeScaling>(modedesc.Scaling);
 			description._scanlineOrdering = static_cast<DisplayModeScanlineOrder>(modedesc.ScanlineOrdering);
 
-			if (pDisplay && pDisplay->_width == modedesc.Width && pDisplay->_height == modedesc.Height && pDisplay->_format == DxHelpers::ConvertDXGIFORMATToSurface(modedesc.Format)) {
-				pDisplay->_descriptions.push_back(description);
+			if (pDisplay && pDisplay->Width == modedesc.Width && pDisplay->Height == modedesc.Height && pDisplay->Format == DxHelpers::ConvertDXGIFORMATToSurface(modedesc.Format)) {
+				pDisplay->impl->Descriptions.push_back(description);
 			}
 			else {
 				pDisplay = New<DisplayMode>();
-				pDisplay->_width = modedesc.Width;
-				pDisplay->_height = modedesc.Height;
-				pDisplay->_format = DxHelpers::ConvertDXGIFORMATToSurface(modedesc.Format);
-				pDisplay->_descriptions.push_back(description);
+				pDisplay->Width = modedesc.Width;
+				pDisplay->Height = modedesc.Height;
+				pDisplay->Format = DxHelpers::ConvertDXGIFORMATToSurface(modedesc.Format);
+				pDisplay->impl->Descriptions.push_back(description);
 				displayList.push_back(pDisplay);
 			}
 		}
 
-		collection->_displayModes = displayList;
+		collection->DisplayModes = displayList;
 
 		return collection;
 	}

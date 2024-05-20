@@ -1,6 +1,5 @@
 #include "audioengine-dx.hpp"
 #include "device-dx.hpp"
-#include "displaymode-dx.hpp"
 #include "dxheaders.hpp"
 #include "game-dx.hpp"
 #include "gamepad-dx.hpp"
