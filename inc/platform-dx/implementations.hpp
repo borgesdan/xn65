@@ -233,4 +233,19 @@ namespace xna {
 		ID3D11Buffer* _buffer = nullptr;
 		DirectX::XMMATRIX _worldViewProjection;
 	};
+
+	struct DataBuffer::PlatformImplementation {
+		~PlatformImplementation() {
+			if (_blob) {
+				_blob->Release();
+				_blob = nullptr;
+			}
+		}
+
+		ID3DBlob* _blob = nullptr;
+
+		void Set(ID3DBlob*& blob) {
+			_blob = blob;
+		}
+	};
 }

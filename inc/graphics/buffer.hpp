@@ -16,6 +16,18 @@ namespace xna {
 		struct PlatformImplementation;
 		uptr<PlatformImplementation> impl = nullptr;
 	};
+
+	class DataBuffer : public GraphicsResource {
+	public:
+		DataBuffer();
+		DataBuffer(sptr<GraphicsDevice> const&);
+		~DataBuffer();
+		bool Initialize(xna_error_nullarg);
+
+	public:
+		struct PlatformImplementation;
+		uptr<PlatformImplementation> impl = nullptr;
+	};
 }
 
 #endif

@@ -44,7 +44,10 @@ namespace xna {
 			graphicsDevice->Clear(Colors::CornflowerBlue);			
 
 			spriteBatch->Begin();
-			spriteBatch->Draw(*texture, Vector2(), Colors::White);
+			
+			if(texture)
+				spriteBatch->Draw(*texture, Vector2(), Colors::White);
+
 			spriteBatch->End();
 
 			Game::Draw(gameTime);

@@ -22,7 +22,7 @@ add_executable (xna WIN32
 "platform/vertexbuffer-dx.cpp"
 "platform/indexbuffer-dx.cpp"
 
-"platform/databuffer-dx.cpp"
+
 "platform/samplerstate-dx.cpp"
 "platform/sprite-dx.cpp"
 

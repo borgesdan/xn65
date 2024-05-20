@@ -3,6 +3,7 @@
 
 #include "../graphics/shader.hpp"
 #include "../graphics/gresource.hpp"
+#include "graphics/buffer.hpp"
 #include "dxheaders.hpp"
 
 namespace xna {

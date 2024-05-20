@@ -1,11 +1,11 @@
 #include "platform-dx/vertexinput-dx.hpp"
 #include "platform-dx/device-dx.hpp"
 #include "platform-dx/dxheaders.hpp"
-#include "platform-dx/databuffer-dx.hpp"
+#include "platform-dx/implementations.hpp"
 
 namespace xna {
 	bool VertexInputLayout::Initialize(GraphicsDevice& device, DataBuffer& blob, xna_error_ptr_arg){
-		if (!device._device || !blob._blob) {
+		if (!device._device || !blob.impl->_blob) {
 			xna_error_apply(err, XnaErrorCode::INVALID_OPERATION);
 			return false;
 		}
@@ -18,8 +18,8 @@ namespace xna {
 		const auto hr = device._device->CreateInputLayout(
 			_description.data(),
 			static_cast<UINT>(_description.size()),
-			blob._blob->GetBufferPointer(),
-			blob._blob->GetBufferSize(),
+			blob.impl->_blob->GetBufferPointer(),
+			blob.impl->_blob->GetBufferSize(),
 			&_inputLayout);
 
 		if (FAILED(hr)) {

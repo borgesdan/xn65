@@ -33,7 +33,6 @@
 #include "game/window.hpp"
 #include "graphics/adapter.hpp"
 #include "graphics/blendstate.hpp"
-#include "graphics/databuffer.hpp"
 #include "graphics/depthstencilstate.hpp"
 #include "graphics/device.hpp"
 #include "graphics/displaymode.hpp"
