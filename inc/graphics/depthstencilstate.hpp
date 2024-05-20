@@ -2,43 +2,56 @@
 #define XNA_GRAPHICS_DEPTHSTENCILSTATE_HPP
 
 #include "../default.hpp"
+#include "gresource.hpp"
 
 namespace xna {
-	class IDepthStencilState {
+	class DepthStencilState : public GraphicsResource {
 	public:
-		virtual ~IDepthStencilState(){}
-		virtual bool Initialize(xna_error_nullarg) = 0;
-		virtual bool Apply(xna_error_ptr_arg) = 0;
-		
-		virtual void DepthEnabled(bool value) = 0;
-		virtual void DepthWriteEnabled(bool value) = 0;
-		virtual void DepthCompareFunction(ComparisonFunction value) = 0;
-		virtual void StencilEnabled(bool value) = 0;
-		virtual void StencilReadMask(int value) = 0;
-		virtual void StencilWriteMask(int value) = 0;
-		virtual void StencilFrontFacePass(StencilOperation value) = 0;
-		virtual void StencilFrontFaceFail(StencilOperation value) = 0;
-		virtual void StencilFrontFaceDepthFail(StencilOperation value) = 0;
-		virtual void StencilFrontFaceCompare(ComparisonFunction value) = 0;
-		virtual void StencilBackFacePass(StencilOperation value) = 0;
-		virtual void StencilBackFaceFail(StencilOperation value) = 0;
-		virtual void StencilBackFaceDepthFail(StencilOperation value) = 0;
-		virtual void StencilBackFaceCompare(ComparisonFunction value) = 0;
 
-		virtual bool DepthEnabled() = 0;
-		virtual bool DepthWriteEnabled() = 0;
-		virtual ComparisonFunction DepthCompareFunction() = 0;
-		virtual bool StencilEnabled() = 0;
-		virtual int StencilReadMask() = 0;
-		virtual int StencilWriteMask() = 0;
-		virtual StencilOperation StencilFrontFacePass() = 0;
-		virtual StencilOperation StencilFrontFaceFail() = 0;
-		virtual StencilOperation StencilFrontFaceDepthFail() = 0;
-		virtual ComparisonFunction StencilFrontFaceCompare() = 0;
-		virtual StencilOperation StencilBackFacePass() = 0;
-		virtual StencilOperation StencilBackFaceFail() = 0;
-		virtual StencilOperation StencilBackFaceDepthFail() = 0;
-		virtual ComparisonFunction StencilBackFaceCompare() = 0;		
+		DepthStencilState();
+		DepthStencilState(sptr<GraphicsDevice> const& device);
+
+		~DepthStencilState();
+		bool Initialize(xna_error_nullarg);
+		bool Apply(xna_error_ptr_arg);
+		
+		void DepthEnabled(bool value);
+		void DepthWriteEnabled(bool value);
+		void DepthCompareFunction(ComparisonFunction value);
+		void StencilEnabled(bool value);
+		void StencilReadMask(Int value);
+		void StencilWriteMask(Int value);
+		void StencilFrontFacePass(StencilOperation value);
+		void StencilFrontFaceFail(StencilOperation value);
+		void StencilFrontFaceDepthFail(StencilOperation value);
+		void StencilFrontFaceCompare(ComparisonFunction value);
+		void StencilBackFacePass(StencilOperation value);
+		void StencilBackFaceFail(StencilOperation value);
+		void StencilBackFaceDepthFail(StencilOperation value);
+		void StencilBackFaceCompare(ComparisonFunction value);
+
+		bool DepthEnabled() const;
+		bool DepthWriteEnabled() const;
+		ComparisonFunction DepthCompareFunction() const;
+		bool StencilEnabled() const;
+		Int StencilReadMask() const;
+		Int StencilWriteMask() const;
+		StencilOperation StencilFrontFacePass() const;
+		StencilOperation StencilFrontFaceFail() const;
+		StencilOperation StencilFrontFaceDepthFail() const;
+		ComparisonFunction StencilFrontFaceCompare() const;
+		StencilOperation StencilBackFacePass() const;
+		StencilOperation StencilBackFaceFail() const;
+		StencilOperation StencilBackFaceDepthFail() const;
+		ComparisonFunction StencilBackFaceCompare() const;
+
+		static uptr<DepthStencilState> None();
+		static uptr<DepthStencilState> Default();
+		static uptr<DepthStencilState> DepthRead();
+
+	public:
+		struct PlatformImplementation;
+		uptr<PlatformImplementation> impl = nullptr;
 	};
 }
 

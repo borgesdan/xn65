@@ -7,6 +7,7 @@
 #include "platform-dx/swapchain-dx.hpp"
 #include "platform-dx/rendertarget-dx.hpp"
 #include "graphics/blendstate.hpp"
+#include "graphics/depthstencilstate.hpp"
 
 namespace xna {
 	struct SpriteFont::PlatformImplementation {
@@ -247,5 +248,17 @@ namespace xna {
 		void Set(ID3DBlob*& blob) {
 			_blob = blob;
 		}
+	};
+
+	struct DepthStencilState::PlatformImplementation {
+		~PlatformImplementation() {
+			if (dxDepthStencil) {
+				dxDepthStencil->Release();
+				dxDepthStencil = nullptr;
+			}
+		}
+
+		ID3D11DepthStencilState* dxDepthStencil = nullptr;
+		D3D11_DEPTH_STENCIL_DESC dxDescription{};
 	};
 }

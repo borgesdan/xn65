@@ -1,6 +1,5 @@
 #include "platform-dx/device-dx.hpp"
 #include "platform-dx/rasterizerstate-dx.hpp"
-#include "platform-dx/depthstencilstate-dx.hpp"
 #include "platform-dx/samplerstate-dx.hpp"
 #include "platform-dx/texture-dx.hpp"
 #include "common/color.hpp"
@@ -8,6 +7,7 @@
 #include "graphics/sprite.hpp"
 #include "graphics/viewport.hpp"
 #include "graphics/blendstate.hpp"
+#include "graphics/depthstencilstate.hpp"
 #include "platform-dx/implementations.hpp"
 
 using DxSpriteBatch = DirectX::SpriteBatch;
@@ -80,7 +80,7 @@ namespace xna {
 			sort,
 			blendState ? blendState->impl->dxBlendState : nullptr,
 			samplerState ? samplerState->_samplerState : nullptr,
-			depthStencil ? depthStencil->dxDepthStencil : nullptr,
+			depthStencil ? depthStencil->impl->dxDepthStencil : nullptr,
 			rasterizerState ? rasterizerState->dxRasterizerState : nullptr,
 			nullptr,
 			matrix

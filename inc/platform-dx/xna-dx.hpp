@@ -1,5 +1,4 @@
 #include "audioengine-dx.hpp"
-#include "depthstencilstate-dx.hpp"
 #include "device-dx.hpp"
 #include "displaymode-dx.hpp"
 #include "dxheaders.hpp"
