@@ -1,5 +1,6 @@
 #include "platform-dx/swapchain-dx.hpp"
 #include "platform-dx/device-dx.hpp"
+#include "platform-dx/dxhelpers.hpp"
 #include "graphics/adapter.hpp"
 #include "platform-dx/implementations.hpp"
 
@@ -48,7 +49,7 @@ namespace xna {
 
         dxDescription.Width = static_cast<UINT>(parameters.backBufferWidth);
         dxDescription.Height = static_cast<UINT>(parameters.backBufferHeight);
-        dxDescription.Format = GraphicsAdapter::PlatformImplementation::ConvertSurfaceToDXGIFORMAT(parameters.backBufferFormat);
+        dxDescription.Format = DxHelpers::ConvertSurfaceToDXGIFORMAT(parameters.backBufferFormat);
         dxDescription.SampleDesc.Count = 1;
         dxDescription.SampleDesc.Quality = 0;
         dxDescription.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;

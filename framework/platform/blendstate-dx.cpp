@@ -2,6 +2,7 @@
 #include "graphics/gresource.hpp"
 #include "platform-dx/device-dx.hpp"
 #include "platform-dx/dxheaders.hpp"
+#include "platform-dx/dxhelpers.hpp"
 #include "graphics/blendstate.hpp"
 #include "platform-dx/implementations.hpp"
 
@@ -72,13 +73,13 @@ namespace xna {
 	void BlendState::RenderTargets(std::vector<BlendRenderTarget> const& value) {
 		for (size_t i = 0; i < value.size() && i < 8; ++i) {
 			impl->dxDescription.RenderTarget[i].BlendEnable = value[i].Enabled;
-			impl->dxDescription.RenderTarget[i].SrcBlend = PlatformImplementation::ConvertBlend(value[i].Source);
-			impl->dxDescription.RenderTarget[i].DestBlend = PlatformImplementation::ConvertBlend(value[i].Destination);
-			impl->dxDescription.RenderTarget[i].BlendOp = PlatformImplementation::ConvertOperation(value[i].Operation);
-			impl->dxDescription.RenderTarget[i].SrcBlendAlpha = PlatformImplementation::ConvertBlend(value[i].SourceAlpha);
-			impl->dxDescription.RenderTarget[i].DestBlendAlpha = PlatformImplementation::ConvertBlend(value[i].DestinationAlpha);
-			impl->dxDescription.RenderTarget[i].BlendOpAlpha = PlatformImplementation::ConvertOperation(value[i].OperationAlpha);
-			impl->dxDescription.RenderTarget[i].RenderTargetWriteMask = PlatformImplementation::ConvertColorWrite(value[i].WriteMask);
+			impl->dxDescription.RenderTarget[i].SrcBlend = DxHelpers::ConvertBlend(value[i].Source);
+			impl->dxDescription.RenderTarget[i].DestBlend = DxHelpers::ConvertBlend(value[i].Destination);
+			impl->dxDescription.RenderTarget[i].BlendOp = DxHelpers::ConvertOperation(value[i].Operation);
+			impl->dxDescription.RenderTarget[i].SrcBlendAlpha = DxHelpers::ConvertBlend(value[i].SourceAlpha);
+			impl->dxDescription.RenderTarget[i].DestBlendAlpha = DxHelpers::ConvertBlend(value[i].DestinationAlpha);
+			impl->dxDescription.RenderTarget[i].BlendOpAlpha = DxHelpers::ConvertOperation(value[i].OperationAlpha);
+			impl->dxDescription.RenderTarget[i].RenderTargetWriteMask = DxHelpers::ConvertColorWrite(value[i].WriteMask);
 		}
 	}
 
