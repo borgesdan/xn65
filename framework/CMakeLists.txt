@@ -13,7 +13,7 @@ add_executable (xna WIN32
 "platform/texture-dx.cpp"
 "platform/blendstate-dx.cpp"
 "platform/game-dx.cpp"
-"platform/clock-dx.cpp"
+
 "csharp/stream.cpp"
 "platform/gdevicemanager-dx.cpp"
 "platform/vertexinput-dx.cpp"
@@ -21,7 +21,7 @@ add_executable (xna WIN32
 "platform/rasterizerstate-dx.cpp"
 "platform/vertexbuffer-dx.cpp"
 "platform/indexbuffer-dx.cpp"
-"platform/constbuffer-dx.cpp"
+
 "platform/databuffer-dx.cpp"
 "platform/samplerstate-dx.cpp"
 "platform/sprite-dx.cpp"
@@ -47,7 +47,7 @@ add_executable (xna WIN32
 "common/color.cpp"
 "common/collision.cpp" 
 "common/gjk.cpp"
-"common/numerics.cpp" "common/packedvalue.cpp")
+"common/numerics.cpp" "common/packedvalue.cpp" "platform/buffer.cpp")
 
 if (CMAKE_VERSION VERSION_GREATER 3.12)
   set_property(TARGET xna PROPERTY CXX_STANDARD 20)

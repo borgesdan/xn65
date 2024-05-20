@@ -1,6 +1,7 @@
 #include "graphics/sprite.hpp"
 #include "graphics/device.hpp"
 #include "graphics/adapter.hpp"
+#include "graphics/buffer.hpp"
 #include "platform-dx/presentparameters-dx.hpp"
 #include "dxheaders.hpp"
 #include "platform-dx/swapchain-dx.hpp"
@@ -218,4 +219,18 @@ namespace xna {
 			}
 		}
 	};	
+
+	struct ConstantBuffer::PlatformImplementation {
+		~PlatformImplementation() {
+			if (_buffer) {
+				_buffer->Release();
+				_buffer = nullptr;
+			}
+		}
+
+		D3D11_BUFFER_DESC _description{};
+		D3D11_SUBRESOURCE_DATA _subResource{};
+		ID3D11Buffer* _buffer = nullptr;
+		DirectX::XMMATRIX _worldViewProjection;
+	};
 }

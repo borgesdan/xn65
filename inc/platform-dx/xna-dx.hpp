@@ -1,6 +1,4 @@
 #include "audioengine-dx.hpp"
-#include "clock-dx.hpp"
-#include "constbuffer-dx.hpp"
 #include "databuffer-dx.hpp"
 #include "depthstencilstate-dx.hpp"
 #include "device-dx.hpp"
