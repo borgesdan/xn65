@@ -2,19 +2,30 @@
 #define XNA_GRAPHICS_BLENDSTATE_HPP
 
 #include "../default.hpp"
+#include "gresource.hpp"
 
 namespace xna {
 	struct BlendRenderTarget;
 
-	class IBlendState {
+	class BlendState : public GraphicsResource {
 	public:
-		virtual ~IBlendState() {}
-		virtual bool Initialize(xna_error_nullarg) = 0;
-		virtual void AlphaToCoverageEnable(bool value) = 0;
-		virtual void IndependentBlendEnable(bool value) = 0;
-		virtual void RenderTargets(std::vector<BlendRenderTarget> const& value) = 0;
+		BlendState();
+		BlendState(sptr<GraphicsDevice> const& device);
+		~BlendState();
+		bool Initialize(xna_error_nullarg) ;
+		void AlphaToCoverageEnable(bool value) ;
+		void IndependentBlendEnable(bool value) ;
+		void RenderTargets(std::vector<BlendRenderTarget> const& value);
+		bool Apply(xna_error_nullarg);
 
-		virtual bool Apply(xna_error_nullarg) = 0;		
+		static uptr<BlendState> Opaque();
+		static uptr<BlendState> AlphaBlend();
+		static uptr<BlendState> Additive();
+		static uptr<BlendState> NonPremultiplied();
+
+	public:
+		struct PlatformImplementation;
+		uptr<PlatformImplementation> impl = nullptr;
 	};	
 }
 

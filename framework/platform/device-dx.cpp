@@ -1,13 +1,13 @@
-#include "platform-dx/device-dx.hpp"
-#include "platform-dx/window-dx.hpp"
-#include "platform-dx/swapchain-dx.hpp"
-#include "platform-dx/rendertarget-dx.hpp"
-#include "platform-dx/blendstate-dx.hpp"
-#include "platform-dx/gdeviceinfo-dx.hpp"
 #include "common/color.hpp"
-#include "platform-dx/gdevicemanager-dx.hpp"
 #include "graphics/adapter.hpp"
+#include "graphics/blendstate.hpp"
+#include "platform-dx/device-dx.hpp"
+#include "platform-dx/gdeviceinfo-dx.hpp"
+#include "platform-dx/gdevicemanager-dx.hpp"
 #include "platform-dx/implementations.hpp"
+#include "platform-dx/rendertarget-dx.hpp"
+#include "platform-dx/swapchain-dx.hpp"
+#include "platform-dx/window-dx.hpp"
 
 namespace xna {
 	GraphicsDevice::GraphicsDevice() {		
