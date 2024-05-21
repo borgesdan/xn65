@@ -6,7 +6,6 @@
 #include "game-dx.hpp"
 #include "gdeviceinfo-dx.hpp"
 #include "gdevicemanager-dx.hpp"
-#include "indexbuffer-dx.hpp"
 #include "init-dx.hpp"
 #include "keyboard-dx.hpp"
 #include "mouse-dx.hpp"

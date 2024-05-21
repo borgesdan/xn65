@@ -150,4 +150,32 @@ namespace xna {
 
 		inline static uptr<DirectX::GamePad> _dxGamePad = nullptr;
 	};
+
+	struct IndexBuffer::PlatformImplementation {
+		~PlatformImplementation() {
+			if (dxBuffer) {
+				dxBuffer->Release();
+				dxBuffer = nullptr;
+			}
+		}
+
+		ID3D11Buffer* dxBuffer = nullptr;
+	};
+
+	template <typename T>
+	inline bool IndexBuffer::Initialize(std::vector<T> const& data, xna_error_ptr_arg) {
+		if (!impl || !m_device || !m_device->_device || data.empty()) {
+			xna_error_apply(err, XnaErrorCode::INVALID_OPERATION);
+			return false;
+		}
+
+		const auto hr = DirectX::CreateStaticBuffer(m_device->_device, data.data(), data.size(), sizeof(T), D3D11_BIND_INDEX_BUFFER, &impl->dxBuffer);
+
+		if (FAILED(hr)) {
+			xna_error_apply(err, XnaErrorCode::FAILED_OPERATION);
+			return false;
+		}
+
+		return true;
+	}
 }

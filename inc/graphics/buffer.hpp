@@ -27,6 +27,21 @@ namespace xna {
 	public:
 		struct PlatformImplementation;
 		uptr<PlatformImplementation> impl = nullptr;
+	};	
+	
+	class IndexBuffer : public GraphicsResource {
+	public:
+		IndexBuffer();
+		IndexBuffer(sptr<GraphicsDevice> const&);
+		~IndexBuffer();
+
+		template <typename T>
+		bool Initialize(std::vector<T> const& data, xna_error_nullarg);	
+		bool Apply(xna_error_nullarg);
+
+	public:
+		struct PlatformImplementation;
+		uptr<PlatformImplementation> impl = nullptr;
 	};
 }
 

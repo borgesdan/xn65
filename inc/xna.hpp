@@ -37,7 +37,6 @@
 #include "graphics/device.hpp"
 #include "graphics/displaymode.hpp"
 #include "graphics/gresource.hpp"
-#include "graphics/indexbuffer.hpp"
 #include "graphics/presentparams.hpp"
 #include "graphics/rasterizerstate.hpp"
 #include "graphics/rendertarget.hpp"

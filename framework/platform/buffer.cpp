@@ -6,7 +6,7 @@
 
 namespace xna {
 	ConstantBuffer::ConstantBuffer() : GraphicsResource(nullptr){
-		impl = uNew<PlatformImplementation>();
+		impl = uNew<PlatformImplementation>();		
 	}
 
 	ConstantBuffer::ConstantBuffer(sptr<GraphicsDevice> const& device) : GraphicsResource(device){
@@ -64,6 +64,29 @@ namespace xna {
 			impl->_blob->Release();
 			impl->_blob = nullptr;
 		}
+
+		return true;
+	}
+
+	IndexBuffer::IndexBuffer() : GraphicsResource(nullptr) {
+		impl = uNew<PlatformImplementation>();
+	}
+	
+	IndexBuffer::IndexBuffer(sptr<GraphicsDevice> const& device) : GraphicsResource(device) {
+		impl = uNew<PlatformImplementation>();
+	}
+
+	IndexBuffer::~IndexBuffer() {
+		impl = nullptr;
+	}
+
+	bool IndexBuffer::Apply(xna_error_ptr_arg) {
+		if (!m_device || !m_device->_context || !impl || !impl->dxBuffer) {
+			xna_error_apply(err, XnaErrorCode::INVALID_OPERATION);
+			return false;
+		}
+
+		m_device->_context->IASetIndexBuffer(impl->dxBuffer, DXGI_FORMAT_R16_UINT, 0);
 
 		return true;
 	}

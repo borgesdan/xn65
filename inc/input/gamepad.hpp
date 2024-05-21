@@ -157,7 +157,7 @@ namespace xna {
 	};
 
 	struct GamePadState {
-		GamePadState() = default;			
+		constexpr GamePadState() = default;			
 
 		constexpr bool IsButtonDown(xna::Buttons button) const {
 			switch (button)
