@@ -41,10 +41,6 @@ namespace xna {
 	}	
 
 	void Game::Initialize() {
-		Keyboard::Initialize();
-		Mouse::Initialize();	
-		GamePad::Initialize();
-
 #if (_WIN32_WINNT >= 0x0A00 /*_WIN32_WINNT_WIN10*/)
 		Microsoft::WRL::Wrappers::RoInitializeWrapper initialize(RO_INIT_MULTITHREADED);
 		if (FAILED(initialize))
@@ -58,6 +54,9 @@ namespace xna {
 			MessageBox(nullptr, "Ocorreu um erro ao chamar CoInitializeEx.", "XN65", MB_OK);
 		}
 #endif
+		Keyboard::Initialize();
+		Mouse::Initialize();
+		GamePad::Initialize();
 
 		_audioEngine = New<AudioEngine>();
 

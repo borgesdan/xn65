@@ -148,6 +148,6 @@ namespace xna {
 			}
 		}
 
-		inline static uptr<DirectX::GamePad> _dxGamePad = uNew<DirectX::GamePad>();
+		inline static uptr<DirectX::GamePad> _dxGamePad = nullptr;
 	};
 }
