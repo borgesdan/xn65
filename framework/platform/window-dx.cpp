@@ -1,5 +1,4 @@
 #include "platform-dx/window-dx.hpp"
-#include "platform-dx/keyboard-dx.hpp"
 #include "platform-dx/mouse-dx.hpp"
 #include "input/gamepad.hpp"
 #include "platform-dx/implementations.hpp"
@@ -142,18 +141,18 @@ namespace xna {
 			return 0;
 		case WM_ACTIVATE:
 		case WM_ACTIVATEAPP:
-			Keyboard::_dxKeyboard->ProcessMessage(msg, wParam, lParam);
+			Keyboard::impl->ProcessMessage(msg, wParam, lParam);
 			Mouse::_dxMouse->ProcessMessage(msg, wParam, lParam);
 			break;
 		case WM_SYSKEYDOWN:
-			if (!(wParam == VK_RETURN && (lParam & 0x60000000) == 0x20000000)) {
-				Keyboard::_dxKeyboard->ProcessMessage(msg, wParam, lParam);
+			if (!(wParam == VK_RETURN && (lParam & 0x60000000) == 0x20000000)) {				
+				Keyboard::impl->ProcessMessage(msg, wParam, lParam);
 			}			
 			break;
 		case WM_KEYDOWN:
 		case WM_KEYUP:
 		case WM_SYSKEYUP:
-			Keyboard::_dxKeyboard->ProcessMessage(msg, wParam, lParam);
+			Keyboard::impl->ProcessMessage(msg, wParam, lParam);
 			break;
 
 		case WM_INPUT:
@@ -171,12 +170,10 @@ namespace xna {
 			Mouse::_dxMouse->ProcessMessage(msg, wParam, lParam);
 			break;
 		case WM_KILLFOCUS:
-			if(GamePad::impl->_dxGamePad) 
-				GamePad::impl->_dxGamePad->Suspend();
+			GamePad::impl->Suspend();
 			break;
 		case WM_SETFOCUS:
-			if (GamePad::impl->_dxGamePad) 
-				GamePad::impl->_dxGamePad->Resume();
+			GamePad::impl->Resume();
 			break;
 		}
 		return DefWindowProc(hWnd, msg, wParam, lParam);

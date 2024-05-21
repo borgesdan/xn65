@@ -7,6 +7,7 @@
 #include "graphics/displaymode.hpp"
 #include "graphics/sprite.hpp"
 #include "input/gamepad.hpp"
+#include "input/keyboard.hpp"
 #include "platform-dx/presentparameters-dx.hpp"
 #include "platform-dx/rendertarget-dx.hpp"
 #include "platform-dx/swapchain-dx.hpp"
@@ -142,6 +143,16 @@ namespace xna {
 
 	struct GamePad::PlatformImplementation {
 		inline static uptr<DirectX::GamePad> _dxGamePad = nullptr;
+
+		void Suspend() {
+			if (_dxGamePad)
+				_dxGamePad->Suspend();
+		}
+
+		void Resume() {
+			if (_dxGamePad)
+				_dxGamePad->Resume();
+		}
 	};
 
 	struct IndexBuffer::PlatformImplementation {
@@ -171,4 +182,13 @@ namespace xna {
 
 		return true;
 	}
+
+	struct Keyboard::PlatformImplementation {
+		inline static uptr<DirectX::Keyboard> _dxKeyboard = nullptr;
+
+		void ProcessMessage(UINT message, WPARAM wParam, LPARAM lParam) {
+			if (_dxKeyboard)
+				Keyboard::impl->_dxKeyboard->ProcessMessage(message, wParam, lParam);
+		}
+	};
 }

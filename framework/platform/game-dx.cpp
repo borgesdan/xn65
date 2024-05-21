@@ -5,7 +5,6 @@
 #include "platform-dx/game-dx.hpp"
 #include "input/gamepad.hpp"
 #include "platform-dx/gdevicemanager-dx.hpp"
-#include "platform-dx/keyboard-dx.hpp"
 #include "platform-dx/mouse-dx.hpp"
 #include "platform-dx/implementations.hpp"
 #include "platform-dx/window-dx.hpp"
