@@ -3,10 +3,11 @@
 #include "platform-dx/audioengine-dx.hpp"
 #include "platform-dx/device-dx.hpp"
 #include "platform-dx/game-dx.hpp"
-#include "platform-dx/gamepad-dx.hpp"
+#include "input/gamepad.hpp"
 #include "platform-dx/gdevicemanager-dx.hpp"
 #include "platform-dx/keyboard-dx.hpp"
 #include "platform-dx/mouse-dx.hpp"
+#include "platform-dx/implementations.hpp"
 #include "platform-dx/window-dx.hpp"
 
 namespace xna {
@@ -42,6 +43,7 @@ namespace xna {
 	void Game::Initialize() {
 		Keyboard::Initialize();
 		Mouse::Initialize();	
+		GamePad::Initialize();
 
 #if (_WIN32_WINNT >= 0x0A00 /*_WIN32_WINNT_WIN10*/)
 		Microsoft::WRL::Wrappers::RoInitializeWrapper initialize(RO_INIT_MULTITHREADED);

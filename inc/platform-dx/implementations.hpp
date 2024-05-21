@@ -1,14 +1,15 @@
-#include "graphics/sprite.hpp"
-#include "graphics/device.hpp"
-#include "graphics/adapter.hpp"
-#include "graphics/buffer.hpp"
-#include "platform-dx/presentparameters-dx.hpp"
 #include "dxheaders.hpp"
-#include "platform-dx/swapchain-dx.hpp"
-#include "platform-dx/rendertarget-dx.hpp"
+#include "graphics/adapter.hpp"
 #include "graphics/blendstate.hpp"
+#include "graphics/buffer.hpp"
 #include "graphics/depthstencilstate.hpp"
+#include "graphics/device.hpp"
 #include "graphics/displaymode.hpp"
+#include "graphics/sprite.hpp"
+#include "input/gamepad.hpp"
+#include "platform-dx/presentparameters-dx.hpp"
+#include "platform-dx/rendertarget-dx.hpp"
+#include "platform-dx/swapchain-dx.hpp"
 
 namespace xna {
 	struct SpriteFont::PlatformImplementation {
@@ -137,5 +138,16 @@ namespace xna {
 
 	struct DisplayMode::PlatformImplementation {
 		std::vector<DisplayModeDescription> Descriptions;
+	};
+
+	struct GamePad::PlatformImplementation {
+		~PlatformImplementation() {
+			if (_dxGamePad) {
+				_dxGamePad->Suspend();				
+				_dxGamePad = nullptr;
+			}
+		}
+
+		inline static uptr<DirectX::GamePad> _dxGamePad = uNew<DirectX::GamePad>();
 	};
 }

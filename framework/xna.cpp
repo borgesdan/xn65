@@ -34,7 +34,7 @@ namespace xna {
 		}
 
 		void Update(GameTime const& gameTime) override {
-			if (Keyboard::GetState().IsKeyDown(Keys::Escape) || GamePad.GetState(PlayerIndex::One).IsButtonDown(Buttons::Back))
+			if (Keyboard::GetState().IsKeyDown(Keys::Escape) || GamePad::GetState(PlayerIndex::One).IsButtonDown(Buttons::Back))
 				Exit();
 
 			Game::Update(gameTime);
