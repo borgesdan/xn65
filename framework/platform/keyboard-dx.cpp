@@ -3,7 +3,7 @@
 
 namespace xna {
 	KeyboardState Keyboard::GetState() {
-		if (!impl->_dxKeyboard)
+		if (!impl || !impl->_dxKeyboard)
 			return KeyboardState();
 
 		const auto state = Keyboard::impl->_dxKeyboard->GetState();
@@ -16,5 +16,12 @@ namespace xna {
 	void Keyboard::Initialize() {
 		impl = uNew<PlatformImplementation>();
 		impl->_dxKeyboard = uNew<DirectX::Keyboard>();
+	}
+
+	bool Keyboard::IsConnected() {
+		if (!impl || !impl->_dxKeyboard)
+			return false;
+
+		return impl->_dxKeyboard->IsConnected();
 	}
 }

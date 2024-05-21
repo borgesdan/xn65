@@ -8,6 +8,7 @@
 #include "graphics/sprite.hpp"
 #include "input/gamepad.hpp"
 #include "input/keyboard.hpp"
+#include "input/mouse.hpp"
 #include "platform-dx/presentparameters-dx.hpp"
 #include "platform-dx/rendertarget-dx.hpp"
 #include "platform-dx/swapchain-dx.hpp"
@@ -188,7 +189,16 @@ namespace xna {
 
 		void ProcessMessage(UINT message, WPARAM wParam, LPARAM lParam) {
 			if (_dxKeyboard)
-				Keyboard::impl->_dxKeyboard->ProcessMessage(message, wParam, lParam);
+				_dxKeyboard->ProcessMessage(message, wParam, lParam);
+		}
+	};
+
+	struct Mouse::PlatformImplementation {
+		inline static uptr<DirectX::Mouse> _dxMouse = nullptr;
+
+		void ProcessMessage(UINT message, WPARAM wParam, LPARAM lParam) {
+			if (_dxMouse)
+				_dxMouse->ProcessMessage(message, wParam, lParam);
 		}
 	};
 }

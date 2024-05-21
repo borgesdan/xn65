@@ -215,6 +215,7 @@ namespace xna {
 		static KeyboardState GetState();
 		//static bool IsConnected();
         static void Initialize();
+        static bool IsConnected();
 
     public:
         struct PlatformImplementation;

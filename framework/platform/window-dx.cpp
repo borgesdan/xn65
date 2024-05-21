@@ -1,5 +1,4 @@
 #include "platform-dx/window-dx.hpp"
-#include "platform-dx/mouse-dx.hpp"
 #include "input/gamepad.hpp"
 #include "platform-dx/implementations.hpp"
 
@@ -142,7 +141,7 @@ namespace xna {
 		case WM_ACTIVATE:
 		case WM_ACTIVATEAPP:
 			Keyboard::impl->ProcessMessage(msg, wParam, lParam);
-			Mouse::_dxMouse->ProcessMessage(msg, wParam, lParam);
+			Mouse::impl->ProcessMessage(msg, wParam, lParam);
 			break;
 		case WM_SYSKEYDOWN:
 			if (!(wParam == VK_RETURN && (lParam & 0x60000000) == 0x20000000)) {				
@@ -167,7 +166,7 @@ namespace xna {
 		case WM_XBUTTONDOWN:
 		case WM_XBUTTONUP:
 		case WM_MOUSEHOVER:
-			Mouse::_dxMouse->ProcessMessage(msg, wParam, lParam);
+			Mouse::impl->ProcessMessage(msg, wParam, lParam);
 			break;
 		case WM_KILLFOCUS:
 			GamePad::impl->Suspend();
