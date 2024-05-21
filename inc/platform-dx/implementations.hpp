@@ -141,13 +141,6 @@ namespace xna {
 	};
 
 	struct GamePad::PlatformImplementation {
-		~PlatformImplementation() {
-			if (_dxGamePad) {
-				_dxGamePad->Suspend();				
-				_dxGamePad = nullptr;
-			}
-		}
-
 		inline static uptr<DirectX::GamePad> _dxGamePad = nullptr;
 	};
 

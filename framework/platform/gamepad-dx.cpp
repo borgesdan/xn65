@@ -4,7 +4,7 @@
 namespace xna {
 	void GamePad::Initialize() {
 		impl = uNew<PlatformImplementation>();
-		impl->_dxGamePad = uNew<DirectX::GamePad>();
+		impl->_dxGamePad = uNew<DirectX::GamePad>();		
 	}
 
 	GamePadState GamePad::GetState(PlayerIndex index) {
