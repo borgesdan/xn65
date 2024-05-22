@@ -32,7 +32,7 @@ add_executable (xna WIN32
 "platform/gamepad-dx.cpp"
 "platform/soundeffect-dx.cpp"
 "platform/displaymode-dx.cpp"
-"platform/presentparameters-dx.cpp"
+
 "game/component.cpp"
 "content/manager.cpp"
 "content/reader.cpp"

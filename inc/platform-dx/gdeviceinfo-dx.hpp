@@ -3,7 +3,7 @@
 
 #include "../game/gdeviceinfo.hpp"
 #include "window-dx.hpp"
-#include "presentparameters-dx.hpp"
+#include "graphics/presentparams.hpp"
 
 namespace xna {
 	class GraphicsDeviceInformation : public IGraphicsDeviceInformation {

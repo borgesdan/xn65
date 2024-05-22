@@ -64,7 +64,7 @@ namespace xna {
 	class GraphicsAdapter;
 	class GraphicsDevice;
 	class GraphicsDeviceInformation;
-	class PresentationParameters;
+	struct PresentationParameters;
 	class RenderTarget2D;
 	class SwapChain;
 	class Texture;

@@ -9,7 +9,7 @@
 #include "gdeviceinfo-dx.hpp"
 #include "swapchain-dx.hpp"
 #include "window-dx.hpp"
-#include "presentparameters-dx.hpp"
+#include "graphics/presentparams.hpp"
 
 namespace xna {
 	class GraphicsDevice : public IGraphicsDevice, public std::enable_shared_from_this<GraphicsDevice> {

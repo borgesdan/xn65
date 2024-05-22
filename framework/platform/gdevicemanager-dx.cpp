@@ -3,7 +3,7 @@
 #include "platform-dx/game-dx.hpp"
 #include "platform-dx/window-dx.hpp"
 #include "platform-dx/gdeviceinfo-dx.hpp"
-#include "platform-dx/presentparameters-dx.hpp"
+#include "graphics/presentparams.hpp"
 
 namespace xna {
 	GraphicsDeviceManager::GraphicsDeviceManager(Game*& game) : _game(game) {		
@@ -12,10 +12,10 @@ namespace xna {
 		_information.GraphicsProfile(xna::GraphicsProfile::HiDef);
 
 		PresentationParameters parameters;
-		parameters.backBufferWidth = _backBufferWidth;
-		parameters.backBufferHeight = _backBufferHeight;
-		parameters.backBufferFormat = SurfaceFormat::Color;
-		parameters.fullscreen = false;
+		parameters.BackBufferWidth = _backBufferWidth;
+		parameters.BackBufferHeight = _backBufferHeight;
+		parameters.BackBufferFormat = SurfaceFormat::Color;
+		parameters.Fullscreen = false;
 		_information.PresentationParameters(parameters);
 
 		if(_game) _information.Window(_game->Window());
@@ -63,8 +63,8 @@ namespace xna {
 
 	bool GraphicsDeviceManager::CreateDevice() {
 		if (_isDeviceDirty) {
-			_information._parameters.backBufferWidth = _backBufferWidth;
-			_information._parameters.backBufferHeight = _backBufferHeight;
+			_information._parameters.BackBufferWidth = _backBufferWidth;
+			_information._parameters.BackBufferHeight = _backBufferHeight;
 		}
 
 		auto result = initWindow();
@@ -93,7 +93,7 @@ namespace xna {
 			return false;
 		}
 
-		_information._parameters.windowHandle = window->WindowHandle();
+		_information._parameters.DeviceWindowHandle = reinterpret_cast<intptr_t>(window->WindowHandle());
 
 		return true;
 	}

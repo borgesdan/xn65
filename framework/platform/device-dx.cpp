@@ -18,7 +18,10 @@ namespace xna {
 	GraphicsDevice::GraphicsDevice(GraphicsDeviceInformation const& info) {
 		_adapter = info.Adapter();
 		_presentationParameters = info.PresentationParameters();
-		_adapter->CurrentDisplayMode(_presentationParameters.backBufferFormat, _presentationParameters.backBufferWidth, _presentationParameters.backBufferHeight);
+		_adapter->CurrentDisplayMode(
+			_presentationParameters.BackBufferFormat, 
+			_presentationParameters.BackBufferWidth, 
+			_presentationParameters.BackBufferHeight);
 	}
 
 	bool GraphicsDevice::Initialize(GameWindow& gameWindow) {

@@ -7,7 +7,6 @@
 #include "gdeviceinfo-dx.hpp"
 #include "gdevicemanager-dx.hpp"
 #include "init-dx.hpp"
-#include "presentparameters-dx.hpp"
 #include "rasterizerstate-dx.hpp"
 #include "rendertarget-dx.hpp"
 #include "samplerstate-dx.hpp"

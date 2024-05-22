@@ -4,13 +4,15 @@
 #include "../default.hpp"
 
 namespace xna {
-	class IPresentationParameters {	
-		virtual Uint BackBufferWidth() const = 0;
-		virtual Uint BackBufferHeight() const = 0;
-		virtual SurfaceFormat BackBufferFormat() const = 0;
-		virtual SwapEffect PresentationSwapEffect() const = 0;
-		virtual intptr_t DeviceWindowHandle() const = 0;
-		virtual bool IsFullScreen() const = 0;
+	struct PresentationParameters {
+		constexpr PresentationParameters() = default;
+
+		Uint BackBufferWidth{ 0 };
+		Uint BackBufferHeight{ 0 };
+		SurfaceFormat BackBufferFormat{ SurfaceFormat::Color };
+		SwapEffect PresentationSwapEffect{ SwapEffect::FlipDiscard };
+		intptr_t DeviceWindowHandle{ 0 };
+		bool Fullscreen{ false };
 	};
 }
 

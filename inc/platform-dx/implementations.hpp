@@ -9,7 +9,7 @@
 #include "input/gamepad.hpp"
 #include "input/keyboard.hpp"
 #include "input/mouse.hpp"
-#include "platform-dx/presentparameters-dx.hpp"
+#include "graphics/presentparams.hpp"
 #include "platform-dx/rendertarget-dx.hpp"
 #include "platform-dx/swapchain-dx.hpp"
 
