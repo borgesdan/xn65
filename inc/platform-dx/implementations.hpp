@@ -14,6 +14,7 @@
 #include "graphics/presentparams.hpp"
 #include "platform-dx/rendertarget-dx.hpp"
 #include "platform-dx/swapchain-dx.hpp"
+#include "graphics/shader.hpp"
 
 namespace xna {
 	struct SpriteFont::PlatformImplementation {
@@ -226,5 +227,27 @@ namespace xna {
 
 		ID3D11SamplerState* _samplerState = nullptr;
 		D3D11_SAMPLER_DESC _description{};
+	};
+
+	struct VertexShader::PlatformImplementation {
+		~PlatformImplementation() {
+			if (_vertexShader) {
+				_vertexShader->Release();
+				_vertexShader = nullptr;
+			}
+		}
+
+		ID3D11VertexShader* _vertexShader = nullptr;
+	};
+
+	struct PixelShader::PlatformImplementation {
+		~PlatformImplementation() {
+			if (_pixelShader) {
+				_pixelShader->Release();
+				_pixelShader = nullptr;
+			}
+		}
+
+		ID3D11PixelShader* _pixelShader = nullptr;
 	};
 }
