@@ -221,12 +221,12 @@ namespace xna {
 			return !IsButtonDown(button);
 		}
 
-		GamePadButtons Buttons;
-		GamePadDPad Dpad;
-		bool IsConnected;
-		Ulong PackedNumber;
-		GamePadThumbSticks Sticks;
-		GamePadTriggers Triggers;
+		GamePadButtons Buttons{};
+		GamePadDPad Dpad{};
+		bool IsConnected{false};
+		Ulong PackedNumber{0};
+		GamePadThumbSticks Sticks{};
+		GamePadTriggers Triggers{};
 	};
 
 	class GamePad {

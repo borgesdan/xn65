@@ -2,17 +2,28 @@
 #define XNA_GRAPHICS_RASTERIZER_HPP
 
 #include "../default.hpp"
+#include "gresource.hpp"
 
 namespace xna {
-	class IRasterizerState {
+	class RasterizerState : GraphicsResource {
 	public:
-		virtual ~IRasterizerState() {}
-		virtual bool Initialize(xna_error_nullarg) = 0;
-		virtual bool Apply(xna_error_nullarg) = 0;
-		virtual xna::CullMode CullMode() const = 0;
-		virtual void CullMode(xna::CullMode value) = 0;
-		virtual xna::FillMode FillMode() const = 0;
-		virtual void FillMode(xna::FillMode value) = 0;
+		RasterizerState();
+		RasterizerState(sptr<GraphicsDevice> const& device);
+		~RasterizerState();
+		bool Initialize(xna_error_nullarg);
+		bool Apply(xna_error_nullarg);
+		xna::CullMode CullMode() const;
+		void CullMode(xna::CullMode value);
+		xna::FillMode FillMode() const;
+		void FillMode(xna::FillMode value);
+
+		static uptr<RasterizerState> CullNone();
+		static uptr<RasterizerState> CullClockwise();
+		static uptr<RasterizerState> CullCounterClockwise();
+
+	public:
+		struct PlatformImplementation;
+		uptr<PlatformImplementation> impl = nullptr;
 	};
 }
 

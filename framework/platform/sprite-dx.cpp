@@ -1,5 +1,5 @@
 #include "platform-dx/device-dx.hpp"
-#include "platform-dx/rasterizerstate-dx.hpp"
+#include "graphics/rasterizerstate.hpp"
 #include "platform-dx/samplerstate-dx.hpp"
 #include "platform-dx/texture-dx.hpp"
 #include "common/color.hpp"
@@ -81,7 +81,7 @@ namespace xna {
 			blendState ? blendState->impl->dxBlendState : nullptr,
 			samplerState ? samplerState->_samplerState : nullptr,
 			depthStencil ? depthStencil->impl->dxDepthStencil : nullptr,
-			rasterizerState ? rasterizerState->dxRasterizerState : nullptr,
+			rasterizerState ? rasterizerState->impl->dxRasterizerState : nullptr,
 			nullptr,
 			matrix
 		);

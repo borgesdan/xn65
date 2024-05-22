@@ -9,6 +9,7 @@
 #include "input/gamepad.hpp"
 #include "input/keyboard.hpp"
 #include "input/mouse.hpp"
+#include "graphics/rasterizerstate.hpp"
 #include "graphics/presentparams.hpp"
 #include "platform-dx/rendertarget-dx.hpp"
 #include "platform-dx/swapchain-dx.hpp"
@@ -200,5 +201,17 @@ namespace xna {
 			if (_dxMouse)
 				_dxMouse->ProcessMessage(message, wParam, lParam);
 		}
+	};
+
+	struct RasterizerState::PlatformImplementation {
+		~PlatformImplementation() {
+			if (dxRasterizerState) {
+				dxRasterizerState->Release();
+				dxRasterizerState = nullptr;
+			}
+		}
+
+		ID3D11RasterizerState* dxRasterizerState = nullptr;
+		D3D11_RASTERIZER_DESC dxDescription{};
 	};
 }
