@@ -8,7 +8,6 @@
 #include "gdevicemanager-dx.hpp"
 #include "init-dx.hpp"
 #include "rendertarget-dx.hpp"
-#include "samplerstate-dx.hpp"
 #include "shader-dx.hpp"
 #include "soundeffect-dx.hpp"
 #include "swapchain-dx.hpp"

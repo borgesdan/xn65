@@ -61,6 +61,16 @@ namespace xna {
 		return std::make_unique<_Ty>(std::forward<_Types>(_Args)...);
 	}
 
+	template <class _Ty, class... _Types>
+	inline std::shared_ptr<_Ty> snew(_Types&&... _Args) {
+		return std::make_shared<_Ty>(std::forward<_Types>(_Args)...);
+	}
+
+	template <class _Ty, class... _Types>
+	inline std::unique_ptr<_Ty> unew(_Types&&... _Args) {
+		return std::make_unique<_Ty>(std::forward<_Types>(_Args)...);
+	}
+
 //See ref: https://en.cppreference.com/w/cpp/error/assert
 #define assertm(exp, msg) assert(((void)msg, exp))
 }

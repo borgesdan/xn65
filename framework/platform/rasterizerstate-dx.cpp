@@ -4,9 +4,13 @@
 
 namespace xna {
 
-	RasterizerState::RasterizerState() : GraphicsResource(nullptr){}
+	RasterizerState::RasterizerState() : GraphicsResource(nullptr){
+		impl = unew<PlatformImplementation>();
+	}
 
-	RasterizerState::RasterizerState(sptr<GraphicsDevice> const& device) : GraphicsResource(device) {}
+	RasterizerState::RasterizerState(sptr<GraphicsDevice> const& device) : GraphicsResource(device) {
+		impl = unew<PlatformImplementation>();
+	}
 
 	RasterizerState::~RasterizerState() {
 		impl = nullptr;
@@ -17,6 +21,11 @@ namespace xna {
 		if (!impl || !m_device || !m_device->_device) {
 			xna_error_apply(err, XnaErrorCode::INVALID_OPERATION);
 			return false;
+		}
+
+		if (impl->dxRasterizerState) {
+			impl->dxRasterizerState->Release();
+			impl->dxRasterizerState = nullptr;
 		}
 
 		const auto hr = m_device->_device->CreateRasterizerState(

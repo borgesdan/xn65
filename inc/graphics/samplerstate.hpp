@@ -2,31 +2,45 @@
 #define XNA_GRAPHICS_SAMPLERSTATE_HPP
 
 #include "../default.hpp"
+#include "gresource.hpp"
 
 namespace xna {
-	class ISamplerState {
+	class SamplerState : GraphicsResource {
 	public:
-		virtual ~ISamplerState(){}
-		virtual bool Initialize(xna_error_nullarg) = 0;
-		virtual bool Apply(xna_error_nullarg) = 0;
-		virtual void Filter(TextureFilter value) = 0;
-		virtual void AddressU(TextureAddressMode value) = 0;
-		virtual void AddressV(TextureAddressMode value) = 0;
-		virtual void AddressW(TextureAddressMode value) = 0;
-		virtual void Comparison(ComparisonFunction value) = 0;
-		virtual void MipLODBias(float value) = 0;
-		virtual void MinLOD(float value) = 0;
-		virtual void MaxLOD(float value) = 0;
-		virtual void MaxAnisotropy(Uint value) = 0;
-		virtual TextureFilter Filter() const = 0;
-		virtual TextureAddressMode AddressU() const = 0;
-		virtual TextureAddressMode AddressV() const = 0;
-		virtual TextureAddressMode AddressW() const = 0;
-		virtual ComparisonFunction Comparison() const = 0;
-		virtual float MipLODBias() const = 0;
-		virtual float MinLOD() const = 0;
-		virtual float MaxLOD() const = 0;
-		virtual Uint MaxAnisotropy() const = 0;		
+		SamplerState();
+		SamplerState(sptr<GraphicsDevice> const& device);
+		~SamplerState();
+		bool Initialize(xna_error_nullarg);
+		bool Apply(xna_error_nullarg);
+		void Filter(TextureFilter value);
+		void AddressU(TextureAddressMode value);
+		void AddressV(TextureAddressMode value);
+		void AddressW(TextureAddressMode value);
+		void Comparison(ComparisonFunction value);
+		void MipLODBias(float value);
+		void MinLOD(float value);
+		void MaxLOD(float value);
+		void MaxAnisotropy(Uint value);
+		TextureFilter Filter() const;
+		TextureAddressMode AddressU() const;
+		TextureAddressMode AddressV() const;
+		TextureAddressMode AddressW() const;
+		ComparisonFunction Comparison() const;
+		float MipLODBias() const;
+		float MinLOD() const;
+		float MaxLOD() const;
+		Uint MaxAnisotropy() const;
+
+		static uptr<SamplerState> PoinWrap();
+		static uptr<SamplerState> PointClamp();
+		static uptr<SamplerState> LinearWrap();
+		static uptr<SamplerState> LinearClamp();
+		static uptr<SamplerState> AnisotropicWrap();
+		static uptr<SamplerState> AnisotropicClamp();
+
+	public:
+		struct PlatformImplementation;
+		uptr<PlatformImplementation> impl = nullptr;
 	};
 }
 

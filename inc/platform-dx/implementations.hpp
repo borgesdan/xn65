@@ -6,6 +6,7 @@
 #include "graphics/device.hpp"
 #include "graphics/displaymode.hpp"
 #include "graphics/sprite.hpp"
+#include "graphics/samplerstate.hpp"
 #include "input/gamepad.hpp"
 #include "input/keyboard.hpp"
 #include "input/mouse.hpp"
@@ -213,5 +214,17 @@ namespace xna {
 
 		ID3D11RasterizerState* dxRasterizerState = nullptr;
 		D3D11_RASTERIZER_DESC dxDescription{};
+	};
+
+	struct SamplerState::PlatformImplementation {
+		~PlatformImplementation() {
+			if (_samplerState) {
+				_samplerState->Release();
+				_samplerState = nullptr;
+			}
+		}
+
+		ID3D11SamplerState* _samplerState = nullptr;
+		D3D11_SAMPLER_DESC _description{};
 	};
 }

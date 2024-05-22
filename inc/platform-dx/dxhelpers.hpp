@@ -161,5 +161,13 @@ namespace xna {
 				return D3D11_COLOR_WRITE_ENABLE_ALL;
 			}
 		}
+
+		static constexpr void ConvertAddressMode(TextureAddressMode value, D3D11_TEXTURE_ADDRESS_MODE& target) {
+			target = static_cast<D3D11_TEXTURE_ADDRESS_MODE>(static_cast<int>(value) + 1);
+		}
+
+		static constexpr void ConvertAddressMode(D3D11_TEXTURE_ADDRESS_MODE value, TextureAddressMode& target) {
+			target = static_cast<TextureAddressMode>(value - 1);
+		}
 	};
 }

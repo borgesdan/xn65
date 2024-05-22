@@ -1,6 +1,6 @@
 #include "platform-dx/device-dx.hpp"
 #include "graphics/rasterizerstate.hpp"
-#include "platform-dx/samplerstate-dx.hpp"
+#include "graphics/samplerstate.hpp"
 #include "platform-dx/texture-dx.hpp"
 #include "common/color.hpp"
 #include "common/numerics.hpp"
@@ -79,7 +79,7 @@ namespace xna {
 		implementation->_dxspriteBatch->Begin(
 			sort,
 			blendState ? blendState->impl->dxBlendState : nullptr,
-			samplerState ? samplerState->_samplerState : nullptr,
+			samplerState ? samplerState->impl->_samplerState : nullptr,
 			depthStencil ? depthStencil->impl->dxDepthStencil : nullptr,
 			rasterizerState ? rasterizerState->impl->dxRasterizerState : nullptr,
 			nullptr,
