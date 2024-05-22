@@ -7,7 +7,6 @@
 #include "../graphics/viewport.hpp"
 #include "dxheaders.hpp"
 #include "gdeviceinfo-dx.hpp"
-#include "swapchain-dx.hpp"
 #include "window-dx.hpp"
 #include "graphics/presentparams.hpp"
 

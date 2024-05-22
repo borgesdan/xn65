@@ -9,7 +9,6 @@
 #include "init-dx.hpp"
 #include "rendertarget-dx.hpp"
 #include "soundeffect-dx.hpp"
-#include "swapchain-dx.hpp"
 #include "texture-dx.hpp"
 #include "vertexbuffer-dx.hpp"
 #include "vertexinput-dx.hpp"

@@ -4,6 +4,8 @@
 #include "platform-dx/window-dx.hpp"
 #include "platform-dx/gdeviceinfo-dx.hpp"
 #include "graphics/presentparams.hpp"
+#include "graphics/swapchain.hpp"
+#include "platform-dx/implementations.hpp"
 
 namespace xna {
 	GraphicsDeviceManager::GraphicsDeviceManager(Game*& game) : _game(game) {		
@@ -38,11 +40,11 @@ namespace xna {
 		auto& swap = _game->graphicsDevice->_swapChain;
 
 		BOOL state = false;
-		auto hr = swap->dxSwapChain->GetFullscreenState(&state, nullptr);
+		auto hr = swap->impl->dxSwapChain->GetFullscreenState(&state, nullptr);
 
 		if (FAILED(hr)) return false;
 
-		hr = swap->dxSwapChain->SetFullscreenState(!state, nullptr);
+		hr = swap->impl->dxSwapChain->SetFullscreenState(!state, nullptr);
 
 		if (FAILED(hr)) return false;
 

@@ -13,8 +13,8 @@
 #include "graphics/rasterizerstate.hpp"
 #include "graphics/presentparams.hpp"
 #include "platform-dx/rendertarget-dx.hpp"
-#include "platform-dx/swapchain-dx.hpp"
 #include "graphics/shader.hpp"
+#include "graphics/swapchain.hpp"
 
 namespace xna {
 	struct SpriteFont::PlatformImplementation {
@@ -249,5 +249,20 @@ namespace xna {
 		}
 
 		ID3D11PixelShader* _pixelShader = nullptr;
+	};
+
+	struct SwapChain::PlatformImplementation {
+		IDXGISwapChain1* dxSwapChain{ nullptr };
+		DXGI_SWAP_CHAIN_DESC1 dxDescription{};
+		DXGI_SWAP_CHAIN_FULLSCREEN_DESC dxFullScreenDescription{};
+
+		bool GetBackBuffer(ID3D11Texture2D*& texture2D) {
+			if (!dxSwapChain)
+				return false;
+
+			const auto hr = dxSwapChain->GetBuffer(0, __uuidof(texture2D), (void**)(&texture2D));
+
+			return !FAILED(hr);
+		}
 	};
 }

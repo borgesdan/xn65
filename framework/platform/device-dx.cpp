@@ -6,7 +6,6 @@
 #include "platform-dx/gdevicemanager-dx.hpp"
 #include "platform-dx/implementations.hpp"
 #include "platform-dx/rendertarget-dx.hpp"
-#include "platform-dx/swapchain-dx.hpp"
 #include "platform-dx/window-dx.hpp"
 
 namespace xna {

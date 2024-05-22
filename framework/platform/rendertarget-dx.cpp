@@ -1,7 +1,7 @@
 #include "platform-dx/rendertarget-dx.hpp"
 #include "graphics/device.hpp"
-#include "platform-dx/swapchain-dx.hpp"
 #include "platform-dx/device-dx.hpp"
+#include "platform-dx/implementations.hpp"
 
 namespace xna {
 	bool RenderTarget2D::Initialize(xna_error_ptr_arg) {
@@ -15,7 +15,7 @@ namespace xna {
 			dxTexture2D = nullptr;
 		}
 
-		if (!m_device->_swapChain->GetBackBuffer(dxTexture2D))
+		if (!m_device->_swapChain->impl->GetBackBuffer(dxTexture2D))
 			return false;
 
 		auto& dxdevice = m_device->_device;
