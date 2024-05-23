@@ -4,9 +4,10 @@
 #include "../default.hpp"
 #include "../csharp/type.hpp"
 #include "../content/typereadermanager.hpp"
+#include "../platforminit.hpp"
 
 namespace xna {
-	struct InitPlatform {
+	struct PlatformInit {
 		static void Init() {
 			InitRegisteredTypes();
 			InitActivadors();
@@ -30,7 +31,7 @@ namespace xna {
 				return reinterpret_pointer_cast<ContentTypeReader>(obj);
 				});
 		}
-	};	
+	};		
 }
 
 #endif

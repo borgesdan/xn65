@@ -62,7 +62,7 @@ namespace xna {
 
 
 int APIENTRY WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPSTR lpCmdLine, _In_ int nCmdShow) {
-	xna::InitPlatform::Init();
+	xna::Platform::Init();
 
 	auto game = xna::Game1();
 	const auto result = game.Run();

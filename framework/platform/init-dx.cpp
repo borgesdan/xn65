@@ -6,9 +6,11 @@
 #include "platform-dx/implementations.hpp"
 
 namespace xna {
-	
+	void Platform::Init() {
+		PlatformInit::Init();
+	}
 
-	void InitPlatform::InitRegisteredTypes()
+	void PlatformInit::InitRegisteredTypes()
 	{
 		insertRegisteredReader<ObjectReader>("ObjecReader");
 		insertRegisteredReader<BooleanReader>("BooleanReader");
@@ -35,7 +37,7 @@ namespace xna {
 		insertRegisteredReader<Texture2DReader>("Texture2DReader");
 	}
 
-	void InitPlatform::InitActivadors()
+	void PlatformInit::InitActivadors()
 	{
 		insertActivadorReader<ObjectReader>();		
 		insertActivadorReader<BooleanReader>();

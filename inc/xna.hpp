@@ -50,5 +50,5 @@
 #include "input/gamepad.hpp"
 #include "input/keyboard.hpp"
 #include "input/mouse.hpp"
-
+#include "platforminit.hpp"
 #include "platform-dx/xna-dx.hpp"
