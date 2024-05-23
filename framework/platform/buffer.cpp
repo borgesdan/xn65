@@ -90,4 +90,35 @@ namespace xna {
 
 		return true;
 	}
+
+	VertexBuffer::VertexBuffer() : GraphicsResource(nullptr) {
+		impl = uNew<PlatformImplementation>();
+	}
+
+	VertexBuffer::VertexBuffer(sptr<GraphicsDevice> const& device) : GraphicsResource(device) {
+		impl = uNew<PlatformImplementation>();
+	}
+
+	VertexBuffer::~VertexBuffer() {
+		impl = nullptr;
+	}
+
+	bool VertexBuffer::Apply(xna_error_ptr_arg) {
+		if (!impl || !m_device || !m_device->_context) {
+			xna_error_apply(err, XnaErrorCode::INVALID_OPERATION);
+			return false;
+		}
+
+		if (!impl->dxBuffer) {
+			xna_error_apply(err, XnaErrorCode::UNINTIALIZED_RESOURCE);
+			return false;
+		}
+
+		UINT stride = impl->size;
+		UINT offset = 0;
+		m_device->_context->IASetVertexBuffers(0, 1,
+			&impl->dxBuffer, &stride, &offset);
+
+		return true;
+	}
 }

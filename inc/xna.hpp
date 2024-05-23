@@ -45,7 +45,6 @@
 #include "graphics/sprite.hpp"
 #include "graphics/swapchain.hpp"
 #include "graphics/texture.hpp"
-#include "graphics/vertexbuffer.hpp"
 #include "graphics/vertexinput.hpp"
 #include "graphics/vertexposition.hpp"
 #include "graphics/viewport.hpp"

@@ -19,7 +19,7 @@ add_executable (xna WIN32
 "platform/vertexinput-dx.cpp"
 "platform/shader-dx.cpp"
 "platform/rasterizerstate-dx.cpp"
-"platform/vertexbuffer-dx.cpp"
+
 
 
 
