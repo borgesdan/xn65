@@ -1,9 +1,9 @@
 #include "platform-dx/init-dx.hpp"
 #include "csharp/type.hpp"
-#include "platform-dx/texture-dx.hpp"
 #include "platform-dx/content-readers/texture2Dreader-dx.hpp"
 #include "content/typereadermanager.hpp"
 #include "content/defaultreaders.hpp"
+#include "platform-dx/implementations.hpp"
 
 namespace xna {
 	

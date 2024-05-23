@@ -4,7 +4,8 @@
 #include "../../content/manager.hpp"
 #include "../../content/reader.hpp"
 #include "../../csharp/type.hpp"
-#include "../texture-dx.hpp"
+#include "graphics/texture.hpp"
+#include "platform-dx/implementations.hpp"
 
 namespace xna {
 	class Texture2DReader : public ContentTypeReaderT<PTexture2D> {

@@ -1,3 +1,6 @@
+#ifndef XNA_PLATFORM_DX_IMPLEMENTATIONS_HPP
+#define XNA_PLATFORM_DX_IMPLEMENTATIONS_HPP
+
 #include "dxheaders.hpp"
 #include "graphics/adapter.hpp"
 #include "graphics/blendstate.hpp"
@@ -12,9 +15,11 @@
 #include "input/mouse.hpp"
 #include "graphics/rasterizerstate.hpp"
 #include "graphics/presentparams.hpp"
-#include "platform-dx/rendertarget-dx.hpp"
 #include "graphics/shader.hpp"
 #include "graphics/swapchain.hpp"
+#include "graphics/texture.hpp"
+#include "graphics/rendertarget.hpp"
+#include "device-dx.hpp"
 
 namespace xna {
 	struct SpriteFont::PlatformImplementation {
@@ -26,7 +31,7 @@ namespace xna {
 	};
 
 	struct GraphicsAdapter::PlatformImplementation {
-		~PlatformImplementation(){
+		~PlatformImplementation() {
 			if (dxadapter) {
 				dxadapter->Release();
 				dxadapter = nullptr;
@@ -40,7 +45,7 @@ namespace xna {
 		sptr<DisplayMode> _currentDisplayMode = nullptr;
 
 	public:
-		bool GetOutput(UINT slot, IDXGIOutput*& output);		
+		bool GetOutput(UINT slot, IDXGIOutput*& output);
 	};
 
 	struct BlendRenderTarget {
@@ -56,7 +61,7 @@ namespace xna {
 		constexpr BlendRenderTarget() = default;
 	};
 
-	struct BlendState::PlatformImplementation {	
+	struct BlendState::PlatformImplementation {
 		~PlatformImplementation() {
 			if (dxBlendState) {
 				dxBlendState->Release();
@@ -67,8 +72,8 @@ namespace xna {
 		ID3D11BlendState* dxBlendState = nullptr;
 		D3D11_BLEND_DESC dxDescription{};
 		float blendFactor[4]{ 1.0F, 1.0F, 1.0F, 1.0F };
-		UINT sampleMask{ 0xffffffff };		
-	};	
+		UINT sampleMask{ 0xffffffff };
+	};
 
 	struct ConstantBuffer::PlatformImplementation {
 		~PlatformImplementation() {
@@ -109,7 +114,7 @@ namespace xna {
 
 		ID3D11DepthStencilState* dxDepthStencil = nullptr;
 		D3D11_DEPTH_STENCIL_DESC dxDescription{};
-	};	
+	};
 
 	struct DisplayModeRefreshRate {
 		constexpr DisplayModeRefreshRate() = default;
@@ -265,4 +270,38 @@ namespace xna {
 			return !FAILED(hr);
 		}
 	};
+
+	struct Texture2D::PlatformImplementation {
+		~PlatformImplementation() {
+			if (dxTexture2D) {
+				dxTexture2D->Release();
+				dxTexture2D = nullptr;
+			}
+
+			if (dxShaderResource) {
+				dxShaderResource->Release();
+				dxShaderResource = nullptr;
+			}
+		}
+
+		ID3D11Texture2D* dxTexture2D{ nullptr };
+		ID3D11ShaderResourceView* dxShaderResource{ nullptr };
+		D3D11_SUBRESOURCE_DATA dxSubResource{};
+		D3D11_TEXTURE2D_DESC dxDescription{};
+		D3D11_SHADER_RESOURCE_VIEW_DESC dxShaderDescription{};
+	};
+
+	struct RenderTarget2D::PlatformImplementation {
+		~PlatformImplementation() {
+			if (_renderTargetView) {
+				_renderTargetView->Release();
+				_renderTargetView = nullptr;
+			}
+		}
+
+		ID3D11RenderTargetView* _renderTargetView = nullptr;
+		D3D11_RENDER_TARGET_VIEW_DESC _renderTargetDesc{};
+	};
 }
+
+#endif

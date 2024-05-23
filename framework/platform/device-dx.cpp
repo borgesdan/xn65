@@ -1,12 +1,13 @@
 #include "common/color.hpp"
 #include "graphics/adapter.hpp"
 #include "graphics/blendstate.hpp"
+#include "graphics/rendertarget.hpp"
 #include "platform-dx/device-dx.hpp"
 #include "platform-dx/gdeviceinfo-dx.hpp"
 #include "platform-dx/gdevicemanager-dx.hpp"
 #include "platform-dx/implementations.hpp"
-#include "platform-dx/rendertarget-dx.hpp"
 #include "platform-dx/window-dx.hpp"
+#include "platform-dx/implementations.hpp"
 
 namespace xna {
 	GraphicsDevice::GraphicsDevice() {		
@@ -77,7 +78,7 @@ namespace xna {
 
 	bool GraphicsDevice::Present() {
 		const auto result = _swapChain->Present(_usevsync);
-		_context->OMSetRenderTargets(1, &_renderTarget2D->_renderTargetView, nullptr);
+		_context->OMSetRenderTargets(1, &_renderTarget2D->render_impl->_renderTargetView, nullptr);
 
 		return result;
 	}
@@ -142,7 +143,7 @@ namespace xna {
 	}
 
 	void GraphicsDevice::Clear() {
-		_context->ClearRenderTargetView(_renderTarget2D->_renderTargetView, _backgroundColor);
+		_context->ClearRenderTargetView(_renderTarget2D->render_impl->_renderTargetView, _backgroundColor);
 	}
 
 	void GraphicsDevice::Clear(Color const& color) {
@@ -153,6 +154,6 @@ namespace xna {
 		_backgroundColor[2] = v4.Z;
 		_backgroundColor[3] = v4.W;
 
-		_context->ClearRenderTargetView(_renderTarget2D->_renderTargetView, _backgroundColor);
+		_context->ClearRenderTargetView(_renderTarget2D->render_impl->_renderTargetView, _backgroundColor);
 	}
 }

@@ -1,7 +1,6 @@
 #include "platform-dx/device-dx.hpp"
 #include "graphics/rasterizerstate.hpp"
 #include "graphics/samplerstate.hpp"
-#include "platform-dx/texture-dx.hpp"
 #include "common/color.hpp"
 #include "common/numerics.hpp"
 #include "graphics/sprite.hpp"
@@ -98,7 +97,7 @@ namespace xna {
 		if (!implementation->_dxspriteBatch)
 			return;
 
-		if (!texture.dxShaderResource)
+		if (!texture.impl->dxShaderResource)
 			return;
 
 		const auto _position = XMFLOAT2(position.X, position.Y);
@@ -106,7 +105,7 @@ namespace xna {
 		XMVECTORF32 _color = { v4.X, v4.Y, v4.Z, v4.W };
 
 		implementation->_dxspriteBatch->Draw(
-			texture.dxShaderResource,
+			texture.impl->dxShaderResource,
 			_position,
 			_color
 		);
@@ -116,7 +115,7 @@ namespace xna {
 		if (!implementation->_dxspriteBatch)
 			return;
 
-		if (!texture.dxShaderResource)
+		if (!texture.impl->dxShaderResource)
 			return;
 
 		const auto _position = XMFLOAT2(position.X, position.Y);
@@ -133,7 +132,7 @@ namespace xna {
 		};
 
 		implementation->_dxspriteBatch->Draw(
-			texture.dxShaderResource,
+			texture.impl->dxShaderResource,
 			_position,
 			sourceRectangle ? &_sourceRect : nullptr,
 			_color);
@@ -143,7 +142,7 @@ namespace xna {
 		if (!implementation->_dxspriteBatch)
 			return;
 
-		if (!texture.dxShaderResource)
+		if (!texture.impl->dxShaderResource)
 			return;
 
 		const auto _position = XMFLOAT2(position.X, position.Y);
@@ -163,7 +162,7 @@ namespace xna {
 		const DxSpriteEffects _effects = static_cast<DxSpriteEffects>(effects);
 
 		implementation->_dxspriteBatch->Draw(
-			texture.dxShaderResource,
+			texture.impl->dxShaderResource,
 			_position,
 			sourceRectangle ? &_sourceRect : nullptr,
 			_color,
@@ -178,7 +177,7 @@ namespace xna {
 		if (!implementation->_dxspriteBatch)
 			return;
 
-		if (!texture.dxShaderResource)
+		if (!texture.impl->dxShaderResource)
 			return;
 
 		const auto _position = XMFLOAT2(position.X, position.Y);
@@ -199,7 +198,7 @@ namespace xna {
 		const XMFLOAT2 _scale = { scale.X, scale.Y };
 
 		implementation->_dxspriteBatch->Draw(
-			texture.dxShaderResource,
+			texture.impl->dxShaderResource,
 			_position,
 			sourceRectangle ? &_sourceRect : nullptr,
 			_color,
@@ -214,7 +213,7 @@ namespace xna {
 		if (!implementation->_dxspriteBatch)
 			return;
 
-		if (!texture.dxShaderResource)
+		if (!texture.impl->dxShaderResource)
 			return;
 
 		RECT _destinationRect{};
@@ -226,14 +225,14 @@ namespace xna {
 		const auto v4 = color.ToVector4();
 		const XMVECTORF32 _color = { v4.X, v4.Y, v4.Z, v4.W };
 
-		implementation->_dxspriteBatch->Draw(texture.dxShaderResource, _destinationRect, _color);
+		implementation->_dxspriteBatch->Draw(texture.impl->dxShaderResource, _destinationRect, _color);
 	}
 
 	void SpriteBatch::Draw(Texture2D& texture, Rectangle const& destinationRectangle, Rectangle const* sourceRectangle, Color const& color) {
 		if (!implementation->_dxspriteBatch)
 			return;
 
-		if (!texture.dxShaderResource)
+		if (!texture.impl->dxShaderResource)
 			return;
 
 		RECT _destinationRect{};
@@ -254,14 +253,14 @@ namespace xna {
 			_sourceRect.bottom = sourceRectangle->Y + sourceRectangle->Height;
 		};
 
-		implementation->_dxspriteBatch->Draw(texture.dxShaderResource, _destinationRect, sourceRectangle ? &_sourceRect : nullptr, _color);
+		implementation->_dxspriteBatch->Draw(texture.impl->dxShaderResource, _destinationRect, sourceRectangle ? &_sourceRect : nullptr, _color);
 	}
 
 	void SpriteBatch::Draw(Texture2D& texture, Rectangle const& destinationRectangle, Rectangle const* sourceRectangle, Color const& color, float rotation, Vector2 const& origin, SpriteEffects effects, float layerDepth) {
 		if (!implementation->_dxspriteBatch)
 			return;
 
-		if (!texture.dxShaderResource)
+		if (!texture.impl->dxShaderResource)
 			return;
 
 		RECT _destinationRect{};
@@ -286,7 +285,7 @@ namespace xna {
 		const auto _effects = static_cast<DxSpriteEffects>(effects);
 
 		implementation->_dxspriteBatch->Draw(
-			texture.dxShaderResource,
+			texture.impl->dxShaderResource,
 			_destinationRect,
 			sourceRectangle ? &_sourceRect : nullptr,
 			_color,

@@ -2,15 +2,21 @@
 #define XNA_GRAPHICS_RENDERTARGET_HPP
 
 #include "../default.hpp"
-
+#include "texture.hpp"
 
 namespace xna {
-	class IRenderTarget2D {
+	class RenderTarget2D : public Texture2D {
 	public:
-		virtual ~IRenderTarget2D(){}
+		RenderTarget2D();
+		RenderTarget2D(sptr<GraphicsDevice> const& device);
 
-		virtual bool Initialize(xna_error_nullarg) = 0;
-		virtual bool Apply(xna_error_nullarg) = 0;
+		~RenderTarget2D() override;
+		bool Initialize(xna_error_nullarg);
+		bool Apply(xna_error_nullarg);
+
+	public:
+		struct PlatformImplementation;
+		uptr<PlatformImplementation> render_impl = nullptr;
 	};	
 }
 
