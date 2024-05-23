@@ -285,7 +285,7 @@ namespace xna {
 			if (num < 0.0)
 				--num;
 
-			return static_cast<Int>(num);
+			return static_cast<float>(static_cast<Int>(num));
 		}
 
 		constexpr float FindSegment(float t, CurveKey& k0, CurveKey& k1) {

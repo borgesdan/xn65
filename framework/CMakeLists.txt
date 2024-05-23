@@ -16,7 +16,7 @@ add_executable (xna WIN32
 
 "csharp/stream.cpp"
 "platform/gdevicemanager-dx.cpp"
-"platform/vertexinput-dx.cpp"
+
 "platform/shader-dx.cpp"
 "platform/rasterizerstate-dx.cpp"
 

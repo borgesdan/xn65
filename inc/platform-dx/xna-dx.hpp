@@ -8,6 +8,5 @@
 #include "gdevicemanager-dx.hpp"
 #include "init-dx.hpp"
 #include "soundeffect-dx.hpp"
-#include "vertexinput-dx.hpp"
 #include "window-dx.hpp"
 #include "implementations.hpp"

@@ -121,4 +121,42 @@ namespace xna {
 
 		return true;
 	}
+
+	VertexInputLayout::VertexInputLayout() : GraphicsResource(nullptr) {
+		impl = uNew<PlatformImplementation>();
+	}
+
+	VertexInputLayout::VertexInputLayout(sptr<GraphicsDevice> const& device) : GraphicsResource(device) {
+		impl = uNew<PlatformImplementation>();
+	}
+
+	VertexInputLayout::~VertexInputLayout() {
+		impl = nullptr;
+	}
+
+	bool VertexInputLayout::Initialize(DataBuffer& blob, xna_error_ptr_arg) {
+		if (!impl || !m_device || !m_device->_device || !blob.impl->_blob) {
+			xna_error_apply(err, XnaErrorCode::INVALID_OPERATION);
+			return false;
+		}
+
+		if (impl->_inputLayout) {
+			impl->_inputLayout->Release();
+			impl->_inputLayout = nullptr;
+		}
+
+		const auto hr = m_device->_device->CreateInputLayout(
+			impl->_description.data(),
+			static_cast<UINT>(impl->_description.size()),
+			blob.impl->_blob->GetBufferPointer(),
+			blob.impl->_blob->GetBufferSize(),
+			&impl->_inputLayout);
+
+		if (FAILED(hr)) {
+			xna_error_apply(err, XnaErrorCode::FAILED_OPERATION);
+			return false;
+		}
+
+		return true;
+	}
 }

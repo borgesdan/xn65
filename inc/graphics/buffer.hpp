@@ -57,6 +57,19 @@ namespace xna {
 		struct PlatformImplementation;
 		uptr<PlatformImplementation> impl = nullptr;
 	};
+
+	class VertexInputLayout : public GraphicsResource {
+	public:
+		VertexInputLayout();
+		VertexInputLayout(sptr<GraphicsDevice> const&);		
+		~VertexInputLayout();
+
+		bool Initialize(DataBuffer& blob, xna_error_nullarg);
+
+	public:
+		struct PlatformImplementation;
+		uptr<PlatformImplementation> impl = nullptr;		
+	};
 }
 
 #endif

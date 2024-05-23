@@ -86,7 +86,7 @@ namespace xna {
 		D3D11_BUFFER_DESC _description{};
 		D3D11_SUBRESOURCE_DATA _subResource{};
 		ID3D11Buffer* _buffer = nullptr;
-		DirectX::XMMATRIX _worldViewProjection;
+		DirectX::XMMATRIX _worldViewProjection{};
 	};
 
 	struct DataBuffer::PlatformImplementation {
@@ -333,6 +333,18 @@ namespace xna {
 
 		return true;
 	}
+
+	struct VertexInputLayout::PlatformImplementation {
+		~PlatformImplementation() {
+			if (_inputLayout) {
+				_inputLayout->Release();
+				_inputLayout = nullptr;
+			}
+		}
+
+		ID3D11InputLayout* _inputLayout{ nullptr };
+		std::vector<D3D11_INPUT_ELEMENT_DESC> _description{};
+	};
 }
 
 #endif
