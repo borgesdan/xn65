@@ -9,7 +9,7 @@ namespace xna {
 	public:
 		ConstantBuffer();
 		ConstantBuffer(sptr<GraphicsDevice> const&);
-		~ConstantBuffer();
+		~ConstantBuffer() override;
 		bool Initialize(xna_error_nullarg);
 
 	public:
@@ -21,7 +21,7 @@ namespace xna {
 	public:
 		DataBuffer();
 		DataBuffer(sptr<GraphicsDevice> const&);
-		~DataBuffer();
+		~DataBuffer() override;
 		bool Initialize(xna_error_nullarg);
 
 	public:
@@ -33,7 +33,7 @@ namespace xna {
 	public:
 		IndexBuffer();
 		IndexBuffer(sptr<GraphicsDevice> const&);
-		~IndexBuffer();
+		~IndexBuffer() override;
 
 		template <typename T>
 		bool Initialize(std::vector<T> const& data, xna_error_nullarg);	

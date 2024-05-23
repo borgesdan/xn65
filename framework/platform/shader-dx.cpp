@@ -54,6 +54,14 @@ namespace xna {
         return SUCCEEDED(hr);
     }
 
+    VertexShader::~VertexShader() {
+        impl = nullptr;
+    }
+
+    PixelShader::~PixelShader() {
+        impl = nullptr;
+    }
+
     bool VertexShader::Initialize(DataBuffer& buffer, xna_error_ptr_arg)
     {
         if (!impl || !m_device || !m_device->_device || !buffer.impl->_blob) {

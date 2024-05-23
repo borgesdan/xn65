@@ -9,7 +9,7 @@ namespace xna {
 	public:
 		Shader();
 		Shader(sptr<GraphicsDevice> const& device);
-		~Shader();
+		~Shader() override {}
 		bool Initialize(DataBuffer& buffer, xna_error_nullarg);	
 		static bool CompileFromFile(WString srcFile, String entryPoint, String profile, DataBuffer& blob);
 	};
@@ -18,7 +18,7 @@ namespace xna {
 	public:
 		VertexShader();
 		VertexShader(sptr<GraphicsDevice> const& device);
-		~VertexShader();
+		~VertexShader() override;
 		bool Initialize(DataBuffer& buffer, xna_error_nullarg);
 
 	public:
@@ -30,7 +30,7 @@ namespace xna {
 	public:
 		PixelShader();
 		PixelShader(sptr<GraphicsDevice> const& device);
-		~PixelShader();
+		~PixelShader() override;
 		bool Initialize(DataBuffer& buffer, xna_error_nullarg);
 
 	public:

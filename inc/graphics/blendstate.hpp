@@ -11,7 +11,7 @@ namespace xna {
 	public:
 		BlendState();
 		BlendState(sptr<GraphicsDevice> const& device);
-		~BlendState();
+		~BlendState() override;
 		bool Initialize(xna_error_nullarg) ;
 		void AlphaToCoverageEnable(bool value) ;
 		void IndependentBlendEnable(bool value) ;

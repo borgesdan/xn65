@@ -9,7 +9,7 @@ namespace xna {
 	public:
 		SamplerState();
 		SamplerState(sptr<GraphicsDevice> const& device);
-		~SamplerState();
+		~SamplerState() override;
 		bool Initialize(xna_error_nullarg);
 		bool Apply(xna_error_nullarg);
 		void Filter(TextureFilter value);

@@ -9,7 +9,7 @@ namespace xna {
 	public:
 		RasterizerState();
 		RasterizerState(sptr<GraphicsDevice> const& device);
-		~RasterizerState();
+		~RasterizerState() override;
 		bool Initialize(xna_error_nullarg);
 		bool Apply(xna_error_nullarg);
 		xna::CullMode CullMode() const;

@@ -9,7 +9,7 @@ namespace xna {
 	public:
 		SwapChain();
 		SwapChain(sptr<GraphicsDevice> const& device);
-		~SwapChain();
+		~SwapChain() override;
 		bool Initialize(xna_error_nullarg);
 		bool Present(bool vsync);
 		bool GetBackBuffer(Texture2D& texture2D);
