@@ -59,23 +59,23 @@ namespace xna {
         
         const auto parameters = m_device->_presentationParameters;
 
-        impl->dxDescription.Width = static_cast<UINT>(parameters.BackBufferWidth);
-        impl->dxDescription.Height = static_cast<UINT>(parameters.BackBufferHeight);
-        impl->dxDescription.Format = DxHelpers::ConvertSurfaceToDXGIFORMAT(parameters.BackBufferFormat);
+        impl->dxDescription.Width = static_cast<UINT>(parameters->BackBufferWidth);
+        impl->dxDescription.Height = static_cast<UINT>(parameters->BackBufferHeight);
+        impl->dxDescription.Format = DxHelpers::ConvertSurfaceToDXGIFORMAT(parameters->BackBufferFormat);
         impl->dxDescription.SampleDesc.Count = 1;
         impl->dxDescription.SampleDesc.Quality = 0;
         impl->dxDescription.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
         impl->dxDescription.BufferCount = 2;
-        impl->dxDescription.SwapEffect = static_cast<DXGI_SWAP_EFFECT>(parameters.PresentationSwapEffect);
+        impl->dxDescription.SwapEffect = static_cast<DXGI_SWAP_EFFECT>(parameters->PresentationSwapEffect);
         impl->dxDescription.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
         impl->dxDescription.AlphaMode = DXGI_ALPHA_MODE::DXGI_ALPHA_MODE_UNSPECIFIED;
         impl->dxFullScreenDescription.RefreshRate.Numerator = 60;        
         impl->dxFullScreenDescription.RefreshRate.Denominator = 1;        
         impl->dxFullScreenDescription.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
         impl->dxFullScreenDescription.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
-        impl->dxFullScreenDescription.Windowed = !parameters.Fullscreen;
+        impl->dxFullScreenDescription.Windowed = !parameters->Fullscreen;
 
-        HWND hwnd = reinterpret_cast<HWND>(parameters.DeviceWindowHandle);
+        HWND hwnd = reinterpret_cast<HWND>(parameters->DeviceWindowHandle);
         return internalInit(*m_device, hwnd, impl->dxSwapChain, impl->dxDescription, impl->dxFullScreenDescription);
     }   
 

@@ -30,6 +30,7 @@
 //Windows
 #define NOMINMAX
 #include <Windows.h>
+#include <windowsx.h>
 #include <Windows.Foundation.h>
 #include <wrl\wrappers\corewrappers.h>
 #include <wrl\client.h>

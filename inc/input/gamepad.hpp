@@ -153,7 +153,7 @@ namespace xna {
 		bool Connected{ false };
 		Ushort Vid{ 0 };
 		Ushort Pid{ 0 };
-		GamePadId Id;
+		GamePadId Id{};
 	};
 
 	struct GamePadState {

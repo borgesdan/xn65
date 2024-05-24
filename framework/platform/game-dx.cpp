@@ -1,11 +1,9 @@
 #include "csharp/type.hpp"
 #include "game/time.hpp"
 #include "platform-dx/audioengine-dx.hpp"
-#include "platform-dx/device-dx.hpp"
 #include "platform-dx/game-dx.hpp"
 #include "platform-dx/gdevicemanager-dx.hpp"
 #include "platform-dx/implementations.hpp"
-#include "platform-dx/window-dx.hpp"
 
 namespace xna {
 	Game::Game() {
@@ -13,9 +11,9 @@ namespace xna {
 		_contentManager = New<ContentManager>("", services);
 
 		_gameWindow = New<GameWindow>();
-		_gameWindow->Color(146, 150, 154);
+		_gameWindow->impl->Color(146, 150, 154);
 		_gameWindow->Title("XN65");
-		_gameWindow->Size(
+		_gameWindow->impl->Size(
 			GraphicsDeviceManager::DefaultBackBufferWidth,
 			GraphicsDeviceManager::DefaultBackBufferHeight, false);
 
@@ -23,7 +21,7 @@ namespace xna {
 	}
 
 	void Game::Exit() {
-		_gameWindow->Close();
+		_gameWindow->impl->Close();
 	}
 
 	int Game::Run() {

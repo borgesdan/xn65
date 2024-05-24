@@ -1,8 +1,6 @@
 #include "platform-dx/gdevicemanager-dx.hpp"
 #include "platform-dx/device-dx.hpp"
 #include "platform-dx/game-dx.hpp"
-#include "platform-dx/window-dx.hpp"
-#include "platform-dx/gdeviceinfo-dx.hpp"
 #include "graphics/presentparams.hpp"
 #include "graphics/swapchain.hpp"
 #include "platform-dx/implementations.hpp"
@@ -10,17 +8,18 @@
 namespace xna {
 	GraphicsDeviceManager::GraphicsDeviceManager(Game*& game) : _game(game) {		
 		sptr<GraphicsAdapter> adp = GraphicsAdapter::DefaultAdapter();		
-		_information.Adapter(adp);
-		_information.GraphicsProfile(xna::GraphicsProfile::HiDef);
+		_information.Adapter = adp;
+		_information.Profile = xna::GraphicsProfile::HiDef;
 
-		PresentationParameters parameters;
-		parameters.BackBufferWidth = _backBufferWidth;
-		parameters.BackBufferHeight = _backBufferHeight;
-		parameters.BackBufferFormat = SurfaceFormat::Color;
-		parameters.Fullscreen = false;
-		_information.PresentationParameters(parameters);
+		auto parameters = snew<PresentationParameters>();
+		parameters->BackBufferWidth = _backBufferWidth;
+		parameters->BackBufferHeight = _backBufferHeight;
+		parameters->BackBufferFormat = SurfaceFormat::Color;
+		parameters->Fullscreen = false;
+		_information.Parameters = parameters;
 
-		if(_game) _information.Window(_game->Window());
+		if(_game) 
+			_information.Window =_game->Window();
 	}
 
 	bool GraphicsDeviceManager::Initialize() {
@@ -65,8 +64,8 @@ namespace xna {
 
 	bool GraphicsDeviceManager::CreateDevice() {
 		if (_isDeviceDirty) {
-			_information._parameters.BackBufferWidth = _backBufferWidth;
-			_information._parameters.BackBufferHeight = _backBufferHeight;
+			_information.Parameters->BackBufferWidth = _backBufferWidth;
+			_information.Parameters->BackBufferHeight = _backBufferHeight;
 		}
 
 		auto result = initWindow();
@@ -81,32 +80,32 @@ namespace xna {
 
 	bool GraphicsDeviceManager::initWindow()
 	{
-		auto window = _information.Window();
+		auto window = _information.Window;
 
 		if (!window) {
 			window = _game->Window();
-			_information.Window(window);
+			_information.Window = window;
 		}
 
-		window->Size(_backBufferWidth, _backBufferHeight);
+		window->impl->Size(_backBufferWidth, _backBufferHeight);
 
-		if (!window->Create()) {
+		if (!window->impl->Create()) {
 			MessageBox(nullptr, "Falha na criação da janela", "XN65", MB_OK);
 			return false;
 		}
 
-		_information._parameters.DeviceWindowHandle = reinterpret_cast<intptr_t>(window->WindowHandle());
+		_information.Parameters->DeviceWindowHandle = reinterpret_cast<intptr_t>(window->impl->WindowHandle());
 
 		return true;
 	}
 
 	bool GraphicsDeviceManager::initDevice()
 	{
-		auto window = _information.Window();
+		auto window = _information.Window;
 		_device = New<GraphicsDevice>(_information);
 
 		if (!_device->Initialize(*window)) {
-			MessageBox(window->WindowHandle(), "Falha na inicialização do dispositivo gráfico", "XN65", MB_OK);
+			MessageBox(window->impl->WindowHandle(), "Falha na inicialização do dispositivo gráfico", "XN65", MB_OK);
 			_device = nullptr;
 			return false;
 		}

@@ -3,11 +3,9 @@
 #include "graphics/blendstate.hpp"
 #include "graphics/rendertarget.hpp"
 #include "platform-dx/device-dx.hpp"
-#include "platform-dx/gdeviceinfo-dx.hpp"
 #include "platform-dx/gdevicemanager-dx.hpp"
 #include "platform-dx/implementations.hpp"
-#include "platform-dx/window-dx.hpp"
-#include "platform-dx/implementations.hpp"
+#include "game/gdeviceinfo.hpp"
 
 namespace xna {
 	GraphicsDevice::GraphicsDevice() {		
@@ -16,12 +14,12 @@ namespace xna {
 	}
 
 	GraphicsDevice::GraphicsDevice(GraphicsDeviceInformation const& info) {
-		_adapter = info.Adapter();
-		_presentationParameters = info.PresentationParameters();
+		_adapter = info.Adapter;
+		_presentationParameters = info.Parameters;
 		_adapter->CurrentDisplayMode(
-			_presentationParameters.BackBufferFormat, 
-			_presentationParameters.BackBufferWidth, 
-			_presentationParameters.BackBufferHeight);
+			_presentationParameters->BackBufferFormat, 
+			_presentationParameters->BackBufferWidth,
+			_presentationParameters->BackBufferHeight);
 	}
 
 	bool GraphicsDevice::Initialize(GameWindow& gameWindow) {
@@ -41,7 +39,7 @@ namespace xna {
 			static_cast<float>(bounds.Height),
 			0.0F, 1.F);
 
-		COLORREF color = gameWindow.Color();
+		COLORREF color = gameWindow.impl->Color();
 		_backgroundColor[0] = GetRValue(color) / 255.0f;
 		_backgroundColor[1] = GetGValue(color) / 255.0f;
 		_backgroundColor[2] = GetBValue(color) / 255.0f;
@@ -50,7 +48,7 @@ namespace xna {
 		_swapChain = New<xna::SwapChain>(_this);
 		_swapChain->Initialize();
 
-		hr = _factory->MakeWindowAssociation(gameWindow.WindowHandle(), DXGI_MWA_NO_ALT_ENTER);
+		hr = _factory->MakeWindowAssociation(gameWindow.impl->WindowHandle(), DXGI_MWA_NO_ALT_ENTER);
 		if (FAILED(hr)) return false;
 
 		_renderTarget2D = New<RenderTarget2D>(_this);

@@ -2,7 +2,7 @@
 #define XNA_PLATFORM_GDEVICEMANAGER_DX_HPP
 
 #include "../game/gdevicemanager.hpp"
-#include "gdeviceinfo-dx.hpp"
+#include "game/gdeviceinfo.hpp"
 
 namespace xna {
 	class GraphicsDeviceManager : public IGraphicsDeviceManager {

@@ -6,9 +6,7 @@
 #include "../graphics/presentparams.hpp"
 #include "../graphics/viewport.hpp"
 #include "dxheaders.hpp"
-#include "gdeviceinfo-dx.hpp"
-#include "window-dx.hpp"
-#include "graphics/presentparams.hpp"
+#include "game/gdeviceinfo.hpp"
 
 namespace xna {
 	class GraphicsDevice : public IGraphicsDevice, public std::enable_shared_from_this<GraphicsDevice> {
@@ -77,7 +75,7 @@ namespace xna {
 		sptr<RenderTarget2D> _renderTarget2D{ nullptr };
 		sptr<BlendState> _blendState{ nullptr };
 		xna::Viewport _viewport{};
-		xna::PresentationParameters _presentationParameters;
+		sptr<xna::PresentationParameters> _presentationParameters;
 
 	private:
 		unsigned int _createDeviceFlags{ 0 };

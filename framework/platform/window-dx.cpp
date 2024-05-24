@@ -1,19 +1,23 @@
-#include "platform-dx/window-dx.hpp"
-#include "input/gamepad.hpp"
 #include "platform-dx/implementations.hpp"
 
 namespace xna {
 	GameWindow::GameWindow() {
-		_hInstance = GetModuleHandle(NULL);
-		_windowIcon = LoadIcon(NULL, IDI_APPLICATION);
-		_windowCursor = LoadCursor(NULL, IDC_ARROW);
-		_windowStyle = static_cast<int>(GameWindowMode::Windowed);		
-		_windowCenterX = _windowWidth / 2.0F;
-		_windowCenterY = _windowHeight / 2.0F;	
+		impl = unew<PlatformImplementation>();
+
+		impl->_hInstance = GetModuleHandle(NULL);
+		impl->_windowIcon = LoadIcon(NULL, IDI_APPLICATION);
+		impl->_windowCursor = LoadCursor(NULL, IDC_ARROW);
+		impl->_windowStyle = static_cast<int>(GameWindowMode::Windowed);		
+		impl->_windowCenterX = impl->_windowWidth / 2.0F;
+		impl->_windowCenterY = impl->_windowHeight / 2.0F;	
 
 	}
 
-	void GameWindow::Position(int width, int height, bool update) {
+	GameWindow::~GameWindow() {
+		impl = nullptr;
+	}
+
+	void GameWindow::PlatformImplementation::Position(int width, int height, bool update) {
 		_windowPosX = width;
 		_windowPosY = height;
 		setCenter();
@@ -21,7 +25,7 @@ namespace xna {
 		if(update) Update();
 	}
 
-	void GameWindow::Size(int width, int height, bool update) {
+	void GameWindow::PlatformImplementation::Size(int width, int height, bool update) {
 		_windowWidth = width;
 		_windowHeight = height;
 		setPosition();
@@ -31,10 +35,12 @@ namespace xna {
 	}
 
 	void GameWindow::Title(String const& title) {
-		_windowTitle = title;
+		if (!impl) return;
+
+		impl->_windowTitle = title;
 	}	
 
-	bool GameWindow::Create() {
+	bool GameWindow::PlatformImplementation::Create() {
 		WNDCLASSEX wndClass{};
 		wndClass.cbSize = sizeof(WNDCLASSEX);
 		wndClass.style = CS_DBLCLKS | CS_OWNDC | CS_HREDRAW | CS_VREDRAW;
@@ -89,7 +95,7 @@ namespace xna {
 		return true;
 	}
 
-	bool GameWindow::Update() {
+	bool GameWindow::PlatformImplementation::Update() {
 		if (_windowStyle == static_cast<int>(GameWindowMode::Windowed)) {
 			RECT winRect = { 0, 0, _windowWidth, _windowHeight };
 
@@ -116,23 +122,29 @@ namespace xna {
 	}
 
 	String GameWindow::Title() const {
-		return _windowTitle;
+		if (!impl) return String();
+
+		return impl->_windowTitle;
 	}
 
 	Rectangle GameWindow::ClientBounds() const {
+		if (!impl) return {};
+
 		return Rectangle(
-			_windowPosX,
-			_windowPosY,
-			_windowWidth,
-			_windowHeight
+			impl->_windowPosX,
+			impl->_windowPosY,
+			impl->_windowWidth,
+			impl->_windowHeight
 		);
 	}
 
 	intptr_t GameWindow::Handle() const {
-		return reinterpret_cast<intptr_t>(_windowHandle);
+		if (!impl) return 0;
+
+		return reinterpret_cast<intptr_t>(impl->_windowHandle);
 	}
 
-	LRESULT GameWindow::WinProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
+	LRESULT GameWindow::PlatformImplementation::WinProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	{
 		switch (msg) {
 		case WM_DESTROY:
@@ -140,18 +152,18 @@ namespace xna {
 			return 0;
 		case WM_ACTIVATE:
 		case WM_ACTIVATEAPP:
-			Keyboard::impl->ProcessMessage(msg, wParam, lParam);
-			Mouse::impl->ProcessMessage(msg, wParam, lParam);
+			if(Keyboard::impl) Keyboard::impl->ProcessMessage(msg, wParam, lParam);
+			if(Mouse::impl) Mouse::impl->ProcessMessage(msg, wParam, lParam);
 			break;
 		case WM_SYSKEYDOWN:
 			if (!(wParam == VK_RETURN && (lParam & 0x60000000) == 0x20000000)) {				
-				Keyboard::impl->ProcessMessage(msg, wParam, lParam);
+				if (Keyboard::impl) Keyboard::impl->ProcessMessage(msg, wParam, lParam);
 			}			
 			break;
 		case WM_KEYDOWN:
 		case WM_KEYUP:
 		case WM_SYSKEYUP:
-			Keyboard::impl->ProcessMessage(msg, wParam, lParam);
+			if (Keyboard::impl) Keyboard::impl->ProcessMessage(msg, wParam, lParam);
 			break;
 
 		case WM_INPUT:
@@ -166,13 +178,13 @@ namespace xna {
 		case WM_XBUTTONDOWN:
 		case WM_XBUTTONUP:
 		case WM_MOUSEHOVER:
-			Mouse::impl->ProcessMessage(msg, wParam, lParam);
+			if (Mouse::impl) Mouse::impl->ProcessMessage(msg, wParam, lParam);
 			break;
 		case WM_KILLFOCUS:
-			GamePad::impl->Suspend();
+			if (GamePad::impl) GamePad::impl->Suspend();
 			break;
 		case WM_SETFOCUS:
-			GamePad::impl->Resume();
+			if (GamePad::impl) GamePad::impl->Resume();
 			break;
 		}
 		return DefWindowProc(hWnd, msg, wParam, lParam);

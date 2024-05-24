@@ -2,11 +2,11 @@
 #define XNA_PLATFORM_DX_IMPLEMENTATIONS_HPP
 
 #include "dxheaders.hpp"
+#include "platform-dx/device-dx.hpp"
 #include "graphics/adapter.hpp"
 #include "graphics/blendstate.hpp"
 #include "graphics/buffer.hpp"
 #include "graphics/depthstencilstate.hpp"
-#include "graphics/device.hpp"
 #include "graphics/displaymode.hpp"
 #include "graphics/sprite.hpp"
 #include "graphics/samplerstate.hpp"
@@ -19,7 +19,7 @@
 #include "graphics/swapchain.hpp"
 #include "graphics/texture.hpp"
 #include "graphics/rendertarget.hpp"
-#include "device-dx.hpp"
+#include "game/window.hpp"
 
 namespace xna {
 	struct SpriteFont::PlatformImplementation {
@@ -344,6 +344,118 @@ namespace xna {
 
 		ID3D11InputLayout* _inputLayout{ nullptr };
 		std::vector<D3D11_INPUT_ELEMENT_DESC> _description{};
+	};
+
+	enum class GameWindowMode : UINT {
+		Fullscreen = WS_POPUP | WS_VISIBLE,
+		Windowed = WS_OVERLAPPED | WS_SYSMENU | WS_VISIBLE,
+		Borderless = WS_EX_TOPMOST | WS_POPUP | WS_VISIBLE,
+	};
+
+	struct GameWindow::PlatformImplementation {
+	public:
+		constexpr void Mode(GameWindowMode mode) {
+			_windowStyle = static_cast<int>(mode);
+		}
+
+		constexpr GameWindowMode Mode() const {
+			return static_cast<GameWindowMode>(_windowStyle);
+		}
+
+		void Position(int width, int height, bool update = true);
+		void Size(int width, int height, bool update = true);
+
+		inline HINSTANCE HInstance() const {
+			return _hInstance;
+		}
+
+		inline HWND WindowHandle() const {
+			return _windowHandle;
+		}
+
+		constexpr int Width() const {
+			return _windowWidth;
+		}
+
+		constexpr int Height() const {
+			return _windowHeight;
+		}
+
+		inline void Icon(unsigned int icon) {
+			_windowIcon = LoadIcon(GetModuleHandle(NULL), MAKEINTRESOURCE(icon));
+		}
+
+		inline void Icon(HICON icon) {
+			_windowIcon = icon;
+		}
+
+		inline void Cursor(unsigned int cursor) {
+			_windowCursor = LoadCursor(GetModuleHandle(NULL), MAKEINTRESOURCE(cursor));
+		}
+
+		inline void Cursor(HCURSOR cursor) {
+			_windowCursor = cursor;
+		}
+
+		constexpr float CenterX() const {
+			return _windowCenterX;
+		}
+
+		constexpr float CenterY() const {
+			return _windowCenterY;
+		}
+
+		inline void CursorVisibility(bool visible) const {
+			ShowCursor(visible);
+		}
+
+		inline void Close() {
+			PostMessage(_windowHandle, WM_DESTROY, 0, 0);
+		}
+
+		constexpr COLORREF Color()	const {
+			return _windowColor;
+		}
+
+		constexpr void Color(COLORREF color) {
+			_windowColor = color;
+		}
+
+		constexpr void Color(BYTE r, BYTE g, BYTE b) {
+			_windowColor = RGB(r, g, b);
+		}
+
+		bool Create();
+		bool Update();
+
+		static LRESULT CALLBACK WinProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+
+	private:
+		friend class GameWindow;
+
+		HINSTANCE		_hInstance{ nullptr };
+		HWND			_windowHandle{ nullptr };
+		int				_windowWidth{ 800 };
+		int				_windowHeight{ 600 };
+		HICON			_windowIcon{ nullptr };
+		HCURSOR			_windowCursor{ nullptr };
+		COLORREF		_windowColor{ RGB(0,0,0) };
+		String			_windowTitle{ "Xna++ Game Development" };
+		DWORD			_windowStyle{ 0 };
+		int				_windowPosX{ 0 };
+		int				_windowPosY{ 0 };
+		float			_windowCenterX{ 0 };
+		float			_windowCenterY{ 0 };
+	
+		inline void setPosition() {
+			_windowPosX = GetSystemMetrics(SM_CXSCREEN) / 2 - _windowWidth / 2;
+			_windowPosY = GetSystemMetrics(SM_CYSCREEN) / 2 - _windowHeight / 2;
+		}
+
+		inline void setCenter() {
+			_windowCenterX = _windowWidth / 2.0f;
+			_windowCenterY = _windowHeight / 2.0f;
+		}
 	};
 }
 
