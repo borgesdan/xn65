@@ -4,8 +4,8 @@
 #include "../content/manager.hpp"
 #include "../default.hpp"
 #include "../game/game.hpp"
-#include "dx/StepTimer.hpp"
 #include "dxheaders.hpp"
+#include "platform-dx/dx/StepTimer.hpp"
 
 namespace xna {
 	class Game : public IGame, public std::enable_shared_from_this<Game> {

@@ -20,6 +20,7 @@
 #include "graphics/texture.hpp"
 #include "graphics/rendertarget.hpp"
 #include "game/window.hpp"
+#include "audio/audioengine.hpp"
 
 namespace xna {
 	struct SpriteFont::PlatformImplementation {
@@ -456,6 +457,24 @@ namespace xna {
 			_windowCenterX = _windowWidth / 2.0f;
 			_windowCenterY = _windowHeight / 2.0f;
 		}
+	};	
+
+	struct AudioEngine::PlatformImplementation {
+		PlatformImplementation() {
+			_dxAudioEngine = unew<DirectX::AudioEngine>(
+#ifdef _DEBUG
+				DirectX::AudioEngine_Debug
+#endif
+			);				
+		}
+
+		~PlatformImplementation(){
+			if (_dxAudioEngine) {
+				_dxAudioEngine->Suspend();
+			}
+		}
+
+		uptr<DirectX::AudioEngine> _dxAudioEngine = nullptr;
 	};
 }
 

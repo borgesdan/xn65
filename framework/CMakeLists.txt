@@ -41,7 +41,8 @@ add_executable (xna WIN32
 "common/gjk.cpp"
 "common/numerics.cpp" 
 "common/packedvalue.cpp" 
-"platform/buffer.cpp" )
+"platform/buffer.cpp"
+"platform/audioengine-dx.cpp" )
 
 if (CMAKE_VERSION VERSION_GREATER 3.12)
   set_property(TARGET xna PROPERTY CXX_STANDARD 20)

@@ -4,17 +4,22 @@
 #include "../default.hpp"
 
 namespace xna {
-	class IAudioEngine {
+	class AudioEngine {
 	public:
-		virtual ~IAudioEngine(){}	
-		virtual bool Reset() = 0;
-		virtual bool Resume() = 0;
-		virtual bool Suspend() = 0;
-		virtual bool Update() = 0;
-		virtual void DefaultSampleRate(int value) = 0;
-		virtual void MasterVolume(float value) = 0;
-		virtual void MasteringLimit(int limit, int loudness) = 0;
-		virtual void Reverb(AudioReverb value) = 0;
+		AudioEngine();
+		~AudioEngine();
+		bool Reset();
+		bool Resume();
+		bool Suspend();
+		bool Update();
+		void DefaultSampleRate(int value);
+		void MasterVolume(float value);
+		void MasteringLimit(int limit, int loudness);
+		void Reverb(AudioReverb value);
+
+	public:
+		struct PlatformImplementation;
+		uptr<PlatformImplementation> impl = nullptr;
 	};
 }
 

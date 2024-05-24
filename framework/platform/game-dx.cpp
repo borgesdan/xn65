@@ -1,9 +1,8 @@
 #include "csharp/type.hpp"
+#include "game/gdevicemanager.hpp"
 #include "game/time.hpp"
-#include "platform-dx/audioengine-dx.hpp"
 #include "platform-dx/game-dx.hpp"
 #include "platform-dx/implementations.hpp"
-#include "game/gdevicemanager.hpp"
 
 namespace xna {
 	Game::Game() {

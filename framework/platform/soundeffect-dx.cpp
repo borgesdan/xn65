@@ -1,15 +1,15 @@
 #include "platform-dx/soundeffect-dx.hpp"
-#include "platform-dx/audioengine-dx.hpp"
+#include "platform-dx/implementations.hpp"
 
 using DxSoundEffect = DirectX::SoundEffect;
 
 namespace xna {
 	SoundEffect::SoundEffect(AudioEngine& audioEngine, String const& fileName) {
-		if (!audioEngine._dxAudioEngine)
+		if (!audioEngine.impl->_dxAudioEngine)
 			return;
 
 		const auto file = XnaHToWString(fileName);
-		_dxSoundEffect = New<DxSoundEffect>(audioEngine._dxAudioEngine.get(), file.c_str());
+		_dxSoundEffect = New<DxSoundEffect>(audioEngine.impl->_dxAudioEngine.get(), file.c_str());
 	}
 
 	void SoundEffect::Play() {
