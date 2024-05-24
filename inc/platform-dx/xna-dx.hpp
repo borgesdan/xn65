@@ -4,7 +4,6 @@
 #include "dx/StepTimer.hpp"
 #include "dxheaders.hpp"
 #include "game-dx.hpp"
-#include "gdevicemanager-dx.hpp"
 #include "init-dx.hpp"
 #include "soundeffect-dx.hpp"
 #include "implementations.hpp"

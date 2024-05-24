@@ -8,7 +8,7 @@
 #include "dxheaders.hpp"
 
 namespace xna {
-	class Game : public IGame {
+	class Game : public IGame, public std::enable_shared_from_this<Game> {
 	public:
 		Game();		
 

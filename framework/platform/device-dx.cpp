@@ -3,9 +3,9 @@
 #include "graphics/blendstate.hpp"
 #include "graphics/rendertarget.hpp"
 #include "platform-dx/device-dx.hpp"
-#include "platform-dx/gdevicemanager-dx.hpp"
 #include "platform-dx/implementations.hpp"
 #include "game/gdeviceinfo.hpp"
+#include "game/gdevicemanager.hpp"
 
 namespace xna {
 	GraphicsDevice::GraphicsDevice() {		

@@ -2,21 +2,37 @@
 #define XNA_GAME_GRAPHICSDEVICEMANAGER_HPP
 
 #include "../default.hpp"
+#include "gdeviceinfo.hpp"
 
 namespace xna {
-	class IGraphicsDeviceManager {
+	class GraphicsDeviceManager {
 	public:
-		virtual ~IGraphicsDeviceManager(){}
-		virtual void ApplyChanges() = 0;
-		virtual bool Initialize() = 0;
-		virtual bool ToggleFullScreen() = 0;
-		virtual Int PreferredBackBufferWidth() const = 0;
-		virtual Int PreferredBackBufferHeight() const = 0;
-		virtual void PreferredBackBufferWidth(Int value) = 0;
-		virtual void PreferredBackBufferHeight(Int value) = 0;
+		GraphicsDeviceManager(sptr<Game> const& game);
+		~GraphicsDeviceManager() {}
+		void ApplyChanges();
+		bool Initialize();
+		bool ToggleFullScreen();
+		Int PreferredBackBufferWidth() const;
+		Int PreferredBackBufferHeight() const;
+		void PreferredBackBufferWidth(Int value);
+		void PreferredBackBufferHeight(Int value);
+
+	public:
+		static constexpr int DefaultBackBufferWidth = 800;
+		static constexpr int DefaultBackBufferHeight = 600;
+
 	protected:
-		virtual bool CreateDevice() = 0;
-		virtual void ChangeDevice() = 0;			
+		bool CreateDevice();
+		void ChangeDevice();
+
+	private:
+		sptr<Game> _game = nullptr;
+		Int _backBufferWidth{ DefaultBackBufferWidth };
+		Int _backBufferHeight{ DefaultBackBufferHeight };
+		bool _isDeviceDirty{ false };		
+		sptr<GraphicsDevice> _device = nullptr;
+		bool _isFullScreen{ false };
+		GraphicsDeviceInformation _information{};
 	};
 }
 
