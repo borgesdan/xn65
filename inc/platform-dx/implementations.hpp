@@ -22,6 +22,7 @@
 #include "graphics/rendertarget.hpp"
 #include "game/window.hpp"
 #include "audio/audioengine.hpp"
+#include "audio/soundeffect.hpp"
 #include "graphics/viewport.hpp"
 #include "common/color.hpp"
 #include "game/game.hpp"
@@ -468,6 +469,14 @@ namespace xna {
 		friend class Game;
 		
 		DX::StepTimer _stepTimer{};
+	};
+
+	struct SoundEffectInstance::PlatformImplementation {
+		uptr<DirectX::SoundEffectInstance> _dxInstance = nullptr;
+	};
+
+	struct SoundEffect::PlatformImplementation {
+		uptr<DirectX::SoundEffect> _dxSoundEffect = nullptr;
 	};
 
 	template <typename T>

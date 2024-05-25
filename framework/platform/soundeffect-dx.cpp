@@ -1,94 +1,105 @@
-#include "platform-dx/soundeffect-dx.hpp"
 #include "platform-dx/implementations.hpp"
 
 using DxSoundEffect = DirectX::SoundEffect;
 
 namespace xna {
+	SoundEffectInstance::SoundEffectInstance() {
+		impl = unew<PlatformImplementation>();		
+	}
+
+	SoundEffectInstance::~SoundEffectInstance() {
+		impl = nullptr;
+	}
+
 	SoundEffect::SoundEffect(AudioEngine& audioEngine, String const& fileName) {
 		if (!audioEngine.impl->_dxAudioEngine)
 			return;
 
 		const auto file = XnaHToWString(fileName);
-		_dxSoundEffect = New<DxSoundEffect>(audioEngine.impl->_dxAudioEngine.get(), file.c_str());
+		impl->_dxSoundEffect = unew<DxSoundEffect>(audioEngine.impl->_dxAudioEngine.get(), file.c_str());
+	}
+
+	SoundEffect::~SoundEffect() {
+		impl = nullptr;
 	}
 
 	void SoundEffect::Play() {
-		if (!_dxSoundEffect)
+		if (!impl->_dxSoundEffect)
 			return;
 
-		_dxSoundEffect->Play();
+		impl->_dxSoundEffect->Play();
 	}
 
 	void SoundEffect::Play(float volume, float pitch, float pan) {
-		if (!_dxSoundEffect)
+		if (!impl->_dxSoundEffect)
 			return;
 
-		_dxSoundEffect->Play(volume, pitch, pan);		
+		impl->_dxSoundEffect->Play(volume, pitch, pan);
 	}
 
-	SoundEffectInstance SoundEffect::CreateInstance() {
-		if (!_dxSoundEffect)
-			return SoundEffectInstance();
+	uptr<SoundEffectInstance> SoundEffect::CreateInstance() {
+		if (!impl->_dxSoundEffect)
+			return unew<SoundEffectInstance>();
 
-		SoundEffectInstance i{};
-		i._dxInstance = _dxSoundEffect->CreateInstance();
+		auto instance = unew<SoundEffectInstance>();
+		instance->impl->_dxInstance = impl->_dxSoundEffect->CreateInstance();
 
-		return i;
+		return instance;
 	}
 
 	void SoundEffectInstance::Play(bool loop) {
-		if (!_dxInstance)
+		if (!impl->_dxInstance)
 			return;
 
-		_dxInstance->Play(loop);
+		impl->_dxInstance->Play(loop);
 	}
 
 	void SoundEffectInstance::Stop(bool immediate) {
-		if (!_dxInstance)
+		if (!impl->_dxInstance)
 			return;
 
-		_dxInstance->Stop(immediate);
+		impl->_dxInstance->Stop(immediate);
 	}
 
 	void SoundEffectInstance::Pause() {
-		if (!_dxInstance)
+		if (!impl->_dxInstance)
 			return;
 
-		_dxInstance->Pause();
+		impl->_dxInstance->Pause();
 	}
 
 	void SoundEffectInstance::Resume() {
-		if (!_dxInstance)
+		if (!impl->_dxInstance)
 			return;
 
-		_dxInstance->Resume();
+		impl->_dxInstance->Resume();
 	}
 
 	void SoundEffectInstance::Volume(float volume) {
-		if (!_dxInstance)
+		if (!impl->_dxInstance)
 			return;
 
-		_dxInstance->SetVolume(volume);
+		impl->_dxInstance->SetVolume(volume);
 	}
 
 	void SoundEffectInstance::Pitch(float pitch) {
-		if (!_dxInstance)
+		if (!impl->_dxInstance)
 			return;
 
-		_dxInstance->SetPitch(pitch);
+		impl->_dxInstance->SetPitch(pitch);
 	}
 
 	void SoundEffectInstance::Pan(float pan) {
-		if (!_dxInstance)
+		if (!impl->_dxInstance)
 			return;
 
-		_dxInstance->SetPan(pan);
+		impl->_dxInstance->SetPan(pan);
 	}
 
 	bool SoundEffectInstance::IsLooped() {
-		if (!_dxInstance)
+		if (!impl->_dxInstance)
 			return false;
 
-		return _dxInstance->IsLooped();
+		return impl->_dxInstance->IsLooped();
 	}
 }

@@ -4,24 +4,36 @@
 #include "../default.hpp"
 
 namespace xna {
-	struct ISoundEffectInstance {
+	struct SoundEffectInstance {
 	public:
-		virtual void Play(bool loop = false) = 0;
-		virtual void Stop(bool immediate = true) = 0;
-		virtual void Pause() = 0;
-		virtual void Resume() = 0;
-		virtual void Volume(float volume) = 0;
-		virtual void Pitch(float pitch) = 0;
-		virtual void Pan(float pan) = 0;
-		virtual bool IsLooped() = 0;
+		SoundEffectInstance();
+		~SoundEffectInstance();
+
+		void Play(bool loop = false);
+		void Stop(bool immediate = true);
+		void Pause();
+		void Resume();
+		void Volume(float volume);
+		void Pitch(float pitch);
+		void Pan(float pan);
+		bool IsLooped();
+
+	public:
+		struct PlatformImplementation;
+		uptr<PlatformImplementation> impl = nullptr;
 	};
 
-	class ISoundEffect {
+	class SoundEffect {
 	public:
-		virtual ~ISoundEffect(){}
-		virtual void Play() = 0;
-		virtual void Play(float volume, float pitch, float pan) = 0;
-		virtual SoundEffectInstance CreateInstance() = 0;
+		SoundEffect(AudioEngine& audioEngine, String const& fileName);
+		~SoundEffect();
+		void Play();
+		void Play(float volume, float pitch, float pan);
+		uptr<SoundEffectInstance> CreateInstance();
+
+	public:
+		struct PlatformImplementation;
+		uptr<PlatformImplementation> impl = nullptr;
 	};
 }
 
