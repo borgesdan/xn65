@@ -88,9 +88,6 @@ namespace xna {
 	struct GamePadState;
 	struct KeyboardState;
 	struct MouseState;
-
-	//Pointer
-	using PTexture2D = std::shared_ptr<Texture2D>;
 }
 
 #endif
