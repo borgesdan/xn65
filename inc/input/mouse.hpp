@@ -4,7 +4,7 @@
 #include "../default.hpp"
 
 namespace xna {
-	struct IMouseState {
+	struct MouseState {
 		ButtonState LeftButton{ ButtonState::Released };
 		ButtonState RightButton{ ButtonState::Released };
 		ButtonState MiddleButton{ ButtonState::Released };
@@ -15,14 +15,19 @@ namespace xna {
 		int ScroolWheelValue{ 0 };
 	};
 
-	class IMouse {
+	class Mouse {
 	public:
-		virtual ~IMouse() {}
 		static MouseState GetState();
 		static bool IsConnected();
 		static bool IsVisible();
 		static void IsVisible(bool value);
-		static void ResetScrollWheel();
+		static void ResetScrollWheel();	
+
+		static void Initialize();
+
+	public:
+		struct PlatformImplementation;
+		inline static uptr<PlatformImplementation> impl = nullptr;
 	};
 }
 

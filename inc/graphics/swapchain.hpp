@@ -2,14 +2,21 @@
 #define XNA_GRAPHICS_SWAPCHAIN_HPP
 
 #include "../default.hpp"
-#include "../game/window.hpp"
+#include "gresource.hpp"
 
 namespace xna {
-	class ISwapChain {
+	class SwapChain : GraphicsResource {
 	public:
-		virtual ~ISwapChain() {}
-		virtual bool Initialize(xna_error_nullarg) = 0;
-	};	
+		SwapChain();
+		SwapChain(sptr<GraphicsDevice> const& device);
+		~SwapChain() override;
+		bool Initialize(xna_error_nullarg);
+		bool Present(bool vsync);
+		bool GetBackBuffer(Texture2D& texture2D);
+	public:
+		struct PlatformImplementation;
+		uptr<PlatformImplementation> impl = nullptr;
+	};
 }
 
 #endif

@@ -2,12 +2,40 @@
 #define XNA_GRAPHICS_SHADER_HPP
 
 #include "../default.hpp"
+#include "gresource.hpp"
 
 namespace xna {
-	class IShader {
+	class Shader : public GraphicsResource {
 	public:
-		virtual ~IShader() {}		
-		virtual bool Initialize(DataBuffer& buffer, xna_error_nullarg) = 0;
+		Shader();
+		Shader(sptr<GraphicsDevice> const& device);
+		~Shader() override {}
+		bool Initialize(DataBuffer& buffer, xna_error_nullarg);	
+		static bool CompileFromFile(WString srcFile, String entryPoint, String profile, DataBuffer& blob);
+	};
+
+	class VertexShader : public Shader {
+	public:
+		VertexShader();
+		VertexShader(sptr<GraphicsDevice> const& device);
+		~VertexShader() override;
+		bool Initialize(DataBuffer& buffer, xna_error_nullarg);
+
+	public:
+		struct PlatformImplementation;
+		uptr<PlatformImplementation> impl = nullptr;
+	};
+	
+	class PixelShader : public Shader {
+	public:
+		PixelShader();
+		PixelShader(sptr<GraphicsDevice> const& device);
+		~PixelShader() override;
+		bool Initialize(DataBuffer& buffer, xna_error_nullarg);
+
+	public:
+		struct PlatformImplementation;
+		uptr<PlatformImplementation> impl = nullptr;
 	};
 }
 

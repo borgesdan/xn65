@@ -2,26 +2,49 @@
 #define XNA_GAME_GAME_HPP
 
 #include "../default.hpp"
-#include "time.hpp"
-#include "component.hpp"
-#include "servicecontainer.hpp"
+#include "game/time.hpp"
 
 namespace xna {
-	class IGame {
+	class Game : public std::enable_shared_from_this<Game> {
 	public:
-		virtual void Exit() = 0;
-		virtual int Run() = 0;
-		virtual sptr<GameWindow> Window() = 0;
-		virtual sptr<GraphicsDevice> GetGraphicsDevice() = 0;
-		virtual sptr<GameComponentCollection> Components() = 0;
-		virtual sptr<GameServiceContainer> Services() = 0;
-		virtual sptr<ContentManager> Content() = 0;
+		Game();
+		~Game();
+		void Exit();
+		int Run();
+		sptr<GameWindow> Window();
+		sptr<GraphicsDevice> GetGraphicsDevice();
+		sptr<GameComponentCollection> Components();
+		sptr<GameServiceContainer> Services();
+		sptr<ContentManager> Content();
+		void EnableGameComponents(bool value);
 
 	protected:
-		virtual void Draw(GameTime const& gameTime) = 0;
-		virtual void Initialize() = 0;
-		virtual void LoadContent() = 0;
-		virtual void Update(GameTime const& gameTime) = 0;
+		virtual void Draw(GameTime const& gameTime);
+		virtual void Initialize();
+		virtual void LoadContent(){}
+		virtual void Update(GameTime const& gameTime);
+		int StartGameLoop();
+		void Step();
+
+	public:
+		sptr<GraphicsDevice> graphicsDevice = nullptr;
+
+	protected:
+		sptr<GameServiceContainer> services = nullptr;
+
+	private:
+		sptr<GameComponentCollection> _gameComponents = nullptr;
+		sptr<GameWindow> _gameWindow{ nullptr };
+		sptr<AudioEngine> _audioEngine = nullptr;
+		sptr<ContentManager> _contentManager;
+		std::vector<sptr<IGameComponent>> _drawableGameComponents;
+		size_t _drawableGameComponentsCount{ 0 };
+		bool _enabledGameComponents{ false };
+		GameTime _currentGameTime{};
+
+	public:
+		struct PlatformImplementation;
+		uptr<PlatformImplementation> impl = nullptr;
 	};
 }
 

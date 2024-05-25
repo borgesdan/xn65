@@ -10,13 +10,12 @@ namespace xna {
 	class Game1 : public Game {
 	public:
 		Game1() : Game() {
-			auto _game = reinterpret_cast<Game*>(this);
-			graphics = New<GraphicsDeviceManager>(_game);
-			
 			Content()->RootDirectory("Content");
 		}
 
 		void Initialize() override {
+			auto game = reinterpret_cast<Game*>(this);
+			graphics = New<GraphicsDeviceManager>(game->shared_from_this());
 			graphics->Initialize();
 
 			std::any device = graphicsDevice;
@@ -34,7 +33,7 @@ namespace xna {
 		}
 
 		void Update(GameTime const& gameTime) override {
-			if (Keyboard::GetState().IsKeyDown(Keys::Escape) || GamePad.GetState(PlayerIndex::One).IsButtonDown(Buttons::Back))
+			if (Keyboard::GetState().IsKeyDown(Keys::Escape) || GamePad::GetState(PlayerIndex::One).IsButtonDown(Buttons::Back))
 				Exit();
 
 			Game::Update(gameTime);
@@ -44,7 +43,10 @@ namespace xna {
 			graphicsDevice->Clear(Colors::CornflowerBlue);			
 
 			spriteBatch->Begin();
-			spriteBatch->Draw(*texture, Vector2(), Colors::White);
+			
+			if(texture)
+				spriteBatch->Draw(*texture, Vector2(), Colors::White);
+
 			spriteBatch->End();
 
 			Game::Draw(gameTime);
@@ -59,9 +61,9 @@ namespace xna {
 
 
 int APIENTRY WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPSTR lpCmdLine, _In_ int nCmdShow) {
-	xna::InitPlatform::Init();
+	xna::Platform::Init();
 
-	auto game = xna::Game1();
-	const auto result = game.Run();
+	auto game = snew<Game1>();
+	const auto result = game->Run();
 	return result;
 }

@@ -4,26 +4,31 @@
 #include "../default.hpp"
 
 namespace xna {
-	class IGraphicsAdapter {
+	class GraphicsAdapter {
 	public:
-		virtual ~IGraphicsAdapter() {}
+		GraphicsAdapter();
+		~GraphicsAdapter();
 
-		virtual String Description() const = 0;
-		virtual Uint DeviceId() const = 0;
-		virtual String DeviceName() const = 0;
-		virtual bool IsDefaultAdapter() const = 0;
-		virtual intptr_t MonitorHandle() const = 0;
-		virtual Uint Revision() const = 0;
-		virtual Uint SubSystemId() const = 0;
-		virtual Uint VendorId() const = 0;
-		virtual uptr<DisplayModeCollection> SupportedDisplayModes() const = 0;
-		virtual uptr<DisplayModeCollection> SupportedDisplayModes(SurfaceFormat surfaceFormat) const = 0;
-		virtual sptr<DisplayMode> CurrentDisplayMode() = 0;
-		virtual void CurrentDisplayMode(SurfaceFormat surfaceFormat, Uint width, Uint height) = 0;
+		String Description() const;
+		Uint DeviceId() const;
+		String DeviceName() const;
+		bool IsDefaultAdapter() const;
+		intptr_t MonitorHandle() const;
+		Uint Revision() const;
+		Uint SubSystemId() const;
+		Uint VendorId() const;
+		uptr<DisplayModeCollection> SupportedDisplayModes() const;
+		uptr<DisplayModeCollection> SupportedDisplayModes(SurfaceFormat surfaceFormat) const;
+		sptr<DisplayMode> CurrentDisplayMode();
+		void CurrentDisplayMode(SurfaceFormat surfaceFormat, Uint width, Uint height);
 
 		static uptr<GraphicsAdapter> DefaultAdapter();
 		static void Adapters(std::vector<sptr<GraphicsAdapter>>& adapters);
 		static void Adapters(std::vector<uptr<GraphicsAdapter>>& adapters);
+
+	public:
+		struct PlatformImplementation;
+		uptr<PlatformImplementation> impl = nullptr;
 	};
 }
 

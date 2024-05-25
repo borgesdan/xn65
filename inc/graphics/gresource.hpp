@@ -11,7 +11,7 @@ namespace xna {
 		virtual ~GraphicsResource(){}
 
 		virtual bool Bind(sptr<GraphicsDevice> const& device) {
-			if (device == m_device)
+			if (!device || device == m_device)
 				return false;
 
 			m_device = device;

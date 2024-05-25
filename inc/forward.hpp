@@ -53,6 +53,7 @@ namespace xna {
 	class IGameTime;
 	class IGameComponent;
 	class GameServiceContainer;
+	class GameComponentCollection;
 
 	//Graphics
 	class BlendState;
@@ -64,7 +65,7 @@ namespace xna {
 	class GraphicsAdapter;
 	class GraphicsDevice;
 	class GraphicsDeviceInformation;
-	class PresentationParameters;
+	struct PresentationParameters;
 	class RenderTarget2D;
 	class SwapChain;
 	class Texture;

@@ -30,7 +30,7 @@ namespace xna {
 				&& textureCoordinate == other.textureCoordinate;
 		}
 
-		VertexPositionTexture(const Vector3& position, const Vector2& textureCoordinate)
+		constexpr VertexPositionTexture(const Vector3& position, const Vector2& textureCoordinate)
 			: position(position), textureCoordinate(textureCoordinate)
 		{
 		}
@@ -49,7 +49,7 @@ namespace xna {
 				&& color == other.color;
 		}
 
-		VertexPositionColorTexture(const Vector3& position, const Vector2& textureCoodinate, const Color& color)
+		constexpr VertexPositionColorTexture(const Vector3& position, const Vector2& textureCoodinate, const Color& color)
 			: position(position), textureCoodinate(textureCoodinate), color(color)
 		{
 		}
@@ -68,7 +68,7 @@ namespace xna {
 				&& textureCoodinate == other.textureCoodinate;
 		}
 
-		VertexPositionNormalTexture(const Vector3& position, const Vector3& normal, const Vector2& textureCoodinate)
+		constexpr VertexPositionNormalTexture(const Vector3& position, const Vector3& normal, const Vector2& textureCoodinate)
 			: position(position), normal(normal), textureCoodinate(textureCoodinate)
 		{
 		}

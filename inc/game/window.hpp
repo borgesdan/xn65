@@ -1,18 +1,22 @@
 #ifndef XNA_GAME_WINDOW_HPP
 #define XNA_GAME_WINDOW_HPP
 
-#include "../enums.hpp"
+#include "../default.hpp"
 #include "../common/numerics.hpp"
 
 namespace xna {
-	class IGameWindow {
+	class GameWindow {
 	public:
-		virtual ~IGameWindow(){}
+		GameWindow();
+		~GameWindow();
+		String Title() const;
+		void Title(String const& title);
+		Rectangle ClientBounds() const;
+		intptr_t Handle() const;
 
-		virtual String Title() const = 0;
-		virtual void Title(String const& title) = 0;
-		virtual Rectangle ClientBounds() const = 0;
-		virtual intptr_t Handle() const = 0;
+	public:
+		struct PlatformImplementation;
+		uptr<PlatformImplementation> impl = nullptr;
 	};
 }
 
