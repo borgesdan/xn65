@@ -2,6 +2,7 @@
 #define XNA_PLATFORM_DX_IMPLEMENTATIONS_HPP
 
 #include "dxheaders.hpp"
+#include "dx/StepTimer.hpp"
 #include "graphics/device.hpp"
 #include "graphics/adapter.hpp"
 #include "graphics/blendstate.hpp"
@@ -23,6 +24,7 @@
 #include "audio/audioengine.hpp"
 #include "graphics/viewport.hpp"
 #include "common/color.hpp"
+#include "game/game.hpp"
 
 namespace xna {
 	struct SpriteFont::PlatformImplementation {
@@ -176,7 +178,7 @@ namespace xna {
 		}
 
 		ID3D11Buffer* dxBuffer = nullptr;
-	};	
+	};
 
 	struct Keyboard::PlatformImplementation {
 		inline static uptr<DirectX::Keyboard> _dxKeyboard = nullptr;
@@ -299,7 +301,7 @@ namespace xna {
 
 		ID3D11Buffer* dxBuffer = nullptr;
 		UINT size{ 0 };
-	};	
+	};
 
 	struct VertexInputLayout::PlatformImplementation {
 		~PlatformImplementation() {
@@ -413,7 +415,7 @@ namespace xna {
 		int				_windowPosY{ 0 };
 		float			_windowCenterX{ 0 };
 		float			_windowCenterY{ 0 };
-	
+
 		inline void setPosition() {
 			_windowPosX = GetSystemMetrics(SM_CXSCREEN) / 2 - _windowWidth / 2;
 			_windowPosY = GetSystemMetrics(SM_CYSCREEN) / 2 - _windowHeight / 2;
@@ -423,7 +425,7 @@ namespace xna {
 			_windowCenterX = _windowWidth / 2.0f;
 			_windowCenterY = _windowHeight / 2.0f;
 		}
-	};	
+	};
 
 	struct AudioEngine::PlatformImplementation {
 		PlatformImplementation() {
@@ -431,10 +433,10 @@ namespace xna {
 #ifdef _DEBUG
 				DirectX::AudioEngine_Debug
 #endif
-			);				
+			);
 		}
 
-		~PlatformImplementation(){
+		~PlatformImplementation() {
 			if (_dxAudioEngine) {
 				_dxAudioEngine->Suspend();
 			}
@@ -458,7 +460,14 @@ namespace xna {
 	private:
 		friend class GraphicsDevice;
 		float _backgroundColor[4] = { 0, 0, 0, 0 };
-		bool _usevsync{ true };		
+		bool _usevsync{ true };
+	};
+
+	struct Game::PlatformImplementation {
+	private:
+		friend class Game;
+		
+		DX::StepTimer _stepTimer{};
 	};
 
 	template <typename T>

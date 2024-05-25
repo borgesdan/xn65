@@ -1,11 +1,14 @@
 #include "csharp/type.hpp"
-#include "game/gdevicemanager.hpp"
 #include "game/time.hpp"
-#include "platform-dx/game-dx.hpp"
+#include "game/component.hpp"
+#include "game/servicecontainer.hpp"
 #include "platform-dx/implementations.hpp"
+#include "game/gdevicemanager.hpp"
+#include "content/manager.hpp"
 
 namespace xna {
 	Game::Game() {
+		impl = unew<PlatformImplementation>();
 		services = New<GameServiceContainer>();
 		_contentManager = New<ContentManager>("", services);
 
@@ -19,8 +22,48 @@ namespace xna {
 		_gameComponents = New<GameComponentCollection>();
 	}
 
+	Game::~Game() {
+		impl = nullptr;
+	}
+
 	void Game::Exit() {
 		_gameWindow->impl->Close();
+	}
+
+	int Game::StartGameLoop() {
+		MSG msg{};		
+
+		impl->_stepTimer = DX::StepTimer();
+
+		do {
+			if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
+			{
+				TranslateMessage(&msg);
+				DispatchMessage(&msg);
+			}
+			else {
+				Step();
+			}
+
+		} while (msg.message != WM_QUIT);
+
+		return static_cast<int>(msg.wParam);
+	}
+
+	void Game::Step()
+	{
+		impl->_stepTimer.Tick([&]()
+			{
+				const auto elapsed = impl->_stepTimer.GetElapsedSeconds();
+				const auto total = impl->_stepTimer.GetTotalSeconds();
+				const auto elapsedTimeSpan = TimeSpan::FromSeconds(elapsed);
+				const auto totalTimeSpan = TimeSpan::FromSeconds(total);
+				_currentGameTime.ElapsedGameTime = elapsedTimeSpan;
+				_currentGameTime.TotalGameTime = totalTimeSpan;
+				Update(_currentGameTime);
+			});
+
+		Draw(_currentGameTime);
 	}
 
 	int Game::Run() {
@@ -31,7 +74,7 @@ namespace xna {
 			return EXIT_FAILURE;
 		}
 
-		return startLoop();
+		return StartGameLoop();
 	}	
 
 	void Game::Initialize() {
@@ -105,38 +148,10 @@ namespace xna {
 		}
 	}
 
-	int Game::startLoop() {
-		MSG msg{};
-		_stepTimer = DX::StepTimer();
-
-		do {
-			if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
-			{
-				TranslateMessage(&msg);
-				DispatchMessage(&msg);
-			}
-			else {
-				step();
-			}
-
-		} while (msg.message != WM_QUIT);
-
-		return static_cast<int>(msg.wParam);
-	}
-
-	void Game::step()
-	{
-		_stepTimer.Tick([&]()
-			{
-				const auto elapsed = _stepTimer.GetElapsedSeconds();
-				const auto total = _stepTimer.GetTotalSeconds();
-				const auto elapsedTimeSpan = TimeSpan::FromSeconds(elapsed);
-				const auto totalTimeSpan = TimeSpan::FromSeconds(total);
-				_currentGameTime.ElapsedGameTime = elapsedTimeSpan;
-				_currentGameTime.TotalGameTime = totalTimeSpan;
-				Update(_currentGameTime);
-			});
-
-		Draw(_currentGameTime);
-	}	
+	sptr<GameWindow> Game::Window() { return _gameWindow; }
+	sptr<GraphicsDevice> Game::GetGraphicsDevice() { return graphicsDevice; }
+	sptr<GameComponentCollection> Game::Components() { return _gameComponents; }
+	sptr<GameServiceContainer> Game::Services() { return services; }
+	sptr<ContentManager> Game::Content() { return _contentManager; }
+	void Game::EnableGameComponents(bool value) { _enabledGameComponents = value; }
 }

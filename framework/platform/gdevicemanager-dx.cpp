@@ -1,7 +1,6 @@
 #include "game/gdevicemanager.hpp"
 #include "graphics/presentparams.hpp"
 #include "graphics/swapchain.hpp"
-#include "platform-dx/game-dx.hpp"
 #include "platform-dx/implementations.hpp"
 
 namespace xna {

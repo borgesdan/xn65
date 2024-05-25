@@ -53,6 +53,7 @@ namespace xna {
 	class IGameTime;
 	class IGameComponent;
 	class GameServiceContainer;
+	class GameComponentCollection;
 
 	//Graphics
 	class BlendState;
