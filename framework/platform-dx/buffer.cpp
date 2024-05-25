@@ -1,6 +1,6 @@
 #include "graphics/buffer.hpp"
 #include "common/numerics.hpp"
-#include "platform-dx/dxheaders.hpp"
+#include "platform-dx/headers.hpp"
 #include "platform-dx/implementations.hpp"
 
 namespace xna {

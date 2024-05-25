@@ -1,7 +1,7 @@
 #include "graphics/blendstate.hpp"
 #include "graphics/gresource.hpp"
-#include "platform-dx/dxheaders.hpp"
-#include "platform-dx/dxhelpers.hpp"
+#include "platform-dx/headers.hpp"
+#include "platform-dx/helpers.hpp"
 #include "graphics/blendstate.hpp"
 #include "platform-dx/implementations.hpp"
 

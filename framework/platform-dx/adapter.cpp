@@ -1,7 +1,7 @@
 #include "graphics/adapter.hpp"
 #include "graphics/displaymode.hpp"
-#include "platform-dx/dxheaders.hpp"
-#include "platform-dx/dxhelpers.hpp"
+#include "platform-dx/headers.hpp"
+#include "platform-dx/helpers.hpp"
 #include "platform-dx/implementations.hpp"
 #include "game/gdevicemanager.hpp"
 

@@ -1,4 +1,4 @@
-#include "platform-dx/dxhelpers.hpp"
+#include "platform-dx/helpers.hpp"
 #include "graphics/adapter.hpp"
 #include "graphics/swapchain.hpp"
 #include "platform-dx/implementations.hpp"

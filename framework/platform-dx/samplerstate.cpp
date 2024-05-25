@@ -1,7 +1,7 @@
 #include "graphics/samplerstate.hpp"
 #include "graphics/samplerstate.hpp"
 #include "platform-dx/implementations.hpp"
-#include "platform-dx/dxhelpers.hpp"
+#include "platform-dx/helpers.hpp"
 
 namespace xna {
 	SamplerState::SamplerState() : GraphicsResource(nullptr) {

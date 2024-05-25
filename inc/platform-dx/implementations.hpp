@@ -1,8 +1,8 @@
 #ifndef XNA_PLATFORM_DX_IMPLEMENTATIONS_HPP
 #define XNA_PLATFORM_DX_IMPLEMENTATIONS_HPP
 
-#include "dxheaders.hpp"
-#include "dx/StepTimer.hpp"
+#include "headers.hpp"
+#include "stepTimer.hpp"
 #include "graphics/device.hpp"
 #include "graphics/adapter.hpp"
 #include "graphics/blendstate.hpp"
