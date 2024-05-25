@@ -4,7 +4,7 @@
 
 # Add source to this project's executable.
 add_library (Xn65 STATIC 
-"../samples/xna.cpp"
+"../samples/01_blank/xna.cpp"
 "csharp/stream.cpp"
 "game/component.cpp"
 "content/manager.cpp"
