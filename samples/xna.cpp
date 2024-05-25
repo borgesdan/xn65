@@ -27,7 +27,7 @@ namespace xna {
 		void LoadContent() override {
 			spriteBatch = New<SpriteBatch>(*graphicsDevice);		
 
-			texture = Content()->Load<PTexture2D>("idle");
+			texture = Content()->Load<PTexture2D>("sampleTexture");
 
 			Game::LoadContent();
 		}

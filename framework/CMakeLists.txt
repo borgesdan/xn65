@@ -3,8 +3,8 @@
 #
 
 # Add source to this project's executable.
-add_executable (xna WIN32 
-"xna.cpp"
+add_library (Xn65 STATIC 
+"../samples/xna.cpp"
 "csharp/stream.cpp"
 "game/component.cpp"
 "content/manager.cpp"
@@ -45,11 +45,11 @@ add_executable (xna WIN32
 "platform-dx/audioengine.cpp" )
 
 if (CMAKE_VERSION VERSION_GREATER 3.12)
-  set_property(TARGET xna PROPERTY CXX_STANDARD 20)
+  set_property(TARGET Xn65 PROPERTY CXX_STANDARD 20)
 endif()
 
 # TODO: Add tests and install targets if needed.
 
 find_package(directxtk CONFIG REQUIRED)
 
-target_link_libraries(${PROJECT_NAME} D3d11.lib dxgi.lib dxguid.lib d3dcompiler.lib Microsoft::DirectXTK)
+target_link_libraries(Xn65 D3d11.lib dxgi.lib dxguid.lib d3dcompiler.lib Microsoft::DirectXTK)
