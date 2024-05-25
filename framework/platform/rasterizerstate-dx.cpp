@@ -1,6 +1,5 @@
 #include "graphics/rasterizerstate.hpp"
 #include "platform-dx/implementations.hpp"
-#include "platform-dx/device-dx.hpp"
 
 namespace xna {
 
@@ -18,7 +17,7 @@ namespace xna {
 
 	bool RasterizerState::Initialize(xna_error_ptr_arg)
 	{
-		if (!impl || !m_device || !m_device->_device) {
+		if (!impl || !m_device || !m_device->impl->_device) {
 			xna_error_apply(err, XnaErrorCode::INVALID_OPERATION);
 			return false;
 		}
@@ -28,7 +27,7 @@ namespace xna {
 			impl->dxRasterizerState = nullptr;
 		}
 
-		const auto hr = m_device->_device->CreateRasterizerState(
+		const auto hr = m_device->impl->_device->CreateRasterizerState(
 			&impl->dxDescription, 
 			&impl->dxRasterizerState);
 
@@ -42,7 +41,7 @@ namespace xna {
 
 	bool RasterizerState::Apply(xna_error_ptr_arg)
 	{
-		if (!impl || !m_device || !m_device->_context) {
+		if (!impl || !m_device || !m_device->impl->_context) {
 			xna_error_apply(err, XnaErrorCode::INVALID_OPERATION);
 			return false;
 		}
@@ -52,7 +51,7 @@ namespace xna {
 			return false;
 		}
 
-		m_device->_context->RSSetState(impl->dxRasterizerState);
+		m_device->impl->_context->RSSetState(impl->dxRasterizerState);
 
 		return true;
 	}

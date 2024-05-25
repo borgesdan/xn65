@@ -1,7 +1,6 @@
 #include "game/gdevicemanager.hpp"
 #include "graphics/presentparams.hpp"
 #include "graphics/swapchain.hpp"
-#include "platform-dx/device-dx.hpp"
 #include "platform-dx/game-dx.hpp"
 #include "platform-dx/implementations.hpp"
 
@@ -34,10 +33,10 @@ namespace xna {
 	}
 
 	bool GraphicsDeviceManager::ToggleFullScreen() {
-		if (!_game || !_game->graphicsDevice || !_game->graphicsDevice->_swapChain)
+		if (!_game || !_game->graphicsDevice || !_game->graphicsDevice->impl->_swapChain)
 			return false;
 
-		auto& swap = _game->graphicsDevice->_swapChain;
+		auto& swap = _game->graphicsDevice->impl->_swapChain;
 
 		BOOL state = false;
 		auto hr = swap->impl->dxSwapChain->GetFullscreenState(&state, nullptr);

@@ -1,5 +1,4 @@
 #include "graphics/samplerstate.hpp"
-#include "platform-dx/device-dx.hpp"
 #include "graphics/samplerstate.hpp"
 #include "platform-dx/implementations.hpp"
 #include "platform-dx/dxhelpers.hpp"
@@ -19,7 +18,7 @@ namespace xna {
 
 	bool SamplerState::Initialize(xna_error_ptr_arg)
 	{
-		if (!impl || !m_device || !m_device->_device) {
+		if (!impl || !m_device || !m_device->impl->_device) {
 			xna_error_apply(err, XnaErrorCode::INVALID_OPERATION);
 			return false;
 		}
@@ -29,7 +28,7 @@ namespace xna {
 			impl->_samplerState = nullptr;
 		}
 
-		const auto hr = m_device->_device->CreateSamplerState(
+		const auto hr = m_device->impl->_device->CreateSamplerState(
 			&impl->_description,
 			&impl->_samplerState);
 
@@ -43,7 +42,7 @@ namespace xna {
 
 	bool SamplerState::Apply(xna_error_ptr_arg)
 	{
-		if (!impl || !m_device || !m_device->_context) {
+		if (!impl || !m_device || !m_device->impl->_context) {
 			xna_error_apply(err, XnaErrorCode::INVALID_OPERATION);
 			return false;
 		}
@@ -53,7 +52,7 @@ namespace xna {
 			return false;
 		}
 
-		m_device->_context->PSSetSamplers(0, 1, &impl->_samplerState);
+		m_device->impl->_context->PSSetSamplers(0, 1, &impl->_samplerState);
 
 		return true;
 	}

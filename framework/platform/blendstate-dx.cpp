@@ -1,6 +1,5 @@
 #include "graphics/blendstate.hpp"
 #include "graphics/gresource.hpp"
-#include "platform-dx/device-dx.hpp"
 #include "platform-dx/dxheaders.hpp"
 #include "platform-dx/dxhelpers.hpp"
 #include "graphics/blendstate.hpp"
@@ -21,7 +20,7 @@ namespace xna {
 
 	bool BlendState::Initialize(xna_error_ptr_arg)
 	{
-		if (!m_device || !m_device->_device) {
+		if (!m_device || !m_device->impl->_device) {
 			xna_error_apply(err, XnaErrorCode::INVALID_OPERATION);
 			return false;
 		}
@@ -31,7 +30,7 @@ namespace xna {
 			impl->dxBlendState = nullptr;
 		}
 
-		const auto hr = m_device->_device->CreateBlendState(
+		const auto hr = m_device->impl->_device->CreateBlendState(
 			&impl->dxDescription,
 			&impl->dxBlendState);
 
@@ -44,7 +43,7 @@ namespace xna {
 	}
 
 	bool BlendState::Apply(xna_error_ptr_arg) {
-		if (!m_device || !m_device->_context) {
+		if (!m_device || !m_device->impl->_context) {
 			xna_error_apply(err, XnaErrorCode::INVALID_OPERATION);
 			return false;
 		}
@@ -54,7 +53,7 @@ namespace xna {
 			return false;
 		}
 		
-        m_device->_context->OMSetBlendState(
+        m_device->impl->_context->OMSetBlendState(
 			impl->dxBlendState, 
 			impl->blendFactor, 
 			impl->sampleMask);

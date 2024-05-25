@@ -2,7 +2,7 @@
 #define XNA_PLATFORM_DX_IMPLEMENTATIONS_HPP
 
 #include "dxheaders.hpp"
-#include "platform-dx/device-dx.hpp"
+#include "graphics/device.hpp"
 #include "graphics/adapter.hpp"
 #include "graphics/blendstate.hpp"
 #include "graphics/buffer.hpp"
@@ -21,6 +21,8 @@
 #include "graphics/rendertarget.hpp"
 #include "game/window.hpp"
 #include "audio/audioengine.hpp"
+#include "graphics/viewport.hpp"
+#include "common/color.hpp"
 
 namespace xna {
 	struct SpriteFont::PlatformImplementation {
@@ -174,24 +176,7 @@ namespace xna {
 		}
 
 		ID3D11Buffer* dxBuffer = nullptr;
-	};
-
-	template <typename T>
-	inline bool IndexBuffer::Initialize(std::vector<T> const& data, xna_error_ptr_arg) {
-		if (!impl || !m_device || !m_device->_device || data.empty()) {
-			xna_error_apply(err, XnaErrorCode::INVALID_OPERATION);
-			return false;
-		}
-
-		const auto hr = DirectX::CreateStaticBuffer(m_device->_device, data.data(), data.size(), sizeof(T), D3D11_BIND_INDEX_BUFFER, &impl->dxBuffer);
-
-		if (FAILED(hr)) {
-			xna_error_apply(err, XnaErrorCode::FAILED_OPERATION);
-			return false;
-		}
-
-		return true;
-	}
+	};	
 
 	struct Keyboard::PlatformImplementation {
 		inline static uptr<DirectX::Keyboard> _dxKeyboard = nullptr;
@@ -314,26 +299,7 @@ namespace xna {
 
 		ID3D11Buffer* dxBuffer = nullptr;
 		UINT size{ 0 };
-	};
-
-	template <typename T>
-	inline bool VertexBuffer::Initialize(std::vector<T> const& data, xna_error_ptr_arg) {
-		if (!impl || !m_device || !m_device->_device || data.empty()) {
-			xna_error_apply(err, XnaErrorCode::INVALID_OPERATION);
-			return false;
-		}
-
-		const auto hr = DirectX::CreateStaticBuffer(m_device->_device, data.data(), data.size(), sizeof(T), D3D11_BIND_VERTEX_BUFFER, &impl->dxBuffer);
-
-		if (FAILED(hr)) {
-			xna_error_apply(err, XnaErrorCode::FAILED_OPERATION);
-			return false;
-		}
-
-		impl->size = sizeof(T);
-
-		return true;
-	}
+	};	
 
 	struct VertexInputLayout::PlatformImplementation {
 		~PlatformImplementation() {
@@ -476,6 +442,60 @@ namespace xna {
 
 		uptr<DirectX::AudioEngine> _dxAudioEngine = nullptr;
 	};
+
+	struct GraphicsDevice::PlatformImplementation {
+		ID3D11Device* _device{ nullptr };
+		ID3D11DeviceContext* _context{ nullptr };
+		IDXGIFactory1* _factory = nullptr;
+		sptr<SwapChain> _swapChain{ nullptr };
+		sptr<GraphicsAdapter> _adapter{ nullptr };
+		sptr<RenderTarget2D> _renderTarget2D{ nullptr };
+		sptr<BlendState> _blendState{ nullptr };
+		xna::Viewport _viewport{};
+		sptr<xna::PresentationParameters> _presentationParameters;
+		D3D_FEATURE_LEVEL _featureLevel{ D3D_FEATURE_LEVEL::D3D_FEATURE_LEVEL_11_0 };
+
+	private:
+		friend class GraphicsDevice;
+		float _backgroundColor[4] = { 0, 0, 0, 0 };
+		bool _usevsync{ true };		
+	};
+
+	template <typename T>
+	inline bool IndexBuffer::Initialize(std::vector<T> const& data, xna_error_ptr_arg) {
+		if (!impl || !m_device || !m_device->impl->_device || data.empty()) {
+			xna_error_apply(err, XnaErrorCode::INVALID_OPERATION);
+			return false;
+		}
+
+		const auto hr = DirectX::CreateStaticBuffer(m_device->impl->_device, data.data(), data.size(), sizeof(T), D3D11_BIND_INDEX_BUFFER, &impl->dxBuffer);
+
+		if (FAILED(hr)) {
+			xna_error_apply(err, XnaErrorCode::FAILED_OPERATION);
+			return false;
+		}
+
+		return true;
+	}
+
+	template <typename T>
+	inline bool VertexBuffer::Initialize(std::vector<T> const& data, xna_error_ptr_arg) {
+		if (!impl || !m_device || !m_device->impl->_device || data.empty()) {
+			xna_error_apply(err, XnaErrorCode::INVALID_OPERATION);
+			return false;
+		}
+
+		const auto hr = DirectX::CreateStaticBuffer(m_device->impl->_device, data.data(), data.size(), sizeof(T), D3D11_BIND_VERTEX_BUFFER, &impl->dxBuffer);
+
+		if (FAILED(hr)) {
+			xna_error_apply(err, XnaErrorCode::FAILED_OPERATION);
+			return false;
+		}
+
+		impl->size = sizeof(T);
+
+		return true;
+	}
 }
 
 #endif

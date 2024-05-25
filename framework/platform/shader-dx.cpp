@@ -1,4 +1,3 @@
-#include "platform-dx/device-dx.hpp"
 #include "graphics/buffer.hpp"
 #include "platform-dx/implementations.hpp"
 #include "graphics/shader.hpp"
@@ -64,7 +63,7 @@ namespace xna {
 
     bool VertexShader::Initialize(DataBuffer& buffer, xna_error_ptr_arg)
     {
-        if (!impl || !m_device || !m_device->_device || !buffer.impl->_blob) {
+        if (!impl || !m_device || !m_device->impl->_device || !buffer.impl->_blob) {
             xna_error_apply(err, XnaErrorCode::INVALID_OPERATION);
             return false;
         }
@@ -74,7 +73,7 @@ namespace xna {
             impl->_vertexShader = nullptr;
         }
 
-        const auto hr = m_device->_device->CreateVertexShader(
+        const auto hr = m_device->impl->_device->CreateVertexShader(
             buffer.impl->_blob->GetBufferPointer(),
             buffer.impl->_blob->GetBufferSize(),
             NULL,
@@ -90,7 +89,7 @@ namespace xna {
 
     bool PixelShader::Initialize(DataBuffer& buffer, xna_error_ptr_arg)
     {
-        if (!impl || !m_device || !m_device->_device || !buffer.impl->_blob) {
+        if (!impl || !m_device || !m_device->impl->_device || !buffer.impl->_blob) {
             xna_error_apply(err, XnaErrorCode::INVALID_OPERATION);
             return false;
         }
@@ -100,7 +99,7 @@ namespace xna {
             impl->_pixelShader = nullptr;
         }
 
-        const auto hr = m_device->_device->CreatePixelShader(
+        const auto hr = m_device->impl->_device->CreatePixelShader(
             buffer.impl->_blob->GetBufferPointer(),
             buffer.impl->_blob->GetBufferSize(),
             NULL,

@@ -1,8 +1,8 @@
-#include "platform-dx/device-dx.hpp"
 #include "platform-dx/dxhelpers.hpp"
 #include "graphics/adapter.hpp"
 #include "graphics/swapchain.hpp"
 #include "platform-dx/implementations.hpp"
+#include "graphics/device.hpp"
 
 namespace xna {
     SwapChain::SwapChain() : GraphicsResource(nullptr) {
@@ -18,7 +18,7 @@ namespace xna {
     }
 
     static bool internalInit(GraphicsDevice& device, HWND windowHandle, IDXGISwapChain1*& swapChain, DXGI_SWAP_CHAIN_DESC1 const& desc, DXGI_SWAP_CHAIN_FULLSCREEN_DESC const& fdesc) {
-        if (!device._device || !windowHandle)
+        if (!device.impl->_device || !windowHandle)
             return false;
         
         if (swapChain) {
@@ -40,7 +40,7 @@ namespace xna {
         if (FAILED(hr)) return false;
 
         dxFactory2->CreateSwapChainForHwnd(
-            device._device,
+            device.impl->_device,
             windowHandle,
             &desc,
             &fdesc,
@@ -52,12 +52,12 @@ namespace xna {
     }
 
     bool SwapChain::Initialize(xna_error_ptr_arg) {
-        if (!impl || !m_device || !m_device->_device) {
+        if (!impl || !m_device || !m_device->impl->_device) {
             xna_error_apply(err, XnaErrorCode::INVALID_OPERATION);
             return false;
         }
         
-        const auto parameters = m_device->_presentationParameters;
+        const auto parameters = m_device->impl->_presentationParameters;
 
         impl->dxDescription.Width = static_cast<UINT>(parameters->BackBufferWidth);
         impl->dxDescription.Height = static_cast<UINT>(parameters->BackBufferHeight);

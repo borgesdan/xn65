@@ -1,7 +1,6 @@
 #include "graphics/buffer.hpp"
 #include "common/numerics.hpp"
 #include "platform-dx/dxheaders.hpp"
-#include "platform-dx/device-dx.hpp"
 #include "platform-dx/implementations.hpp"
 
 namespace xna {
@@ -19,7 +18,7 @@ namespace xna {
 
 	bool ConstantBuffer::Initialize(xna_error_ptr_arg)
 	{
-		if (!m_device || !m_device->_device) {
+		if (!m_device || !m_device->impl->_device) {
 			xna_error_apply(err, XnaErrorCode::INVALID_OPERATION);
 			return false;
 		}
@@ -29,7 +28,7 @@ namespace xna {
 			impl->_buffer = nullptr;
 		}
 
-		const auto hr = m_device->_device->CreateBuffer(
+		const auto hr = m_device->impl->_device->CreateBuffer(
 			&impl->_description,
 			&impl->_subResource,
 			&impl->_buffer);
@@ -55,7 +54,7 @@ namespace xna {
 	}
 
 	bool DataBuffer::Initialize(xna_error_ptr_arg) {
-		if (!m_device || !m_device->_device) {
+		if (!m_device || !m_device->impl->_device) {
 			xna_error_apply(err, XnaErrorCode::INVALID_OPERATION);
 			return false;
 		}
@@ -81,12 +80,12 @@ namespace xna {
 	}
 
 	bool IndexBuffer::Apply(xna_error_ptr_arg) {
-		if (!m_device || !m_device->_context || !impl || !impl->dxBuffer) {
+		if (!m_device || !m_device->impl->_context || !impl || !impl->dxBuffer) {
 			xna_error_apply(err, XnaErrorCode::INVALID_OPERATION);
 			return false;
 		}
 
-		m_device->_context->IASetIndexBuffer(impl->dxBuffer, DXGI_FORMAT_R16_UINT, 0);
+		m_device->impl->_context->IASetIndexBuffer(impl->dxBuffer, DXGI_FORMAT_R16_UINT, 0);
 
 		return true;
 	}
@@ -104,7 +103,7 @@ namespace xna {
 	}
 
 	bool VertexBuffer::Apply(xna_error_ptr_arg) {
-		if (!impl || !m_device || !m_device->_context) {
+		if (!impl || !m_device || !m_device->impl->_context) {
 			xna_error_apply(err, XnaErrorCode::INVALID_OPERATION);
 			return false;
 		}
@@ -116,7 +115,7 @@ namespace xna {
 
 		UINT stride = impl->size;
 		UINT offset = 0;
-		m_device->_context->IASetVertexBuffers(0, 1,
+		m_device->impl->_context->IASetVertexBuffers(0, 1,
 			&impl->dxBuffer, &stride, &offset);
 
 		return true;
@@ -135,7 +134,7 @@ namespace xna {
 	}
 
 	bool VertexInputLayout::Initialize(DataBuffer& blob, xna_error_ptr_arg) {
-		if (!impl || !m_device || !m_device->_device || !blob.impl->_blob) {
+		if (!impl || !m_device || !m_device->impl->_device || !blob.impl->_blob) {
 			xna_error_apply(err, XnaErrorCode::INVALID_OPERATION);
 			return false;
 		}
@@ -145,7 +144,7 @@ namespace xna {
 			impl->_inputLayout = nullptr;
 		}
 
-		const auto hr = m_device->_device->CreateInputLayout(
+		const auto hr = m_device->impl->_device->CreateInputLayout(
 			impl->_description.data(),
 			static_cast<UINT>(impl->_description.size()),
 			blob.impl->_blob->GetBufferPointer(),

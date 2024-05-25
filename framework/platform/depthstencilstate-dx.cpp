@@ -1,4 +1,3 @@
-#include "platform-dx/device-dx.hpp"
 #include "graphics/depthstencilstate.hpp"
 #include "platform-dx/dxheaders.hpp"
 #include "platform-dx/implementations.hpp"
@@ -43,7 +42,7 @@ namespace xna {
 
 	bool DepthStencilState::Initialize(xna_error_ptr_arg)
 	{
-		if (!m_device || !m_device->_device) {
+		if (!m_device || !m_device->impl->_device) {
 			xna_error_apply(err, XnaErrorCode::INVALID_OPERATION);
 			return false;
 		}
@@ -53,7 +52,7 @@ namespace xna {
 			impl->dxDepthStencil = nullptr;
 		}
 
-		const auto hr = m_device->_device->CreateDepthStencilState(
+		const auto hr = m_device->impl->_device->CreateDepthStencilState(
 			&impl->dxDescription,
 			&impl->dxDepthStencil);
 
@@ -67,7 +66,7 @@ namespace xna {
 
 	bool DepthStencilState::Apply(xna_error_ptr_arg)
 	{
-		if (!m_device || !m_device->_context) {
+		if (!m_device || !m_device->impl->_context) {
 			xna_error_apply(err, XnaErrorCode::INVALID_OPERATION);
 			return false;
 		}
@@ -77,7 +76,7 @@ namespace xna {
 			return false;
 		}
 
-		m_device->_context->OMSetDepthStencilState(impl->dxDepthStencil, 0);
+		m_device->impl->_context->OMSetDepthStencilState(impl->dxDepthStencil, 0);
 
 		return true;
 	}

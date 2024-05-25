@@ -1,29 +1,27 @@
 #ifndef XNA_GRAPHICS_DEVICE_HPP
 #define XNA_GRAPHICS_DEVICE_HPP
 
-#include "../enums.hpp"
-#include "../forward.hpp"
-#include "../game/window.hpp"
-#include "../types.hpp"
-#include "adapter.hpp"
-#include "rendertarget.hpp"
-#include "swapchain.hpp"
-#include "viewport.hpp"
-#include "blendstate.hpp"
+#include "../default.hpp"
 
 namespace xna {
-	class IGraphicsDevice {
+	class GraphicsDevice : public std::enable_shared_from_this<GraphicsDevice> {
 	public:
-		virtual ~IGraphicsDevice() {}
-		virtual void Clear() = 0;
-		virtual void Clear(Color const& color) = 0;
-		virtual bool Initialize(GameWindow& gameWindow) = 0;
-		virtual bool Present() = 0;
-		virtual sptr<GraphicsAdapter> Adapter() const = 0;
-		virtual void Adapter(sptr<GraphicsAdapter> const& adapter) = 0;
-		virtual xna::Viewport Viewport() const = 0;
-		virtual void Viewport(xna::Viewport const& viewport) = 0;
-		virtual void UseVSync(bool use) = 0;		
+		GraphicsDevice();
+		GraphicsDevice(GraphicsDeviceInformation const& info);
+		~GraphicsDevice();
+		void Clear();
+		void Clear(Color const& color);
+		bool Initialize(GameWindow& gameWindow);
+		bool Present();
+		sptr<GraphicsAdapter> Adapter() const;
+		void Adapter(sptr<GraphicsAdapter> const& adapter);
+		xna::Viewport Viewport() const;
+		void Viewport(xna::Viewport const& viewport);
+		void UseVSync(bool use);
+
+	public:
+		struct PlatformImplementation;
+		uptr<PlatformImplementation> impl = nullptr;
 	};
 }
 

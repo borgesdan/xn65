@@ -1,4 +1,3 @@
-#include "platform-dx/device-dx.hpp"
 #include "graphics/rasterizerstate.hpp"
 #include "graphics/samplerstate.hpp"
 #include "common/color.hpp"
@@ -24,7 +23,7 @@ namespace xna {
 	{
 		const auto wString = XnaHToWString(fontFileName);
 		implementation = uNew<PlatformImplementation>();
-		implementation->_dxSpriteFont = New<DxSpriteFont>(device._device, wString.c_str());
+		implementation->_dxSpriteFont = New<DxSpriteFont>(device.impl->_device, wString.c_str());
 	}
 
 	SpriteFont::~SpriteFont() {}
@@ -47,11 +46,11 @@ namespace xna {
 	}
 
 	SpriteBatch::SpriteBatch(GraphicsDevice& device) {
-		if (!device._context)
+		if (!device.impl->_context)
 			return;
 
 		implementation = uNew<PlatformImplementation>();
-		implementation->_dxspriteBatch = New<DxSpriteBatch>(device._context);
+		implementation->_dxspriteBatch = New<DxSpriteBatch>(device.impl->_context);
 
 		Viewport(device.Viewport());
 	}
