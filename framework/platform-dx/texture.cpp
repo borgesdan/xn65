@@ -353,4 +353,26 @@ namespace xna {
 
 		return texture2d;
 	}	
+
+	Int Texture2D::Width() const {
+		if (!impl) return 0;
+
+		return static_cast<Int>(impl->dxDescription.Width);
+	}
+
+	Int Texture2D::Height() const {
+		if (!impl) return 0;
+
+		return static_cast<Int>(impl->dxDescription.Height);
+	}
+
+	Rectangle Texture2D::Bounds() const {
+		if (!impl) return {};
+
+		return Rectangle(
+			0, 0,
+			static_cast<Int>(impl->dxDescription.Width),
+			static_cast<Int>(impl->dxDescription.Height)
+		);
+	}
 }

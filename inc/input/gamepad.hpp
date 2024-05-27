@@ -193,21 +193,21 @@ namespace xna {
 			case xna::Buttons::BigButton:
 				return this->Buttons.BigButton == ButtonState::Pressed;
 			case xna::Buttons::LeftThumbstickLeft:
-				return this->Sticks.Left().X < 0.5F;
+				return this->ThumbSticks.Left().X < 0.5F;
 			case xna::Buttons::LeftThumbstickRight:
-				return this->Sticks.Left().X > 0.5F;
+				return this->ThumbSticks.Left().X > 0.5F;
 			case xna::Buttons::LeftThumbstickDown:
-				return this->Sticks.Left().Y > 0.5F;
+				return this->ThumbSticks.Left().Y > 0.5F;
 			case xna::Buttons::LeftThumbstickUp:
-				return this->Sticks.Left().Y < 0.5F;
+				return this->ThumbSticks.Left().Y < 0.5F;
 			case xna::Buttons::RightThumbstickLeft:
-				return this->Sticks.Right().X < 0.5F;
+				return this->ThumbSticks.Right().X < 0.5F;
 			case xna::Buttons::RightThumbstickRight:
-				return this->Sticks.Right().X > 0.5F;
+				return this->ThumbSticks.Right().X > 0.5F;
 			case xna::Buttons::RightThumbstickDown:
-				return this->Sticks.Right().Y > 0.5F;
+				return this->ThumbSticks.Right().Y > 0.5F;
 			case xna::Buttons::RightThumbstickUp:
-				return this->Sticks.Right().Y < 0.5F;
+				return this->ThumbSticks.Right().Y < 0.5F;
 			case xna::Buttons::LeftTrigger:
 				return this->Triggers.Left() > 0.5F;
 			case xna::Buttons::RightTrigger:
@@ -225,7 +225,7 @@ namespace xna {
 		GamePadDPad Dpad{};
 		bool IsConnected{false};
 		Ulong PackedNumber{0};
-		GamePadThumbSticks Sticks{};
+		GamePadThumbSticks ThumbSticks{};
 		GamePadTriggers Triggers{};
 	};
 

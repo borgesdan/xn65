@@ -35,6 +35,8 @@ namespace xna {
 		struct PlatformImplementation;
 		uptr<PlatformImplementation> impl = nullptr;
 	};
+
+	using PSoundEffect = sptr<SoundEffect>;
 }
 
 #endif

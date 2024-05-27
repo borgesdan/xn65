@@ -10,6 +10,7 @@ namespace xna {
 	Game::Game() {
 		impl = unew<PlatformImplementation>();
 		services = New<GameServiceContainer>();
+		auto iservice = reinterpret_pointer_cast<IServiceProvider>(services);
 		_contentManager = New<ContentManager>("", services);
 
 		_gameWindow = New<GameWindow>();

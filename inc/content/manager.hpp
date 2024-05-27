@@ -14,12 +14,12 @@ namespace xna {
 	public:
 		friend class ContentReader;
 
-		ContentManager(String const& rootDirectory, sptr<GameServiceContainer> const& services) : 
+		ContentManager(String const& rootDirectory, sptr<IServiceProvider> const& services) : 
 			_rootDirectory(rootDirectory){
 			_services = services;
 		};		
 
-		static sptr<GameServiceContainer> Services() {
+		static sptr<IServiceProvider> Services() {
 			return _services;
 		}
 
@@ -65,7 +65,7 @@ namespace xna {
 		std::vector<Byte> byteBuffer;
 		
 		inline const static String contentExtension = ".xnb";
-		inline static sptr<GameServiceContainer> _services = nullptr;
+		inline static sptr<IServiceProvider> _services = nullptr;
 	};
 }
 

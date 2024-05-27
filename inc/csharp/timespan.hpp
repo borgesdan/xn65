@@ -144,6 +144,9 @@ namespace xna {
 
 		//TODO: Not implemented.
 		//static constexpr TimeSpan FromMinutes(int64_t minutes, int64_t seconds = 0, int64_t milliseconds = 0, int64_t microseconds = 0);
+		static constexpr TimeSpan FromSeconds(int seconds) {
+			return FromSeconds(static_cast<int64_t>(seconds));
+		}
 
 		static constexpr TimeSpan FromSeconds(int64_t seconds) {
 			return FromUnits(seconds, TicksPerSecond, MinSeconds, MaxSeconds);
@@ -292,11 +295,11 @@ namespace xna {
 			return a.Divide(b);
 		}
 
-		friend TimeSpan operator<(TimeSpan const& a, TimeSpan const& b) {
+		friend bool operator<(TimeSpan const& a, TimeSpan const& b) {
 			return a._ticks < b._ticks;
 		}
 
-		friend TimeSpan operator<=(TimeSpan const& a, TimeSpan const& b) {
+		friend bool operator<=(TimeSpan const& a, TimeSpan const& b) {
 			return a._ticks <= b._ticks;
 		}
 
