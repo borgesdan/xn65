@@ -1,3 +1,5 @@
+#ifndef XNA_PLATFORM_DX_SLEPTIME_HPP
+#define XNA_PLATFORM_DX_SLEPTIME_HPP
 //
 // StepTimer.h - A simple timer that provides elapsed time information
 //
@@ -10,7 +12,7 @@
 #include <exception>
 
 
-namespace DX
+namespace xna
 {
     // Helper class for animation and simulation timing.
     class StepTimer
@@ -189,3 +191,5 @@ namespace DX
         uint64_t m_targetElapsedTicks;
     };
 }
+
+#endif

@@ -468,7 +468,7 @@ namespace xna {
 	private:
 		friend class Game;
 		
-		DX::StepTimer _stepTimer{};
+		xna::StepTimer _stepTimer{};
 	};
 
 	struct SoundEffectInstance::PlatformImplementation {

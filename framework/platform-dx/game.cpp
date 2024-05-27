@@ -34,7 +34,7 @@ namespace xna {
 	int Game::StartGameLoop() {
 		MSG msg{};		
 
-		impl->_stepTimer = DX::StepTimer();
+		impl->_stepTimer = xna::StepTimer();
 
 		do {
 			if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
