@@ -1,5 +1,5 @@
-#ifndef XNA_PLATFORM_DX_SLEPTIME_HPP
-#define XNA_PLATFORM_DX_SLEPTIME_HPP
+#ifndef XNA_PLATFORM_DX_STEPTIMER_HPP
+#define XNA_PLATFORM_DX_STEPTIMER_HPP
 //
 // StepTimer.h - A simple timer that provides elapsed time information
 //
@@ -10,7 +10,7 @@
 #include <cmath>
 #include <cstdint>
 #include <exception>
-
+#include "headers.hpp"
 
 namespace xna
 {

@@ -1,11 +1,10 @@
-#ifndef XNA_PLATFORM_CONTENTREADERS_TEXTURE2D_HPP
-#define XNA_PLATFORM_CONTENTREADERS_TEXTURE2D_HPP
+#ifndef XNA_GRAPHICS_READERS_TEXTURE2D_HPP
+#define XNA_GRAPHICS_READERS_TEXTURE2D_HPP
 
-#include "../../content/manager.hpp"
-#include "../../content/reader.hpp"
-#include "../../csharp/type.hpp"
+#include "content/manager.hpp"
+#include "content/reader.hpp"
+#include "csharp/type.hpp"
 #include "graphics/texture.hpp"
-#include "platform-dx/implementations.hpp"
 
 namespace xna {
 	class Texture2DReader : public ContentTypeReaderT<PTexture2D> {
