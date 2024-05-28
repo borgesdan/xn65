@@ -1,13 +1,8 @@
 #include "platform-dx/implementations.hpp"
 
 namespace xna {
-	AudioEngine::AudioEngine()
-	{
+	void AudioEngine::Initialize() {
 		impl = unew<PlatformImplementation>();
-	}
-
-	AudioEngine::~AudioEngine() {
-		impl = nullptr;
 	}
 
 	bool AudioEngine::Reset() {

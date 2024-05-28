@@ -11,12 +11,12 @@ namespace xna {
 		impl = nullptr;
 	}
 
-	SoundEffect::SoundEffect(AudioEngine& audioEngine, String const& fileName) {
-		if (!audioEngine.impl->_dxAudioEngine)
+	SoundEffect::SoundEffect(String const& fileName) {
+		if (!AudioEngine::impl || !AudioEngine::impl->_dxAudioEngine)
 			return;
 
 		const auto file = XnaHToWString(fileName);
-		impl->_dxSoundEffect = unew<DxSoundEffect>(audioEngine.impl->_dxAudioEngine.get(), file.c_str());
+		impl->_dxSoundEffect = unew<DxSoundEffect>(AudioEngine::impl->_dxAudioEngine.get(), file.c_str());
 	}
 
 	SoundEffect::~SoundEffect() {

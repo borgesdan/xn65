@@ -25,7 +25,8 @@ namespace xna {
 
 	class SoundEffect {
 	public:
-		SoundEffect(AudioEngine& audioEngine, String const& fileName);
+		SoundEffect();
+		SoundEffect(String const& fileName);
 		~SoundEffect();
 		void Play();
 		void Play(float volume, float pitch, float pan);
