@@ -1,6 +1,7 @@
 #include "platform-dx/init.hpp"
 #include "csharp/type.hpp"
 #include "graphics/readers/texture2D.hpp"
+#include "audio/readers/soundeffect.hpp"
 #include "content/typereadermanager.hpp"
 #include "content/defaultreaders.hpp"
 #include "platform-dx/implementations.hpp"
@@ -47,6 +48,7 @@ namespace xna {
 		insertRegisteredReader<Vector3Reader>("Vector3Reader");
 		insertRegisteredReader<Vector4Reader>("Vector4Reader");
 		insertRegisteredReader<Texture2DReader>("Texture2DReader");
+		insertRegisteredReader<SoundEffect>("SoundEffectReader");
 	}
 
 	void PlatformInit::InitActivadors()
@@ -74,5 +76,6 @@ namespace xna {
 		insertActivadorReader<Vector3Reader>();
 		insertActivadorReader<Vector4Reader>();
 		insertActivadorReader<Texture2DReader>();
+		insertActivadorReader<SoundEffect>();
 	}
 }

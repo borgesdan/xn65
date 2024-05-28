@@ -11,6 +11,9 @@ namespace xna {
 		impl = nullptr;
 	}
 
+	SoundEffect::SoundEffect() {
+	}
+
 	SoundEffect::SoundEffect(String const& fileName) {
 		if (!AudioEngine::impl || !AudioEngine::impl->_dxAudioEngine)
 			return;
@@ -19,8 +22,37 @@ namespace xna {
 		impl->_dxSoundEffect = unew<DxSoundEffect>(AudioEngine::impl->_dxAudioEngine.get(), file.c_str());
 	}
 
-	SoundEffect::~SoundEffect() {
-		impl = nullptr;
+	SoundEffect::SoundEffect(
+		std::vector<Byte> format,
+		std::vector<Byte> data,
+		Int loopStart,
+		Int loopLength,
+		TimeSpan const& duration) {
+		if (!AudioEngine::impl || !AudioEngine::impl->_dxAudioEngine)
+			return;
+
+		auto wavData = unew<Byte[]>(data.size());
+		for (size_t i = 0; i < data.size(); ++i)
+			wavData[i] = data[i];
+
+		auto wavFormat = reinterpret_cast<WAVEFORMATEX*>(format.data());
+		auto startAudio = wavData.get() + sizeof(WAVEFORMATEX);
+		/*auto se = new DxSoundEffect(
+			AudioEngine::impl->_dxAudioEngine.get(),
+			wavData,
+			wavFormat,
+			startAudio,
+			data.size(),
+			loopStart,
+			loopLength);*/
+		impl->_dxSoundEffect = unew<DxSoundEffect>(
+			AudioEngine::impl->_dxAudioEngine.get(),
+			wavData,
+			wavFormat,
+			startAudio,
+			data.size(),
+			loopStart,
+			loopLength);
 	}
 
 	void SoundEffect::Play() {

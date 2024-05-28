@@ -12,7 +12,13 @@ namespace xna {
 		SoundEffectReader() : ContentTypeReaderT(typeof<SoundEffect>()) {}
 
 		PSoundEffect Read(ContentReader& input, PSoundEffect& existingInstance) override {
-			return nullptr;
+			const auto count1 = input.ReadInt32();
+			auto format = input.ReadBytes(count1);
+			auto count2 = input.ReadInt32();
+			auto data = input.ReadBytes(count2);
+			auto loopStart = input.ReadInt32();
+			auto loopLength = input.ReadInt32();
+			auto num = input.ReadInt32();
 		}
 	};
 }

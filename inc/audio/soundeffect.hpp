@@ -27,7 +27,12 @@ namespace xna {
 	public:
 		SoundEffect();
 		SoundEffect(String const& fileName);
-		~SoundEffect();
+		SoundEffect(
+			std::vector<Byte> format,
+			std::vector<Byte> data,
+			Int loopStart,
+			Int loopLength,
+			TimeSpan const& duration);
 		void Play();
 		void Play(float volume, float pitch, float pan);
 		uptr<SoundEffectInstance> CreateInstance();
