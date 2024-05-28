@@ -80,6 +80,7 @@ namespace xna {
 		}
 		catch (std::exception& e) {
 			MessageBox(nullptr, e.what(), "XN65", MB_OK);
+			return EXIT_FAILURE;
 		}		
 	}	
 

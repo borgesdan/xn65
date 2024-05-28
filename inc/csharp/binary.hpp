@@ -32,7 +32,15 @@ namespace xna {
 		Int Read(std::vector<Byte>& buffer, size_t index, size_t count, xna_error_nullarg);
 
 		std::vector<Byte> ReadBytes(size_t count, xna_error_nullarg);
-
+		
+		// Reads a 32-bit integer in compressed format.
+		// This function may throw a std::format_error exception or returns -1 if stream is null.
+		Int Read7BitEncodedInt() noexcept(false);		
+		
+		
+		// Reads a 64-bit integer in compressed format.
+		// This function may throw a std::format_error exception or returns -1 if stream is null.		
+		Long Read7BitEncodedInt64() noexcept(false);
 	private:
 		static constexpr int maxCharBytesSize = 128;
 		static constexpr int bufferLength = 16;
@@ -45,12 +53,8 @@ namespace xna {
 		bool m2BytesPerChar{ false };
 
 	protected:
-		Int InternalReadOneChar(xna_error_nullarg);
-
-		void FillBuffer(Int numBytes, xna_error_nullarg);
-
-		Int Read7BitEncodedInt(xna_error_nullarg);
-
+		Int InternalReadOneChar();		
+		void FillBuffer(Int numBytes) noexcept(false);
 		Int InternalReadChars(Char* buffer, size_t bufferSize, size_t index, size_t count, xna_error_nullarg);
 	};
 
