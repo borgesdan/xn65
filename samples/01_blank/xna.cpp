@@ -25,10 +25,7 @@ namespace xna {
 		}
 
 		void LoadContent() override {
-			spriteBatch = New<SpriteBatch>(*graphicsDevice);					
-
-			auto effect = Content()->Load<PSoundEffect>("ExitReached");
-
+			spriteBatch = New<SpriteBatch>(*graphicsDevice);
 			Game::LoadContent();
 		}
 

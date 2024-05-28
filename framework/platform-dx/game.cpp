@@ -68,14 +68,19 @@ namespace xna {
 	}
 
 	int Game::Run() {
-		Initialize();
+		try {
+			Initialize();
 
-		if (graphicsDevice == nullptr) {
-			MessageBox(nullptr, "O dispositivo gráfico não foi inicializado corretamente", "XN65", MB_OK);
-			return EXIT_FAILURE;
+			if (graphicsDevice == nullptr) {
+				MessageBox(nullptr, "O dispositivo gráfico não foi inicializado corretamente", "XN65", MB_OK);
+				return EXIT_FAILURE;
+			}
+
+			return StartGameLoop();
 		}
-
-		return StartGameLoop();
+		catch (std::exception& e) {
+			MessageBox(nullptr, e.what(), "XN65", MB_OK);
+		}		
 	}	
 
 	void Game::Initialize() {	
