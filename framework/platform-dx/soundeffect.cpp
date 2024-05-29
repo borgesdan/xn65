@@ -1,16 +1,18 @@
 #include "platform-dx/implementations.hpp"
+#include "csharp/stream.hpp"
 
 using DxSoundEffect = DirectX::SoundEffect;
 
 namespace xna {
 	SoundEffectInstance::SoundEffectInstance() {
-		impl = unew<PlatformImplementation>();		
+		impl = unew<PlatformImplementation>();
 	}
 
 	SoundEffectInstance::~SoundEffectInstance() {
 		impl = nullptr;
 	}
 
+	//Remover posteriormente
 	SoundEffect::SoundEffect() {
 	}
 
@@ -23,36 +25,64 @@ namespace xna {
 	}
 
 	SoundEffect::SoundEffect(
-		std::vector<Byte> format,
-		std::vector<Byte> data,
+		std::vector<Byte> const& format,
+		std::vector<Byte> const& data,
 		Int loopStart,
 		Int loopLength,
+		//We must evaluate how to use the time duration
 		TimeSpan const& duration) {
 		if (!AudioEngine::impl || !AudioEngine::impl->_dxAudioEngine)
-			return;
+			return;			
+		
+		//We expect 'format' to always be 16 bytes
+		MemoryStream stream(format);
+		WORD word = 0;
+		DWORD dword = 0;
+
+		auto bWord = reinterpret_cast<Byte*>(&word);
+		auto bDword = reinterpret_cast<Byte*>(&dword);
+
+		stream.Read(bWord, 2, 0, 2);
+		auto tag = word;
+		stream.Read(bWord, 2, 0, 2);
+		auto channels = word;
+		stream.Read(bDword, 4, 0, 4);
+		auto samplesPerSec = dword;
+		stream.Read(bDword, 4, 0, 4);
+		auto bytesPerSec = dword;
+		stream.Read(bWord, 2, 0, 2);
+		auto blockAlign = word;
+		stream.Read(bWord, 2, 0, 2);
+		auto bitsPerSample = word;
+		stream.Read(bWord, 2, 0, 2);
+		auto cbSize = word;
 
 		auto wavData = unew<Byte[]>(data.size());
 		for (size_t i = 0; i < data.size(); ++i)
 			wavData[i] = data[i];
 
-		auto wavFormat = reinterpret_cast<WAVEFORMATEX*>(format.data());
-		auto startAudio = wavData.get() + sizeof(WAVEFORMATEX);
-		/*auto se = new DxSoundEffect(
+		auto wfx = reinterpret_cast<WAVEFORMATEX*>(wavData.get());
+		wfx->wFormatTag = tag;
+		wfx->nChannels = channels;
+		wfx->nSamplesPerSec = samplesPerSec;
+		wfx->nAvgBytesPerSec = bytesPerSec;
+		wfx->nBlockAlign = blockAlign;
+		wfx->wBitsPerSample = bitsPerSample;
+		wfx->cbSize = cbSize;
+
+		auto startAudio = wavData.get();
+		
+		auto se = unew<DxSoundEffect>(
 			AudioEngine::impl->_dxAudioEngine.get(),
 			wavData,
-			wavFormat,
-			startAudio,
-			data.size(),
-			loopStart,
-			loopLength);*/
-		impl->_dxSoundEffect = unew<DxSoundEffect>(
-			AudioEngine::impl->_dxAudioEngine.get(),
-			wavData,
-			wavFormat,
+			wfx,
 			startAudio,
 			data.size(),
 			loopStart,
 			loopLength);
+
+		impl = unew<PlatformImplementation>();
+		impl->_dxSoundEffect = std::move(se);
 	}
 
 	void SoundEffect::Play() {

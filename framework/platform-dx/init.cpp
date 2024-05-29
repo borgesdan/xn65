@@ -48,7 +48,7 @@ namespace xna {
 		insertRegisteredReader<Vector3Reader>("Vector3Reader");
 		insertRegisteredReader<Vector4Reader>("Vector4Reader");
 		insertRegisteredReader<Texture2DReader>("Texture2DReader");
-		insertRegisteredReader<SoundEffect>("SoundEffectReader");
+		insertRegisteredReader<SoundEffectReader>("SoundEffectReader");
 	}
 
 	void PlatformInit::InitActivadors()
@@ -76,6 +76,6 @@ namespace xna {
 		insertActivadorReader<Vector3Reader>();
 		insertActivadorReader<Vector4Reader>();
 		insertActivadorReader<Texture2DReader>();
-		insertActivadorReader<SoundEffect>();
+		insertActivadorReader<SoundEffectReader>();
 	}
 }

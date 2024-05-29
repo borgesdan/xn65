@@ -5,6 +5,7 @@
 #include "content/reader.hpp"
 #include "csharp/type.hpp"
 #include "audio/soundeffect.hpp"
+#include "csharp/timespan.hpp"
 
 namespace xna {
 	class SoundEffectReader : public ContentTypeReaderT<PSoundEffect> {
@@ -19,6 +20,9 @@ namespace xna {
 			auto loopStart = input.ReadInt32();
 			auto loopLength = input.ReadInt32();
 			auto num = input.ReadInt32();
+
+			auto sf = snew<SoundEffect>(format, data, loopStart, loopLength, TimeSpan::FromMilliseconds((double)num));
+			return sf;
 		}
 	};
 }
