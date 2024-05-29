@@ -1,8 +1,3 @@
-/*
-	TimeSpan in C++
-	Source code: https://source.dot.net/#System.Private.CoreLib/src/libraries/System.Private.CoreLib/src/System/TimeSpan.cs,865ef7b89f41b632 
-*/
-
 #ifndef XNA_CSHARP_TIMESPAN_HPP
 #define XNA_CSHARP_TIMESPAN_HPP
 
@@ -11,6 +6,8 @@
 #include <cmath>
 
 namespace xna {
+	//A port of the System.TimeSpan
+	//TimeSpan represents a duration of time.A TimeSpan can be negative or positive.
 	struct TimeSpan {
 		static constexpr int64_t NanosecondsPerTick = 100;
 		static constexpr int64_t TicksPerMicrosecond = 10;
@@ -49,7 +46,7 @@ namespace xna {
 		static constexpr int64_t MinDays = MinTicks / TicksPerDay;
 		static constexpr int64_t MaxDays = MaxTicks / TicksPerDay;
 		static constexpr int64_t TicksPerTenthSecond = TicksPerMillisecond * 100;
-
+		
 		static constexpr TimeSpan Zero() { return TimeSpan(); }
 		static constexpr TimeSpan MaxValue() { return TimeSpan(MaxTicks); }
 		static constexpr TimeSpan MinValue() { return TimeSpan(MinTicks); }
