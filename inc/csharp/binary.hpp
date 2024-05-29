@@ -84,10 +84,20 @@ namespace xna {
 	//A simplified port of the BinaryWriter class.
 	class BinaryWriter {
 	public:
-		BinaryWriter(sptr<Stream> const& stream) : _stream(stream), _buffer(16) {
+		BinaryWriter(sptr<Stream> const& stream) {
+			if (!stream)
+				throw std::invalid_argument("stream is null.");
+
+			_stream = stream;
+			_buffer = std::vector<Byte>(16);
 		}
 
+		//Sets the position within the current stream.
 		Long Seek(Int offset, SeekOrigin origin);
+
+		//
+		// Writes a value to the current stream.
+		//
 
 		void Write(bool value);
 		void Write(Byte value);
@@ -108,12 +118,14 @@ namespace xna {
 		void Write(std::string const& value);
 		void Write(const char* _string, size_t stringLength);
 
-	public:
-		sptr<Stream> _stream = nullptr;
+		//Writes a 32-bit integer in a compressed format.
+		void Write7BitEncodedInt(Int value);
+		
+		//void Write7BitEncodedInt64(Long value);	
 
 	private:
+		sptr<Stream> _stream = nullptr;
 		std::vector<Byte> _buffer;
-		void Write7BitEncodedInt(Int value);
 	};
 }
 
