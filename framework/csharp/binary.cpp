@@ -563,10 +563,10 @@ namespace xna {
 	void BinaryWriter::Write7BitEncodedInt(Int value)
 	{
 		Uint num;
-		for (num = (Uint)value; num >= (Uint)128U; num >>= 7)
-			Write((Byte)(num | (Uint)128U));
+		for (num = static_cast<Uint>(value); num >= static_cast<Uint>(128U); num >>= 7)
+			Write(static_cast<Byte>(num | static_cast<Uint>(128U)));
 
-		Write((Byte)num);
+		Write(static_cast<Byte>(num));
 	}
 
 	void BinaryWriter::Write(Long value)
