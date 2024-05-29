@@ -12,29 +12,29 @@ namespace xna {
 	void LzxDecoderStream::Close()
 	{
 	}
-	Long LzxDecoderStream::Seek(Long offset, SeekOrigin const& origin, xna_error_ptr_arg)
+	Long LzxDecoderStream::Seek(Long offset, SeekOrigin const& origin)
 	{
 		return Long();
 	}
-	Int LzxDecoderStream::Read(Byte* buffer, Int bufferLength, Int offset, Int count, xna_error_ptr_arg)
+	Int LzxDecoderStream::Read(Byte* buffer, Int bufferLength, Int offset, Int count)
 	{
-		return decompressedStream->Read(buffer, bufferLength, offset, count, err);
+		return decompressedStream->Read(buffer, bufferLength, offset, count);
 	}
-	Int LzxDecoderStream::Read(std::vector<Byte>& buffer, Int offset, Int count, xna_error_ptr_arg)
+	Int LzxDecoderStream::Read(std::vector<Byte>& buffer, Int offset, Int count)
 	{
-		return decompressedStream->Read(buffer, offset, count, err);
+		return decompressedStream->Read(buffer, offset, count);
 	}
-	Int LzxDecoderStream::ReadByte(xna_error_ptr_arg)
+	Int LzxDecoderStream::ReadByte()
 	{
 		return Int();
 	}
-	void LzxDecoderStream::Write(Byte const* buffer, Int bufferLength, Int offset, Int count, xna_error_ptr_arg)
+	void LzxDecoderStream::Write(Byte const* buffer, Int bufferLength, Int offset, Int count)
 	{
 	}
-	void LzxDecoderStream::Write(std::vector<Byte> const& buffer, Int offset, Int count, xna_error_ptr_arg)
+	void LzxDecoderStream::Write(std::vector<Byte> const& buffer, Int offset, Int count)
 	{
 	}
-	void LzxDecoderStream::WriteByte(Byte value, xna_error_ptr_arg)
+	void LzxDecoderStream::WriteByte(Byte value)
 	{
 	}
 }

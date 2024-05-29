@@ -5,7 +5,7 @@
 #include "../default.hpp"
 
 namespace xna {
-	//A simplified port of the BinaryReader class.
+	//A simplified port of the System.IO.BinaryReader class.
 	class BinaryReader {
 	public:
 		BinaryReader(sptr<Stream> const& input) {
@@ -81,7 +81,7 @@ namespace xna {
 		//bool m2BytesPerChar{ false };
 	};
 
-	//A simplified port of the BinaryWriter class.
+	//A simplified port of the System.IO.BinaryWriter class.
 	class BinaryWriter {
 	public:
 		BinaryWriter(sptr<Stream> const& stream) {

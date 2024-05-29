@@ -8,22 +8,41 @@
 #include <filesystem>
 
 namespace xna {
+	//A simplified port of the System.IO.Stream.
+	//Provides a generic view of a sequence of bytes. This is an abstract class.
 	class Stream {
 	public:
 		virtual ~Stream(){}
+		//Gets the length in bytes of the stream.
 		virtual Int Length() = 0;
-		virtual Long Position() = 0;		
+		//Gets the position within the current stream.
+		virtual Long Position() = 0;
+		//Closes the current stream and releases any resources
 		virtual void Close() = 0;
 		virtual bool IsClosed() = 0;
-		virtual Long Seek(Long offset, SeekOrigin const& origin, xna_error_nullarg) = 0;
-		virtual Int Read(Byte* buffer, Int bufferLength, Int offset, Int count, xna_error_nullarg) = 0;
-		virtual Int Read(std::vector<Byte>& buffer, Int offset, Int count, xna_error_nullarg) = 0;
-		virtual Int ReadByte(xna_error_nullarg) = 0;
-		virtual void Write(Byte const* buffer, Int bufferLength, Int offset, Int count, xna_error_nullarg) = 0;
-		virtual void Write(std::vector<Byte> const& buffer, Int offset, Int count, xna_error_nullarg) = 0;
-		virtual void WriteByte(Byte value, xna_error_nullarg) = 0;
+		//Sets the position within the current stream.
+		virtual Long Seek(Long offset, SeekOrigin const& origin) = 0;
+		
+		//
+		//Reads a sequence of bytes from the current stream and advances the position within the stream by the number of bytes read.
+		//		
+		virtual Int Read(Byte* buffer, Int bufferLength, Int offset, Int count) = 0;
+		virtual Int Read(std::vector<Byte>& buffer, Int offset, Int count) = 0;
+		
+		//Reads a byte from the stream and advances the position within the stream by one byte, or returns -1 if at the end of the stream.
+		virtual Int ReadByte() = 0;
+		
+		//
+		//When overridden in a derived class, writes a sequence of bytes to the current stream and advances the current position within this stream by the number of bytes written.
+		//
+		virtual void Write(Byte const* buffer, Int bufferLength, Int offset, Int count) = 0;
+		virtual void Write(std::vector<Byte> const& buffer, Int offset, Int count) = 0;
+		
+		//Writes a byte to the current position in the stream and advances the position within the stream by one byte.
+		virtual void WriteByte(Byte value) = 0;
 	};
 
+	//A simplified port of the System.IO.MemoryStream.
 	class MemoryStream : public Stream {
 	public:
 		constexpr MemoryStream(Int capacity) :
@@ -53,13 +72,13 @@ namespace xna {
 			return _closed;
 		}
 
-		virtual Long Seek(Long offset, SeekOrigin const& origin, xna_error_nullarg) override;
-		virtual Int Read(Byte* buffer, Int bufferLength, Int offset, Int count, xna_error_nullarg) override;
-		virtual Int Read(std::vector<Byte>& buffer, Int offset, Int count, xna_error_nullarg) override;
-		virtual Int ReadByte(xna_error_nullarg) override;
-		virtual void Write(Byte const* buffer, Int bufferLength, Int offset, Int count, xna_error_nullarg) override;
-		virtual void Write(std::vector<Byte> const& buffer, Int offset, Int count, xna_error_nullarg) override;
-		virtual void WriteByte(Byte value, xna_error_nullarg) override;
+		virtual Long Seek(Long offset, SeekOrigin const& origin) override;
+		virtual Int Read(Byte* buffer, Int bufferLength, Int offset, Int count) override;
+		virtual Int Read(std::vector<Byte>& buffer, Int offset, Int count) override;
+		virtual Int ReadByte() override;
+		virtual void Write(Byte const* buffer, Int bufferLength, Int offset, Int count) override;
+		virtual void Write(std::vector<Byte> const& buffer, Int offset, Int count) override;
+		virtual void WriteByte(Byte value) override;
 
 	public:
 		Int _position{ 0 };
@@ -69,118 +88,37 @@ namespace xna {
 		bool _closed{ false };
 	};
 
+	//A simplified port of the System.IO.FileStream.
 	class FileStream : public Stream {
 	public:
-		FileStream(String const& path, FileMode fileMode) {
-			int flags = std::fstream::in
-				| std::fstream::out
-				| std::fstream::binary;
-
-			const auto exists = std::filesystem::exists(path);
-
-			switch (fileMode)
-			{
-			//Especifica se deve abrir um arquivo existente.
-			case FileMode::Open:				
-				if (!exists) {
-					_closed = true;
-					return;
-				}
-				break;
-			//Especifica que se deve abrir um arquivo, se existir;
-			// caso contrário, um novo arquivo deverá ser criado.
-			case FileMode::OpenOrCreate:
-			case FileMode::Create:
-				if (!exists)
-					flags |= std::fstream::trunc;
-				break;
-			//Especifica que o sistema operacional deve criar um novo arquivo.
-			//Se o arquivo já existir, não abre o arquivo.
-			case FileMode::CreateNew:
-				if (!exists)
-					flags |= std::fstream::trunc;
-				else
-					return;
-				break;
-			//Abre o arquivo, se existir, e busca o final do arquivo ou cria um novo arquivo.
-			case FileMode::Append:
-				if (!exists)
-					flags |= std::fstream::trunc;
-				else
-					flags |= std::fstream::app;
-				break;
-			//Especifica que se deve abrir um arquivo existente.
-			//Quando o arquivo for aberto, ele deverá ser truncado
-			//para que seu tamanho seja zero bytes.
-			//Tentativa de ler um arquivo truncado retornará 0;
-			case FileMode::Truncate:
-				flags |= std::fstream::trunc;
-				_truncated = true;
-				break;
-			default:
-				break;
-			}
-
-			_fstream.open(path.c_str(), flags);
-
-			if (!_fstream.good())
-				_closed = true;
-		}
-
-		FileStream(String const& path){
-			int flags = std::fstream::in
-				| std::fstream::out
-				| std::fstream::binary;
-				//| std::fstream::ate;
-
-			const auto exists = std::filesystem::exists(path);
-
-			if (!exists)
-				flags |= std::fstream::trunc;
-
-			_fstream.open(path.c_str(), flags);
-
-			if (!_fstream.good())
-				_closed = true;
-		}
+		FileStream(String const& path, FileMode fileMode);
+		FileStream(String const& path);
 
 		~FileStream() {
 			Close();
 		}		
 
-		virtual Int Length() override {
-			if (_closed)
-				return 0;
+		virtual Int Length() override;
+		virtual Long Position() override;
 
-			const auto end = endOfFile();
-			return end;
-		}
-
-		virtual Long Position() override {
-			if (_closed)
-				return 0;
-
-			return static_cast<Long>(_fstream.tellg());
-		}
-
-		virtual void Close() override {
+		inline virtual void Close() override {
 			_closed = true;
 
 			if(_fstream.is_open())
 				_fstream.close();
 		}
 
-		virtual constexpr bool IsClosed() override {
+		inline virtual constexpr bool IsClosed() override {
 			return _closed;
 		}
 
-		virtual Long Seek(Long offset, SeekOrigin const& origin, xna_error_nullarg) override;
-		virtual Int Read(Byte* buffer, Int bufferLength, Int offset, Int count, xna_error_nullarg) override;
-		virtual Int Read(std::vector<Byte>& buffer, Int offset, Int count, xna_error_nullarg) override;
-		virtual Int ReadByte(xna_error_nullarg) override;
-		virtual void Write(Byte const* buffer, Int bufferLength, Int offset, Int count, xna_error_nullarg) override;
-		virtual void Write(std::vector<Byte> const& buffer, Int offset, Int count, xna_error_nullarg) override;
-		virtual void WriteByte(Byte value, xna_error_nullarg) override;
+		virtual Long Seek(Long offset, SeekOrigin const& origin) override;
+		virtual Int Read(Byte* buffer, Int bufferLength, Int offset, Int count) override;
+		virtual Int Read(std::vector<Byte>& buffer, Int offset, Int count) override;
+		virtual Int ReadByte() override;
+		virtual void Write(Byte const* buffer, Int bufferLength, Int offset, Int count) override;
+		virtual void Write(std::vector<Byte> const& buffer, Int offset, Int count) override;
+		virtual void WriteByte(Byte value) override;
 
 	public:
 		std::fstream _fstream;
