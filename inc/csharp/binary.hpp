@@ -81,31 +81,32 @@ namespace xna {
 		//bool m2BytesPerChar{ false };
 	};
 
+	//A simplified port of the BinaryWriter class.
 	class BinaryWriter {
 	public:
 		BinaryWriter(sptr<Stream> const& stream) : _stream(stream), _buffer(16) {
 		}
 
-		Long Seek(Int offset, SeekOrigin origin, xna_error_nullarg);
+		Long Seek(Int offset, SeekOrigin origin);
 
-		void Write(bool value, xna_error_nullarg);
-		void Write(Byte value, xna_error_nullarg);
-		void Write(Sbyte value, xna_error_nullarg);
-		void Write(Byte const* buffer, Int bufferLength, xna_error_nullarg);
-		void Write(std::vector<Byte> const& buffer, xna_error_nullarg);
-		void Write(Byte const* buffer, Int bufferLength, Int index, Int count, xna_error_nullarg);
-		void Write(std::vector<Byte> const& buffer, Int index, Int count, xna_error_nullarg);
-		void Write(Char ch, xna_error_nullarg);
-		void Write(double value, xna_error_nullarg);
-		void Write(Short value, xna_error_nullarg);
-		void Write(Ushort value, xna_error_nullarg);
-		void Write(Int value, xna_error_nullarg);
-		void Write(Uint value, xna_error_nullarg);
-		void Write(Long value, xna_error_nullarg);
-		void Write(Ulong value, xna_error_nullarg);
-		void Write(float value, xna_error_nullarg);
-		void Write(std::string const& value, xna_error_nullarg);
-		void Write(const char* _string, size_t stringLength, xna_error_nullarg);
+		void Write(bool value);
+		void Write(Byte value);
+		void Write(Sbyte value);
+		void Write(Byte const* buffer, Int bufferLength);
+		void Write(std::vector<Byte> const& buffer);
+		void Write(Byte const* buffer, Int bufferLength, Int index, Int count);
+		void Write(std::vector<Byte> const& buffer, Int index, Int count);
+		void Write(Char ch);
+		void Write(double value);
+		void Write(Short value);
+		void Write(Ushort value);
+		void Write(Int value);
+		void Write(Uint value);
+		void Write(Long value);
+		void Write(Ulong value);
+		void Write(float value);
+		void Write(std::string const& value);
+		void Write(const char* _string, size_t stringLength);
 
 	public:
 		sptr<Stream> _stream = nullptr;

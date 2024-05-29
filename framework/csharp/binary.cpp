@@ -432,53 +432,53 @@ namespace xna {
 
 	//Binary Writer
 
-	Long BinaryWriter::Seek(Int offset, SeekOrigin origin, xna_error_ptr_arg)
+	Long BinaryWriter::Seek(Int offset, SeekOrigin origin)
 	{
 		return _stream->Seek(offset, origin);
 	}
 
-	void BinaryWriter::Write(bool value, xna_error_ptr_arg)
+	void BinaryWriter::Write(bool value)
 	{
 		_buffer[0] = value ? (Byte)1 : (Byte)0;
 		_stream->Write(_buffer, 0, 1);
 	}
 
-	void BinaryWriter::Write(Byte value, xna_error_ptr_arg)
+	void BinaryWriter::Write(Byte value)
 	{
 		_stream->WriteByte(value);
 	}
 
-	void BinaryWriter::Write(Sbyte value, xna_error_ptr_arg)
+	void BinaryWriter::Write(Sbyte value)
 	{
 		_stream->WriteByte(static_cast<Byte>(value));
 	}
 
-	void BinaryWriter::Write(Byte const* buffer, Int bufferLength, xna_error_ptr_arg)
+	void BinaryWriter::Write(Byte const* buffer, Int bufferLength)
 	{
 		_stream->Write(buffer, bufferLength, 0, bufferLength);
 	}
 
-	void BinaryWriter::Write(std::vector<Byte> const& buffer, xna_error_ptr_arg)
+	void BinaryWriter::Write(std::vector<Byte> const& buffer)
 	{
 		_stream->Write(buffer, 0, static_cast<Int>(buffer.size()));
 	}
-	void BinaryWriter::Write(Byte const* buffer, Int bufferLength, Int index, Int count, xna_error_ptr_arg)
+	void BinaryWriter::Write(Byte const* buffer, Int bufferLength, Int index, Int count)
 	{
 		_stream->Write(buffer, bufferLength, index, count);
 	}
 
-	void BinaryWriter::Write(std::vector<Byte> const& buffer, Int index, Int count, xna_error_ptr_arg)
+	void BinaryWriter::Write(std::vector<Byte> const& buffer, Int index, Int count)
 	{
 		_stream->Write(buffer, index, count);
 	}
 
-	void BinaryWriter::Write(Char ch, xna_error_ptr_arg)
+	void BinaryWriter::Write(Char ch)
 	{
 		_buffer[0] = static_cast<Byte>(ch);
 		_stream->Write(_buffer, 0, 1);
 	}
 
-	void BinaryWriter::Write(double value, xna_error_ptr_arg)
+	void BinaryWriter::Write(double value)
 	{
 		Ulong num = (Ulong) * (Long*)&value;
 		_buffer[0] = static_cast<Byte>(num);
@@ -493,21 +493,21 @@ namespace xna {
 		_stream->Write(_buffer, 0, 8);
 	}
 
-	void BinaryWriter::Write(Short value, xna_error_ptr_arg)
+	void BinaryWriter::Write(Short value)
 	{
 		_buffer[0] = static_cast<Byte>(value);
 		_buffer[1] = static_cast<Byte>((Uint)value >> 8);
 		_stream->Write(_buffer, 0, 2);
 	}
 
-	void BinaryWriter::Write(Ushort value, xna_error_ptr_arg)
+	void BinaryWriter::Write(Ushort value)
 	{
 		_buffer[0] = static_cast<Byte>(value);
 		_buffer[1] = static_cast<Byte>((Uint)value >> 8);
 		_stream->Write(_buffer, 0, 2);
 	}
 
-	void BinaryWriter::Write(Int value, xna_error_ptr_arg)
+	void BinaryWriter::Write(Int value)
 	{
 		_buffer[0] = static_cast<Byte>(value);
 		_buffer[1] = static_cast<Byte>(value >> 8);
@@ -516,7 +516,7 @@ namespace xna {
 		_stream->Write(_buffer, 0, 4);
 	}
 
-	void BinaryWriter::Write(Uint value, xna_error_ptr_arg)
+	void BinaryWriter::Write(Uint value)
 	{
 		_buffer[0] = static_cast<Byte>(value);
 		_buffer[1] = static_cast<Byte>(value >> 8);
@@ -525,7 +525,7 @@ namespace xna {
 		_stream->Write(_buffer, 0, 4);
 	}
 
-	void BinaryWriter::Write(Ulong value, xna_error_ptr_arg)
+	void BinaryWriter::Write(Ulong value)
 	{
 		_buffer[0] = static_cast<Byte>(value);
 		_buffer[1] = static_cast<Byte>(value >> 8);
@@ -538,7 +538,7 @@ namespace xna {
 		_stream->Write(_buffer, 0, 8);
 	}
 
-	void BinaryWriter::Write(float value, xna_error_ptr_arg)
+	void BinaryWriter::Write(float value)
 	{
 		Uint num = *(Uint*)&value;
 		_buffer[0] = static_cast<Byte>(num);
@@ -548,12 +548,12 @@ namespace xna {
 		_stream->Write(_buffer, 0, 4);
 	}
 
-	void BinaryWriter::Write(std::string const& value, xna_error_ptr_arg)
+	void BinaryWriter::Write(std::string const& value)
 	{
 		Write(value.c_str(), value.size());
 	}
 
-	void BinaryWriter::Write(const char* _string, size_t stringLength, xna_error_ptr_arg)
+	void BinaryWriter::Write(const char* _string, size_t stringLength)
 	{
 		Write7BitEncodedInt(static_cast<Int>(stringLength));
 		const auto b = reinterpret_cast<const Byte*>(_string);
@@ -569,7 +569,7 @@ namespace xna {
 		Write((Byte)num);
 	}
 
-	void BinaryWriter::Write(Long value, xna_error_ptr_arg)
+	void BinaryWriter::Write(Long value)
 	{
 		_buffer[0] = static_cast<Byte>(value);
 		_buffer[1] = static_cast<Byte>(value >> 8);
