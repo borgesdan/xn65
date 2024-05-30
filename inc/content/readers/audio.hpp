@@ -1,5 +1,5 @@
-#ifndef XNA_AUDIO_READERS_SOUNDEFFECT_HPP
-#define XNA_AUDIO_READERS_SOUNDEFFECT_HPP
+#ifndef XNA_CONTENT_READERS_AUDIO_HPP
+#define XNA_CONTENT_READERS_AUDIO_HPP
 
 #include "content/manager.hpp"
 #include "content/reader.hpp"
@@ -10,7 +10,7 @@
 namespace xna {
 	class SoundEffectReader : public ContentTypeReaderT<PSoundEffect> {
 	public:
-		SoundEffectReader() : ContentTypeReaderT(typeof<SoundEffect>()) {}
+		SoundEffectReader() : ContentTypeReaderT(typeof<PSoundEffect>()) {}
 
 		PSoundEffect Read(ContentReader& input, PSoundEffect& existingInstance) override {
 			const auto count1 = input.ReadInt32();

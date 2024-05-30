@@ -1,6 +1,6 @@
 #include "content/typereadermanager.hpp"
 #include "content/reader.hpp"
-#include "content/defaultreaders.hpp"
+#include "content/readers/default.hpp"
 
 namespace xna {
 	std::vector<PContentTypeReader> ContentTypeReaderManager::ReadTypeManifest(Int typeCount, sptr<ContentReader>& contentReader, xna_error_ptr_arg)
@@ -46,14 +46,22 @@ namespace xna {
 			return nullptr;
 		}
 
-		sptr<ContentTypeReader> typeReader = nullptr;
+		//sptr<ContentTypeReader> typeReader = nullptr;
 
-		if (!ContentTypeReaderManager::targetTypeToReader.contains(targetType)) {
+		/*if (!ContentTypeReaderManager::targetTypeToReader.contains(targetType)) {
 			xna_error_apply(err, XnaErrorCode::ARGUMENT_OUT_OF_RANGE);
 			return nullptr;
-		}		
+		}	*/	
 
-		return ContentTypeReaderManager::targetTypeToReader[targetType];
+		for (auto const& item : ContentTypeReaderManager::targetTypeToReader) {
+			auto firstHashCode = item.first->GetHashCode();
+			auto targetHashCode = targetType->GetHashCode();
+
+			if (firstHashCode == targetHashCode)
+				return item.second;
+		}
+
+		throw std::runtime_error("ContentTypeReaderManager::GetTypeReade: targetType not found.");
 	}
 
 	ContentTypeReaderManager::ContentTypeReaderManager(sptr<ContentReader>& contentReader) {

@@ -1,11 +1,11 @@
-#ifndef XNA_CONTENT_DEFAULTREADERS_ARRAY_HPP
-#define XNA_CONTENT_DEFAULTREADERS_ARRAY_HPP
+#ifndef XNA_CONTENT_READERS_DEFAULT_HPP
+#define XNA_CONTENT_READERS_DEFAULT_HPP
 
-#include "reader.hpp"
-#include "../default.hpp"
-#include "../common/color.hpp"
-#include "../common/numerics.hpp"
-#include "../csharp/timespan.hpp"
+#include "content/reader.hpp"
+#include "default.hpp"
+#include "common/color.hpp"
+#include "common/numerics.hpp"
+#include "csharp/timespan.hpp"
 
 namespace xna {
 	class ObjectReader : public ContentTypeReaderT<Object> {
@@ -64,7 +64,7 @@ namespace xna {
 			return input.ReadDouble();
 		}
 	};
-	
+
 	class Int16Reader : public ContentTypeReaderT<Short> {
 	public:
 		Int16Reader() : ContentTypeReaderT(typeof<Short>()) {}
@@ -215,6 +215,31 @@ namespace xna {
 		Vector4 Read(ContentReader& input, Vector4& existingInstance) override {
 			return input.ReadVector4();
 		}
+	};	
+
+	template <typename T>
+	class ListReader : public ContentTypeReaderT<std::vector<T>> {
+	public:
+		ListReader(){}
+
+		std::vector<T> Read(ContentReader& input, std::vector<T>& existingInstance) override {
+			auto num = input.ReadInt32();
+
+			auto& objList = existingInstance;
+
+			while (num-- > 0) {
+				auto obj = input.ReadObject<T>(*elementReader);
+				objList.push_back(obj);
+			}
+			return objList;
+		}		
+
+		void Initialize(sptr<ContentTypeReaderManager> const& manager) override {
+			elementReader = manager->GetTypeReader(typeof<std::vector<T>>());
+		}
+
+	private:
+		PContentTypeReader elementReader = nullptr;
 	};
 }
 

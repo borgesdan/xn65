@@ -6,6 +6,7 @@
 #include "enemy.hpp"
 #include "level.hpp"
 #include "gem.hpp"
+#include <format>
 
 using namespace std;
 using namespace xna;
@@ -20,6 +21,8 @@ namespace PlatformerStarterKit {
 		void Initialize() override {
 			auto game = reinterpret_cast<Game*>(this);
 			graphics = New<GraphicsDeviceManager>(game->shared_from_this());
+			graphics->PreferredBackBufferWidth(BackBufferWidth);
+			graphics->PreferredBackBufferHeight(BackBufferHeight);
 			graphics->Initialize();
 
 			std::any device = graphicsDevice;
@@ -31,19 +34,91 @@ namespace PlatformerStarterKit {
 		void LoadContent() override {
 			spriteBatch = New<SpriteBatch>(*graphicsDevice);					
 
+			// Load fonts
+			hudFont = Content()->Load<PSpriteFont>("Fonts/Hud");
+
+			// Load overlay textures
+			winOverlay = Content()->Load<PTexture2D>("Overlays/you_win");
+			loseOverlay = Content()->Load<PTexture2D>("Overlays/you_lose");
+			diedOverlay = Content()->Load<PTexture2D>("Overlays/you_died");
+
+			LoadNextLevel();
+
 			Game::LoadContent();
 		}
 
 		void Update(GameTime const& gameTime) override {
-			if (Keyboard::GetState().IsKeyDown(Keys::Escape) || GamePad::GetState(PlayerIndex::One).IsButtonDown(Buttons::Back))
-				Exit();
+			HandleInput();
+
+			level->Update(gameTime);
 
 			Game::Update(gameTime);
 		}
 
 		void Draw(GameTime const& gameTime) override {
 			graphicsDevice->Clear(Colors::CornflowerBlue);
+
+			spriteBatch->Begin();
+
+			level->Draw(gameTime, *spriteBatch);
+
+			//DrawHud();
+
+			spriteBatch->End();
+
 			Game::Draw(gameTime);
+		}
+
+	private:
+		void HandleInput() {
+			auto keyboardState = Keyboard::GetState();
+			auto gamepadState = GamePad::GetState(PlayerIndex::One);
+			
+			if (gamepadState.Buttons.Back == ButtonState::Pressed)
+				Exit();
+
+			bool continuePressed =
+				keyboardState.IsKeyDown(Keys::Space) ||
+				gamepadState.IsButtonDown(ContinueButton);
+			
+			if (!wasContinuePressed && continuePressed) {
+				if (!level->Player()->IsAlive()) {
+					level->StartNewLife();
+				}
+				else if (level->TimeRemaining() == TimeSpan::Zero()) {
+					if (level->ReachedExit())
+						LoadNextLevel();
+					else
+						ReloadCurrentLevel();
+				}
+			}
+
+			wasContinuePressed = continuePressed;
+		}
+
+		void LoadNextLevel() {
+			xna::String levelPath;
+			
+			while (true) {				
+				levelPath = std::format("Levels/{0}.txt", ++levelIndex);
+				levelPath = "Content/" + levelPath;
+				
+				if (std::filesystem::exists(levelPath))
+					break;
+				
+				if (levelIndex == 0)
+					throw std::exception("No levels found.");
+				
+				levelIndex = -1;
+			}			
+			
+			level = snew<Level>(services, levelPath);
+			level->Initialize();
+		}
+
+		void ReloadCurrentLevel() {
+			--levelIndex;
+			LoadNextLevel();
 		}
 
 	private:

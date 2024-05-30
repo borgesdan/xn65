@@ -35,7 +35,7 @@ namespace PlatformerStarterKit {
         Position = position;
         Velocity = xna::Vector2::Zero();
         isAlive = true;
-        sprite->PlayAnimation(idleAnimation);
+        sprite.PlayAnimation(idleAnimation);
     }
 
     void Player::ApplyPhysics(xna::GameTime const& gameTime)
@@ -76,10 +76,10 @@ namespace PlatformerStarterKit {
 
         if (IsAlive() && IsOnGround()) {
             if (std::abs(Velocity.X) - 0.02f > 0) {
-                sprite->PlayAnimation(runAnimation);
+                sprite.PlayAnimation(runAnimation);
             }
             else {
-                sprite->PlayAnimation(idleAnimation);
+                sprite.PlayAnimation(idleAnimation);
             }
         }
         
@@ -124,7 +124,7 @@ namespace PlatformerStarterKit {
         else
             fallSound->Play();
 
-        sprite->PlayAnimation(dieAnimation);
+        sprite.PlayAnimation(dieAnimation);
     }
 
     void Player::Draw(xna::GameTime const& gameTime, xna::SpriteBatch& spriteBatch)
@@ -134,12 +134,12 @@ namespace PlatformerStarterKit {
         else if (Velocity.X < 0)
             flip = xna::SpriteEffects::None;
         
-        sprite->Draw(gameTime, spriteBatch, Position, flip);
+        sprite.Draw(gameTime, spriteBatch, Position, flip);
     }
 
     void Player::OnReachedExit()
     {
-        sprite->PlayAnimation(celebrateAnimation);
+        sprite.PlayAnimation(celebrateAnimation);
     }
 
     float Player::DoJump(float velocityY, xna::GameTime const& gameTime)
@@ -150,7 +150,7 @@ namespace PlatformerStarterKit {
                     jumpSound->Play();
 
                 jumpTime += static_cast<float>(gameTime.ElapsedGameTime.TotalSeconds());
-                sprite->PlayAnimation(jumpAnimation);
+                sprite.PlayAnimation(jumpAnimation);
             }
             
             if (0.0f < jumpTime && jumpTime <= MaxJumpTime) {                
@@ -216,8 +216,8 @@ namespace PlatformerStarterKit {
     }
 
     xna::Rectangle Player::BoundingRectangle() const {
-        auto left = std::round(Position.X - sprite->Origin().X) + localBounds.X;
-        auto top = std::round(Position.Y - sprite->Origin().Y) + localBounds.Y;
+        auto left = std::round(Position.X - sprite.Origin().X) + localBounds.X;
+        auto top = std::round(Position.Y - sprite.Origin().Y) + localBounds.Y;
 
         return xna::Rectangle(
             static_cast<int>(left),

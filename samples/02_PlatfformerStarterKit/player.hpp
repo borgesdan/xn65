@@ -46,7 +46,7 @@ namespace PlatformerStarterKit {
         xna::sptr<Animation> celebrateAnimation = nullptr;
         xna::sptr<Animation> dieAnimation = nullptr;
         xna::SpriteEffects flip = xna::SpriteEffects::None;
-        xna::sptr<AnimationPlayer> sprite = nullptr;
+        AnimationPlayer sprite;
         xna::sptr<xna::SoundEffect> killedSound = nullptr;
         xna::sptr<xna::SoundEffect> jumpSound = nullptr;
         xna::sptr<xna::SoundEffect> fallSound = nullptr;

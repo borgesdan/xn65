@@ -70,7 +70,7 @@ namespace xna {
 			
 			return classType;
 		}
-
+		
 		return nullptr;
 	}	
 

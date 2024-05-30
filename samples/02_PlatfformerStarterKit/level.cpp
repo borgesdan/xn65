@@ -8,20 +8,21 @@
 #include <string>
 
 namespace PlatformerStarterKit {
-	Level::Level(xna::sptr<xna::IServiceProvider> const& serviceProvider, xna::String const& path)
+	Level::Level(xna::sptr<xna::IServiceProvider> const& serviceProvider, xna::String const& path) : path(path)
 	{
 		srand(354668);
 		
 		content = xna::snew<xna::ContentManager>("Content", serviceProvider);
 		timeRemaining = xna::TimeSpan::FromMinutes(2.0);
 
-		LoadTiles(path);
+		//LoadTiles(path);
 
 		layers = std::vector<xna::PTexture2D>(3);
 
 		for (size_t i = 0; i < layers.size(); ++i) {			
 			const auto segmentIndex = rand() % 3;
-			layers[i] = content->Load<xna::PTexture2D>("Backgrounds/Layer" + i + '_' + segmentIndex);
+            xna::String file = "Backgrounds/Layer" + std::to_string(i) + "_" + std::to_string(segmentIndex);
+			layers[i] = content->Load<xna::PTexture2D>(file);
 
 			exitReachedSound = content->Load<xna::PSoundEffect>("Sounds/ExitReached");
 		}
@@ -41,7 +42,7 @@ namespace PlatformerStarterKit {
         std::getline(reader, line);
         width = line.size();
 
-        while (!reader.eofbit) {
+        while (reader.good()) {
             if (line.size() != width)
                 std::exception("The length of line {0} is different from all preceeding lines.");
 
@@ -50,11 +51,13 @@ namespace PlatformerStarterKit {
             std::getline(reader, line);
         }
         
-        tiles = std::vector<std::vector<Tile>>(width, std::vector<Tile>(lines.size()));
-                
+        tiles = std::vector<std::vector<Tile>>(width, std::vector<Tile>(lines.size()));        
+
         for (size_t y = 0; y < lines.size(); ++y) {
-            for (size_t x = 0; x < width; ++x) {                
+            for (size_t x = 0; x < width; ++x) {
+
                 auto tileType = lines[y][x];
+
                 tiles[x][y] = LoadTile(tileType, x, y);
             }
         }
@@ -199,6 +202,11 @@ namespace PlatformerStarterKit {
         gem->OnCollected(collectedBy);
     }
 
+    void Level::Initialize()
+    {
+        LoadTiles(path);
+    }
+
     void Level::Update(xna::GameTime const& gameTime) {
         if (!player->IsAlive() || timeRemaining == xna::TimeSpan::Zero()) {            
             player->ApplyPhysics(gameTime);
@@ -234,21 +242,30 @@ namespace PlatformerStarterKit {
 
     void Level::Draw(xna::GameTime const& gameTime, xna::SpriteBatch& spriteBatch)
     {
-        for (size_t i = 0; i <= EntityLayer; ++i)
-            spriteBatch.Draw(layers[i], xna::Vector2::Zero(), xna::Colors::White);
+        for (size_t i = 0; i <= EntityLayer; ++i) {
+            auto& layer = layers[i];
+            spriteBatch.Draw(layer, xna::Vector2::Zero(), xna::Colors::White);
+        }
 
         DrawTiles(spriteBatch);
 
-        /*foreach(Gem gem in gems)
-            gem.Draw(gameTime, spriteBatch);
+        for (size_t i = 0; i < gems.size(); ++i) {
+            auto& gem = gems[i];
+            gem->Draw(gameTime, spriteBatch);
+        }        
 
-        Player.Draw(gameTime, spriteBatch);
+        player->Draw(gameTime, spriteBatch);
 
-        foreach(Enemy enemy in enemies)
-            enemy.Draw(gameTime, spriteBatch);
+        for (size_t i = 0; i < enemies.size(); ++i) {
+            auto& enemy = enemies[i];
+            enemy->Draw(gameTime, spriteBatch);
+        }        
 
-        for (int i = EntityLayer + 1; i < layers.Length; ++i)
-            spriteBatch.Draw(layers[i], Vector2.Zero, Color.White);*/
+        for (size_t i = EntityLayer + 1; i < layers.size(); ++i) {
+            auto& layer = layers[i];
+            spriteBatch.Draw(layer, xna::Vector2::Zero(), xna::Colors::White);
+        }
+            
     }
 
     void Level::StartNewLife() {

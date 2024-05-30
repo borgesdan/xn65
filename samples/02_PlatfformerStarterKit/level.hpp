@@ -15,7 +15,7 @@ namespace PlatformerStarterKit {
 	* The level owns the player and controls the game's win and lose
 	* conditions as well as scoring.
 	*/
-	class Level : std::enable_shared_from_this<Level> {		
+	class Level : public std::enable_shared_from_this<Level> {		
 	public:
 		Level(xna::sptr<xna::IServiceProvider> const& serviceProvider, xna::String const& path );
 
@@ -59,6 +59,7 @@ namespace PlatformerStarterKit {
 			return tiles[0].size();
 		}
 
+		void Initialize();
 		void Update(xna::GameTime const& gameTime);
 		void Draw(xna::GameTime const& gameTime, xna::SpriteBatch& spriteBatch);
 		void StartNewLife();
@@ -81,6 +82,7 @@ namespace PlatformerStarterKit {
 		xna::TimeSpan timeRemaining{};	
 		xna::sptr<xna::ContentManager> content = nullptr;
 		xna::sptr<xna::SoundEffect> exitReachedSound = nullptr;
+		xna::String path;
 
 	private:
 		void LoadTiles(xna::String const& path);

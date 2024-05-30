@@ -33,6 +33,11 @@ namespace xna {
 
 	template <class T>
 	class ContentTypeReaderT : public ContentTypeReader {
+	public:
+		//Por algum motivo ListReader<T> necessita de um construtor padrão
+		ContentTypeReaderT() : ContentTypeReader(typeof<T>()) {
+			auto a = T();
+		}
 	protected:
 		ContentTypeReaderT(sptr<Type> const& targetType) : ContentTypeReader(targetType){}
 
