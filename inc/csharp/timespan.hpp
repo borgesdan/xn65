@@ -300,6 +300,14 @@ namespace xna {
 			return a._ticks <= b._ticks;
 		}
 
+		friend bool operator>(TimeSpan const& a, TimeSpan const& b) {
+			return a._ticks > b._ticks;
+		}
+
+		friend bool operator>=(TimeSpan const& a, TimeSpan const& b) {
+			return a._ticks >= b._ticks;
+		}
+
 	private:
 		int64_t _ticks{ 0 };
 

@@ -119,6 +119,56 @@ namespace PlatformerStarterKit {
 			LoadNextLevel();
 		}
 
+		void DrawHud()
+		{
+			auto titleSafeArea = graphicsDevice->Viewport().Bounds();
+			auto hudLocation = Vector2(titleSafeArea.X, titleSafeArea.Y);
+			auto center = Vector2(titleSafeArea.X + titleSafeArea.Width / 2.0f,
+				titleSafeArea.Y + titleSafeArea.Height / 2.0f);
+			
+			//string timeString = "TIME: " + to_string(level->TimeRemaining().Minutes()) + ":" + to_string(level->TimeRemaining().Seconds());
+			string timeString = "TIME";
+			Color timeColor;
+			if (level->TimeRemaining() > WarningTime ||
+				level->ReachedExit() ||
+				static_cast<int>(level->TimeRemaining().TotalSeconds()) % 2 == 0)
+			{
+				timeColor = Colors::Yellow;
+			} else {
+				timeColor = Colors::Red;
+			}
+			DrawShadowedString(*hudFont, timeString, hudLocation, timeColor);
+
+			
+			float timeHeight = hudFont->MeasureString(timeString).Y;
+			DrawShadowedString(*hudFont, "SCORE: " + to_string(level->Score()), hudLocation + Vector2(0.0f, timeHeight * 1.2f), Colors::Yellow);
+			
+			PTexture2D status = nullptr;
+			if (level->TimeRemaining() == TimeSpan::Zero())
+			{
+				if (level->ReachedExit()) {
+					status = winOverlay;
+				} else {
+					status = loseOverlay;
+				}
+			}
+			else if (!level->Player()->IsAlive()) {
+				status = diedOverlay;
+			}
+
+			if (status)
+			{				
+				const auto statusSize = Vector2(status->Width(), status->Height());
+				spriteBatch->Draw(status, center - statusSize / 2, Colors::White);
+			}
+		}
+
+		void DrawShadowedString(SpriteFont& font, String const& value, Vector2 const& position, Color const& color)
+		{
+			spriteBatch->DrawString(font, value, position + Vector2(1.0f, 1.0f), Colors::Black);
+			spriteBatch->DrawString(font, value, position, color);
+		}
+
 	private:
 		sptr<GraphicsDeviceManager> graphics = nullptr;
 		sptr<SpriteBatch> spriteBatch = nullptr;
