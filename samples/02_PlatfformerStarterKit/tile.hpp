@@ -12,8 +12,8 @@ namespace PlatformerStarterKit {
 	struct Tile {
 		xna::PTexture2D Texture = nullptr;
 		TileCollision Collision{};
-		constexpr static int Width = 64;
-		constexpr static int Height = 48;
+		constexpr static int Width = 40;
+		constexpr static int Height = 32;
 
 		constexpr static xna::Vector2 Size() {
 			return{ Width, Height };

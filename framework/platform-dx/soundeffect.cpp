@@ -88,15 +88,15 @@ namespace xna {
 	void SoundEffect::Play() {
 		if (!impl->_dxSoundEffect)
 			return;
-
-		impl->_dxSoundEffect->Play();
+		
+		impl->_dxSoundEffect->Play();		
 	}
 
 	void SoundEffect::Play(float volume, float pitch, float pan) {
 		if (!impl->_dxSoundEffect)
-			return;
-
-		impl->_dxSoundEffect->Play(volume, pitch, pan);
+			return;		
+		
+		impl->_dxSoundEffect->Play(volume, pitch, pan);		
 	}
 
 	uptr<SoundEffectInstance> SoundEffect::CreateInstance() {

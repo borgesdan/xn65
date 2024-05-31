@@ -186,10 +186,9 @@ namespace PlatformerStarterKit {
         for (size_t y = 0; y < Height(); ++y) {
             for (size_t x = 0; x < Width(); ++x) {                
                 auto& texture = tiles[x][y].Texture;
-                if (texture) {               
-                    const auto p = xna::Vector2(x, y);
+                if (texture) { 
                     const auto s = xna::Vector2(x, y);
-                    const auto position = p * s;
+                    const auto position = s * Tile::Size();
                     spriteBatch.Draw(texture, position, xna::Colors::White);
                 }
             }

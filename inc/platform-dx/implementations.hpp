@@ -406,7 +406,7 @@ namespace xna {
 		HINSTANCE		_hInstance{ nullptr };
 		HWND			_windowHandle{ nullptr };
 		int				_windowWidth{ 800 };
-		int				_windowHeight{ 600 };
+		int				_windowHeight{ 480 };
 		HICON			_windowIcon{ nullptr };
 		HCURSOR			_windowCursor{ nullptr };
 		COLORREF		_windowColor{ RGB(0,0,0) };

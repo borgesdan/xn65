@@ -28,7 +28,7 @@ namespace PlatformerStarterKit {
 
 	void Gem::OnCollected(xna::sptr<Player>& collectedBy)
 	{
-		collectedSound->Play();
+		collectedSound->Play();		
 	}
 
 	void Gem::Draw(xna::GameTime const& gameTime, xna::SpriteBatch& spriteBatch)

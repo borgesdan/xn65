@@ -20,9 +20,7 @@ namespace PlatformerStarterKit {
 
 		void Initialize() override {
 			auto game = reinterpret_cast<Game*>(this);
-			graphics = New<GraphicsDeviceManager>(game->shared_from_this());
-			graphics->PreferredBackBufferWidth(BackBufferWidth);
-			graphics->PreferredBackBufferHeight(BackBufferHeight);
+			graphics = New<GraphicsDeviceManager>(game->shared_from_this());			
 			graphics->Initialize();
 
 			std::any device = graphicsDevice;
@@ -130,11 +128,9 @@ namespace PlatformerStarterKit {
 		sptr<Texture2D> diedOverlay = nullptr;
 		int levelIndex = -1;
 		sptr<Level> level = nullptr;
-		bool wasContinuePressed;
+		bool wasContinuePressed = false;
 		TimeSpan WarningTime = TimeSpan::FromSeconds(30);
 		static constexpr int TargetFrameRate = 60;
-		static constexpr int BackBufferWidth = 1280;
-		static constexpr int BackBufferHeight = 720;
 		static constexpr Buttons ContinueButton = Buttons::A;
 	};
 }
