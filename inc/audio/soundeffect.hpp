@@ -34,6 +34,7 @@ namespace xna {
 			Int loopStart,
 			Int loopLength,
 			TimeSpan const& duration);
+		~SoundEffect();
 		void Play();
 		void Play(float volume, float pitch, float pan);
 		uptr<SoundEffectInstance> CreateInstance();

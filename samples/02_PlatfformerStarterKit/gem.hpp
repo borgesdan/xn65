@@ -31,6 +31,10 @@ namespace PlatformerStarterKit {
 		void Update(xna::GameTime const& gameTime);
 		void OnCollected(xna::sptr<Player>& collectedBy);
 		void Draw(xna::GameTime const& gameTime, xna::SpriteBatch& spriteBatch);
+		
+		constexpr bool IsCollected() const {
+			return isCollected;
+		}
 
 	private:
 		xna::PTexture2D texture = nullptr;
@@ -39,6 +43,7 @@ namespace PlatformerStarterKit {
 		xna::Vector2 basePosition{};
 		float bounce{ 0.0F };
 		xna::sptr<PlatformerStarterKit::Level> level = nullptr;
+		bool isCollected{ false };
 	};
 }
 

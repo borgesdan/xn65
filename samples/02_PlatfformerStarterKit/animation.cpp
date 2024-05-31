@@ -13,10 +13,10 @@ namespace PlatformerStarterKit {
 
 	void AnimationPlayer::Draw(xna::GameTime const& gameTime, xna::SpriteBatch& spriteBatch, xna::Vector2& position, xna::SpriteEffects spriteEffects) {
 		if (animation == nullptr)
-			std::exception();
+			std::exception("No animation is currently playing.");
 
 		// Process passing time.
-		time += (float)gameTime.ElapsedGameTime.TotalSeconds();
+		time += static_cast<float>(gameTime.ElapsedGameTime.TotalSeconds());
 
 		while (time > animation->FrameTime()) {
 			time -= animation->FrameTime();

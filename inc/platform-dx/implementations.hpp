@@ -476,6 +476,9 @@ namespace xna {
 	};
 
 	struct SoundEffect::PlatformImplementation {
+		~PlatformImplementation() {			
+		}
+
 		uptr<DirectX::SoundEffect> _dxSoundEffect = nullptr;
 	};
 

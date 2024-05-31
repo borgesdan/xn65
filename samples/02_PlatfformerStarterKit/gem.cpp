@@ -15,7 +15,7 @@ namespace PlatformerStarterKit {
 	}
 
 	void Gem::Update(xna::GameTime const& gameTime)
-	{		
+	{	
 		constexpr float BounceHeight = 0.18f;
 		constexpr float BounceRate = 3.0f;
 		constexpr float BounceSync = -0.75f;
@@ -28,11 +28,12 @@ namespace PlatformerStarterKit {
 
 	void Gem::OnCollected(xna::sptr<Player>& collectedBy)
 	{
-		collectedSound->Play();		
+		collectedSound->Play();
+		isCollected = true;
 	}
 
 	void Gem::Draw(xna::GameTime const& gameTime, xna::SpriteBatch& spriteBatch)
-	{
+	{			
 		spriteBatch.Draw(texture, Position(), nullptr, Color, 0.0f, origin, 1.0f, xna::SpriteEffects::None, 0.0f);
 	}
 }

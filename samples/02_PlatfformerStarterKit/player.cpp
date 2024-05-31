@@ -112,7 +112,7 @@ namespace PlatformerStarterKit {
             gamePadState.IsButtonDown(JumpButton) ||
             keyboardState.IsKeyDown(xna::Keys::Space) ||
             keyboardState.IsKeyDown(xna::Keys::Up) ||
-            keyboardState.IsKeyDown(xna::Keys::W);
+            keyboardState.IsKeyDown(xna::Keys::W);        
     }
 
     void Player::OnKilled(xna::sptr<Enemy>& killedBy)
@@ -171,15 +171,15 @@ namespace PlatformerStarterKit {
     void Player::HandleCollisions()
     {
         auto bounds = BoundingRectangle();
-        auto leftTile = std::floor(static_cast<float>(bounds.Left()) / Tile::Width);
-        auto rightTile = std::ceil((static_cast<float>(bounds.Right()) / Tile::Width)) - 1;
-        auto topTile = std::floor(static_cast<float>(bounds.Top()) / Tile::Height);
-        auto bottomTile = std::ceil((static_cast<float>(bounds.Bottom()) / Tile::Height)) - 1;
+        auto leftTile = static_cast<int>(std::floor(static_cast<float>(bounds.Left()) / Tile::Width));
+        auto rightTile = static_cast<int>(std::ceil((static_cast<float>(bounds.Right()) / Tile::Width))) - 1;
+        auto topTile = static_cast<int>(std::floor(static_cast<float>(bounds.Top()) / Tile::Height));
+        auto bottomTile = static_cast<int>(std::ceil((static_cast<float>(bounds.Bottom()) / Tile::Height))) - 1;
         
-        isOnGround = false;
+        isOnGround = false;        
         
-        for (size_t y = topTile; y <= bottomTile; ++y) {
-            for (size_t x = leftTile; x <= rightTile; ++x) {                
+        for (int y = topTile; y <= bottomTile; ++y) {
+            for (int x = leftTile; x <= rightTile; ++x) {                
                 auto collision = level->GetCollision(x, y);
                 if (collision != TileCollision::Passable) {                    
                     auto tileBounds = level->GetBounds(x, y);
@@ -189,11 +189,12 @@ namespace PlatformerStarterKit {
                         auto absDepthY = std::abs(depth.Y);
                                                 
                         if (absDepthY < absDepthX || collision == TileCollision::Platform) {
-                            if (previousBottom <= tileBounds.Top())
-                                isOnGround = true;
+                            const auto tileBoundsTop = tileBounds.Top();
+                            if (previousBottom <= tileBoundsTop)
+                                isOnGround = true;                            
                             
                             if (collision == TileCollision::Impassable || IsOnGround()) {
-                                Position = xna::Vector2(Position.X, Position.Y + depth.Y);
+                                Position = xna::Vector2(Position.X, Position.Y + depth.Y);                                
                                 bounds = BoundingRectangle();
                             }
                         }
@@ -206,7 +207,7 @@ namespace PlatformerStarterKit {
                 }
             }
         }
-        
+
         previousBottom = bounds.Bottom();
     }
 

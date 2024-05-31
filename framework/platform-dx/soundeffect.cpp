@@ -24,6 +24,10 @@ namespace xna {
 		impl->_dxSoundEffect = unew<DxSoundEffect>(AudioEngine::impl->_dxAudioEngine.get(), file.c_str());
 	}
 
+	SoundEffect::~SoundEffect() {
+		impl = nullptr;
+	}
+
 	SoundEffect::SoundEffect(
 		std::vector<Byte> const& format,
 		std::vector<Byte> const& data,

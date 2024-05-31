@@ -60,15 +60,17 @@ namespace PlatformerStarterKit {
         float jumpTime = false;
         xna::Rectangle localBounds{};
 
-        static constexpr float MoveAcceleration = 14000.0f;
-        static constexpr float MaxMoveSpeed = 2000.0f;
-        static constexpr float GroundDragFactor = 0.58f;
-        static constexpr float AirDragFactor = 0.65f;        
+        static constexpr float MoveAcceleration = 13000.0f;
+        static constexpr float MaxMoveSpeed = 1750.0f;
+        static constexpr float GroundDragFactor = 0.48;
+        static constexpr float AirDragFactor = 0.58f;        
+
         static constexpr float MaxJumpTime = 0.35f;
-        static constexpr float JumpLaunchVelocity = -4000.0f;
-        static constexpr float GravityAcceleration = 3500.0f;
-        static constexpr float MaxFallSpeed = 600.0f;
-        static constexpr float JumpControlPower = 0.14f;        
+        static constexpr float JumpLaunchVelocity = -3500.0f;
+        static constexpr float GravityAcceleration = 3400.0f;
+        static constexpr float MaxFallSpeed = 550.0f;
+        static constexpr float JumpControlPower = 0.14f;
+
         static constexpr float MoveStickScale = 1.0f;
         static constexpr xna::Buttons JumpButton = xna::Buttons::A;
 

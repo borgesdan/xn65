@@ -10,7 +10,7 @@
 namespace PlatformerStarterKit {
 	Level::Level(xna::sptr<xna::IServiceProvider> const& serviceProvider, xna::String const& path) : path(path)
 	{
-		srand(354668);
+		//srand(354668);
 		
 		content = xna::snew<xna::ContentManager>("Content", serviceProvider);
 		timeRemaining = xna::TimeSpan::FromMinutes(2.0);
@@ -112,7 +112,7 @@ namespace PlatformerStarterKit {
         if (player != nullptr)
             std::exception("A level may only have one starting point.");
 
-        start = RectangleExtensions::GetBottomCenter(GetBounds(x, y));
+        start = RectangleExtensions::GetBottomCenter(GetBounds(x, --y));
         const auto _this = shared_from_this();
         player = xna::snew<PlatformerStarterKit::Player>(_this, start);
 
@@ -149,10 +149,12 @@ namespace PlatformerStarterKit {
         for (size_t i = 0; i < gems.size(); ++i) {
             auto& gem = gems[i];
 
-            gem->Update(gameTime);
+            if (gem->IsCollected())
+                continue;
+
+            gem->Update(gameTime);            
 
             if (gem->BoundingCircle().Intersects(player->BoundingRectangle())) {                
-                gems.erase(gems.begin() + i--);
                 OnGemCollected(gem, player);
             }
         }
@@ -167,6 +169,8 @@ namespace PlatformerStarterKit {
     {
         for (size_t i = 0; i < enemies.size(); ++i) {
             auto& enemy = enemies[i];
+
+            enemy->Update(gameTime);
 
             if (enemy->BoundingRectangle().Intersects(player->BoundingRectangle())) {
                 OnPlayerKilled(enemy);
@@ -223,7 +227,10 @@ namespace PlatformerStarterKit {
 
             UpdateGems(gameTime);
             
-            if (player->BoundingRectangle().Top() >= Height() * Tile::Height)
+            auto playerBounds = player->BoundingRectangle();
+            auto heigth = Height();
+
+            if (playerBounds.Top() >= heigth * Tile::Height)
                 OnPlayerKilled(nullptr);
 
             UpdateEnemies(gameTime);
@@ -250,6 +257,10 @@ namespace PlatformerStarterKit {
 
         for (size_t i = 0; i < gems.size(); ++i) {
             auto& gem = gems[i];
+
+            if (gem->IsCollected())
+                continue;
+
             gem->Draw(gameTime, spriteBatch);
         }        
 
