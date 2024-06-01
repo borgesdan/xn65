@@ -16,6 +16,7 @@ namespace PlatformerStarterKit {
 	public:
 		Game1() : Game() {
 			Content()->RootDirectory("Content");
+			srand(354668);
 		}
 
 		void Initialize() override {
@@ -60,15 +61,7 @@ namespace PlatformerStarterKit {
 
 			level->Draw(gameTime, *spriteBatch);
 			
-			DrawHud();
-
-			/*auto b = graphicsDevice->Viewport().Bounds();
-			auto p = Vector2(0, 0);
-			spriteBatch->DrawString(hudFont, " !\"#$%&'()*+,-./0123456789:;<=>?@", p, Colors::Black);
-			p.Y += 50;
-			spriteBatch->DrawString(hudFont, "ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`", p, Colors::Black);
-			p.Y += 50;
-			spriteBatch->DrawString(hudFont, "abcdefghijklmnopqrstuvwxyz{|}~", p, Colors::Black);*/
+			DrawHud();			
 
 			spriteBatch->End();
 
