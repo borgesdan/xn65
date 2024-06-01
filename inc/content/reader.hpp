@@ -15,19 +15,19 @@ namespace xna {
 		static sptr<ContentReader> Create(ContentManager* contentManager, sptr<Stream>& input, String const& assetName);
 
 		template <typename T>
-		T ReadAsset();
+		auto ReadAsset();
 
 		template <typename T>
-		T ReadObject();
+		auto ReadObject();
 
 		template <typename T>
-		T ReadObject(T existingInstance);
+		auto ReadObject(T existingInstance);
 
 		template <typename T>
-		T ReadObject(ContentTypeReader& typeReader);
+		auto ReadObject(ContentTypeReader& typeReader);
 
 		template <typename T>
-		T ReadObject(ContentTypeReader& typeReader, T existingInstance);
+		auto ReadObject(ContentTypeReader& typeReader, T existingInstance);
 
 		Vector2 ReadVector2();
 		Vector3 ReadVector3();
@@ -49,13 +49,13 @@ namespace xna {
 		Int ReadHeader();
 
 		template <typename T>
-		T ReadObjectInternal(std::any& existingInstance, xna_error_nullarg);
+		auto ReadObjectInternal(std::any& existingInstance, xna_error_nullarg);
 		
 		template <typename T>
-		T ReadObjectInternal(ContentTypeReader& typeReader, std::any& existingInstance, xna_error_nullarg);
+		auto ReadObjectInternal(ContentTypeReader& typeReader, std::any& existingInstance, xna_error_nullarg);
 
 		template <typename T>
-		T InvokeReader(ContentTypeReader& reader, std::any& existingInstance, xna_error_nullarg);
+		auto InvokeReader(ContentTypeReader& reader, std::any& existingInstance, xna_error_nullarg);
 
 	private:
 		ContentManager* _contentManager = nullptr;
@@ -70,12 +70,12 @@ namespace xna {
 	};
 
 	template<typename T>
-	inline T ContentReader::ReadObjectInternal(std::any& existingInstance, xna_error_ptr_arg)
+	inline auto ContentReader::ReadObjectInternal(std::any& existingInstance, xna_error_ptr_arg)
 	{
 		const auto num = Read7BitEncodedInt();
 
 		if (num == 0) {
-			return T();
+			ReturnDefaultOrNull<T>();
 		}
 
 		const auto index = num - 1;
@@ -83,33 +83,16 @@ namespace xna {
 		if (index >= typeReaders.size()) {
 			xna_error_apply(err, XnaErrorCode::ARGUMENT_OUT_OF_RANGE);
 			
-			return T();
+			ReturnDefaultOrNull<T>();
 		}		
 		
 		auto reader = typeReaders[index];		
-
-		//Verificação necessária pois a depender da situação é encontrado um reader errado
-		/*auto typeT = typeof<T>();
-		auto typeThash = typeT->GetHashCode();
-		auto readerType = reader->TargetType();
-
-		if (readerType->GetHashCode() != typeThash) {
-			for (auto const& item : typeReaders) {
-				if (item->TargetType()->GetHashCode() == typeThash) {
-					reader = item;
-					break;
-				}
-			}
-
-			if(reader->TargetType()->GetHashCode() != typeThash)
-				throw std::runtime_error("ContentReader::ReadObjectInternal: wrong reader!");
-		}	*/
-
+		
 		return InvokeReader<T>(*reader, existingInstance, err);
 	}
 
 	template<typename T>
-	inline T ContentReader::InvokeReader(ContentTypeReader& reader, std::any& existingInstance, xna_error_ptr_arg)
+	inline auto ContentReader::InvokeReader(ContentTypeReader& reader, std::any& existingInstance, xna_error_ptr_arg)
 	{
 		auto contentTypeReader = reinterpret_cast<ContentTypeReaderT<T>*>(&reader);
 		T objB;
@@ -120,11 +103,11 @@ namespace xna {
 			return objB;
 		}
 
-		return T();
+		return ReturnDefaultOrNull<T>();
 	}
 
 	template<typename T>
-	inline T ContentReader::ReadAsset()
+	inline auto ContentReader::ReadAsset()
 	{
 		const auto sharedResourceCount = ReadHeader();
 		auto obj = ReadObject<T>();
@@ -132,33 +115,33 @@ namespace xna {
 	}
 
 	template<typename T>
-	inline T ContentReader::ReadObject()
+	inline auto ContentReader::ReadObject()
 	{
 		auto a = std::any();
 		return ReadObjectInternal<T>(a);
 	}
 
 	template<typename T>
-	inline T ContentReader::ReadObject(T existingInstance)
+	inline auto ContentReader::ReadObject(T existingInstance)
 	{
 		return ReadObjectInternal<T>(std::any(existingInstance));
 	}
 
 	template<typename T>
-	inline T ContentReader::ReadObject(ContentTypeReader& typeReader)
+	inline auto ContentReader::ReadObject(ContentTypeReader& typeReader)
 	{
 		auto obj = std::any();
 		return ReadObjectInternal<T>(typeReader, obj);
 	}
 
 	template<typename T>
-	inline T ContentReader::ReadObject(ContentTypeReader& typeReader, T existingInstance)
+	inline auto ContentReader::ReadObject(ContentTypeReader& typeReader, T existingInstance)
 	{
 		return ReadObjectInternal<T>(typeReader, std::any(existingInstance));
 	}
 
 	template<typename T>
-	inline T ContentReader::ReadObjectInternal(ContentTypeReader& typeReader, std::any& existingInstance, xna_error_ptr_arg)
+	inline auto ContentReader::ReadObjectInternal(ContentTypeReader& typeReader, std::any& existingInstance, xna_error_ptr_arg)
 	{
 		return typeReader.TargetIsValueType
 			? InvokeReader<T>(typeReader, existingInstance, err)

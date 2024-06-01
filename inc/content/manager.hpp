@@ -32,8 +32,10 @@ namespace xna {
 		}
 
 		template <typename T>
-		T Load(String const& assetName) {
-			if (assetName.empty()) return T();			
+		auto Load(String const& assetName) {
+			if (assetName.empty()) {
+				return ReturnDefaultOrNull<T>();
+			}
 
 			auto obj2 = ReadAsset<T>(assetName); 
 
@@ -42,15 +44,16 @@ namespace xna {
 
 	protected:
 		template <typename T>
-		T ReadAsset(String const& assetName) {
+		auto ReadAsset(String const& assetName) {
 			auto input = OpenStream(assetName);
 
 			if (input->IsClosed())
-				return T();
+				return ReturnDefaultOrNull<T>();
 
 			auto contentReader = ContentReader::Create(this, input, assetName);
 
-			return contentReader->ReadAsset<T>();
+			auto asset = contentReader->ReadAsset<T>();
+			return asset;
 		}
 
 		sptr<Stream> OpenStream(String const& assetName) {

@@ -24,10 +24,26 @@ namespace xna {
 	}
 
 	template <class T>
-	static constexpr void XnaHHashCombine(std::size_t& seed, const T& v) {
+	constexpr void XnaHHashCombine(std::size_t& seed, const T& v) {
 		std::hash<T> hasher;
 		seed ^= hasher(v) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
 	}
+
+	template<typename T> struct is_shared_ptr : std::false_type {};
+	template<typename T> struct is_shared_ptr<std::shared_ptr<T>> : std::true_type {};
+
+	template<typename T>
+	inline auto ReturnDefaultOrNull() {
+		if constexpr (is_shared_ptr<T>::value)
+			return (T)nullptr;
+		else
+			return T();
+	}
+
+	/*template<typename T>
+	inline auto ReturnAuto(T& value) {
+		return value;
+	}*/
 }
 
 #endif
