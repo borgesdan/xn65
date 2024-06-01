@@ -62,6 +62,14 @@ namespace PlatformerStarterKit {
 			
 			DrawHud();
 
+			/*auto b = graphicsDevice->Viewport().Bounds();
+			auto p = Vector2(0, 0);
+			spriteBatch->DrawString(hudFont, " !\"#$%&'()*+,-./0123456789:;<=>?@", p, Colors::Black);
+			p.Y += 50;
+			spriteBatch->DrawString(hudFont, "ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`", p, Colors::Black);
+			p.Y += 50;
+			spriteBatch->DrawString(hudFont, "abcdefghijklmnopqrstuvwxyz{|}~", p, Colors::Black);*/
+
 			spriteBatch->End();
 
 			Game::Draw(gameTime);

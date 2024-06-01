@@ -43,11 +43,11 @@ namespace xna {
 			DxGlyph g;
 			g.Subrect.left = glyphs[i].Left();
 			g.Subrect.right = glyphs[i].Right();
-			g.Subrect.bottom = glyphs[i].Bottom();
 			g.Subrect.top = glyphs[i].Top();
+			g.Subrect.bottom = glyphs[i].Bottom();
 			g.Character = static_cast<Uint>(charMap[i]);
 			g.XOffset = kerning[i].X;
-			g.YOffset = kerning[i].Y;
+			g.YOffset = cropping[i].Y;
 			g.XAdvance = kerning[i].Z;
 			dxGlyps[i] = g;
 		}		
@@ -78,6 +78,19 @@ namespace xna {
 	}
 
 	Vector2 SpriteFont::MeasureString(String const& text, bool ignoreWhiteSpace)
+	{
+		if (!impl->_dxSpriteFont)
+			return Vector2();
+
+		const auto size = impl->_dxSpriteFont->MeasureString(text.c_str(), ignoreWhiteSpace);
+		Vector2 vec2{};
+		vec2.X = size.m128_f32[0];
+		vec2.Y = size.m128_f32[1];
+
+		return vec2;
+	}
+
+	Vector2 SpriteFont::MeasureString(WString const& text, bool ignoreWhiteSpace)
 	{
 		if (!impl->_dxSpriteFont)
 			return Vector2();

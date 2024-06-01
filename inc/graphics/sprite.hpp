@@ -93,8 +93,8 @@ namespace xna {
 			std::vector<Vector3> const& kerning,
 			std::optional<Char> defaultCharacter);
 		~SpriteFont();
-		Vector2 MeasureString(String const& text, bool ignoreWhiteSpace = false);
-		Vector2 MeasureString(WString const& text, bool ignoreWhiteSpace = false);
+		Vector2 MeasureString(String const& text, bool ignoreWhiteSpace = true);
+		Vector2 MeasureString(WString const& text, bool ignoreWhiteSpace = true);
 
 	private:
 		sptr<Texture2D> textureValue = nullptr;
