@@ -34,7 +34,7 @@ namespace xna {
 		template <typename T>
 		auto Load(String const& assetName) {
 			if (assetName.empty()) {
-				return ReturnDefaultOrNull<T>();
+				return XnaHelper::ReturnDefaultOrNull<T>();
 			}
 
 			auto obj2 = ReadAsset<T>(assetName); 
@@ -48,7 +48,7 @@ namespace xna {
 			auto input = OpenStream(assetName);
 
 			if (input->IsClosed())
-				return ReturnDefaultOrNull<T>();
+				return XnaHelper::ReturnDefaultOrNull<T>();
 
 			auto contentReader = ContentReader::Create(this, input, assetName);
 

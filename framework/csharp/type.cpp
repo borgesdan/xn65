@@ -4,11 +4,11 @@ namespace xna {
 	size_t Type::GetHashCode() const
 	{
 		size_t seed = 0;
-		XnaHHashCombine(seed, fullName);
-		XnaHHashCombine(seed, isClass);
-		XnaHHashCombine(seed, isEnum);
-		XnaHHashCombine(seed, isValueType);
-		XnaHHashCombine(seed, isPrimitive);
+		XnaHelper::HashCombine(seed, fullName);
+		XnaHelper::HashCombine(seed, isClass);
+		XnaHelper::HashCombine(seed, isEnum);
+		XnaHelper::HashCombine(seed, isValueType);
+		XnaHelper::HashCombine(seed, isPrimitive);
 
 		return seed;
 	}	

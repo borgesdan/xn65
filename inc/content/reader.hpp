@@ -75,7 +75,7 @@ namespace xna {
 		const auto num = Read7BitEncodedInt();
 
 		if (num == 0) {
-			ReturnDefaultOrNull<T>();
+			XnaHelper::ReturnDefaultOrNull<T>();
 		}
 
 		const auto index = num - 1;
@@ -83,7 +83,7 @@ namespace xna {
 		if (index >= typeReaders.size()) {
 			xna_error_apply(err, XnaErrorCode::ARGUMENT_OUT_OF_RANGE);
 			
-			ReturnDefaultOrNull<T>();
+			XnaHelper::ReturnDefaultOrNull<T>();
 		}		
 		
 		auto reader = typeReaders[index];		
@@ -103,7 +103,7 @@ namespace xna {
 			return objB;
 		}
 
-		return ReturnDefaultOrNull<T>();
+		return XnaHelper::ReturnDefaultOrNull<T>();
 	}
 
 	template<typename T>

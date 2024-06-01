@@ -20,7 +20,7 @@ namespace xna {
 		if (!AudioEngine::impl || !AudioEngine::impl->_dxAudioEngine)
 			return;
 
-		const auto file = XnaHToWString(fileName);
+		const auto file = XnaHelper::ToWString(fileName);
 		impl->_dxSoundEffect = unew<DxSoundEffect>(AudioEngine::impl->_dxAudioEngine.get(), file.c_str());
 	}
 

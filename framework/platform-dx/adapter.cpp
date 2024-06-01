@@ -89,7 +89,7 @@ namespace xna {
 
 		DXGI_ADAPTER_DESC1 desc;
 		impl->dxadapter->GetDesc1(&desc);
-		String description = XnaHToString(desc.Description);
+		String description = XnaHelper::ToString(desc.Description);
 		return description;
 	}
 
@@ -110,7 +110,7 @@ namespace xna {
 		
 		if (impl->dxadapter->EnumOutputs(0, &pOutput) != DXGI_ERROR_NOT_FOUND) {
 			pOutput->GetDesc(&outputDesc);
-			String deviceName = XnaHToString(outputDesc.DeviceName);
+			String deviceName = XnaHelper::ToString(outputDesc.DeviceName);
 			
 			pOutput->Release();
 			pOutput = nullptr;
