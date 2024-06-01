@@ -1,5 +1,4 @@
-#include "content-readers/texture2d.hpp"
-#include "steptimer.hpp"
 #include "headers.hpp"
-#include "init.hpp"
 #include "implementations.hpp"
+#include "init.hpp"
+#include "steptimer.hpp"

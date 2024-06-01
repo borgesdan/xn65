@@ -19,7 +19,7 @@ namespace xna {
 
 	public:
 		static constexpr int DefaultBackBufferWidth = 800;
-		static constexpr int DefaultBackBufferHeight = 600;
+		static constexpr int DefaultBackBufferHeight = 480;
 
 	protected:
 		bool CreateDevice();

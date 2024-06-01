@@ -1,3 +1,4 @@
+#define NOMINMAX 
 #include "xnaerror.hpp"
 #include "types.hpp"
 #include "helpers.hpp"
@@ -11,7 +12,9 @@
 #include "common/packedvalue.hpp"
 #include "common/numerics.hpp"
 #include "common/collision.hpp"
-#include "content/defaultreaders.hpp"
+#include "content/readers/default.hpp"
+#include "content/readers/graphics.hpp"
+#include "content/readers/audio.hpp"
 #include "content/manager.hpp"
 #include "content/reader.hpp"
 #include "content/typereadermanager.hpp"

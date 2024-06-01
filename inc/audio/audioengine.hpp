@@ -5,21 +5,26 @@
 
 namespace xna {
 	class AudioEngine {
-	public:
-		AudioEngine();
-		~AudioEngine();
-		bool Reset();
-		bool Resume();
-		bool Suspend();
-		bool Update();
-		void DefaultSampleRate(int value);
-		void MasterVolume(float value);
-		void MasteringLimit(int limit, int loudness);
-		void Reverb(AudioReverb value);
+	public:		
+		static bool Reset();
+		static bool Resume();
+		static bool Suspend();
+		static bool Update();
+		static void DefaultSampleRate(int value);
+		static void MasterVolume(float value);
+		static void MasteringLimit(int limit, int loudness);
+		static void Reverb(AudioReverb value);
+
+		static void Initialize();
 
 	public:
 		struct PlatformImplementation;
-		uptr<PlatformImplementation> impl = nullptr;
+		inline static uptr<PlatformImplementation> impl = nullptr;
+
+	private:
+		AudioEngine();
+		AudioEngine(AudioEngine&);
+		AudioEngine(AudioEngine&&);
 	};
 }
 

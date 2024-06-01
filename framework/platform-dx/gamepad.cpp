@@ -24,7 +24,7 @@ namespace xna {
 		
 		pad.IsConnected = state.connected;
 		pad.PackedNumber = state.packet;
-		pad.Sticks = GamePadThumbSticks(
+		pad.ThumbSticks = GamePadThumbSticks(
 			Vector2(state.thumbSticks.leftX, state.thumbSticks.leftY),
 			Vector2(state.thumbSticks.rightX, state.thumbSticks.rightY));
 		pad.Triggers = GamePadTriggers(state.triggers.left, state.triggers.right);
@@ -62,7 +62,7 @@ namespace xna {
 
 		pad.IsConnected = state.connected;
 		pad.PackedNumber = state.packet;
-		pad.Sticks = GamePadThumbSticks(
+		pad.ThumbSticks = GamePadThumbSticks(
 			Vector2(state.thumbSticks.leftX, state.thumbSticks.leftY),
 			Vector2(state.thumbSticks.rightX, state.thumbSticks.rightY));
 		pad.Triggers = GamePadTriggers(state.triggers.left, state.triggers.right);

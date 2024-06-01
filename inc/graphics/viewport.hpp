@@ -1,6 +1,8 @@
 #ifndef XNA_GRAPHICS_VIEWPORT
 #define XNA_GRAPHICS_VIEWPORT
 
+#include "common/numerics.hpp"
+
 namespace xna {
 	struct Viewport {
 		float X{ 0 };
@@ -22,6 +24,15 @@ namespace xna {
 				&& Height == other.Height 
 				&& MinDetph == other.MinDetph 
 				&& MaxDepth == other.MaxDepth;
+		}
+
+		constexpr Rectangle Bounds() const {
+			return { 
+				static_cast<int>(X),
+				static_cast<int>(Y),
+				static_cast<int>(Width),
+				static_cast<int>(Height),
+			};
 		}
 	};
 }

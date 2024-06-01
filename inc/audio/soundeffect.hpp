@@ -25,7 +25,15 @@ namespace xna {
 
 	class SoundEffect {
 	public:
-		SoundEffect(AudioEngine& audioEngine, String const& fileName);
+		//Remover posteriormente ou implementar funções de carregamento dos dados
+		SoundEffect();
+		SoundEffect(String const& fileName);
+		SoundEffect(
+			std::vector<Byte> const& format,
+			std::vector<Byte> const& data,
+			Int loopStart,
+			Int loopLength,
+			TimeSpan const& duration);
 		~SoundEffect();
 		void Play();
 		void Play(float volume, float pitch, float pan);
@@ -35,6 +43,8 @@ namespace xna {
 		struct PlatformImplementation;
 		uptr<PlatformImplementation> impl = nullptr;
 	};
+
+	using PSoundEffect = sptr<SoundEffect>;
 }
 
 #endif

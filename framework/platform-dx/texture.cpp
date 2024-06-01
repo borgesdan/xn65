@@ -271,6 +271,7 @@ namespace xna {
 			impl->dxShaderResource = nullptr;
 		}
 
+		impl->dxShaderDescription.Format = impl->dxDescription.Format;
 		impl->dxShaderDescription.Texture2D.MipLevels = impl->dxDescription.MipLevels;
 		hr = m_device->impl->_device->CreateShaderResourceView(resource, &impl->dxShaderDescription, &impl->dxShaderResource);
 
@@ -353,4 +354,26 @@ namespace xna {
 
 		return texture2d;
 	}	
+
+	Int Texture2D::Width() const {
+		if (!impl) return 0;
+
+		return static_cast<Int>(impl->dxDescription.Width);
+	}
+
+	Int Texture2D::Height() const {
+		if (!impl) return 0;
+
+		return static_cast<Int>(impl->dxDescription.Height);
+	}
+
+	Rectangle Texture2D::Bounds() const {
+		if (!impl) return {};
+
+		return Rectangle(
+			0, 0,
+			static_cast<Int>(impl->dxDescription.Width),
+			static_cast<Int>(impl->dxDescription.Height)
+		);
+	}
 }

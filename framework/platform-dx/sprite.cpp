@@ -7,6 +7,7 @@
 #include "graphics/blendstate.hpp"
 #include "graphics/depthstencilstate.hpp"
 #include "platform-dx/implementations.hpp"
+#include <stdexcept>
 
 using DxSpriteBatch = DirectX::SpriteBatch;
 using DxSpriteSortMode = DirectX::SpriteSortMode;
@@ -17,29 +18,90 @@ using DirectX::FXMVECTOR;
 using DirectX::XMVECTORF32;
 using DirectX::GXMVECTOR;
 using DxSpriteFont = DirectX::SpriteFont;
+using DxGlyph = DirectX::SpriteFont::Glyph;
 
 namespace xna {
-	SpriteFont::SpriteFont(GraphicsDevice& device, String const& fontFileName)
+	SpriteFont::SpriteFont(
+		sptr<Texture2D> const& texture,
+		std::vector<Rectangle> const& glyphs,
+		std::vector<Rectangle> const& cropping,
+		std::vector<Char> const& charMap,
+		Int lineSpacing,
+		float spacing,
+		std::vector<Vector3> const& kerning,
+		std::optional<Char> defaultCharacter) :
+		textureValue(texture), glyphData(glyphs), croppingData(cropping),
+		characterMap(charMap), lineSpacing(lineSpacing), spacing(spacing),
+		kerning(kerning), defaultCharacter(defaultCharacter)
 	{
-		const auto wString = XnaHToWString(fontFileName);
-		implementation = uNew<PlatformImplementation>();
-		implementation->_dxSpriteFont = New<DxSpriteFont>(device.impl->_device, wString.c_str());
+		if (!texture)
+			throw std::invalid_argument("SpriteFont: texture is null.");
+
+		std::vector<DxGlyph> dxGlyps(glyphs.size());		
+
+		for (size_t i = 0; i < dxGlyps.size(); ++i) {
+			DxGlyph g;
+			g.Subrect.left = glyphs[i].Left();
+			g.Subrect.right = glyphs[i].Right();
+			g.Subrect.top = glyphs[i].Top();
+			g.Subrect.bottom = glyphs[i].Bottom();
+			g.Character = static_cast<Uint>(charMap[i]);
+			g.XOffset = kerning[i].X;
+			g.YOffset = cropping[i].Y;
+			g.XAdvance = kerning[i].Z;
+			dxGlyps[i] = g;
+		}		
+		
+		impl = uNew<PlatformImplementation>();
+		impl->_dxSpriteFont = unew<DxSpriteFont>(
+			//ID3D11ShaderResourceView* texture
+			texture->impl->dxShaderResource,
+			//Glyph const* glyphs
+			dxGlyps.data(),
+			//size_t glyphCount
+			glyphs.size(),
+			//float lineSpacing
+			static_cast<float>(lineSpacing)
+		);
+
+		if (defaultCharacter.has_value()) {
+			const auto defChar = static_cast<wchar_t>(defaultCharacter.value());
+			impl->_dxSpriteFont->SetDefaultCharacter(defChar);
+		}
+		else {
+			impl->_dxSpriteFont->SetDefaultCharacter(charMap[0]);
+		}
 	}
 
-	SpriteFont::~SpriteFont() {}
+	SpriteFont::~SpriteFont() {
+		impl = nullptr;
+	}
 
 	Vector2 SpriteFont::MeasureString(String const& text, bool ignoreWhiteSpace)
 	{
-		if (!implementation->_dxSpriteFont)
+		if (!impl->_dxSpriteFont)
 			return Vector2();
 
-		const auto size = implementation->_dxSpriteFont->MeasureString(text.c_str(), ignoreWhiteSpace);
+		const auto size = impl->_dxSpriteFont->MeasureString(text.c_str(), ignoreWhiteSpace);
 		Vector2 vec2{};
 		vec2.X = size.m128_f32[0];
 		vec2.Y = size.m128_f32[1];
 
 		return vec2;
-	}	
+	}
+
+	Vector2 SpriteFont::MeasureString(WString const& text, bool ignoreWhiteSpace)
+	{
+		if (!impl->_dxSpriteFont)
+			return Vector2();
+
+		const auto size = impl->_dxSpriteFont->MeasureString(text.c_str(), ignoreWhiteSpace);
+		Vector2 vec2{};
+		vec2.X = size.m128_f32[0];
+		vec2.Y = size.m128_f32[1];
+
+		return vec2;
+	}
 
 	static constexpr void ConvertSpriteSort(SpriteSortMode value, DirectX::SpriteSortMode& target) {
 		target = static_cast<DirectX::SpriteSortMode>(static_cast<int>(value));
@@ -57,7 +119,7 @@ namespace xna {
 
 	SpriteBatch::~SpriteBatch() {
 	}
-	
+
 	void SpriteBatch::Begin(SpriteSortMode sortMode, BlendState* blendState, SamplerState* samplerState, DepthStencilState* depthStencil, RasterizerState* rasterizerState, Matrix const& transformMatrix) {
 
 		if (!implementation->_dxspriteBatch)
@@ -65,14 +127,14 @@ namespace xna {
 
 		DxSpriteSortMode sort;
 		ConvertSpriteSort(sortMode, sort);
-		
+
 		const auto& t = transformMatrix;
 		DxMatrix matrix = DxMatrix(
 			t.M11, t.M12, t.M13, t.M14,
 			t.M21, t.M22, t.M23, t.M24,
 			t.M31, t.M32, t.M33, t.M34,
 			t.M41, t.M42, t.M43, t.M44);
-		
+
 
 		implementation->_dxspriteBatch->Begin(
 			sort,
@@ -294,7 +356,7 @@ namespace xna {
 			layerDepth);
 	}
 
-	void SpriteBatch::Viewport(xna::Viewport const& value)	{
+	void SpriteBatch::Viewport(xna::Viewport const& value) {
 		if (!implementation->_dxspriteBatch)
 			return;
 
@@ -307,27 +369,27 @@ namespace xna {
 		_view.MaxDepth = value.MaxDepth;
 
 		implementation->_dxspriteBatch->SetViewport(_view);
-	}	
+	}
 
 	void SpriteBatch::DrawString(SpriteFont& spriteFont, String const& text, Vector2 const& position, Color const& color) {
-		if (!implementation->_dxspriteBatch || !spriteFont.implementation->_dxSpriteFont)
+		if (!implementation->_dxspriteBatch || !spriteFont.impl->_dxSpriteFont)
 			return;
 
 		const auto _position = XMFLOAT2(position.X, position.Y);
 		const auto v4 = color.ToVector4();
 		const XMVECTORF32 _color = { v4.X, v4.Y, v4.Z, v4.W };
 
-		spriteFont.implementation->_dxSpriteFont->DrawString(
+		spriteFont.impl->_dxSpriteFont->DrawString(
 			implementation->_dxspriteBatch.get(),
 			text.c_str(),
 			_position,
 			_color
 		);
 	}
-	
+
 	void SpriteBatch::DrawString(SpriteFont& spriteFont, String const& text, Vector2 const& position,
 		Color const& color, float rotation, Vector2 const& origin, float scale, SpriteEffects effects, float layerDepth) {
-		if (!implementation->_dxspriteBatch || !spriteFont.implementation->_dxSpriteFont)
+		if (!implementation->_dxspriteBatch || !spriteFont.impl->_dxSpriteFont)
 			return;
 
 		const auto _position = XMFLOAT2(position.X, position.Y);
@@ -336,15 +398,15 @@ namespace xna {
 		const XMVECTORF32 _color = { v4.X, v4.Y, v4.Z, v4.W };
 		const auto _effects = static_cast<DxSpriteEffects>(effects);
 
-		spriteFont.implementation->_dxSpriteFont->DrawString(
+		spriteFont.impl->_dxSpriteFont->DrawString(
 			implementation->_dxspriteBatch.get(),
 			text.c_str(),
 			_position,
-			_color, 
-			rotation, 
-			_origin, 
-			scale, 
-			_effects, 
+			_color,
+			rotation,
+			_origin,
+			scale,
+			_effects,
 			layerDepth
 		);
 	}

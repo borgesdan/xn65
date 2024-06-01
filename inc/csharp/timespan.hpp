@@ -1,8 +1,3 @@
-/*
-	TimeSpan in C++
-	Source code: https://source.dot.net/#System.Private.CoreLib/src/libraries/System.Private.CoreLib/src/System/TimeSpan.cs,865ef7b89f41b632 
-*/
-
 #ifndef XNA_CSHARP_TIMESPAN_HPP
 #define XNA_CSHARP_TIMESPAN_HPP
 
@@ -11,6 +6,8 @@
 #include <cmath>
 
 namespace xna {
+	//A port of the System.TimeSpan
+	//TimeSpan represents a duration of time.A TimeSpan can be negative or positive.
 	struct TimeSpan {
 		static constexpr int64_t NanosecondsPerTick = 100;
 		static constexpr int64_t TicksPerMicrosecond = 10;
@@ -49,7 +46,7 @@ namespace xna {
 		static constexpr int64_t MinDays = MinTicks / TicksPerDay;
 		static constexpr int64_t MaxDays = MaxTicks / TicksPerDay;
 		static constexpr int64_t TicksPerTenthSecond = TicksPerMillisecond * 100;
-
+		
 		static constexpr TimeSpan Zero() { return TimeSpan(); }
 		static constexpr TimeSpan MaxValue() { return TimeSpan(MaxTicks); }
 		static constexpr TimeSpan MinValue() { return TimeSpan(MinTicks); }
@@ -144,6 +141,9 @@ namespace xna {
 
 		//TODO: Not implemented.
 		//static constexpr TimeSpan FromMinutes(int64_t minutes, int64_t seconds = 0, int64_t milliseconds = 0, int64_t microseconds = 0);
+		static constexpr TimeSpan FromSeconds(int seconds) {
+			return FromSeconds(static_cast<int64_t>(seconds));
+		}
 
 		static constexpr TimeSpan FromSeconds(int64_t seconds) {
 			return FromUnits(seconds, TicksPerSecond, MinSeconds, MaxSeconds);
@@ -292,12 +292,20 @@ namespace xna {
 			return a.Divide(b);
 		}
 
-		friend TimeSpan operator<(TimeSpan const& a, TimeSpan const& b) {
+		friend bool operator<(TimeSpan const& a, TimeSpan const& b) {
 			return a._ticks < b._ticks;
 		}
 
-		friend TimeSpan operator<=(TimeSpan const& a, TimeSpan const& b) {
+		friend bool operator<=(TimeSpan const& a, TimeSpan const& b) {
 			return a._ticks <= b._ticks;
+		}
+
+		friend bool operator>(TimeSpan const& a, TimeSpan const& b) {
+			return a._ticks > b._ticks;
+		}
+
+		friend bool operator>=(TimeSpan const& a, TimeSpan const& b) {
+			return a._ticks >= b._ticks;
 		}
 
 	private:

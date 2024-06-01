@@ -2,109 +2,73 @@
 #include "csharp/buffer.hpp"
 
 namespace xna {
-	Int BinaryReader::PeekChar(xna_error_ptr_arg)
+	Int BinaryReader::PeekChar()
 	{
-		if (!stream) {
-			xna_error_apply(err, XnaErrorCode::INVALID_OPERATION);
-			return -1;
-		}
-
 		const auto position = stream->Position();
-		const auto num = Read(err);
+		const auto num = Read();		
 
-		if (xna_error_haserros(err))
-			return -1;
-
-		stream->Seek(position, SeekOrigin::Begin, err);
-
-		if (xna_error_haserros(err))
-			return -1;
+		stream->Seek(position, SeekOrigin::Begin);
 
 		return num;
 	}
 
-	Int BinaryReader::Read(xna_error_ptr_arg)
+	Int BinaryReader::Read()
 	{
-		if (!stream) {
-			xna_error_apply(err, XnaErrorCode::INVALID_OPERATION);
-			return -1;
-		}
+		const auto result = InternalReadOneChar();
 
-		const auto result = InternalReadOneChar(err);
-
-		return xna_error_haserros(err) ? -1 : result;
+		return result;
 	}
 
-	bool BinaryReader::ReadBoolean(xna_error_ptr_arg)
+	bool BinaryReader::ReadBoolean()
 	{
-		FillBuffer(1, err);
-		return xna_error_haserros(err) ? false : buffer[0] > 0;
+		FillBuffer(1);
+		return buffer[0] > 0;
 	}
 
-	Byte BinaryReader::ReadByte(xna_error_ptr_arg)
+	Byte BinaryReader::ReadByte()
 	{
-		if (!stream) {
-			xna_error_apply(err, XnaErrorCode::INVALID_OPERATION);
-			return -1;
-		}
-
 		const auto num = stream->ReadByte();
-
-		if (num == -1)
-		{
-			xna_error_apply(err, XnaErrorCode::END_OF_FILE);
-			return 0;
-		}
 
 		return static_cast<Byte>(num);
 	}
 
-	Sbyte BinaryReader::ReadSByte(xna_error_ptr_arg)
+	Sbyte BinaryReader::ReadSByte()
 	{
-		FillBuffer(1, err);
-		return xna_error_haserros(err) ? -1 : static_cast<Sbyte>(buffer[0]);
+		FillBuffer(1);
+		return static_cast<Sbyte>(buffer[0]);
 	}
 
-	Char BinaryReader::ReadChar(xna_error_ptr_arg)
+	Char BinaryReader::ReadChar()
 	{
-		auto num = Read(err);
+		auto num = Read();
 
-		if (xna_error_haserros(err) || num == -1)
+		if (num == -1)
 			return '\0';
 
 		return static_cast<Char>(num);
 	}
 
-	Short BinaryReader::ReadInt16(xna_error_ptr_arg)
+	Short BinaryReader::ReadInt16()
 	{
-		FillBuffer(2, err);
-
-		if (xna_error_haserros(err))
-			return -1;
+		FillBuffer(2);		
 
 		return static_cast<Short>(
 			static_cast<Int>(buffer[0])
 			| static_cast<Int>(buffer[1]) << 8);
 	}
 
-	Ushort BinaryReader::ReadUInt16(xna_error_ptr_arg)
+	Ushort BinaryReader::ReadUInt16()
 	{
-		FillBuffer(2, err);
-
-		if (xna_error_haserros(err))
-			return 0;
+		FillBuffer(2);		
 
 		return static_cast<Ushort>(
 			static_cast<Uint>(buffer[0])
 			| static_cast<Uint>(buffer[1]) << 8);
 	}
 
-	Int BinaryReader::ReadInt32(xna_error_ptr_arg)
+	Int BinaryReader::ReadInt32()
 	{
-		FillBuffer(4, err);
-
-		if (xna_error_haserros(err))
-			return -1;
+		FillBuffer(4);		
 
 		return static_cast<Int>(buffer[0])
 			| static_cast<Int>(buffer[1]) << 8
@@ -112,12 +76,9 @@ namespace xna {
 			| static_cast<Int>(buffer[3]) << 24;
 	}
 
-	Uint BinaryReader::ReadUInt32(xna_error_ptr_arg)
+	Uint BinaryReader::ReadUInt32()
 	{
-		FillBuffer(4, err);
-
-		if (xna_error_haserros(err))
-			return -1;
+		FillBuffer(4);		
 
 		return static_cast<Uint>(
 			static_cast<Int>(buffer[0])
@@ -126,12 +87,9 @@ namespace xna {
 			| static_cast<Int>(buffer[3]) << 24);
 	}
 
-	Long BinaryReader::ReadInt64(xna_error_ptr_arg)
+	Long BinaryReader::ReadInt64()
 	{
-		FillBuffer(8, err);
-
-		if (xna_error_haserros(err))
-			return -1;
+		FillBuffer(8);		
 
 		const auto num1 = static_cast<Uint>(
 			static_cast<Int>(buffer[4])
@@ -148,12 +106,9 @@ namespace xna {
 		return static_cast<Long>(num1) << 32 | static_cast<Long>(num2);
 	}
 
-	Ulong BinaryReader::ReadUInt64(xna_error_ptr_arg)
+	Ulong BinaryReader::ReadUInt64()
 	{
-		FillBuffer(8, err);
-
-		if (xna_error_haserros(err))
-			return 0;
+		FillBuffer(8);		
 
 		const auto num1 = static_cast<Uint>(
 			static_cast<Int>(buffer[4])
@@ -170,12 +125,9 @@ namespace xna {
 		return static_cast<Ulong>(num1) << 32 | static_cast<Ulong>(num2);
 	}
 
-	float BinaryReader::ReadSingle(xna_error_ptr_arg)
+	float BinaryReader::ReadSingle()
 	{
-		FillBuffer(4, err);
-
-		if (xna_error_haserros(err))
-			return std::numeric_limits<float>::quiet_NaN();
+		FillBuffer(4);		
 
 		const auto num = static_cast<Uint>(
 			static_cast<Int>(buffer[0])
@@ -186,12 +138,9 @@ namespace xna {
 		return *(float*)&num;
 	}
 
-	double BinaryReader::ReadDouble(xna_error_ptr_arg)
+	double BinaryReader::ReadDouble()
 	{
-		FillBuffer(8, err);
-
-		if (xna_error_haserros(err))
-			return std::numeric_limits<double>::quiet_NaN();
+		FillBuffer(8);		
 
 		const auto num1 = static_cast<Uint>(
 			static_cast<Int>(buffer[4])
@@ -210,23 +159,15 @@ namespace xna {
 		return *(double*)&num3;
 	}
 
-	std::string BinaryReader::ReadString(xna_error_ptr_arg)
+	std::string BinaryReader::ReadString()
 	{
-		static const auto empty = std::string();
-
-		if (!stream) {
-			xna_error_apply(err, XnaErrorCode::INVALID_OPERATION);
-			return std::string();
-		}
+		static const auto empty = std::string();		
 
 		Int num = 0;
-		auto val1 = Read7BitEncodedInt(err);
-
-		if (xna_error_haserros(err))
-			return empty;
+		auto val1 = Read7BitEncodedInt();		
 
 		if (val1 < 0) {
-			xna_error_apply(err, XnaErrorCode::INVALID_OPERATION);
+			//xna_error_apply(err, XnaErrorCode::INVALID_OPERATION);
 			return empty;
 		}
 
@@ -245,7 +186,7 @@ namespace xna {
 			const auto byteCount = stream->Read(charBytes, 0, val1 - num > 128 ? 128 : val1 - num);
 
 			if (byteCount == 0) {
-				xna_error_apply(err, XnaErrorCode::END_OF_FILE);
+				//xna_error_apply(err, XnaErrorCode::END_OF_FILE);
 				return empty;
 			}
 
@@ -264,7 +205,7 @@ namespace xna {
 		return sb;
 	}
 
-	Int BinaryReader::InternalReadOneChar(xna_error_ptr_arg)
+	Int BinaryReader::InternalReadOneChar()
 	{
 		Int num1 = 0;
 		Long num2 = 0;
@@ -278,7 +219,8 @@ namespace xna {
 
 		while (num1 == 0)
 		{
-			auto byteCount = m2BytesPerChar ? 2 : 1;
+			//auto byteCount = m2BytesPerChar ? 2 : 1;
+			auto byteCount = 1;
 			const auto num4 = stream->ReadByte();
 
 			charBytes[0] = static_cast<Byte>(num4);
@@ -297,7 +239,7 @@ namespace xna {
 			if (byteCount == 0) {
 				return -1;
 			}
-
+			
 			auto data = reinterpret_cast<char*>(charBytes.data());
 			const auto result = std::string(data, data + byteCount);
 
@@ -311,49 +253,38 @@ namespace xna {
 		return num1 == 0 ? -1 : static_cast<Int>(singleChar[0]);
 	}
 
-	void BinaryReader::FillBuffer(Int numBytes, xna_error_ptr_arg)
+	void BinaryReader::FillBuffer(Int numBytes)
 	{
-		if (!stream) {
-			xna_error_apply(err, XnaErrorCode::INVALID_OPERATION);
-			return;
-		}
+		if (numBytes < 0 || numBytes > buffer.size()) {
+			throw std::out_of_range("numBytes");
+		}		
 
-		if (!buffer.empty() && (numBytes < 0 || numBytes > buffer.size())) {
-			xna_error_apply(err, XnaErrorCode::ARGUMENT_OUT_OF_RANGE);
-			return;
-		}
-
-		int offset = 0;
-
-		if (numBytes == 1)
-		{
-
-			const auto num = stream->ReadByte();
-			if (num == -1) {
-				xna_error_apply(err, XnaErrorCode::END_OF_FILE);
-				return;
+		Int bytesRead = 0;
+		Int n = 0;		
+		
+		if (numBytes == 1) {
+			n = stream->ReadByte();
+			
+			if (n == -1){
+				throw std::runtime_error("End of file.");
 			}
 
-			buffer[0] = static_cast<Byte>(num);
+			buffer[0] = static_cast<Byte>(n);
+			return;
 		}
-		else
-		{
-			do
-			{
-				const auto num = stream->Read(buffer, offset, numBytes - offset);
 
-				if (num == 0)
-				{
-					xna_error_apply(err, XnaErrorCode::END_OF_FILE);
-					return;
-				}
+		do {
+			n = stream->Read(buffer, bytesRead, numBytes - bytesRead);
+			
+			if (n == 0) {
+				throw std::runtime_error("End of file.");
+			}
 
-				offset += num;
-			} while (offset < numBytes);
-		}
+			bytesRead += n;
+		} while (bytesRead < numBytes);
 	}
 
-	Int BinaryReader::InternalReadChars(Char* buffer, size_t bufferSize, size_t index, size_t count, xna_error_ptr_arg)
+	Int BinaryReader::InternalReadChars(Char* buffer, size_t bufferSize, size_t index, size_t count)
 	{
 		auto charCount = count;
 
@@ -366,8 +297,8 @@ namespace xna {
 			if (count1 > 1)
 				--count1;
 
-			if (m2BytesPerChar)
-				count1 <<= 1;
+			/*if (m2BytesPerChar)
+				count1 <<= 1;*/
 
 			if (count1 > 128)
 				count1 = 128;
@@ -377,19 +308,17 @@ namespace xna {
 
 			std::vector<Byte> numArray;
 
-			byteCount = stream->Read(charBytes, 0, static_cast<Int>(count1), err);
+			byteCount = stream->Read(charBytes, 0, static_cast<Int>(count1));
 			numArray = charBytes;
 
 			if (byteCount == 0)
 				return static_cast<Int>(count - charCount);
 
 			if (position < 0 || byteCount < 0 || (position + byteCount) > numArray.size()) {
-				xna_error_apply(err, XnaErrorCode::ARGUMENT_OUT_OF_RANGE);
 				return -1;
 			}
 
-			if (index < 0 || charCount < 0 || (index + charCount) > bufferSize) {
-				xna_error_apply(err, XnaErrorCode::ARGUMENT_OUT_OF_RANGE);
+			if (index < 0 || charCount < 0 || (index + charCount) > bufferSize) {				
 				return -1;
 			}
 
@@ -411,104 +340,146 @@ namespace xna {
 		return static_cast<Int>(count - charCount);
 	}
 
-	Long BinaryWriter::Seek(Int offset, SeekOrigin origin, xna_error_ptr_arg)
+	Int BinaryReader::Read7BitEncodedInt()
 	{
-		if (!_stream) {
-			xna_error_apply(err, XnaErrorCode::INVALID_OPERATION);
-			return -1;
+		Uint result = 0;
+		Byte byteReadJustNow;
+
+		constexpr Int MaxBytesWithoutOverflow = 4;
+
+		for (size_t shift = 0; shift < MaxBytesWithoutOverflow * 7; shift += 7)
+		{
+			byteReadJustNow = ReadByte();
+			result |= (byteReadJustNow & 0x7Fu) << shift;
+
+			if (byteReadJustNow <= 0x7Fu)
+			{
+				return static_cast<Int>(result);
+			}
 		}
 
+		byteReadJustNow = ReadByte();
+
+		if (byteReadJustNow > 0b1111u) {
+			throw std::format_error("Too many bytes in what should have been a 7-bit encoded integer.");
+		}
+
+		result |= static_cast<Uint>(byteReadJustNow) << (MaxBytesWithoutOverflow * 7);
+		return static_cast<Int>(result);
+	}
+
+	Long BinaryReader::Read7BitEncodedInt64() {
+		Ulong result = 0;
+		Byte byteReadJustNow;
+
+		constexpr Int MaxBytesWithoutOverflow = 9;
+
+		for (size_t shift = 0; shift < MaxBytesWithoutOverflow * 7; shift += 7)
+		{
+			byteReadJustNow = ReadByte();
+			result |= (static_cast<Ulong>(byteReadJustNow & 0x7Ful)) << shift;
+
+			if (byteReadJustNow <= 0x7Fu) {
+				return static_cast<Long>(result);
+			}
+		}
+
+		byteReadJustNow = ReadByte();
+
+		if (byteReadJustNow > 0b1u)
+		{
+			throw std::format_error("Too many bytes in what should have been a 7-bit encoded integer.");
+		}
+
+		result |= static_cast<Ulong>(byteReadJustNow) << (MaxBytesWithoutOverflow * 7);
+		return static_cast<Long>(result);
+	}
+
+	Int BinaryReader::Read(std::vector<Char>& buffer, size_t index, size_t count)
+	{
+		return InternalReadChars(buffer.data(), buffer.size(), index, count);
+	}
+
+	Int BinaryReader::Read(std::vector<Byte>& buffer, size_t index, size_t count)
+	{
+		auto data = reinterpret_cast<Char*>(buffer.data());
+		return InternalReadChars(data, buffer.size(), index, count);
+	}
+
+	std::vector<Byte> BinaryReader::ReadBytes(size_t count)
+	{
+		std::vector<Byte> result(count);
+		Int numRead = 0;
+
+		do {
+			const auto n = stream->Read(result, static_cast<Int>(numRead), static_cast<Int>(count));
+
+			if (n == 0)
+				break;
+
+			numRead += n;
+			count -= n;
+		} while (count > 0);
+
+		if (numRead != result.size()) {
+			std::vector<Byte> copy(numRead);
+			Buffer::BlockCopy(result.data(), 0, copy.data(), 0, numRead);
+			result = copy;
+		}
+
+		return result;
+	}
+
+	//Binary Writer
+
+	Long BinaryWriter::Seek(Int offset, SeekOrigin origin)
+	{
 		return _stream->Seek(offset, origin);
 	}
 
-	void BinaryWriter::Write(bool value, xna_error_ptr_arg)
+	void BinaryWriter::Write(bool value)
 	{
-		if (!_stream) {
-			xna_error_apply(err, XnaErrorCode::INVALID_OPERATION);
-			return;
-		}
-
 		_buffer[0] = value ? (Byte)1 : (Byte)0;
 		_stream->Write(_buffer, 0, 1);
 	}
 
-	void BinaryWriter::Write(Byte value, xna_error_ptr_arg)
+	void BinaryWriter::Write(Byte value)
 	{
-		if (!_stream) {
-			xna_error_apply(err, XnaErrorCode::INVALID_OPERATION);
-			return;
-		}
-
 		_stream->WriteByte(value);
 	}
 
-	void BinaryWriter::Write(Sbyte value, xna_error_ptr_arg)
+	void BinaryWriter::Write(Sbyte value)
 	{
-		if (!_stream) {
-			xna_error_apply(err, XnaErrorCode::INVALID_OPERATION);
-			return;
-		}
-
 		_stream->WriteByte(static_cast<Byte>(value));
 	}
 
-	void BinaryWriter::Write(Byte const* buffer, Int bufferLength, xna_error_ptr_arg)
+	void BinaryWriter::Write(Byte const* buffer, Int bufferLength)
 	{
-		if (!_stream) {
-			xna_error_apply(err, XnaErrorCode::INVALID_OPERATION);
-			return;
-		}
-
 		_stream->Write(buffer, bufferLength, 0, bufferLength);
 	}
 
-	void BinaryWriter::Write(std::vector<Byte> const& buffer, xna_error_ptr_arg)
+	void BinaryWriter::Write(std::vector<Byte> const& buffer)
 	{
-		if (!_stream) {
-			xna_error_apply(err, XnaErrorCode::INVALID_OPERATION);
-			return;
-		}
-
 		_stream->Write(buffer, 0, static_cast<Int>(buffer.size()));
 	}
-	void BinaryWriter::Write(Byte const* buffer, Int bufferLength, Int index, Int count, xna_error_ptr_arg)
+	void BinaryWriter::Write(Byte const* buffer, Int bufferLength, Int index, Int count)
 	{
-		if (!_stream) {
-			xna_error_apply(err, XnaErrorCode::INVALID_OPERATION);
-			return;
-		}
-
 		_stream->Write(buffer, bufferLength, index, count);
 	}
 
-	void BinaryWriter::Write(std::vector<Byte> const& buffer, Int index, Int count, xna_error_ptr_arg)
+	void BinaryWriter::Write(std::vector<Byte> const& buffer, Int index, Int count)
 	{
-		if (!_stream) {
-			xna_error_apply(err, XnaErrorCode::INVALID_OPERATION);
-			return;
-		}
-
 		_stream->Write(buffer, index, count);
 	}
 
-	void BinaryWriter::Write(Char ch, xna_error_ptr_arg)
+	void BinaryWriter::Write(Char ch)
 	{
-		if (!_stream) {
-			xna_error_apply(err, XnaErrorCode::INVALID_OPERATION);
-			return;
-		}
-
 		_buffer[0] = static_cast<Byte>(ch);
 		_stream->Write(_buffer, 0, 1);
 	}
 
-	void BinaryWriter::Write(double value, xna_error_ptr_arg)
+	void BinaryWriter::Write(double value)
 	{
-		if (!_stream) {
-			xna_error_apply(err, XnaErrorCode::INVALID_OPERATION);
-			return;
-		}
-
 		Ulong num = (Ulong) * (Long*)&value;
 		_buffer[0] = static_cast<Byte>(num);
 		_buffer[1] = static_cast<Byte>(num >> 8);
@@ -522,37 +493,22 @@ namespace xna {
 		_stream->Write(_buffer, 0, 8);
 	}
 
-	void BinaryWriter::Write(Short value, xna_error_ptr_arg)
+	void BinaryWriter::Write(Short value)
 	{
-		if (!_stream) {
-			xna_error_apply(err, XnaErrorCode::INVALID_OPERATION);
-			return;
-		}
-
 		_buffer[0] = static_cast<Byte>(value);
 		_buffer[1] = static_cast<Byte>((Uint)value >> 8);
 		_stream->Write(_buffer, 0, 2);
 	}
 
-	void BinaryWriter::Write(Ushort value, xna_error_ptr_arg)
+	void BinaryWriter::Write(Ushort value)
 	{
-		if (!_stream) {
-			xna_error_apply(err, XnaErrorCode::INVALID_OPERATION);
-			return;
-		}
-
 		_buffer[0] = static_cast<Byte>(value);
 		_buffer[1] = static_cast<Byte>((Uint)value >> 8);
 		_stream->Write(_buffer, 0, 2);
 	}
 
-	void BinaryWriter::Write(Int value, xna_error_ptr_arg)
+	void BinaryWriter::Write(Int value)
 	{
-		if (!_stream) {
-			xna_error_apply(err, XnaErrorCode::INVALID_OPERATION);
-			return;
-		}
-
 		_buffer[0] = static_cast<Byte>(value);
 		_buffer[1] = static_cast<Byte>(value >> 8);
 		_buffer[2] = static_cast<Byte>(value >> 16);
@@ -560,13 +516,8 @@ namespace xna {
 		_stream->Write(_buffer, 0, 4);
 	}
 
-	void BinaryWriter::Write(Uint value, xna_error_ptr_arg)
+	void BinaryWriter::Write(Uint value)
 	{
-		if (!_stream) {
-			xna_error_apply(err, XnaErrorCode::INVALID_OPERATION);
-			return;
-		}
-
 		_buffer[0] = static_cast<Byte>(value);
 		_buffer[1] = static_cast<Byte>(value >> 8);
 		_buffer[2] = static_cast<Byte>(value >> 16);
@@ -574,13 +525,8 @@ namespace xna {
 		_stream->Write(_buffer, 0, 4);
 	}
 
-	void BinaryWriter::Write(Ulong value, xna_error_ptr_arg)
+	void BinaryWriter::Write(Ulong value)
 	{
-		if (!_stream) {
-			xna_error_apply(err, XnaErrorCode::INVALID_OPERATION);
-			return;
-		}
-
 		_buffer[0] = static_cast<Byte>(value);
 		_buffer[1] = static_cast<Byte>(value >> 8);
 		_buffer[2] = static_cast<Byte>(value >> 16);
@@ -592,13 +538,8 @@ namespace xna {
 		_stream->Write(_buffer, 0, 8);
 	}
 
-	void BinaryWriter::Write(float value, xna_error_ptr_arg)
+	void BinaryWriter::Write(float value)
 	{
-		if (!_stream) {
-			xna_error_apply(err, XnaErrorCode::INVALID_OPERATION);
-			return;
-		}
-
 		Uint num = *(Uint*)&value;
 		_buffer[0] = static_cast<Byte>(num);
 		_buffer[1] = static_cast<Byte>(num >> 8);
@@ -607,23 +548,13 @@ namespace xna {
 		_stream->Write(_buffer, 0, 4);
 	}
 
-	void BinaryWriter::Write(std::string const& value, xna_error_ptr_arg)
+	void BinaryWriter::Write(std::string const& value)
 	{
-		if (!_stream) {
-			xna_error_apply(err, XnaErrorCode::INVALID_OPERATION);
-			return;
-		}
-
 		Write(value.c_str(), value.size());
 	}
 
-	void BinaryWriter::Write(const char* _string, size_t stringLength, xna_error_ptr_arg)
+	void BinaryWriter::Write(const char* _string, size_t stringLength)
 	{
-		if (!_stream) {
-			xna_error_apply(err, XnaErrorCode::INVALID_OPERATION);
-			return;
-		}
-
 		Write7BitEncodedInt(static_cast<Int>(stringLength));
 		const auto b = reinterpret_cast<const Byte*>(_string);
 		_stream->Write(b, static_cast<Int>(stringLength), 0, static_cast<Int>(stringLength));
@@ -632,19 +563,14 @@ namespace xna {
 	void BinaryWriter::Write7BitEncodedInt(Int value)
 	{
 		Uint num;
-		for (num = (Uint)value; num >= (Uint)128U; num >>= 7)
-			Write((Byte)(num | (Uint)128U));
+		for (num = static_cast<Uint>(value); num >= static_cast<Uint>(128U); num >>= 7)
+			Write(static_cast<Byte>(num | static_cast<Uint>(128U)));
 
-		Write((Byte)num);
+		Write(static_cast<Byte>(num));
 	}
 
-	void BinaryWriter::Write(Long value, xna_error_ptr_arg)
+	void BinaryWriter::Write(Long value)
 	{
-		if (!_stream) {
-			xna_error_apply(err, XnaErrorCode::INVALID_OPERATION);
-			return;
-		}
-
 		_buffer[0] = static_cast<Byte>(value);
 		_buffer[1] = static_cast<Byte>(value >> 8);
 		_buffer[2] = static_cast<Byte>(value >> 16);
@@ -654,61 +580,5 @@ namespace xna {
 		_buffer[6] = static_cast<Byte>(value >> 48);
 		_buffer[7] = static_cast<Byte>(value >> 56);
 		_stream->Write(_buffer, 0, 8);
-	}
-
-	Int BinaryReader::Read7BitEncodedInt(xna_error_ptr_arg)
-	{
-		Int num1 = 0;
-		Int num2 = 0;
-
-		while (num2 != 35) {
-			auto num3 = ReadByte(err);
-
-			if (xna_error_haserros(err))
-				return -1;
-
-			num1 |= (static_cast<Int>(num3) & static_cast<Int>(SbyteMaxValue)) << num2;
-			num2 += 7;
-
-			if ((static_cast<Int>(num3) & 128) == 0)
-				return num1;
-		}
-
-		xna_error_apply(err, XnaErrorCode::INVALID_OPERATION);
-		return -1;
-	}
-
-	Int BinaryReader::Read(std::vector<Char>& buffer, size_t index, size_t count, xna_error_ptr_arg)
-	{
-		return InternalReadChars(buffer.data(), buffer.size(), index, count, err);
-	}
-
-	Int BinaryReader::Read(std::vector<Byte>& buffer, size_t index, size_t count, xna_error_ptr_arg)
-	{
-		auto data = reinterpret_cast<Char*>(buffer.data());
-		return InternalReadChars(data, buffer.size(), index, count, err);
-	}
-	std::vector<Byte> BinaryReader::ReadBytes(size_t count, xna_error_ptr_arg)
-	{
-		std::vector<Byte> result(count);
-		Int numRead = 0;
-
-		do {
-			const auto n = stream->Read(result, static_cast<Int>(numRead), static_cast<Int>(count), err);
-			
-			if (n == 0)
-				break;
-			
-			numRead += n;
-			count -= n;
-		} while (count > 0);
-
-		if (numRead != result.size()) {			
-			std::vector<Byte> copy(numRead);
-			Buffer::BlockCopy(result.data(), 0, copy.data(), 0, numRead);
-			result = copy;
-		}
-
-		return result;
-	}
+	}	
 }

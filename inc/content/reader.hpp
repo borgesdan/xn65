@@ -84,9 +84,27 @@ namespace xna {
 			xna_error_apply(err, XnaErrorCode::ARGUMENT_OUT_OF_RANGE);
 			
 			return T();
-		}
+		}		
+		
+		auto reader = typeReaders[index];		
 
-		auto reader = typeReaders[index];
+		//Verificação necessária pois a depender da situação é encontrado um reader errado
+		/*auto typeT = typeof<T>();
+		auto typeThash = typeT->GetHashCode();
+		auto readerType = reader->TargetType();
+
+		if (readerType->GetHashCode() != typeThash) {
+			for (auto const& item : typeReaders) {
+				if (item->TargetType()->GetHashCode() == typeThash) {
+					reader = item;
+					break;
+				}
+			}
+
+			if(reader->TargetType()->GetHashCode() != typeThash)
+				throw std::runtime_error("ContentReader::ReadObjectInternal: wrong reader!");
+		}	*/
+
 		return InvokeReader<T>(*reader, existingInstance, err);
 	}
 

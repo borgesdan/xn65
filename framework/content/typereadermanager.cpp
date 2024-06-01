@@ -1,6 +1,6 @@
 #include "content/typereadermanager.hpp"
 #include "content/reader.hpp"
-#include "content/defaultreaders.hpp"
+#include "content/readers/default.hpp"
 
 namespace xna {
 	std::vector<PContentTypeReader> ContentTypeReaderManager::ReadTypeManifest(Int typeCount, sptr<ContentReader>& contentReader, xna_error_ptr_arg)
@@ -11,7 +11,7 @@ namespace xna {
 		std::vector<PContentTypeReader> newTypeReaders;
 
 		for (size_t index = 0; index < typeCount; ++index)
-		{
+		{			
 			const auto readerTypeName = contentReader->ReadString();
 			const auto xnaType = readerTypeName.substr(0, readerTypeName.find(","));
 
@@ -24,15 +24,15 @@ namespace xna {
 				return std::vector<PContentTypeReader>();
 			}
 
-			contentTypeReaderArray[index] = typeReader;
+			contentTypeReaderArray[index] = typeReader;			
+		}
 
-			if (!newTypeReaders.empty()) {
-				auto manager = std::shared_ptr<ContentTypeReaderManager>(new ContentTypeReaderManager(contentReader));
+		if (!newTypeReaders.empty()) {
+			auto manager = std::shared_ptr<ContentTypeReaderManager>(new ContentTypeReaderManager(contentReader));
 
-				for (size_t i = 0; i < newTypeReaders.size(); ++i) {
-					auto& contentTypeReader = newTypeReaders[i];
-					contentTypeReader->Initialize(manager);
-				}
+			for (size_t i = 0; i < newTypeReaders.size(); ++i) {
+				auto& contentTypeReader = newTypeReaders[i];
+				contentTypeReader->Initialize(manager);
 			}
 		}
 
@@ -44,16 +44,17 @@ namespace xna {
 		if (!targetType) {
 			xna_error_apply(err, XnaErrorCode::ARGUMENT_IS_NULL);
 			return nullptr;
-		}
-
-		sptr<ContentTypeReader> typeReader = nullptr;
-
-		if (!ContentTypeReaderManager::targetTypeToReader.contains(targetType)) {
-			xna_error_apply(err, XnaErrorCode::ARGUMENT_OUT_OF_RANGE);
-			return nullptr;
 		}		
 
-		return ContentTypeReaderManager::targetTypeToReader[targetType];
+		for (auto const& item : ContentTypeReaderManager::targetTypeToReader) {
+			auto firstHashCode = item.first->GetHashCode();
+			auto targetHashCode = targetType->GetHashCode();
+
+			if (firstHashCode == targetHashCode)
+				return item.second;
+		}
+
+		throw std::runtime_error("ContentTypeReaderManager::GetTypeReade: targetType not found.");
 	}
 
 	ContentTypeReaderManager::ContentTypeReaderManager(sptr<ContentReader>& contentReader) {
@@ -115,7 +116,6 @@ namespace xna {
 		}
 
 		ContentTypeReaderManager::targetTypeToReader.insert({ targetType, reader });
-		//ContentTypeReaderManager::readerTypeToReader.insert({ reader->GetType(), reader });
 		ContentTypeReaderManager::readerTypeToReader.insert({ typeof(*reader), reader});
 		ContentTypeReaderManager::nameToReader.insert({ readerTypeName, reader });
 	}
@@ -138,9 +138,7 @@ namespace xna {
 		if (targetTypeToReader.empty() && readerTypeToReader.empty()) {
 			auto typeReader = New<ObjectReader>();
 			auto contentTypeReader = reinterpret_pointer_cast<ContentTypeReader>(typeReader);
-
-			//targetTypeToReader.insert({ typeReader->TargetType(), contentTypeReader});
-			//readerTypeToReader.insert({ typeReader->GetType(), contentTypeReader});
+			
 			targetTypeToReader.insert({ typeof<Object>(), contentTypeReader});
 			readerTypeToReader.insert({ typeof<ObjectReader>(), contentTypeReader});
 		}

@@ -35,7 +35,6 @@ namespace xna {
 
 	
 	using PTexture2D = sptr<Texture2D>;
-	using UTexture2D = uptr<Texture2D>;
 }
 
 #endif

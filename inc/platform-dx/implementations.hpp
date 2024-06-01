@@ -406,7 +406,7 @@ namespace xna {
 		HINSTANCE		_hInstance{ nullptr };
 		HWND			_windowHandle{ nullptr };
 		int				_windowWidth{ 800 };
-		int				_windowHeight{ 600 };
+		int				_windowHeight{ 480 };
 		HICON			_windowIcon{ nullptr };
 		HCURSOR			_windowCursor{ nullptr };
 		COLORREF		_windowColor{ RGB(0,0,0) };
@@ -468,7 +468,7 @@ namespace xna {
 	private:
 		friend class Game;
 		
-		DX::StepTimer _stepTimer{};
+		xna::StepTimer _stepTimer{};
 	};
 
 	struct SoundEffectInstance::PlatformImplementation {
@@ -476,6 +476,9 @@ namespace xna {
 	};
 
 	struct SoundEffect::PlatformImplementation {
+		~PlatformImplementation() {			
+		}
+
 		uptr<DirectX::SoundEffect> _dxSoundEffect = nullptr;
 	};
 

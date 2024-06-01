@@ -75,13 +75,13 @@ namespace xna {
         Int Length() override;
         Long Position() override;
         void Close() override;
-        Long Seek(Long offset, SeekOrigin const& origin, xna_error_nullarg) override;
-        Int Read(Byte* buffer, Int bufferLength, Int offset, Int count, xna_error_nullarg) override;
-        Int Read(std::vector<Byte>& buffer, Int offset, Int count, xna_error_nullarg) override;
-        Int ReadByte(xna_error_nullarg) override;
-        void Write(Byte const* buffer, Int bufferLength, Int offset, Int count, xna_error_nullarg) override;
-        void Write(std::vector<Byte> const& buffer, Int offset, Int count, xna_error_nullarg) override;
-        void WriteByte(Byte value, xna_error_nullarg) override;
+        Long Seek(Long offset, SeekOrigin const& origin) override;
+        Int Read(Byte* buffer, Int bufferLength, Int offset, Int count) override;
+        Int Read(std::vector<Byte>& buffer, Int offset, Int count) override;
+        Int ReadByte() override;
+        void Write(Byte const* buffer, Int bufferLength, Int offset, Int count) override;
+        void Write(std::vector<Byte> const& buffer, Int offset, Int count) override;
+        void WriteByte(Byte value) override;
         virtual constexpr bool IsClosed() override { return false; }
     };
 }

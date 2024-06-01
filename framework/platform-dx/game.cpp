@@ -10,6 +10,7 @@ namespace xna {
 	Game::Game() {
 		impl = unew<PlatformImplementation>();
 		services = New<GameServiceContainer>();
+		auto iservice = reinterpret_pointer_cast<IServiceProvider>(services);
 		_contentManager = New<ContentManager>("", services);
 
 		_gameWindow = New<GameWindow>();
@@ -33,7 +34,7 @@ namespace xna {
 	int Game::StartGameLoop() {
 		MSG msg{};		
 
-		impl->_stepTimer = DX::StepTimer();
+		impl->_stepTimer = xna::StepTimer();
 
 		do {
 			if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
@@ -67,35 +68,27 @@ namespace xna {
 	}
 
 	int Game::Run() {
-		Initialize();
+		try {
+			Initialize();
 
-		if (graphicsDevice == nullptr) {
-			MessageBox(nullptr, "O dispositivo gráfico não foi inicializado corretamente", "XN65", MB_OK);
-			return EXIT_FAILURE;
+			if (graphicsDevice == nullptr) {
+				MessageBox(nullptr, "O dispositivo gráfico não foi inicializado corretamente", "XN65", MB_OK);
+				return EXIT_FAILURE;
+			}
+
+			return StartGameLoop();
 		}
-
-		return StartGameLoop();
+		catch (std::exception& e) {
+			MessageBox(nullptr, e.what(), "XN65", MB_OK);
+			return EXIT_FAILURE;
+		}		
 	}	
 
-	void Game::Initialize() {
-//#if (_WIN32_WINNT >= _WIN32_WINNT_WIN10)
-		Microsoft::WRL::Wrappers::RoInitializeWrapper initialize(RO_INIT_MULTITHREADED);
-		if (FAILED(initialize))
-		{
-			MessageBox(nullptr, "Ocorreu um erro ao chamar Microsoft::WRL::Wrappers::RoInitializeWrapper.", "XN65", MB_OK);
-		}
-//#else
-		HRESULT hr = CoInitializeEx(nullptr, COINIT_MULTITHREADED);
-		if (FAILED(hr))
-		{
-			MessageBox(nullptr, "Ocorreu um erro ao chamar CoInitializeEx.", "XN65", MB_OK);
-		}
-//#endif		
+	void Game::Initialize() {	
 		Keyboard::Initialize();
 		Mouse::Initialize();
 		GamePad::Initialize();
-
-		_audioEngine = New<AudioEngine>();
+		AudioEngine::Initialize();		
 
 		LoadContent();
 	}

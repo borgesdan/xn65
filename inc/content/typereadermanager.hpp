@@ -22,10 +22,14 @@ namespace xna {
 
 	protected:
 		ContentTypeReader(sptr<Type> const& targetType) : _targetType(targetType) 
-		{}	
+		{
+			//TargetIsValueType = targetType->IsValueType();
+		}	
 
 	public:
-		bool TargetIsValueType{ false };
+		//Vamos admitir que primariamente o alvo é tipo valor
+		//caso não seja deve ser setado manualmente para falso
+		bool TargetIsValueType{ true };
 
 	private:
 		sptr<Type> _targetType = nullptr;
@@ -33,6 +37,11 @@ namespace xna {
 
 	template <class T>
 	class ContentTypeReaderT : public ContentTypeReader {
+	public:
+		//Por algum motivo ListReader<T> necessita de um construtor padrão
+		ContentTypeReaderT() : ContentTypeReader(typeof<T>()) {
+			auto a = T();
+		}
 	protected:
 		ContentTypeReaderT(sptr<Type> const& targetType) : ContentTypeReader(targetType){}
 

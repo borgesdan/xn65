@@ -124,7 +124,7 @@ namespace xna {
 		if (_byte == 'w')
 			num1 = binaryReader.ReadUInt16();
 		else
-			return nullptr;
+			throw std::runtime_error("ContentReader::PrepareStream: Bad xbn file.");
 
 		graphicsProfile = (num1 & XnbVersionProfileMask) >> XnbVersionProfileShift;
 		bool flag = false;
