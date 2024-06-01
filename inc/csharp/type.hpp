@@ -15,6 +15,7 @@ namespace xna {
 		constexpr bool IsEnum() const { return isEnum; }
 		constexpr bool IsValueType() const { return isValueType; }
 		constexpr bool IsPrimitive() const { return isPrimitive; }
+		constexpr bool IsPointer() const { return isPointer; }
 
 		virtual size_t GetHashCode() const;
 
@@ -24,6 +25,7 @@ namespace xna {
 				&& isClass == other.isClass
 				&& isEnum == other.isEnum
 				&& isValueType == other.isValueType
+				&& isPointer == other.isPointer
 				&& isPrimitive == other.isPrimitive;
 		}
 
@@ -43,6 +45,7 @@ namespace xna {
 		bool isEnum{ false };
 		bool isValueType{ false };
 		bool isPrimitive{ false };	
+		bool isPointer { false };	
 	};
 
 	template <class T>
@@ -61,6 +64,13 @@ namespace xna {
 			enumType->isValueType = true;
 			enumType->isEnum = true;
 			return enumType;
+		}
+
+		if (std::is_pointer<T>::value) {
+			auto pointerType = New<Type>();
+			pointerType->fullName = typeid(T).name();
+			pointerType->isPointer = true;
+			return pointerType;
 		}
 
 		if (std::is_class<T>::value) {

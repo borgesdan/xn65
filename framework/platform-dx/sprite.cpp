@@ -25,7 +25,7 @@ namespace xna {
 		sptr<Texture2D> const& texture,
 		std::vector<Rectangle> const& glyphs,
 		std::vector<Rectangle> const& cropping,
-		std::vector<char> const& charMap,
+		std::vector<Char> const& charMap,
 		Int lineSpacing,
 		float spacing,
 		std::vector<Vector3> const& kerning,
@@ -37,7 +37,7 @@ namespace xna {
 		if (!texture)
 			throw std::invalid_argument("SpriteFont: texture is null.");
 
-		std::vector<DxGlyph> dxGlyps(glyphs.size());
+		std::vector<DxGlyph> dxGlyps(glyphs.size());		
 
 		for (size_t i = 0; i < dxGlyps.size(); ++i) {
 			DxGlyph g;
@@ -45,8 +45,13 @@ namespace xna {
 			g.Subrect.right = glyphs[i].Right();
 			g.Subrect.bottom = glyphs[i].Bottom();
 			g.Subrect.top = glyphs[i].Top();
-		}
-
+			g.Character = static_cast<Uint>(charMap[i]);
+			g.XOffset = kerning[i].X;
+			g.YOffset = kerning[i].Y;
+			g.XAdvance = kerning[i].Z;
+			dxGlyps[i] = g;
+		}		
+		
 		impl = uNew<PlatformImplementation>();
 		impl->_dxSpriteFont = unew<DxSpriteFont>(
 			//ID3D11ShaderResourceView* texture
@@ -62,6 +67,9 @@ namespace xna {
 		if (defaultCharacter.has_value()) {
 			const auto defChar = static_cast<wchar_t>(defaultCharacter.value());
 			impl->_dxSpriteFont->SetDefaultCharacter(defChar);
+		}
+		else {
+			impl->_dxSpriteFont->SetDefaultCharacter(charMap[0]);
 		}
 	}
 

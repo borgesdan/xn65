@@ -271,6 +271,7 @@ namespace xna {
 			impl->dxShaderResource = nullptr;
 		}
 
+		impl->dxShaderDescription.Format = impl->dxDescription.Format;
 		impl->dxShaderDescription.Texture2D.MipLevels = impl->dxDescription.MipLevels;
 		hr = m_device->impl->_device->CreateShaderResourceView(resource, &impl->dxShaderDescription, &impl->dxShaderResource);
 

@@ -89,7 +89,7 @@ namespace xna {
 		auto reader = typeReaders[index];		
 
 		//Verificação necessária pois a depender da situação é encontrado um reader errado
-		auto typeT = typeof<T>();
+		/*auto typeT = typeof<T>();
 		auto typeThash = typeT->GetHashCode();
 		auto readerType = reader->TargetType();
 
@@ -103,7 +103,7 @@ namespace xna {
 
 			if(reader->TargetType()->GetHashCode() != typeThash)
 				throw std::runtime_error("ContentReader::ReadObjectInternal: wrong reader!");
-		}	
+		}	*/
 
 		return InvokeReader<T>(*reader, existingInstance, err);
 	}

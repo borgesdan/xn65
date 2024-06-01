@@ -22,10 +22,14 @@ namespace xna {
 
 	protected:
 		ContentTypeReader(sptr<Type> const& targetType) : _targetType(targetType) 
-		{}	
+		{
+			//TargetIsValueType = targetType->IsValueType();
+		}	
 
 	public:
-		bool TargetIsValueType{ false };
+		//Vamos admitir que primariamente o alvo é tipo valor
+		//caso não seja deve ser setado manualmente para falso
+		bool TargetIsValueType{ true };
 
 	private:
 		sptr<Type> _targetType = nullptr;

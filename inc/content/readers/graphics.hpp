@@ -12,7 +12,9 @@
 namespace xna {
 	class Texture2DReader : public ContentTypeReaderT<PTexture2D> {
 	public:
-		Texture2DReader() : ContentTypeReaderT(typeof<PTexture2D>()) {}
+		Texture2DReader() : ContentTypeReaderT(typeof<PTexture2D>()) {
+			ContentTypeReader::TargetIsValueType = false;
+		}
 
 		PTexture2D Read(ContentReader& input, PTexture2D& existingInstance) override {
 			const auto format = static_cast<SurfaceFormat>(input.ReadInt32());
@@ -41,13 +43,15 @@ namespace xna {
 
 	class SpriteFontReader : public ContentTypeReaderT<PSpriteFont> {
 	public:
-		SpriteFontReader() : ContentTypeReaderT(typeof<PSpriteFont>()) {}
+		SpriteFontReader() : ContentTypeReaderT(typeof<PSpriteFont>()) {
+			ContentTypeReader::TargetIsValueType = false;
+		}
 
 		PSpriteFont Read(ContentReader& input, PSpriteFont& existingInstance) override {
 			auto texture = input.ReadObject<PTexture2D>();
 			auto glyphs = input.ReadObject<std::vector<Rectangle>>();
 			auto cropping = input.ReadObject<std::vector<Rectangle>>();
-			auto charMap = input.ReadObject<std::vector<char>>();
+			auto charMap = input.ReadObject<std::vector<Char>>();
 			auto lineSpacing = input.ReadInt32();
 			auto spacing = input.ReadSingle();
 			auto kerning = input.ReadObject<std::vector<Vector3>>();

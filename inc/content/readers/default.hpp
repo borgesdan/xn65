@@ -235,7 +235,7 @@ namespace xna {
 		}		
 
 		void Initialize(sptr<ContentTypeReaderManager> const& manager) override {
-			elementReader = manager->GetTypeReader(typeof<std::vector<T>>());
+			elementReader = manager->GetTypeReader(typeof<T>());
 		}
 
 	private:

@@ -59,8 +59,8 @@ namespace PlatformerStarterKit {
 			spriteBatch->Begin();
 
 			level->Draw(gameTime, *spriteBatch);
-
-			//DrawHud();
+			
+			DrawHud();
 
 			spriteBatch->End();
 
@@ -126,8 +126,7 @@ namespace PlatformerStarterKit {
 			auto center = Vector2(titleSafeArea.X + titleSafeArea.Width / 2.0f,
 				titleSafeArea.Y + titleSafeArea.Height / 2.0f);
 			
-			//string timeString = "TIME: " + to_string(level->TimeRemaining().Minutes()) + ":" + to_string(level->TimeRemaining().Seconds());
-			string timeString = "TIME";
+			string timeString = "TIME: " + to_string(level->TimeRemaining().Minutes()) + ":" + to_string(level->TimeRemaining().Seconds());			
 			Color timeColor;
 			if (level->TimeRemaining() > WarningTime ||
 				level->ReachedExit() ||

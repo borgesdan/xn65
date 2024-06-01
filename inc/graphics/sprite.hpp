@@ -87,7 +87,7 @@ namespace xna {
 			sptr<Texture2D> const& texture,
 			std::vector<Rectangle> const& glyphs,
 			std::vector<Rectangle> const& cropping,
-			std::vector<char> const& charMap,
+			std::vector<Char> const& charMap,
 			Int lineSpacing,
 			float spacing,
 			std::vector<Vector3> const& kerning,
@@ -100,7 +100,7 @@ namespace xna {
 		sptr<Texture2D> textureValue = nullptr;
 		std::vector<Rectangle> glyphData;
 		std::vector<Rectangle> croppingData;
-		std::vector<char> characterMap;
+		std::vector<Char> characterMap;
 		Int lineSpacing{0};
 		float spacing{0};
 		std::vector<Vector3> kerning;

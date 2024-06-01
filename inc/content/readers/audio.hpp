@@ -10,7 +10,9 @@
 namespace xna {
 	class SoundEffectReader : public ContentTypeReaderT<PSoundEffect> {
 	public:
-		SoundEffectReader() : ContentTypeReaderT(typeof<PSoundEffect>()) {}
+		SoundEffectReader() : ContentTypeReaderT(typeof<PSoundEffect>()) {
+			ContentTypeReader::TargetIsValueType = false;
+		}
 
 		PSoundEffect Read(ContentReader& input, PSoundEffect& existingInstance) override {
 			const auto count1 = input.ReadInt32();
