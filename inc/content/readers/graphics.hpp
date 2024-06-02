@@ -22,7 +22,7 @@ namespace xna {
 			const auto height = input.ReadInt32();
 			const auto mipMaps = input.ReadInt32();
 
-			auto a_device = ContentManager::Services()->GetService(*typeof<GraphicsDevice>());
+			auto a_device = ContentManager::GameServiceProvider()->GetService(*typeof<GraphicsDevice>());
 			sptr<GraphicsDevice> device = nullptr;
 
 			if (a_device.has_value())

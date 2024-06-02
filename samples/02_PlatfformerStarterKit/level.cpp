@@ -10,7 +10,7 @@
 namespace PlatformerStarterKit {
 	Level::Level(xna::sptr<xna::IServiceProvider> const& serviceProvider, xna::String const& path) : path(path)
 	{	
-		content = xna::snew<xna::ContentManager>("Content", serviceProvider);
+		content = xna::snew<xna::ContentManager>(serviceProvider, "Content");
 		timeRemaining = xna::TimeSpan::FromMinutes(2.0);		
 
 		layers = std::vector<xna::PTexture2D>(3);

@@ -1,11 +1,11 @@
 #ifndef XNA_CONTENT_READER_HPP
 #define XNA_CONTENT_READER_HPP
 
-#include "../common/color.hpp"
-#include "../common/numerics.hpp"
-#include "../csharp/binary.hpp"
-#include "../csharp/type.hpp"
-#include "../default.hpp"
+#include "common/color.hpp"
+#include "common/numerics.hpp"
+#include "csharp/binary.hpp"
+#include "csharp/type.hpp"
+#include "default.hpp"
 #include "typereadermanager.hpp"
 #include <any>
 

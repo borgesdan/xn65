@@ -11,7 +11,8 @@ namespace xna {
 		impl = unew<PlatformImplementation>();
 		services = New<GameServiceContainer>();
 		auto iservice = reinterpret_pointer_cast<IServiceProvider>(services);
-		_contentManager = New<ContentManager>("", services);
+		_contentManager = New<ContentManager>(services, "");
+		_contentManager->_gameServices = iservice;
 
 		_gameWindow = New<GameWindow>();
 		_gameWindow->impl->Color(146, 150, 154);
