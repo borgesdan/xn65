@@ -72,11 +72,10 @@ namespace xna {
 	public:
 		using Activador = sptr<ContentTypeReader>(*)();
 
-		static sptr<ContentTypeReader> CreateInstance(sptr<Type> const& type, xna_error_nullarg) {
+		static sptr<ContentTypeReader> CreateInstance(sptr<Type> const& type) {
 			if (!type)
 			{
-				xna_error_apply(err, XnaErrorCode::ARGUMENT_IS_NULL);
-				return nullptr;
+				throw std::invalid_argument("ContentTypeReaderActivador: type is null.");
 			}
 
 			const auto hash = type->GetHashCode();
@@ -91,10 +90,9 @@ namespace xna {
 			return activador();
 		}
 
-		static void SetActivador(sptr<Type> const& type, Activador activador, xna_error_nullarg) {
+		static void SetActivador(sptr<Type> const& type, Activador activador) {
 			if (!type) {
-				xna_error_apply(err, XnaErrorCode::ARGUMENT_IS_NULL);
-				return;
+				throw std::invalid_argument("ContentTypeReaderActivador: type is null.");
 			}
 
 			const auto hash = type->GetHashCode();

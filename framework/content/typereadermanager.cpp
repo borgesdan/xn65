@@ -103,7 +103,7 @@ namespace xna {
 			return false;
 		}
 
-		reader = ContentTypeReaderActivador::CreateInstance(type, err);
+		reader = ContentTypeReaderActivador::CreateInstance(type);
 		return true;
 	}
 
