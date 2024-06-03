@@ -92,7 +92,7 @@ namespace xna {
 		return *(double*)&int64;
 	}
 
-	std::vector<Byte> ContentReader::ReadByteBuffer(size_t size, xna_error_ptr_arg)
+	std::vector<Byte> ContentReader::ReadByteBuffer(size_t size)
 	{
 		if (byteBuffer.empty() || byteBuffer.size() < size)
 		{
@@ -104,8 +104,7 @@ namespace xna {
 		{			
 			num = Read(byteBuffer, index, size - index);
 			if (num == 0) {
-				xna_error_apply(err, XnaErrorCode::FAILED_OPERATION);
-				return std::vector<Byte>();
+				throw std::runtime_error("ContentReader::ReadByteBuffer: Bad xbn.");
 			}
 		}
 
@@ -161,12 +160,7 @@ namespace xna {
 	Int ContentReader::ReadHeader() {
 		auto _this = shared_from_this();
 		typeReaders = ContentTypeReaderManager::ReadTypeManifest(this->Read7BitEncodedInt(), _this);
-		auto length = this->Read7BitEncodedInt();
-
-		if (length > 0)
-		{
-			//TODO: length > 0
-		}
+		auto length = this->Read7BitEncodedInt();		
 
 		return length;
 

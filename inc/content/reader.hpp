@@ -63,7 +63,7 @@ namespace xna {
 		template <typename T>
 		auto ReadAsset();
 
-		std::vector<Byte> ReadByteBuffer(size_t size, xna_error_nullarg);		
+		std::vector<Byte> ReadByteBuffer(size_t size);		
 
 	private:
 		ContentReader(sptr<xna::ContentManager> const& contentManager, sptr<Stream>& input, String const& assetName, Int graphicsProfile)
@@ -74,13 +74,13 @@ namespace xna {
 		Int ReadHeader();
 
 		template <typename T>
-		auto ReadObjectInternal(std::any& existingInstance, xna_error_nullarg);
+		auto ReadObjectInternal(std::any& existingInstance);
 		
 		template <typename T>
-		auto ReadObjectInternal(ContentTypeReader& typeReader, std::any& existingInstance, xna_error_nullarg);
+		auto ReadObjectInternal(ContentTypeReader& typeReader, std::any& existingInstance);
 
 		template <typename T>
-		auto InvokeReader(ContentTypeReader& reader, std::any& existingInstance, xna_error_nullarg);
+		auto InvokeReader(ContentTypeReader& reader, std::any& existingInstance);
 
 	private:
 		sptr<xna::ContentManager> _contentManager = nullptr;
@@ -96,7 +96,7 @@ namespace xna {
 	};
 
 	template<typename T>
-	inline auto ContentReader::ReadObjectInternal(std::any& existingInstance, xna_error_ptr_arg)
+	inline auto ContentReader::ReadObjectInternal(std::any& existingInstance)
 	{
 		const auto num = Read7BitEncodedInt();
 
@@ -107,18 +107,16 @@ namespace xna {
 		const auto index = num - 1;
 
 		if (index >= typeReaders.size()) {
-			xna_error_apply(err, XnaErrorCode::ARGUMENT_OUT_OF_RANGE);
-			
-			XnaHelper::ReturnDefaultOrNull<T>();
+			throw std::runtime_error("ContentReader::ReadObjectInternal: Bad xbn.");
 		}		
 		
 		auto reader = typeReaders[index];		
 		
-		return InvokeReader<T>(*reader, existingInstance, err);
+		return InvokeReader<T>(*reader, existingInstance);
 	}
 
 	template<typename T>
-	inline auto ContentReader::InvokeReader(ContentTypeReader& reader, std::any& existingInstance, xna_error_ptr_arg)
+	inline auto ContentReader::InvokeReader(ContentTypeReader& reader, std::any& existingInstance)
 	{
 		auto contentTypeReader = reinterpret_cast<ContentTypeReaderT<T>*>(&reader);
 		T objB;
@@ -167,11 +165,11 @@ namespace xna {
 	}
 
 	template<typename T>
-	inline auto ContentReader::ReadObjectInternal(ContentTypeReader& typeReader, std::any& existingInstance, xna_error_ptr_arg)
+	inline auto ContentReader::ReadObjectInternal(ContentTypeReader& typeReader, std::any& existingInstance)
 	{
 		return typeReader.TargetIsValueType
-			? InvokeReader<T>(typeReader, existingInstance, err)
-			: ReadObjectInternal<T>(existingInstance, err);
+			? InvokeReader<T>(typeReader, existingInstance)
+			: ReadObjectInternal<T>(existingInstance);
 	}	
 }
 
