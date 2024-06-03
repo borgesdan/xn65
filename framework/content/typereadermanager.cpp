@@ -3,6 +3,7 @@
 #include "content/readers/default.hpp"
 
 namespace xna {
+
 	std::vector<PContentTypeReader> ContentTypeReaderManager::ReadTypeManifest(Int typeCount, sptr<ContentReader>& contentReader, xna_error_ptr_arg)
 	{
 		initMaps();
