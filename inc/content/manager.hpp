@@ -5,6 +5,7 @@
 #include "default.hpp"
 #include "csharp/service.hpp"
 #include "reader.hpp"
+#include <map>
 
 namespace xna {
 	//The run-time component which loads managed objects from the binary files produced by the design time content pipeline.
@@ -41,11 +42,32 @@ namespace xna {
 			if (assetName.empty()) {
 				return XnaHelper::ReturnDefaultOrNull<T>();
 			}
+			
+			if constexpr (XnaHelper::is_shared_ptr<T>::value) {				
+
+				if (_loadedAssets.contains(assetName)) {
+					auto& voidAsset = _loadedAssets[assetName];					
+					using TYPE = T::element_type;
+					auto asset = reinterpret_pointer_cast<TYPE>(voidAsset);
+					return asset;
+				}
+			}
 
 			const auto obj2 = ReadAsset<T>(assetName); 
 
+			if constexpr (XnaHelper::is_shared_ptr<T>::value) {
+
+				if(obj2)
+					_loadedAssets.emplace( assetName, obj2 );
+			}
+
 			return obj2;
 		}		
+
+		//Disposes all data that was loaded by this ContentManager.
+		void Unload() {
+			_loadedAssets.clear();
+		}
 
 		//Gets the service provider associated with the main Game.
 		static sptr<IServiceProvider> GameServiceProvider() {
@@ -75,6 +97,7 @@ namespace xna {
 		String _rootDirectory;		
 		std::vector<Byte> byteBuffer;
 		sptr<IServiceProvider> _services = nullptr;
+		std::map<String, sptr<void>> _loadedAssets;
 		
 		inline static sptr<IServiceProvider> _gameServices = nullptr;		
 		inline const static String contentExtension = ".xnb";
