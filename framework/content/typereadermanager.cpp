@@ -4,6 +4,35 @@
 
 namespace xna {
 
+	sptr<ContentTypeReader> ContentTypeReaderActivador::CreateInstance(sptr<Type> const& type) {
+		if (!type)
+		{
+			throw std::invalid_argument("ContentTypeReaderActivador: type is null.");
+		}
+
+		const auto hash = type->GetHashCode();
+
+		if (!activators.contains(hash))
+			return nullptr;
+
+		auto activador = activators[hash];
+
+		if (!activador) return nullptr;
+
+		return activador();
+	}
+
+	void ContentTypeReaderActivador::SetActivador(sptr<Type> const& type, Activador activador) {
+		if (!type) {
+			throw std::invalid_argument("ContentTypeReaderActivador: type is null.");
+		}
+
+		const auto hash = type->GetHashCode();
+
+		if (!activators.contains(hash))
+			activators.insert({ hash, activador });
+	}
+
 	std::vector<PContentTypeReader> ContentTypeReaderManager::ReadTypeManifest(Int typeCount, sptr<ContentReader>& contentReader, xna_error_ptr_arg)
 	{
 		initMaps();
@@ -144,4 +173,26 @@ namespace xna {
 			readerTypeToReader.insert({ typeof<ObjectReader>(), contentTypeReader});
 		}
 	}	
+
+	void ContentTypeReaderManager::RollbackAddReader(std::map<String, PContentTypeReader>& dictionary, sptr<ContentTypeReader>& reader) {
+		std::map<String, sptr<ContentTypeReader>>::iterator it;
+
+		for (it = dictionary.begin(); it != dictionary.end(); it++) {
+			if (it->second == reader) {
+				dictionary.erase(it->first);
+				it = dictionary.begin();
+			}
+		}
+	}
+
+	void ContentTypeReaderManager::RollbackAddReader(std::map<PType, PContentTypeReader>& dictionary, sptr<ContentTypeReader>& reader) {
+		std::map<PType, sptr<ContentTypeReader>>::iterator it;
+
+		for (it = dictionary.begin(); it != dictionary.end(); it++) {
+			if (it->second == reader) {
+				dictionary.erase(it->first);
+				it = dictionary.begin();
+			}
+		}
+	}
 }

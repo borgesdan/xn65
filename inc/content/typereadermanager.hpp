@@ -54,7 +54,7 @@ namespace xna {
 		//Reads a strongly typed object from the current stream.
 		std::any Read(ContentReader& input, std::any& existingInstance) override {
 			if (existingInstance.has_value() && !(existingInstance.type() == typeid(T)))
-				throw std::runtime_error("ContentTypeReader<T>::Read: bad xbn wrong type.");
+				throw std::runtime_error("ContentTypeReader<T>::Read: bad xbn, wrong type.");
 
 			auto existingInstance1 = XnaHelper::ReturnDefaultOrNull<T>();
 			auto obj = Read(input, existingInstance1);
@@ -72,34 +72,8 @@ namespace xna {
 	public:
 		using Activador = sptr<ContentTypeReader>(*)();
 
-		static sptr<ContentTypeReader> CreateInstance(sptr<Type> const& type) {
-			if (!type)
-			{
-				throw std::invalid_argument("ContentTypeReaderActivador: type is null.");
-			}
-
-			const auto hash = type->GetHashCode();
-
-			if (!activators.contains(hash))
-				return nullptr;
-
-			auto activador = activators[hash];
-
-			if (!activador) return nullptr;
-
-			return activador();
-		}
-
-		static void SetActivador(sptr<Type> const& type, Activador activador) {
-			if (!type) {
-				throw std::invalid_argument("ContentTypeReaderActivador: type is null.");
-			}
-
-			const auto hash = type->GetHashCode();
-
-			if (!activators.contains(hash))
-				activators.insert({ hash, activador });
-		}
+		static sptr<ContentTypeReader> CreateInstance(sptr<Type> const& type);
+		static void SetActivador(sptr<Type> const& type, Activador activador);
 
 	private:
 		inline static auto activators = std::map<size_t, Activador>();
@@ -135,28 +109,8 @@ namespace xna {
 		static void AddTypeReader(String const& readerTypeName, sptr<ContentReader>& contentReader, sptr<ContentTypeReader>& reader, xna_error_nullarg);
 		static void RollbackAddReaders(std::vector<sptr<ContentTypeReader>>& newTypeReaders);
 
-		static void RollbackAddReader(std::map<String, PContentTypeReader>& dictionary, sptr<ContentTypeReader>& reader) {
-			std::map<String, sptr<ContentTypeReader>>::iterator it;
-
-			for (it = dictionary.begin(); it != dictionary.end(); it++) {
-				if (it->second == reader) {
-					dictionary.erase(it->first);
-					it = dictionary.begin();
-				}
-			}
-		}
-
-		static void RollbackAddReader(std::map<PType, PContentTypeReader>& dictionary, sptr<ContentTypeReader>& reader) {
-			std::map<PType, sptr<ContentTypeReader>>::iterator it;
-
-			for (it = dictionary.begin(); it != dictionary.end(); it++) {
-				if (it->second == reader) {
-					dictionary.erase(it->first);
-					it = dictionary.begin();
-				}
-			}
-		}
-
+		static void RollbackAddReader(std::map<String, PContentTypeReader>& dictionary, sptr<ContentTypeReader>& reader);
+		static void RollbackAddReader(std::map<PType, PContentTypeReader>& dictionary, sptr<ContentTypeReader>& reader);
 
 	private:
 		sptr<ContentReader> contentReader = nullptr;
