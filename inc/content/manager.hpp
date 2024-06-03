@@ -9,7 +9,7 @@
 
 namespace xna {
 	//The run-time component which loads managed objects from the binary files produced by the design time content pipeline.
-	class ContentManager {
+	class ContentManager : public std::enable_shared_from_this<ContentManager> {
 	public:
 		ContentManager(sptr<IServiceProvider> const& services) :
 			_rootDirectory("") {
@@ -82,7 +82,8 @@ namespace xna {
 			if (!input)
 				return XnaHelper::ReturnDefaultOrNull<T>();
 
-			auto contentReader = ContentReader::Create(this, input, assetName);
+			const auto _this = shared_from_this();
+			auto contentReader = ContentReader::Create(_this, input, assetName);
 
 			auto asset = contentReader->ReadAsset<T>();
 			return asset;
@@ -94,8 +95,7 @@ namespace xna {
 		friend class ContentReader;
 		friend class Game;
 
-		String _rootDirectory;		
-		std::vector<Byte> byteBuffer;
+		String _rootDirectory;				
 		sptr<IServiceProvider> _services = nullptr;
 		std::map<String, sptr<void>> _loadedAssets;
 		

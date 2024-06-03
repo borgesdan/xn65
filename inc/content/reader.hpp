@@ -10,38 +10,63 @@
 #include <any>
 
 namespace xna {
+	//A worker object that implements most of ContentManager.Load.
 	class ContentReader : public BinaryReader, public std::enable_shared_from_this<ContentReader> {
 	public:
-		static sptr<ContentReader> Create(ContentManager* contentManager, sptr<Stream>& input, String const& assetName);
+		static sptr<ContentReader> Create(sptr<ContentManager> const& contentManager, sptr<Stream>& input, String const& assetName);		
+
+		// Reads a single object from the current stream.
+		template <typename T>
+		auto ReadObject();
+
+		// Reads a single object from the current stream.
+		template <typename T>
+		auto ReadObject(T existingInstance);
+
+		// Reads a single object from the current stream.
+		template <typename T>
+		auto ReadObject(ContentTypeReader& typeReader);
+
+		// Reads a single object from the current stream.
+		template <typename T>
+		auto ReadObject(ContentTypeReader& typeReader, T existingInstance);
+
+		//Reads a Vector2 value from the current stream. 
+		Vector2 ReadVector2();
+		//Reads a Vector3 value from the current stream. 
+		Vector3 ReadVector3();
+		//Reads a Vector4 value from the current stream. 
+		Vector4 ReadVector4();
+		//Reads a Matrix value from the currently open stream.
+		Matrix ReadMatrix();
+		//Reads a Quaternion value from the current stream. 
+		Quaternion ReadQuaternion();
+		//Reads a Color value from the currently open stream.
+		Color ReadColor();
+		//Reads a float value from the currently open stream.
+		float ReadSingle();
+		//Reads a double value from the currently open stream.
+		double ReadDouble();
+
+		//Gets the name of the asset currently being read by this ContentReader.
+		constexpr String AssetName() const {
+			return _assetName;
+		}
+
+		//Gets the ContentManager associated with the ContentReader.
+		sptr<xna::ContentManager> ContentManager() const;
+
+		//
+		// Internal methods
+		//
 
 		template <typename T>
 		auto ReadAsset();
 
-		template <typename T>
-		auto ReadObject();
-
-		template <typename T>
-		auto ReadObject(T existingInstance);
-
-		template <typename T>
-		auto ReadObject(ContentTypeReader& typeReader);
-
-		template <typename T>
-		auto ReadObject(ContentTypeReader& typeReader, T existingInstance);
-
-		Vector2 ReadVector2();
-		Vector3 ReadVector3();
-		Vector4 ReadVector4();
-		Matrix ReadMatrix();
-		Quaternion ReadQuaternion();
-		Color ReadColor();
-		float ReadSingle();
-		double ReadDouble();
-
-		std::vector<Byte> ReadByteBuffer(size_t size, xna_error_nullarg);
+		std::vector<Byte> ReadByteBuffer(size_t size, xna_error_nullarg);		
 
 	private:
-		ContentReader(ContentManager* contentManager, sptr<Stream>& input, String const& assetName, Int graphicsProfile)
+		ContentReader(sptr<xna::ContentManager> const& contentManager, sptr<Stream>& input, String const& assetName, Int graphicsProfile)
 			: BinaryReader(input), _contentManager(contentManager), _assetName(assetName) {}
 
 		static sptr<Stream> PrepareStream(sptr<Stream>& input, String const& assetName, Int& graphicsProfile);
@@ -58,10 +83,11 @@ namespace xna {
 		auto InvokeReader(ContentTypeReader& reader, std::any& existingInstance, xna_error_nullarg);
 
 	private:
-		ContentManager* _contentManager = nullptr;
+		sptr<xna::ContentManager> _contentManager = nullptr;
 		String _assetName;
 		std::vector<sptr<ContentTypeReader>> typeReaders;
 		Int graphicsProfile{ 0 };
+		std::vector<Byte> byteBuffer;
 
 		static constexpr Ushort XnbVersionProfileMask = 32512;
 		static constexpr Ushort XnbCompressedVersion = 32773;
