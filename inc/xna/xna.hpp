@@ -19,7 +19,6 @@
 #include "content/reader.hpp"
 #include "content/typereadermanager.hpp"
 #include "content/lzx/decoder.hpp"
-#include "content/lzx/decoderstream.hpp"
 #include "csharp/binary.hpp"
 #include "csharp/buffer.hpp"
 #include "csharp/object.hpp"

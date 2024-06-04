@@ -1,6 +1,5 @@
 #include "xna/content/reader.hpp"
 #include "xna/content/manager.hpp"
-#include "xna/content/lzx/decoderstream.hpp"
 #include "xna/content/typereadermanager.hpp"
 
 namespace xna {
@@ -152,9 +151,7 @@ namespace xna {
 		const Int compressedTodo = num2 - 14;
 		const auto decompressedTodo = binaryReader.ReadInt32();
 
-		auto lzxStream = New<LzxDecoderStream>(input, compressedTodo, decompressedTodo);
-
-		return reinterpret_pointer_cast<Stream>(lzxStream);
+		throw std::runtime_error("ContentReader::PrepareStream: LzxDecoder not implemented.");
 	}
 
 	Int ContentReader::ReadHeader() {

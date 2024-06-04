@@ -3,11 +3,13 @@
 #
 
 # Add source to this project's executable.
-add_executable (BlankApp WIN32 "game.cpp" "animation.cpp" "enemy.cpp" "level.cpp" "player.cpp" "gem.cpp")
+add_executable (PlatformApp WIN32 "game.cpp" "animation.cpp" "enemy.cpp" "level.cpp" "player.cpp" "gem.cpp")
 
 if (CMAKE_VERSION VERSION_GREATER 3.12)
-  set_property(TARGET BlankApp PROPERTY CXX_STANDARD 20)
+  set_property(TARGET PlatformApp PROPERTY CXX_STANDARD 20)
 endif()
 
 # TODO: Add tests and install targets if needed.
-target_link_libraries(BlankApp Xn65)
+target_link_libraries(
+	PlatformApp Xn65
+)
