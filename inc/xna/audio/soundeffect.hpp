@@ -25,8 +25,6 @@ namespace xna {
 
 	class SoundEffect {
 	public:
-		//Remover posteriormente ou implementar funções de carregamento dos dados
-		SoundEffect();
 		SoundEffect(String const& fileName);
 		SoundEffect(
 			std::vector<Byte> const& format,

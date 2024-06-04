@@ -10,11 +10,7 @@ namespace xna {
 
 	SoundEffectInstance::~SoundEffectInstance() {
 		impl = nullptr;
-	}
-
-	//Remover posteriormente
-	SoundEffect::SoundEffect() {
-	}
+	}	
 
 	SoundEffect::SoundEffect(String const& fileName) {
 		if (!AudioEngine::impl || !AudioEngine::impl->_dxAudioEngine)

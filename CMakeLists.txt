@@ -9,14 +9,17 @@ if (POLICY CMP0141)
   set(CMAKE_MSVC_DEBUG_INFORMATION_FORMAT "$<IF:$<AND:$<C_COMPILER_ID:MSVC>,$<CXX_COMPILER_ID:MSVC>>,$<$<CONFIG:Debug,RelWithDebInfo>:EditAndContinue>,$<$<CONFIG:Debug,RelWithDebInfo>:ProgramDatabase>>")
 endif()
 
-# CMAKE_TOOLCHAIN_FILE
+# VCPKG source directory
 set(PROJECT_VCPKG_DIRECTORY "C:/vcpkg")
-set(PROJECT_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/inc")
+# Includes directory
+set(PROJECT_INCLUDES_DIR "${CMAKE_CURRENT_SOURCE_DIR}/inc")
+# CMAKE_TOOLCHAIN_FILE
 include("${PROJECT_VCPKG_DIRECTORY}/scripts/buildsystems/vcpkg.cmake")
+
 project ("xna")
 
 # Include sub-projects.
-include_directories(${PROJECT_INCLUDE_DIR})
+include_directories(${PROJECT_INCLUDES_DIR})
 add_subdirectory ("framework")
 add_subdirectory ("samples")
 

@@ -2,6 +2,12 @@
 #define XNA_ENUMS_HPP
 
 namespace xna {
+    enum class AudioChannels
+    {
+        Mono = 1,
+        Stereo = 2,
+    };
+
     enum  class AudioReverb {
         Off,
         Default,
