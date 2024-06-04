@@ -48,13 +48,13 @@ namespace xna {
 		}
 
 		PSpriteFont Read(ContentReader& input, PSpriteFont& existingInstance) override {
-			auto texture = input.ReadObject<PTexture2D>();
-			auto glyphs = input.ReadObject<std::vector<Rectangle>>();
-			auto cropping = input.ReadObject<std::vector<Rectangle>>();
-			auto charMap = input.ReadObject<std::vector<Char>>();
-			auto lineSpacing = input.ReadInt32();
-			auto spacing = input.ReadSingle();
-			auto kerning = input.ReadObject<std::vector<Vector3>>();
+			const auto texture = input.ReadObject<PTexture2D>();
+			const auto glyphs = input.ReadObject<std::vector<Rectangle>>();
+			const auto cropping = input.ReadObject<std::vector<Rectangle>>();
+			const auto charMap = input.ReadObject<std::vector<Char>>();
+			const auto lineSpacing = input.ReadInt32();
+			const auto spacing = input.ReadSingle();
+			const auto kerning = input.ReadObject<std::vector<Vector3>>();
 			std::optional<Char> defaultCharacter;
 
 			if (input.ReadBoolean())
