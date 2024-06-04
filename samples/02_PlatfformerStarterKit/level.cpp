@@ -59,9 +59,9 @@ namespace PlatformerStarterKit {
         }
        
         if (!player)
-            std::exception("A level must have a starting point.");
+           throw std::runtime_error("A level must have a starting point.");
         if (exit == InvalidPosition)
-            std::exception("A level must have an exit.");
+            throw std::runtime_error("A level must have an exit.");
 	}
 
     Tile Level::LoadTile(char tileType, int x, int y) {
@@ -93,6 +93,8 @@ namespace PlatformerStarterKit {
         default:
             std::exception("Unsupported tile type character");
         }
+
+        return Tile(nullptr, TileCollision::Passable);;
     }
 
     Tile Level::LoadTile(xna::String const& name, TileCollision collision) {

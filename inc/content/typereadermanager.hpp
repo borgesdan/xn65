@@ -89,14 +89,14 @@ namespace xna {
 	//-------------------------------------------------------//
 	// 				ContentTypeReaderManager				 //
 	//-------------------------------------------------------//
+	
+	//A manager that constructs and keeps track of type reader objects. 
 	class ContentTypeReaderManager {
 	public:
-		static std::vector<PContentTypeReader> ReadTypeManifest(Int typeCount, sptr<ContentReader>& contentReader, xna_error_nullarg);
-		static sptr<ContentTypeReader> GetTypeReader(sptr<Type> const& targetType, sptr<ContentReader>& contentReader, xna_error_nullarg);
-
-		inline sptr<ContentTypeReader> GetTypeReader(sptr<Type> const& targetType, xna_error_nullarg) {
-			return ContentTypeReaderManager::GetTypeReader(targetType, this->contentReader, err);
-		}
+		static std::vector<PContentTypeReader> ReadTypeManifest(Int typeCount, sptr<ContentReader>& contentReader);
+		
+		//Looks up a reader for the specified type.
+		static sptr<ContentTypeReader> GetTypeReader(sptr<Type> const& targetType);		
 
 		inline static bool ContainsTypeReader(sptr<Type> const& targetType) {
 			return ContentTypeReaderManager::targetTypeToReader.contains(targetType);
@@ -104,9 +104,9 @@ namespace xna {
 
 	private:
 		ContentTypeReaderManager(sptr<ContentReader>& contentReader);
-		static sptr<ContentTypeReader> GetTypeReader(String const& readerTypeName, sptr<ContentReader>& contentReader, std::vector<PContentTypeReader>& newTypeReaders, xna_error_nullarg);
-		static bool InstantiateTypeReader(String const& readerTypeName, sptr<ContentReader>& contentReader, sptr<ContentTypeReader>& reader, xna_error_nullarg);
-		static void AddTypeReader(String const& readerTypeName, sptr<ContentReader>& contentReader, sptr<ContentTypeReader>& reader, xna_error_nullarg);
+		static sptr<ContentTypeReader> GetTypeReader(String const& readerTypeName, sptr<ContentReader>& contentReader, std::vector<PContentTypeReader>& newTypeReaders);
+		static bool InstantiateTypeReader(String const& readerTypeName, sptr<ContentReader>& contentReader, sptr<ContentTypeReader>& reader);
+		static void AddTypeReader(String const& readerTypeName, sptr<ContentReader>& contentReader, sptr<ContentTypeReader>& reader);
 		static void RollbackAddReaders(std::vector<sptr<ContentTypeReader>>& newTypeReaders);
 
 		static void RollbackAddReader(std::map<String, PContentTypeReader>& dictionary, sptr<ContentTypeReader>& reader);

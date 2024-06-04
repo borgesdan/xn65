@@ -33,7 +33,7 @@ namespace xna {
 			activators.insert({ hash, activador });
 	}
 
-	std::vector<PContentTypeReader> ContentTypeReaderManager::ReadTypeManifest(Int typeCount, sptr<ContentReader>& contentReader, xna_error_ptr_arg)
+	std::vector<PContentTypeReader> ContentTypeReaderManager::ReadTypeManifest(Int typeCount, sptr<ContentReader>& contentReader)
 	{
 		initMaps();
 		
@@ -48,8 +48,7 @@ namespace xna {
 
 			auto typeReader = ContentTypeReaderManager::GetTypeReader(xnaType.empty() ? readerTypeName : xnaType, contentReader, newTypeReaders);
 
-			if (contentReader->ReadInt32() != typeReader->TypeVersion()) {
-				xna_error_apply(err, XnaErrorCode::BAD_TYPE);
+			if (contentReader->ReadInt32() != typeReader->TypeVersion()) {				
 				ContentTypeReaderManager::RollbackAddReaders(newTypeReaders);
 				return std::vector<PContentTypeReader>();
 			}
@@ -69,11 +68,10 @@ namespace xna {
 		return contentTypeReaderArray;
 	}
 
-	sptr<ContentTypeReader> ContentTypeReaderManager::GetTypeReader(sptr<Type> const& targetType, sptr<ContentReader>& contentReader, xna_error_ptr_arg)
+	sptr<ContentTypeReader> ContentTypeReaderManager::GetTypeReader(sptr<Type> const& targetType)
 	{
 		if (!targetType) {
-			xna_error_apply(err, XnaErrorCode::ARGUMENT_IS_NULL);
-			return nullptr;
+			throw std::invalid_argument("ContentTypeReaderManager::GetTypeReader: targetType is null.");
 		}		
 
 		for (auto const& item : ContentTypeReaderManager::targetTypeToReader) {
@@ -91,30 +89,25 @@ namespace xna {
 		initMaps();
 	}
 
-	sptr<ContentTypeReader> ContentTypeReaderManager::GetTypeReader(String const& readerTypeName, sptr<ContentReader>& contentReader, std::vector<PContentTypeReader>& newTypeReaders, xna_error_ptr_arg)
+	sptr<ContentTypeReader> ContentTypeReaderManager::GetTypeReader(String const& readerTypeName, sptr<ContentReader>& contentReader, std::vector<PContentTypeReader>& newTypeReaders)
 	{
 		sptr<ContentTypeReader> reader = nullptr;
 
 		if (ContentTypeReaderManager::nameToReader.contains(readerTypeName)) {
 			return ContentTypeReaderManager::nameToReader[readerTypeName];
 		}
-		else if (!ContentTypeReaderManager::InstantiateTypeReader(readerTypeName, contentReader, reader, err)) {
+		else if (!ContentTypeReaderManager::InstantiateTypeReader(readerTypeName, contentReader, reader)) {
 			return reader;
-		}
+		}		
 
-		if (xna_error_haserros(err))
-			return nullptr;
-
-		ContentTypeReaderManager::AddTypeReader(readerTypeName, contentReader, reader, err);
-
-		if (xna_error_haserros(err)) return nullptr;
+		ContentTypeReaderManager::AddTypeReader(readerTypeName, contentReader, reader);		
 
 		newTypeReaders.push_back(reader);
 
 		return reader;
 	}
 
-	bool ContentTypeReaderManager::InstantiateTypeReader(String const& readerTypeName, sptr<ContentReader>& contentReader, sptr<ContentTypeReader>& reader, xna_error_ptr_arg)
+	bool ContentTypeReaderManager::InstantiateTypeReader(String const& readerTypeName, sptr<ContentReader>& contentReader, sptr<ContentTypeReader>& reader)
 	{
 		sptr<Type> type = nullptr;
 
@@ -122,8 +115,7 @@ namespace xna {
 			type = Type::NameOfRegisteredTypes[readerTypeName];		
 
 		if (!type) {
-			xna_error_apply(err, XnaErrorCode::INVALID_OPERATION);
-			return false;
+			throw std::runtime_error("ContentTypeReaderManager::InstantiateTypeReader:  registered type is null.");
 		}
 
 		if (ContentTypeReaderManager::readerTypeToReader.contains(type)) {
@@ -136,12 +128,11 @@ namespace xna {
 		return true;
 	}
 
-	void ContentTypeReaderManager::AddTypeReader(String const& readerTypeName, sptr<ContentReader>& contentReader, sptr<ContentTypeReader>& reader, xna_error_ptr_arg)
+	void ContentTypeReaderManager::AddTypeReader(String const& readerTypeName, sptr<ContentReader>& contentReader, sptr<ContentTypeReader>& reader)
 	{
 		auto targetType = reader->TargetType();
 
 		if (ContentTypeReaderManager::targetTypeToReader.contains(targetType)) {
-			xna_error_apply(err, XnaErrorCode::INVALID_OPERATION);
 			return;
 		}
 
@@ -156,7 +147,7 @@ namespace xna {
 			return;		
 
 		for (size_t i = 0; i < newTypeReaders.size(); ++i) {
-			auto newTypeReader = newTypeReaders[i];
+			auto& newTypeReader = newTypeReaders[i];
 			ContentTypeReaderManager::RollbackAddReader(ContentTypeReaderManager::nameToReader, newTypeReader);
 			ContentTypeReaderManager::RollbackAddReader(ContentTypeReaderManager::targetTypeToReader, newTypeReader);
 			ContentTypeReaderManager::RollbackAddReader(ContentTypeReaderManager::readerTypeToReader, newTypeReader);
