@@ -6,8 +6,9 @@
 
 The project is still under development and the next updates will focus on the following tasks:
 - [x] Finish basic classes
-- [ ] Code refactoring and cleaning
+- [x] Code refactoring and cleaning
 - [ ] 3D support
+- [ ] Implementation of missing classes and functions
 - [ ] Content Pipeline
 - [ ] Multiplatform support
 
@@ -24,10 +25,10 @@ Use the following command in vcpkg to install DirectXTK:
 .\vcpkg install directxtk[tools,spectre,xaudio2-9]
 ```
 
-In the root CMakeLists.txt set the vcpkg CMAKE_TOOLCHAIN_FILE path
+In the root CMakeLists.txt set the vcpkg path
 
 ```
-include("C:/vcpkg/scripts/buildsystems/vcpkg.cmake")
+set(PROJECT_VCPKG_DIRECTORY "C:/vcpkg")
 ```
 
 ## 📝 License
