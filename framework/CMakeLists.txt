@@ -53,5 +53,5 @@ find_package(directxtk CONFIG REQUIRED)
 
 target_link_libraries(
 	Xn65 D3d11.lib dxgi.lib dxguid.lib d3dcompiler.lib Microsoft::DirectXTK
-	"${PROJECT_INCLUDE_DIR}/libmspack/mspack.lib"
+	"${PROJECT_INCLUDES_DIR}/libmspack/mspack.lib"
 )
