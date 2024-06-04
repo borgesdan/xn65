@@ -1,8 +1,8 @@
-#include "platform-dx/helpers.hpp"
-#include "graphics/adapter.hpp"
-#include "graphics/swapchain.hpp"
-#include "platform-dx/implementations.hpp"
-#include "graphics/device.hpp"
+#include "xna/platform-dx/helpers.hpp"
+#include "xna/graphics/adapter.hpp"
+#include "xna/graphics/swapchain.hpp"
+#include "xna/platform-dx/implementations.hpp"
+#include "xna/graphics/device.hpp"
 
 namespace xna {
     SwapChain::SwapChain() : GraphicsResource(nullptr) {

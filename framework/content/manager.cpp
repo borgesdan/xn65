@@ -1,4 +1,4 @@
-#include "content/manager.hpp"
+#include "xna/content/manager.hpp"
 
 namespace xna {
 	sptr<Stream> ContentManager::OpenStream(String const& assetName) const {

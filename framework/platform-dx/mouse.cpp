@@ -1,5 +1,5 @@
-#include "input/mouse.hpp"
-#include "platform-dx/implementations.hpp"
+#include "xna/input/mouse.hpp"
+#include "xna/platform-dx/implementations.hpp"
 
 namespace xna {
 	MouseState Mouse::GetState() {

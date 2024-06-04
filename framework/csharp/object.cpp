@@ -1,5 +1,5 @@
-#include "csharp/object.hpp"
-#include "csharp/type.hpp"
+#include "xna/csharp/object.hpp"
+#include "xna/csharp/type.hpp"
 
 namespace xna {
 	size_t Object::GetHashCode() const

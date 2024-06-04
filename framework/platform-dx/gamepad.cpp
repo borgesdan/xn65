@@ -1,5 +1,5 @@
-#include "platform-dx/implementations.hpp"
-#include "input/gamepad.hpp"
+#include "xna/platform-dx/implementations.hpp"
+#include "xna/input/gamepad.hpp"
 
 namespace xna {
 	void GamePad::Initialize() {

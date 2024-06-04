@@ -1,11 +1,11 @@
 #ifndef XNA_CONTENT_READERS_AUDIO_HPP
 #define XNA_CONTENT_READERS_AUDIO_HPP
 
-#include "content/manager.hpp"
-#include "content/reader.hpp"
-#include "csharp/type.hpp"
-#include "audio/soundeffect.hpp"
-#include "csharp/timespan.hpp"
+#include "../../audio/soundeffect.hpp"
+#include "../../csharp/timespan.hpp"
+#include "../../csharp/type.hpp"
+#include "../manager.hpp"
+#include "../reader.hpp"
 
 namespace xna {
 	class SoundEffectReader : public ContentTypeReaderT<PSoundEffect> {

@@ -1,9 +1,9 @@
 #ifndef XNA_CONTENT_MANAGER_HPP
 #define XNA_CONTENT_MANAGER_HPP
 
-#include "csharp/stream.hpp"
-#include "default.hpp"
-#include "csharp/service.hpp"
+#include "../csharp/service.hpp"
+#include "../csharp/stream.hpp"
+#include "../default.hpp"
 #include "reader.hpp"
 #include <map>
 

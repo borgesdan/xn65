@@ -1,6 +1,6 @@
-#include "content/typereadermanager.hpp"
-#include "content/reader.hpp"
-#include "content/readers/default.hpp"
+#include "xna/content/typereadermanager.hpp"
+#include "xna/content/reader.hpp"
+#include "xna/content/readers/default.hpp"
 
 namespace xna {
 

@@ -1,13 +1,13 @@
 #ifndef XNA_CONTENT_READERS_GRAPHICS_HPP
 #define XNA_CONTENT_READERS_GRAPHICS_HPP
 
-#include "content/manager.hpp"
-#include "content/reader.hpp"
-#include "csharp/type.hpp"
-#include "graphics/texture.hpp"
-#include "common/numerics.hpp"
-#include "csharp/timespan.hpp"
-#include "graphics/sprite.hpp"
+#include "../../common/numerics.hpp"
+#include "../../csharp/timespan.hpp"
+#include "../../csharp/type.hpp"
+#include "../../graphics/sprite.hpp"
+#include "../../graphics/texture.hpp"
+#include "../manager.hpp"
+#include "../reader.hpp"
 
 namespace xna {
 	class Texture2DReader : public ContentTypeReaderT<PTexture2D> {

@@ -1,5 +1,5 @@
-#include "platform-dx/implementations.hpp"
-#include "csharp/stream.hpp"
+#include "xna/platform-dx/implementations.hpp"
+#include "xna/csharp/stream.hpp"
 
 using DxSoundEffect = DirectX::SoundEffect;
 

@@ -1,7 +1,7 @@
-#include "graphics/buffer.hpp"
-#include "common/numerics.hpp"
-#include "platform-dx/headers.hpp"
-#include "platform-dx/implementations.hpp"
+#include "xna/graphics/buffer.hpp"
+#include "xna/common/numerics.hpp"
+#include "xna/platform-dx/headers.hpp"
+#include "xna/platform-dx/implementations.hpp"
 
 namespace xna {
 	ConstantBuffer::ConstantBuffer() : GraphicsResource(nullptr){

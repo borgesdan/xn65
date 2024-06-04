@@ -1,7 +1,7 @@
 #ifndef PLATFORMSTARTERKIT_GEM_HPP
 #define PLATFORMSTARTERKIT_GEM_HPP
 
-#include "xna.hpp"
+#include "xna/xna.hpp"
 #include "circle.hpp"
 #include "tile.hpp"
 

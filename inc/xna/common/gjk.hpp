@@ -1,7 +1,7 @@
 #ifndef XNA_COMMON_GDK_HPP
 #define XNA_COMMON_GDK_HPP
 
-#include "default.hpp"
+#include "../default.hpp"
 #include "numerics.hpp"
 #include "math.hpp"
 
