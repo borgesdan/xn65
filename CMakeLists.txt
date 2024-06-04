@@ -10,7 +10,8 @@ if (POLICY CMP0141)
 endif()
 
 # CMAKE_TOOLCHAIN_FILE
-include("C:/vcpkg/scripts/buildsystems/vcpkg.cmake")
+set(VCPKG_USER_DIRECTORY "C:/vcpkg")
+include("${VCPKG_USER_DIRECTORY}/scripts/buildsystems/vcpkg.cmake")
 project ("xna")
 
 # Include sub-projects.
