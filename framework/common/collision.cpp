@@ -1,4 +1,4 @@
-#include "common/collision.hpp"
+#include "xna/common/collision.hpp"
 
 namespace xna {
 	Plane::Plane(Vector3 const& point1, Vector3 const& point2, Vector3 const& point3) {

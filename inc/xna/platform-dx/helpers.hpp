@@ -1,6 +1,6 @@
 #include "headers.hpp"
-#include "graphics/blendstate.hpp"
-#include "graphics/adapter.hpp"
+#include "../graphics/blendstate.hpp"
+#include "../graphics/adapter.hpp"
 
 namespace xna {
 	struct DxHelpers {

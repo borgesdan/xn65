@@ -1,7 +1,7 @@
 #ifndef PLATFORMSTARTERKIT_LEVEL_HPP
 #define PLATFORMSTARTERKIT_LEVEL_HPP
 
-#include "xna.hpp"
+#include "xna/xna.hpp"
 #include "tile.hpp"
 
 namespace PlatformerStarterKit {

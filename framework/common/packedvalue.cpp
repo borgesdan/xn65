@@ -1,4 +1,4 @@
-#include "common/packedvalue.hpp"
+#include "xna/common/packedvalue.hpp"
 
 namespace xna {
 	Uint PackUtils::PackUnsigned(float bitmask, float value) {

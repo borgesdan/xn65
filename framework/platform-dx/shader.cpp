@@ -1,6 +1,6 @@
-#include "graphics/buffer.hpp"
-#include "platform-dx/implementations.hpp"
-#include "graphics/shader.hpp"
+#include "xna/graphics/buffer.hpp"
+#include "xna/platform-dx/implementations.hpp"
+#include "xna/graphics/shader.hpp"
 
 namespace xna {
     static HRESULT shaderCompileFromFile(_In_ LPCWSTR srcFile, _In_ LPCSTR entryPoint, _In_ LPCSTR profile, _Outptr_ ID3DBlob** blob)

@@ -1,7 +1,7 @@
 #ifndef PLATFORMSTARTERKIT_ANIMATION_HPP
 #define PLATFORMSTARTERKIT_ANIMATION_HPP
 
-#include "xna.hpp"
+#include "xna/xna.hpp"
 
 namespace PlatformerStarterKit {
 	/*

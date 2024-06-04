@@ -1,13 +1,13 @@
 #ifndef XNA_CONTENT_READERS_GRAPHICS_HPP
 #define XNA_CONTENT_READERS_GRAPHICS_HPP
 
-#include "content/manager.hpp"
-#include "content/reader.hpp"
-#include "csharp/type.hpp"
-#include "graphics/texture.hpp"
-#include "common/numerics.hpp"
-#include "csharp/timespan.hpp"
-#include "graphics/sprite.hpp"
+#include "../../common/numerics.hpp"
+#include "../../csharp/timespan.hpp"
+#include "../../csharp/type.hpp"
+#include "../../graphics/sprite.hpp"
+#include "../../graphics/texture.hpp"
+#include "../manager.hpp"
+#include "../reader.hpp"
 
 namespace xna {
 	class Texture2DReader : public ContentTypeReaderT<PTexture2D> {
@@ -22,7 +22,7 @@ namespace xna {
 			const auto height = input.ReadInt32();
 			const auto mipMaps = input.ReadInt32();
 
-			auto a_device = ContentManager::Services()->GetService(*typeof<GraphicsDevice>());
+			auto a_device = ContentManager::GameServiceProvider()->GetService(*typeof<GraphicsDevice>());
 			sptr<GraphicsDevice> device = nullptr;
 
 			if (a_device.has_value())
@@ -48,13 +48,13 @@ namespace xna {
 		}
 
 		PSpriteFont Read(ContentReader& input, PSpriteFont& existingInstance) override {
-			auto texture = input.ReadObject<PTexture2D>();
-			auto glyphs = input.ReadObject<std::vector<Rectangle>>();
-			auto cropping = input.ReadObject<std::vector<Rectangle>>();
-			auto charMap = input.ReadObject<std::vector<Char>>();
-			auto lineSpacing = input.ReadInt32();
-			auto spacing = input.ReadSingle();
-			auto kerning = input.ReadObject<std::vector<Vector3>>();
+			const auto texture = input.ReadObject<PTexture2D>();
+			const auto glyphs = input.ReadObject<std::vector<Rectangle>>();
+			const auto cropping = input.ReadObject<std::vector<Rectangle>>();
+			const auto charMap = input.ReadObject<std::vector<Char>>();
+			const auto lineSpacing = input.ReadInt32();
+			const auto spacing = input.ReadSingle();
+			const auto kerning = input.ReadObject<std::vector<Vector3>>();
 			std::optional<Char> defaultCharacter;
 
 			if (input.ReadBoolean())

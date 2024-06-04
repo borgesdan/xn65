@@ -1,5 +1,5 @@
-#include "platform-dx/implementations.hpp"
-#include "game/gdevicemanager.hpp"
+#include "xna/platform-dx/implementations.hpp"
+#include "xna/game/gdevicemanager.hpp"
 
 namespace xna {
 	void reset(GraphicsDevice::PlatformImplementation& impl)

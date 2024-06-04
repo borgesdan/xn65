@@ -1,5 +1,5 @@
-#include "csharp/stream.hpp"
-#include "csharp/buffer.hpp"
+#include "xna/csharp/stream.hpp"
+#include "xna/csharp/buffer.hpp"
 
 namespace xna {
 	Long MemoryStream::Seek(Long offset, SeekOrigin const& origin) {

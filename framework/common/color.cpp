@@ -1,4 +1,4 @@
-#include "common/color.hpp"
+#include "xna/common/color.hpp"
 
 namespace xna {
 	Color::Color(float r, float g, float b, float a) :

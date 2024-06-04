@@ -1,5 +1,5 @@
-#include "platform-dx/implementations.hpp"
-#include "platform-dx/helpers.hpp"
+#include "xna/platform-dx/implementations.hpp"
+#include "xna/platform-dx/helpers.hpp"
 
 namespace xna {	
 	Texture2D::~Texture2D() {
@@ -11,7 +11,7 @@ namespace xna {
 		auto _this = device.shared_from_this();
 		auto texture2d = New<Texture2D>(_this);
 		ID3D11Resource* resource = nullptr;		
-		auto wstr = XnaHToWString(fileName);
+		auto wstr = XnaHelper::ToWString(fileName);
 		
 		HRESULT result = DirectX::CreateWICTextureFromFile(
 			device.impl->_device,

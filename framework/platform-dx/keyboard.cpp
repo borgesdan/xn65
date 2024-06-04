@@ -1,5 +1,5 @@
-#include "input/keyboard.hpp"
-#include "platform-dx/implementations.hpp"
+#include "xna/input/keyboard.hpp"
+#include "xna/platform-dx/implementations.hpp"
 
 namespace xna {
 	KeyboardState Keyboard::GetState() {

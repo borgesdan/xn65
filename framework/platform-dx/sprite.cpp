@@ -1,12 +1,12 @@
-#include "graphics/rasterizerstate.hpp"
-#include "graphics/samplerstate.hpp"
-#include "common/color.hpp"
-#include "common/numerics.hpp"
-#include "graphics/sprite.hpp"
-#include "graphics/viewport.hpp"
-#include "graphics/blendstate.hpp"
-#include "graphics/depthstencilstate.hpp"
-#include "platform-dx/implementations.hpp"
+#include "xna/graphics/rasterizerstate.hpp"
+#include "xna/graphics/samplerstate.hpp"
+#include "xna/common/color.hpp"
+#include "xna/common/numerics.hpp"
+#include "xna/graphics/sprite.hpp"
+#include "xna/graphics/viewport.hpp"
+#include "xna/graphics/blendstate.hpp"
+#include "xna/graphics/depthstencilstate.hpp"
+#include "xna/platform-dx/implementations.hpp"
 #include <stdexcept>
 
 using DxSpriteBatch = DirectX::SpriteBatch;

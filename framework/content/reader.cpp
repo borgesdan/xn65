@@ -1,15 +1,17 @@
-#include "content/reader.hpp"
-#include "content/manager.hpp"
-#include "content/lzx/decoderstream.hpp"
-#include "content/typereadermanager.hpp"
-#include "content/manager.hpp"
+#include "xna/content/reader.hpp"
+#include "xna/content/manager.hpp"
+#include "xna/content/typereadermanager.hpp"
 
 namespace xna {
-	sptr<ContentReader> ContentReader::Create(ContentManager* contentManager, sptr<Stream>& input, String const& assetName)
+	sptr<ContentReader> ContentReader::Create(sptr<xna::ContentManager> const& contentManager, sptr<Stream>& input, String const& assetName)
 	{
 		Int graphicsProfile = 0;
 		input = ContentReader::PrepareStream(input, assetName, graphicsProfile);
 		return std::shared_ptr<ContentReader>(new ContentReader(contentManager, input, assetName, graphicsProfile));
+	}
+
+	sptr<ContentManager> ContentReader::ContentManager() const {
+		return _contentManager;
 	}
 
 	Vector2 ContentReader::ReadVector2()
@@ -89,27 +91,23 @@ namespace xna {
 		return *(double*)&int64;
 	}
 
-	std::vector<Byte> ContentReader::ReadByteBuffer(size_t size, xna_error_ptr_arg)
+	std::vector<Byte> ContentReader::ReadByteBuffer(size_t size)
 	{
-		std::vector<Byte>& buffer = _contentManager->byteBuffer;
-		
-		if (buffer.empty() || buffer.size() < size)
+		if (byteBuffer.empty() || byteBuffer.size() < size)
 		{
-			buffer = std::vector<Byte>(size);
-			//_contentManager->byteBuffer = buffer;
+			byteBuffer.resize(size);
 		}
 		
 		Int num = 0;
 		for (size_t index = 0; index < size; index += num)
 		{			
-			num = Read(buffer, index, size - index);
+			num = Read(byteBuffer, index, size - index);
 			if (num == 0) {
-				xna_error_apply(err, XnaErrorCode::FAILED_OPERATION);
-				return std::vector<Byte>();
+				throw std::runtime_error("ContentReader::ReadByteBuffer: Bad xbn.");
 			}
 		}
 
-		return buffer;
+		return byteBuffer;
 	}
 
 	sptr<Stream> ContentReader::PrepareStream(sptr<Stream>& input, String const& assetName, Int& graphicsProfile)
@@ -117,14 +115,15 @@ namespace xna {
 		BinaryReader binaryReader = BinaryReader(input);
 
 		if (binaryReader.ReadByte() != 'X' || binaryReader.ReadByte() != 'N' || binaryReader.ReadByte() != 'B')
-			return nullptr;
+			throw std::runtime_error("ContentReader::PrepareStream: Bad xbn platform.");
 
 		Int num1 = 0;
-		auto _byte = binaryReader.ReadByte(); //desfazer
-		if (_byte == 'w')
-			num1 = binaryReader.ReadUInt16();
-		else
+		auto wbyte = binaryReader.ReadByte();
+
+		if(wbyte != 'w')
 			throw std::runtime_error("ContentReader::PrepareStream: Bad xbn file.");
+
+		num1 = binaryReader.ReadUInt16();			
 
 		graphicsProfile = (num1 & XnbVersionProfileMask) >> XnbVersionProfileShift;
 		bool flag = false;
@@ -138,13 +137,13 @@ namespace xna {
 			flag = true;
 			break;
 		default:
-			return nullptr;
+			throw std::runtime_error("ContentReader::PrepareStream: Bad xbn version.");
 		}
 
 		const auto num2 = binaryReader.ReadInt32();
 
-		if ((num2 - 10) > input->Length() - input->Position())
-			return nullptr;
+		if ((static_cast<Long>(num2) - 10) > input->Length() - input->Position())
+			throw std::runtime_error("ContentReader::PrepareStream: Bad xbn size.");
 
 		if (!flag)
 			return input;
@@ -152,20 +151,13 @@ namespace xna {
 		const Int compressedTodo = num2 - 14;
 		const auto decompressedTodo = binaryReader.ReadInt32();
 
-		auto lzxStream = New<LzxDecoderStream>(input, compressedTodo, decompressedTodo);
-
-		return reinterpret_pointer_cast<Stream>(lzxStream);
+		throw std::runtime_error("ContentReader::PrepareStream: LzxDecoder not implemented.");
 	}
 
 	Int ContentReader::ReadHeader() {
 		auto _this = shared_from_this();
 		typeReaders = ContentTypeReaderManager::ReadTypeManifest(this->Read7BitEncodedInt(), _this);
-		auto length = this->Read7BitEncodedInt();
-
-		if (length > 0)
-		{
-			//TODO: length > 0
-		}
+		auto length = this->Read7BitEncodedInt();		
 
 		return length;
 

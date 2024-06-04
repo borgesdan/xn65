@@ -1,4 +1,4 @@
-#include "common/numerics.hpp"
+#include "xna/common/numerics.hpp"
 
 namespace xna {
     bool Vector2::Transform(Vector2 const* sourceArray, size_t sourceArrayLength, Matrix const& matrix, Vector2* destinationArray, size_t destinationArrayLength) {

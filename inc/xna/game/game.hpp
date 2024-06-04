@@ -2,7 +2,7 @@
 #define XNA_GAME_GAME_HPP
 
 #include "../default.hpp"
-#include "game/time.hpp"
+#include "time.hpp"
 
 namespace xna {
 	class Game : public std::enable_shared_from_this<Game> {

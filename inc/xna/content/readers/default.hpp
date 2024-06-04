@@ -1,11 +1,11 @@
 #ifndef XNA_CONTENT_READERS_DEFAULT_HPP
 #define XNA_CONTENT_READERS_DEFAULT_HPP
 
-#include "content/reader.hpp"
-#include "default.hpp"
-#include "common/color.hpp"
-#include "common/numerics.hpp"
-#include "csharp/timespan.hpp"
+#include "../../common/color.hpp"
+#include "../../common/numerics.hpp"
+#include "../../csharp/timespan.hpp"
+#include "../../default.hpp"
+#include "../reader.hpp"
 
 namespace xna {
 	class ObjectReader : public ContentTypeReaderT<Object> {

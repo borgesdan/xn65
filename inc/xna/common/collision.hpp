@@ -1,7 +1,7 @@
 #ifndef XNA_COMMON_SHAPES_HPP
 #define XNA_COMMON_SHAPES_HPP
 
-#include "default.hpp"
+#include "../default.hpp"
 #include "numerics.hpp"
 #include "gjk.hpp"
 #include <optional>

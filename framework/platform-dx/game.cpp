@@ -1,17 +1,18 @@
-#include "csharp/type.hpp"
-#include "game/time.hpp"
-#include "game/component.hpp"
-#include "game/servicecontainer.hpp"
-#include "platform-dx/implementations.hpp"
-#include "game/gdevicemanager.hpp"
-#include "content/manager.hpp"
+#include "xna/csharp/type.hpp"
+#include "xna/game/time.hpp"
+#include "xna/game/component.hpp"
+#include "xna/game/servicecontainer.hpp"
+#include "xna/platform-dx/implementations.hpp"
+#include "xna/game/gdevicemanager.hpp"
+#include "xna/content/manager.hpp"
 
 namespace xna {
 	Game::Game() {
 		impl = unew<PlatformImplementation>();
 		services = New<GameServiceContainer>();
 		auto iservice = reinterpret_pointer_cast<IServiceProvider>(services);
-		_contentManager = New<ContentManager>("", services);
+		_contentManager = New<ContentManager>(services, "");
+		_contentManager->_gameServices = iservice;
 
 		_gameWindow = New<GameWindow>();
 		_gameWindow->impl->Color(146, 150, 154);

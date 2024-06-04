@@ -1,7 +1,7 @@
 #ifndef XNA_GRAPHICS_VIEWPORT
 #define XNA_GRAPHICS_VIEWPORT
 
-#include "common/numerics.hpp"
+#include "../common/numerics.hpp"
 
 namespace xna {
 	struct Viewport {

@@ -1,7 +1,7 @@
-#include "game/gdevicemanager.hpp"
-#include "graphics/presentparams.hpp"
-#include "graphics/swapchain.hpp"
-#include "platform-dx/implementations.hpp"
+#include "xna/game/gdevicemanager.hpp"
+#include "xna/graphics/presentparams.hpp"
+#include "xna/graphics/swapchain.hpp"
+#include "xna/platform-dx/implementations.hpp"
 
 namespace xna {
 	GraphicsDeviceManager::GraphicsDeviceManager(sptr<Game> const& game) : _game(game)

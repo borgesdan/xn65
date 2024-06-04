@@ -4,14 +4,13 @@
 
 # Add source to this project's executable.
 add_library (Xn65 STATIC 
-"../samples/01_blank/xna.cpp"
 "csharp/stream.cpp"
 "game/component.cpp"
 "content/manager.cpp"
 "content/reader.cpp"
 "csharp/binary.cpp"
 "content/lzx/decoder.cpp"
-"content/lzx/decoderstream.cpp"
+
 "content/typereadermanager.cpp"
 "csharp/object.cpp"
 "csharp/type.cpp"
@@ -52,4 +51,7 @@ endif()
 
 find_package(directxtk CONFIG REQUIRED)
 
-target_link_libraries(Xn65 D3d11.lib dxgi.lib dxguid.lib d3dcompiler.lib Microsoft::DirectXTK)
+target_link_libraries(
+	Xn65 D3d11.lib dxgi.lib dxguid.lib d3dcompiler.lib Microsoft::DirectXTK
+	"${PROJECT_INCLUDE_DIR}/libmspack/mspack.lib"
+)

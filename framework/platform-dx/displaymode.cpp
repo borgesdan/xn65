@@ -1,5 +1,5 @@
-#include "platform-dx/implementations.hpp"
-#include "graphics/displaymode.hpp"
+#include "xna/platform-dx/implementations.hpp"
+#include "xna/graphics/displaymode.hpp"
 
 namespace xna {
 	DisplayMode::DisplayMode() {

@@ -2,8 +2,8 @@
 #define XNA_GRAPHICS_SPRITE_HPP
 
 #include "../default.hpp"
-#include "common/numerics.hpp"
-#include "common/color.hpp"
+#include "../common/numerics.hpp"
+#include "../common/color.hpp"
 #include <optional>
 
 namespace xna {

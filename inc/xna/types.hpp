@@ -43,6 +43,10 @@ namespace xna {
 	constexpr double    DoubleMaxValue	= (std::numeric_limits<double>::max)();
 	constexpr double    DoubleMinValue	= (std::numeric_limits<double>::min)();
 
+	//
+	// About strings: https://stackoverflow.com/questions/402283/stdwstring-vs-stdstring
+	//
+
 	using String	= std::string;
 	using WString	= std::wstring;
 	
