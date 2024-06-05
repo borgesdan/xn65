@@ -447,6 +447,23 @@ namespace xna {
 	};
 
 	struct GraphicsDevice::PlatformImplementation {
+		~PlatformImplementation() {
+			if (_device) {
+				_device->Release();
+				_device = nullptr;
+			}
+
+			if (_context) {
+				_context->Release();
+				_device = nullptr;
+			}
+
+			if (_factory) {
+				_factory->Release();
+				_factory = nullptr;
+			}
+		}
+
 		ID3D11Device* _device{ nullptr };
 		ID3D11DeviceContext* _context{ nullptr };
 		IDXGIFactory1* _factory = nullptr;
@@ -454,6 +471,7 @@ namespace xna {
 		sptr<GraphicsAdapter> _adapter{ nullptr };
 		sptr<RenderTarget2D> _renderTarget2D{ nullptr };
 		sptr<BlendState> _blendState{ nullptr };
+		sptr<GameWindow> _gameWindow = nullptr;
 		xna::Viewport _viewport{};
 		sptr<xna::PresentationParameters> _presentationParameters;
 		D3D_FEATURE_LEVEL _featureLevel{ D3D_FEATURE_LEVEL::D3D_FEATURE_LEVEL_11_0 };

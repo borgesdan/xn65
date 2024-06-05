@@ -11,7 +11,7 @@ namespace xna {
 		~GraphicsDevice();
 		void Clear();
 		void Clear(Color const& color);
-		bool Initialize(GameWindow& gameWindow);
+		bool Initialize();
 		bool Present();
 		sptr<GraphicsAdapter> Adapter() const;
 		void Adapter(sptr<GraphicsAdapter> const& adapter);

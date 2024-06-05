@@ -2,7 +2,7 @@
 #include "xna/game/gdevicemanager.hpp"
 
 namespace xna {
-	void reset(GraphicsDevice::PlatformImplementation& impl)
+	static void reset(GraphicsDevice::PlatformImplementation& impl)
 	{
 		if (impl._device) {
 			impl._device->Release();
@@ -24,7 +24,7 @@ namespace xna {
 		impl._renderTarget2D = nullptr;
 	}
 
-	bool createDevice(GraphicsDevice::PlatformImplementation& impl) {
+	static bool createDevice(GraphicsDevice::PlatformImplementation& impl) {
 		auto createDeviceFlags = 0;
 #if _DEBUG
 		createDeviceFlags = D3D11_CREATE_DEVICE_FLAG::D3D11_CREATE_DEVICE_DEBUG;
@@ -75,6 +75,7 @@ namespace xna {
 		impl = unew<PlatformImplementation>();
 		
 		impl->_adapter = info.Adapter;
+		impl->_gameWindow = info.Window;
 		impl->_presentationParameters = info.Parameters;
 		impl->_adapter->CurrentDisplayMode(
 			impl->_presentationParameters->BackBufferFormat, 
@@ -86,7 +87,7 @@ namespace xna {
 		impl = nullptr;
 	}
 
-	bool GraphicsDevice::Initialize(GameWindow& gameWindow) {
+	bool GraphicsDevice::Initialize() {
 		if (!impl)
 			impl = uptr<PlatformImplementation>();
 
@@ -101,14 +102,14 @@ namespace xna {
 		if (FAILED(hr)) 
 			return false;		
 
-		const auto bounds = gameWindow.ClientBounds();
+		const auto bounds = impl->_gameWindow->ClientBounds();
 
 		impl->_viewport = xna::Viewport(0.0F, 0.0F,
 			static_cast<float>(bounds.Width),
 			static_cast<float>(bounds.Height),
 			0.0F, 1.F);
 
-		COLORREF color = gameWindow.impl->Color();
+		COLORREF color = impl->_gameWindow->impl->Color();
 		impl->_backgroundColor[0] = GetRValue(color) / 255.0f;
 		impl->_backgroundColor[1] = GetGValue(color) / 255.0f;
 		impl->_backgroundColor[2] = GetBValue(color) / 255.0f;
@@ -117,7 +118,7 @@ namespace xna {
 		impl->_swapChain = New<xna::SwapChain>(_this);
 		impl->_swapChain->Initialize();
 
-		hr = impl->_factory->MakeWindowAssociation(gameWindow.impl->WindowHandle(), DXGI_MWA_NO_ALT_ENTER);
+		hr = impl->_factory->MakeWindowAssociation(impl->_gameWindow->impl->WindowHandle(), DXGI_MWA_NO_ALT_ENTER);
 		if (FAILED(hr)) return false;
 
 		impl->_renderTarget2D = New<RenderTarget2D>(_this);
