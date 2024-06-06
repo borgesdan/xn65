@@ -246,6 +246,13 @@ namespace xna {
 	};
 
 	struct SwapChain::PlatformImplementation {
+		~PlatformImplementation() {
+			if (dxSwapChain) {
+				dxSwapChain->Release();
+				dxSwapChain = nullptr;
+			}
+		}
+
 		IDXGISwapChain1* dxSwapChain{ nullptr };
 		DXGI_SWAP_CHAIN_DESC1 dxDescription{};
 		DXGI_SWAP_CHAIN_FULLSCREEN_DESC dxFullScreenDescription{};

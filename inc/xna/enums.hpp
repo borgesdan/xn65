@@ -450,6 +450,14 @@ namespace xna {
 		Immediate
 	};
 
+    enum class PrimitiveType
+    {
+        TriangleList,
+        TriangleStrip,
+        LineList,
+        LineStrip,
+    };
+
 	enum RenderTargetUsage {
 		DiscardContents,
 		PreserveContents,

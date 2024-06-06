@@ -178,13 +178,7 @@ namespace xna {
 		if (!impl) return nullptr;
 
 		return impl->_adapter;
-	}
-
-	void GraphicsDevice::Adapter(sptr<GraphicsAdapter> const& adapter) {
-		if (!impl) return;
-
-		impl->_adapter = adapter;
-	}
+	}	
 
 	xna::Viewport GraphicsDevice::Viewport() const {
 		if (!impl) return {};
@@ -202,5 +196,5 @@ namespace xna {
 		if (!impl) return;
 
 		impl->_usevsync = use;
-	}	
+	}		
 }

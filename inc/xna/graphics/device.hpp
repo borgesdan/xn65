@@ -14,10 +14,11 @@ namespace xna {
 		bool Initialize();
 		bool Present();
 		sptr<GraphicsAdapter> Adapter() const;
-		void Adapter(sptr<GraphicsAdapter> const& adapter);
 		xna::Viewport Viewport() const;
 		void Viewport(xna::Viewport const& viewport);
 		void UseVSync(bool use);
+
+		//void DrawPrimitives(PrimitiveType primitiveType, Int startVertex, Int primitiveCount);
 
 	public:
 		struct PlatformImplementation;
