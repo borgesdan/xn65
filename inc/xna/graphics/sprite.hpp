@@ -5,11 +5,15 @@
 #include "../common/numerics.hpp"
 #include "../common/color.hpp"
 #include <optional>
+#include "../graphics/gresource.hpp"
 
 namespace xna {
-	class SpriteBatch {
+	//Enables a group of sprites to be drawn using the same settings. 
+	class SpriteBatch : public GraphicsResource {
 	public:
-		SpriteBatch(GraphicsDevice& device);
+		SpriteBatch(sptr<GraphicsDevice> const& device);
+
+		//Begins a sprite batch operation. 
 		void Begin(
 			SpriteSortMode sortMode = SpriteSortMode::Deferred,
 			BlendState* blendState = nullptr,
@@ -19,8 +23,14 @@ namespace xna {
 			//Effect
 			Matrix const& transformMatrix = Matrix::Identity()
 		);
+
+		//Flushes the sprite batch and restores the device state to how it was before Begin was called.
 		void End();
 		
+		//
+		// Draw - Adds a sprite to a batch of sprites to be rendered.
+		//
+
 		void Draw(uptr<Texture2D> const& texture, Vector2 const& position, Color const& color) { Draw(*texture, position, color); }
 		void Draw(sptr<Texture2D> const& texture, Vector2 const& position, Color const& color) { Draw(*texture, position, color); }
 		void Draw(Texture2D& texture, Vector2 const& position, Color const& color);
@@ -57,6 +67,10 @@ namespace xna {
 			float rotation, Vector2 const& origin, SpriteEffects effects, float layerDepth) { Draw(*texture, destinationRectangle, sourceRectangle, color, rotation, origin, effects, layerDepth); }
 		void Draw(Texture2D& texture, Rectangle const& destinationRectangle, std::optional<Rectangle> const& sourceRectangle, Color const& color,
 			float rotation, Vector2 const& origin, SpriteEffects effects, float layerDepth);		
+
+		//
+		// DrawString - Adds a string to a batch of sprites to be rendered.
+		//
 
 		void DrawString(uptr<SpriteFont> const& spriteFont, String const& text, Vector2 const& position, Color const& color) { DrawString(*spriteFont, text, position, color); }
 		void DrawString(sptr<SpriteFont> const& spriteFont, String const& text, Vector2 const& position, Color const& color) { DrawString(*spriteFont, text, position, color); }

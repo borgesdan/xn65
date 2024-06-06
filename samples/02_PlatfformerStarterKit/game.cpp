@@ -31,7 +31,7 @@ namespace PlatformerStarterKit {
 		}
 
 		void LoadContent() override {
-			spriteBatch = New<SpriteBatch>(*graphicsDevice);					
+			spriteBatch = New<SpriteBatch>(graphicsDevice);					
 
 			// Load fonts
 			hudFont = Content()->Load<PSpriteFont>("Fonts/Hud");

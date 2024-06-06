@@ -123,17 +123,17 @@ namespace xna {
 		impl->_dxSpriteFont->SetLineSpacing(static_cast<float>(value));		
 	}		
 
-	SpriteBatch::SpriteBatch(GraphicsDevice& device) {
-		if (!device.impl->_context)
+	SpriteBatch::SpriteBatch(sptr<GraphicsDevice> const& device) : GraphicsResource(device) {
+		if (!device->impl->_context)
 			return;
 
 		implementation = uNew<PlatformImplementation>();
 		implementation->_dxspriteBatch = New<DxSpriteBatch>(
 			//ID3D11DeviceContext* deviceContext
-			device.impl->_context
+			device->impl->_context
 		);
 
-		Viewport(device.Viewport());
+		Viewport(device->Viewport());
 	}	
 
 	void SpriteBatch::Begin(SpriteSortMode sortMode, BlendState* blendState, SamplerState* samplerState, DepthStencilState* depthStencil, RasterizerState* rasterizerState, Matrix const& transformMatrix) {
