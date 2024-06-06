@@ -92,6 +92,10 @@ namespace xna {
 	//==============================================//
 
 	struct DxHelpers {
+		static constexpr void ConvertSpriteSort(SpriteSortMode value, DirectX::SpriteSortMode& target) {
+			target = static_cast<DirectX::SpriteSortMode>(static_cast<int>(value));
+		}
+
 		static constexpr DXGI_FORMAT ConvertSurfaceToDXGIFORMAT(SurfaceFormat format)
 		{
 			switch (format)
@@ -446,7 +450,7 @@ namespace xna {
 	//==============================================//
 
 	struct SpriteFont::PlatformImplementation {
-		sptr<DirectX::SpriteFont> _dxSpriteFont = nullptr;
+		uptr<DirectX::SpriteFont> _dxSpriteFont{ nullptr };
 	};
 
 	struct SpriteBatch::PlatformImplementation {

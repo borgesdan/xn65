@@ -34,6 +34,6 @@ namespace PlatformerStarterKit {
 		const auto source = xna::Rectangle(frameIndex * animation->Texture()->Height(), 0, animation->Texture()->Height(), animation->Texture()->Height());
 
 		// Draw the current frame.
-		spriteBatch.Draw(animation->Texture(), position, &source, xna::Colors::White, 0.0f, Origin(), 1.0f, spriteEffects, 0.0f);
+		spriteBatch.Draw(animation->Texture(), position, source, xna::Colors::White, 0.0f, Origin(), 1.0f, spriteEffects, 0.0f);
 	}
 }

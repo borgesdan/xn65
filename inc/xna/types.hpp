@@ -8,6 +8,7 @@
 #include <memory>
 #include <utility>
 #include <cassert>
+#include <optional>
 
 namespace xna {
 	using Sbyte		= int8_t;
@@ -48,7 +49,7 @@ namespace xna {
 	//
 
 	using String	= std::string;
-	using WString	= std::wstring;
+	using WString	= std::wstring;	
 	
 	template <typename T>
 	using sptr		= std::shared_ptr<T>;

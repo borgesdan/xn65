@@ -28,26 +28,35 @@ namespace xna {
 		Int lineSpacing,
 		float spacing,
 		std::vector<Vector3> const& kerning,
-		std::optional<Char> defaultCharacter) :
-		textureValue(texture), glyphData(glyphs), croppingData(cropping),
-		characterMap(charMap), lineSpacing(lineSpacing), spacing(spacing),
-		kerning(kerning), defaultCharacter(defaultCharacter)
+		std::optional<Char> const& defaultCharacter)
 	{
-		if (!texture)
+		if (!texture || !texture->impl->dxShaderResource)
 			throw std::invalid_argument("SpriteFont: texture is null.");
+
+		if(cropping.size() != glyphs.size() || charMap.size() != glyphs.size() || (!kerning.empty() && kerning.size() != glyphs.size()))
+			throw std::invalid_argument("SpriteFont: cropping, charmap and kerning (if not empty) must all be the same size.");
 
 		std::vector<DxGlyph> dxGlyps(glyphs.size());		
 
 		for (size_t i = 0; i < dxGlyps.size(); ++i) {
 			DxGlyph g;
-			g.Subrect.left = glyphs[i].Left();
-			g.Subrect.right = glyphs[i].Right();
-			g.Subrect.top = glyphs[i].Top();
-			g.Subrect.bottom = glyphs[i].Bottom();
+			g.Subrect.left = static_cast<LONG>(glyphs[i].Left());
+			g.Subrect.right = static_cast<LONG>(glyphs[i].Right());
+			g.Subrect.top = static_cast<LONG>(glyphs[i].Top());
+			g.Subrect.bottom = static_cast<LONG>(glyphs[i].Bottom());
 			g.Character = static_cast<Uint>(charMap[i]);
-			g.XOffset = kerning[i].X;
-			g.YOffset = cropping[i].Y;
-			g.XAdvance = kerning[i].Z;
+
+			if (!kerning.empty()) {
+				g.XOffset = kerning[i].X;
+				g.YOffset = static_cast<float>(cropping[i].Y);
+				g.XAdvance = kerning[i].Z + spacing;
+			}
+			else {
+				g.XOffset = 0;
+				g.YOffset = 0;
+				g.XAdvance = spacing;
+			}			
+			
 			dxGlyps[i] = g;
 		}		
 		
@@ -67,14 +76,7 @@ namespace xna {
 			const auto defChar = static_cast<wchar_t>(defaultCharacter.value());
 			impl->_dxSpriteFont->SetDefaultCharacter(defChar);
 		}
-		else {
-			impl->_dxSpriteFont->SetDefaultCharacter(charMap[0]);
-		}
-	}
-
-	SpriteFont::~SpriteFont() {
-		impl = nullptr;
-	}
+	}	
 
 	Vector2 SpriteFont::MeasureString(String const& text, bool ignoreWhiteSpace)
 	{
@@ -102,22 +104,37 @@ namespace xna {
 		return vec2;
 	}
 
-	static constexpr void ConvertSpriteSort(SpriteSortMode value, DirectX::SpriteSortMode& target) {
-		target = static_cast<DirectX::SpriteSortMode>(static_cast<int>(value));
+	Char SpriteFont::DefaultCharacter() const {
+		const auto defChar = impl->_dxSpriteFont->GetDefaultCharacter();
+		return static_cast<Char>(defChar);
+	}	
+
+	void SpriteFont::DefaultCharacter(Char value) {
+		const auto defChar = static_cast<wchar_t>(value);
+		impl->_dxSpriteFont->SetDefaultCharacter(defChar);
 	}
+
+	Int SpriteFont::LineSpacing() const {
+		const auto space = impl->_dxSpriteFont->GetLineSpacing();
+		return static_cast<Int>(space);
+	}
+
+	void SpriteFont::LineSpacing(Int value) {
+		impl->_dxSpriteFont->SetLineSpacing(static_cast<float>(value));		
+	}		
 
 	SpriteBatch::SpriteBatch(GraphicsDevice& device) {
 		if (!device.impl->_context)
 			return;
 
 		implementation = uNew<PlatformImplementation>();
-		implementation->_dxspriteBatch = New<DxSpriteBatch>(device.impl->_context);
+		implementation->_dxspriteBatch = New<DxSpriteBatch>(
+			//ID3D11DeviceContext* deviceContext
+			device.impl->_context
+		);
 
 		Viewport(device.Viewport());
-	}
-
-	SpriteBatch::~SpriteBatch() {
-	}
+	}	
 
 	void SpriteBatch::Begin(SpriteSortMode sortMode, BlendState* blendState, SamplerState* samplerState, DepthStencilState* depthStencil, RasterizerState* rasterizerState, Matrix const& transformMatrix) {
 
@@ -125,7 +142,7 @@ namespace xna {
 			return;
 
 		DxSpriteSortMode sort;
-		ConvertSpriteSort(sortMode, sort);
+		DxHelpers::ConvertSpriteSort(sortMode, sort);
 
 		const auto& t = transformMatrix;
 		DxMatrix matrix = DxMatrix(
@@ -171,10 +188,10 @@ namespace xna {
 		);
 	}
 
-	void SpriteBatch::Draw(Texture2D& texture, Vector2 const& position, Rectangle const* sourceRectangle, Color const& color) {
+	void SpriteBatch::Draw(Texture2D& texture, Vector2 const& position, std::optional<Rectangle> const& sourceRectangle, Color const& color) {
 		if (!implementation->_dxspriteBatch)
 			return;
-
+		
 		if (!texture.impl->dxShaderResource)
 			return;
 
@@ -184,7 +201,7 @@ namespace xna {
 
 		RECT _sourceRect{};
 
-		if (sourceRectangle) {
+		if (sourceRectangle.has_value()) {
 			_sourceRect.top = sourceRectangle->Y;
 			_sourceRect.left = sourceRectangle->X;
 			_sourceRect.right = sourceRectangle->X + sourceRectangle->Width;
@@ -198,7 +215,7 @@ namespace xna {
 			_color);
 	}
 
-	void SpriteBatch::Draw(Texture2D& texture, Vector2 const& position, Rectangle const* sourceRectangle, Color const& color, float rotation, Vector2 const& origin, float scale, SpriteEffects effects, float layerDepth) {
+	void SpriteBatch::Draw(Texture2D& texture, Vector2 const& position, std::optional<Rectangle> const& sourceRectangle, Color const& color, float rotation, Vector2 const& origin, float scale, SpriteEffects effects, float layerDepth) {
 		if (!implementation->_dxspriteBatch)
 			return;
 
@@ -212,7 +229,7 @@ namespace xna {
 
 		RECT _sourceRect{};
 
-		if (sourceRectangle) {
+		if (sourceRectangle.has_value()) {
 			_sourceRect.top = sourceRectangle->Y;
 			_sourceRect.left = sourceRectangle->X;
 			_sourceRect.right = sourceRectangle->X + sourceRectangle->Width;
@@ -233,7 +250,7 @@ namespace xna {
 			layerDepth);
 	}
 
-	void SpriteBatch::Draw(Texture2D& texture, Vector2 const& position, Rectangle const* sourceRectangle, Color const& color, float rotation, Vector2 const& origin, Vector2 const& scale, SpriteEffects effects, float layerDepth) {
+	void SpriteBatch::Draw(Texture2D& texture, Vector2 const& position, std::optional<Rectangle> const& sourceRectangle, Color const& color, float rotation, Vector2 const& origin, Vector2 const& scale, SpriteEffects effects, float layerDepth) {
 		if (!implementation->_dxspriteBatch)
 			return;
 
@@ -247,7 +264,7 @@ namespace xna {
 
 		RECT _sourceRect{};
 
-		if (sourceRectangle) {
+		if (sourceRectangle.has_value()) {
 			_sourceRect.top = sourceRectangle->Y;
 			_sourceRect.left = sourceRectangle->X;
 			_sourceRect.right = sourceRectangle->X + sourceRectangle->Width;
@@ -288,7 +305,7 @@ namespace xna {
 		implementation->_dxspriteBatch->Draw(texture.impl->dxShaderResource, _destinationRect, _color);
 	}
 
-	void SpriteBatch::Draw(Texture2D& texture, Rectangle const& destinationRectangle, Rectangle const* sourceRectangle, Color const& color) {
+	void SpriteBatch::Draw(Texture2D& texture, Rectangle const& destinationRectangle, std::optional<Rectangle> const& sourceRectangle, Color const& color) {
 		if (!implementation->_dxspriteBatch)
 			return;
 
@@ -306,7 +323,7 @@ namespace xna {
 
 		RECT _sourceRect{};
 
-		if (sourceRectangle) {
+		if (sourceRectangle.has_value()) {
 			_sourceRect.top = sourceRectangle->Y;
 			_sourceRect.left = sourceRectangle->X;
 			_sourceRect.right = sourceRectangle->X + sourceRectangle->Width;
@@ -316,7 +333,7 @@ namespace xna {
 		implementation->_dxspriteBatch->Draw(texture.impl->dxShaderResource, _destinationRect, sourceRectangle ? &_sourceRect : nullptr, _color);
 	}
 
-	void SpriteBatch::Draw(Texture2D& texture, Rectangle const& destinationRectangle, Rectangle const* sourceRectangle, Color const& color, float rotation, Vector2 const& origin, SpriteEffects effects, float layerDepth) {
+	void SpriteBatch::Draw(Texture2D& texture, Rectangle const& destinationRectangle, std::optional<Rectangle> const& sourceRectangle, Color const& color, float rotation, Vector2 const& origin, SpriteEffects effects, float layerDepth) {
 		if (!implementation->_dxspriteBatch)
 			return;
 
@@ -334,7 +351,7 @@ namespace xna {
 
 		RECT _sourceRect{};
 
-		if (sourceRectangle) {
+		if (sourceRectangle.has_value()) {
 			_sourceRect.top = sourceRectangle->Y;
 			_sourceRect.left = sourceRectangle->X;
 			_sourceRect.right = sourceRectangle->X + sourceRectangle->Width;

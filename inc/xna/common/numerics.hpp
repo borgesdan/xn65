@@ -3,6 +3,7 @@
 
 #include <cmath>
 #include "../default.hpp"
+#include <optional>
 
 namespace xna {
 	struct Point {
@@ -32,6 +33,10 @@ namespace xna {
 
 		constexpr bool operator==(const Rectangle& other) const {
 			return Height == other.Height && Width == other.Width && X == other.X && Y == other.Y;
+		}
+
+		constexpr operator std::optional<Rectangle>() const {
+			return std::make_optional<Rectangle>(X, Y, Width, Height);
 		}
 
 		constexpr Int Left() const { return X; }
