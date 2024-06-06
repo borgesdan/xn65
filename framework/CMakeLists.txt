@@ -41,7 +41,7 @@ add_library (Xn65 STATIC
 "platform-dx/displaymode.cpp"
 "platform-dx/init.cpp"
 "platform-dx/buffer.cpp"
-"platform-dx/audioengine.cpp" )
+"platform-dx/audioengine.cpp"  "graphics/gresource.cpp")
 
 if (CMAKE_VERSION VERSION_GREATER 3.12)
   set_property(TARGET Xn65 PROPERTY CXX_STANDARD 20)
