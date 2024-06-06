@@ -1,5 +1,5 @@
 #include "xna/graphics/buffer.hpp"
-#include "xna/platform-dx/implementations.hpp"
+#include "xna/platform-dx/dx.hpp"
 #include "xna/graphics/shader.hpp"
 
 namespace xna {

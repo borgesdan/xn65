@@ -1,10 +1,10 @@
-#include "xna/csharp/type.hpp"
-#include "xna/game/time.hpp"
-#include "xna/game/component.hpp"
-#include "xna/game/servicecontainer.hpp"
-#include "xna/platform-dx/implementations.hpp"
-#include "xna/game/gdevicemanager.hpp"
 #include "xna/content/manager.hpp"
+#include "xna/csharp/type.hpp"
+#include "xna/game/component.hpp"
+#include "xna/game/gdevicemanager.hpp"
+#include "xna/game/servicecontainer.hpp"
+#include "xna/game/time.hpp"
+#include "xna/platform-dx/dx.hpp"
 
 namespace xna {
 	Game::Game() {

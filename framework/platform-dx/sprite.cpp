@@ -6,8 +6,7 @@
 #include "xna/graphics/viewport.hpp"
 #include "xna/graphics/blendstate.hpp"
 #include "xna/graphics/depthstencilstate.hpp"
-#include "xna/platform-dx/implementations.hpp"
-#include <stdexcept>
+#include "xna/platform-dx/dx.hpp"
 
 using DxSpriteBatch = DirectX::SpriteBatch;
 using DxSpriteSortMode = DirectX::SpriteSortMode;

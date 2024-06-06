@@ -1,5 +1,5 @@
 #include "xna/graphics/rasterizerstate.hpp"
-#include "xna/platform-dx/implementations.hpp"
+#include "xna/platform-dx/dx.hpp"
 
 namespace xna {
 

@@ -1,9 +1,6 @@
 #include "xna/graphics/blendstate.hpp"
 #include "xna/graphics/gresource.hpp"
-#include "xna/platform-dx/headers.hpp"
-#include "xna/platform-dx/helpers.hpp"
-#include "xna/graphics/blendstate.hpp"
-#include "xna/platform-dx/implementations.hpp"
+#include "xna/platform-dx/dx.hpp"
 
 namespace xna {
 	BlendState::BlendState() : GraphicsResource(nullptr) {

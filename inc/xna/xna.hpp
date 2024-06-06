@@ -53,4 +53,4 @@
 #include "input/keyboard.hpp"
 #include "input/mouse.hpp"
 #include "platforminit.hpp"
-#include "platform-dx/xna-dx.hpp"
+#include "xna/platform-dx/dx.hpp"

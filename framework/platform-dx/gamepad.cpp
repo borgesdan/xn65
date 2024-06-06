@@ -1,4 +1,4 @@
-#include "xna/platform-dx/implementations.hpp"
+#include "xna/platform-dx/dx.hpp"
 #include "xna/input/gamepad.hpp"
 
 namespace xna {

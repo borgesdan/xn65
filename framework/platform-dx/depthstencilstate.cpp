@@ -1,6 +1,5 @@
 #include "xna/graphics/depthstencilstate.hpp"
-#include "xna/platform-dx/headers.hpp"
-#include "xna/platform-dx/implementations.hpp"
+#include "xna/platform-dx/dx.hpp"
 
 namespace xna {
 	static D3D11_DEPTH_STENCIL_DESC defaultDesc() {
