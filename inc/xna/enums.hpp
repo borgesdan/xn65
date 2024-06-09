@@ -197,6 +197,27 @@ namespace xna {
         Stretched = 2
     };
 
+    enum class EffectParameterClass {
+        Matrix,
+        Object,
+        Scalar,
+        Struct,
+        Vector
+    };
+
+    enum class EffectParameterType {
+        Bool,
+        Int32,
+        Single,
+        String,
+        Texture,
+        Texture1D,
+        Texture2D,
+        Texture3D,
+        TextureCube,
+        Void
+    };
+
     enum class FileMode {
         CreateNew,
         Create,

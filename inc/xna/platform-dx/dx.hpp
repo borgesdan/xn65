@@ -6,12 +6,18 @@
 //--------------------------------//
 
 //DirectX
+#if defined(_XBOX_ONE) && defined(_TITLE)
+#include <d3d11_x.h>
+#define NO_D3D11_DEBUG_NAME
+#endif
 #include "dxgi.h"
 #include "d3d11.h"
 #include <d3d11_1.h>
 #include <d3d11_2.h>
-//HSLS
+//HSLS AND EFFECTS
 #include <d3dcompiler.h>
+#include <d3d11shader.h>
+#include "effects11/d3dx11effect.h"
 //DirectXTK
 #include <DirectXMath.h>
 #include <Audio.h>
@@ -62,6 +68,7 @@ using comptr = Microsoft::WRL::ComPtr<T>;
 #include "../graphics/depthstencilstate.hpp"
 #include "../graphics/displaymode.hpp"
 #include "../graphics/sprite.hpp"
+#include "../graphics/effect.hpp"
 #include "../graphics/samplerstate.hpp"
 #include "../input/gamepad.hpp"
 #include "../input/keyboard.hpp"
@@ -926,6 +933,21 @@ namespace xna {
 		}
 
 		uptr<DirectX::SoundEffect> _dxSoundEffect = nullptr;
+	};
+
+	struct Effect::PlatformImplementation {
+		~PlatformImplementation() {
+			if (dxEffect) {
+				dxEffect->Release();
+				dxEffect = nullptr;
+			}
+		}
+
+		ID3DX11Effect* dxEffect = nullptr;
+	};
+
+	struct EffectAnnotation::PlatformImplementation {
+		ID3DX11EffectVariable* dxVariable = nullptr;
 	};
 
 	template <typename T>
