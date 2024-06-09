@@ -947,7 +947,26 @@ namespace xna {
 	};
 
 	struct EffectAnnotation::PlatformImplementation {
+		~PlatformImplementation() {
+			if (dxVariable) {
+				dxVariable->Release();
+				dxVariable = nullptr;
+			}
+		}
+
 		ID3DX11EffectVariable* dxVariable = nullptr;
+	};
+
+	struct EffectPass::PlatformImplementation {
+		~PlatformImplementation() {
+			if (dxPass) {
+				dxPass->Release();
+				dxPass = nullptr;
+			}
+		}
+
+		ID3DX11EffectPass* dxPass = nullptr;
+		PGraphicsDevice graphicsDevice = nullptr;
 	};
 
 	template <typename T>

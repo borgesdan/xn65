@@ -6,9 +6,9 @@
 #include "gresource.hpp"
 
 namespace xna {   
+    //Represents an annotation to an EffectParameter. 
     class EffectAnnotation {
-    public:
-        EffectAnnotation();
+    public:        
         Int ColumCount() const;
         String Name() const;
         EffectParameterClass ParameterClass() const;
@@ -26,6 +26,64 @@ namespace xna {
     public:
         struct PlatformImplementation;
         uptr<PlatformImplementation> impl;
+
+    public:
+        EffectAnnotation();
+    };
+
+    using PEffectAnnotation = sptr<EffectAnnotation>;
+
+    class EffectAnnotationCollection {
+    public:
+        EffectAnnotationCollection();
+        
+        EffectAnnotationCollection(std::vector<PEffectAnnotation> const& data) : data(data)
+        {
+        }
+
+        constexpr size_t Count() const {
+            return data.size();
+        }
+
+        PEffectAnnotation operator[](size_t index) {
+            if (index >= data.size())
+                return nullptr;
+
+            return data[index];
+        }
+
+        PEffectAnnotation operator[](String const& name) {
+            for (size_t i = 0; i < data.size(); ++i) {
+                const auto& p = data[i];
+
+                if (p->Name() == name)
+                    return p;
+            }
+
+            return nullptr;
+        }
+
+    public:
+        std::vector<PEffectAnnotation> data;
+    };
+
+    using PEffectAnnotationCollection = sptr<EffectAnnotationCollection>;
+
+    class EffectPass {
+    public:        
+        //Gets the name of this pass. 
+        String Name() const;
+        //The EffectAnnotationCollection containing EffectAnnotation objects for this EffectPass.
+        PEffectAnnotationCollection Annotations() const;
+
+        //Begins this pass.
+        void Apply();
+    public:
+        struct PlatformImplementation;
+        uptr<PlatformImplementation> impl;    
+
+    public:
+        EffectPass(sptr<GraphicsDevice> const& device);
     };
 
 	class Effect : public GraphicsResource {

@@ -211,4 +211,55 @@ namespace xna {
 
 		return v;
 	}
+
+	EffectPass::EffectPass(PGraphicsDevice const& device) {
+		if (!device || !device->impl || !device->impl->_context)
+			throw std::invalid_argument("EffectPass::EffectPass: device is null");
+
+		impl = unew<PlatformImplementation>();
+		impl->graphicsDevice = device;
+	}
+
+	String EffectPass::Name() const {
+		if (!impl->dxPass)
+			throw std::runtime_error("EffectPass::Name: The class was not initialized correctly");
+
+		D3DX11_PASS_DESC desc{};
+		impl->dxPass->GetDesc(&desc);
+
+		return String(desc.Name);
+	}
+
+	PEffectAnnotationCollection EffectPass::Annotations() const {
+		if (!impl->dxPass)
+			throw std::runtime_error("EffectPass::Annotations: The class was not initialized correctly");
+
+		D3DX11_PASS_DESC desc{};
+		impl->dxPass->GetDesc(&desc);
+
+		auto annotCount = desc.Annotations;
+
+		if (annotCount == 0)
+			return snew<EffectAnnotationCollection>();
+		
+		std::vector<PEffectAnnotation> list(annotCount);
+
+		for (size_t i = 0; i < annotCount; ++i) {
+			auto current = impl->dxPass->GetAnnotationByIndex(i);
+			auto annotation = snew<EffectAnnotation>();
+			annotation->impl->dxVariable = current;			
+
+			list[i] = annotation;
+		}
+
+		auto collection = snew<EffectAnnotationCollection>(list);
+		return collection;
+	}
+	
+	void EffectPass::Apply() {
+		if (!impl->dxPass)
+			throw std::runtime_error("EffectPass::Apply: The class was not initialized correctly");
+
+		impl->dxPass->Apply(0, impl->graphicsDevice->impl->_context);
+	}
 }

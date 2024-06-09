@@ -24,6 +24,8 @@ namespace xna {
 		struct PlatformImplementation;
 		uptr<PlatformImplementation> impl = nullptr;
 	};
+
+	using PGraphicsDevice = sptr<GraphicsDevice>;
 }
 
 #endif
