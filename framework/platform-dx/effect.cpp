@@ -262,4 +262,62 @@ namespace xna {
 
 		impl->dxPass->Apply(0, impl->graphicsDevice->impl->_context);
 	}
+
+	EffectTechnique::EffectTechnique(sptr<GraphicsDevice> const& device) {
+		impl = unew<PlatformImplementation>();
+		impl->graphicsDevice = device;
+	}
+
+	String EffectTechnique::Name() const {
+		D3DX11_TECHNIQUE_DESC desc;
+		impl->dxTechnique->GetDesc(&desc);
+		
+		return String(desc.Name);
+	}
+
+	PEffectAnnotationCollection EffectTechnique::Annotations() const {
+		D3DX11_TECHNIQUE_DESC desc;
+		impl->dxTechnique->GetDesc(&desc);
+
+		auto annotCount = desc.Annotations;
+
+		if (annotCount == 0)
+			return snew<EffectAnnotationCollection>();
+
+		std::vector<PEffectAnnotation> list(annotCount);
+
+		for (size_t i = 0; i < annotCount; ++i) {
+			auto current = impl->dxTechnique->GetAnnotationByIndex(i);
+			auto annotation = snew<EffectAnnotation>();
+			annotation->impl->dxVariable = current;
+
+			list[i] = annotation;
+		}
+
+		auto collection = snew<EffectAnnotationCollection>(list);
+		return collection;
+	}
+
+	PEffectPassCollection EffectTechnique::Passes() const {
+		D3DX11_TECHNIQUE_DESC desc;
+		impl->dxTechnique->GetDesc(&desc);
+
+		auto passCount = desc.Passes;
+
+		if (passCount == 0)
+			return snew<EffectPassCollection>();
+
+		std::vector<PEffectPass> list(passCount);
+
+		for (size_t i = 0; i < passCount; ++i) {
+			auto current = impl->dxTechnique->GetPassByIndex(i);
+			auto pass = snew<EffectPass>(impl->graphicsDevice);
+			pass->impl->dxPass = current;
+
+			list[i] = pass;
+		}
+
+		auto collection = snew<EffectPassCollection>(list);
+		return collection;
+	}
 }

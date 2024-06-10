@@ -35,7 +35,7 @@ namespace xna {
 
     class EffectAnnotationCollection {
     public:
-        EffectAnnotationCollection();
+        EffectAnnotationCollection(){}
         
         EffectAnnotationCollection(std::vector<PEffectAnnotation> const& data) : data(data)
         {
@@ -92,6 +92,58 @@ namespace xna {
     public:
         struct PlatformImplementation;
         uptr<PlatformImplementation> impl;
+    };
+
+    using PEffectPass = sptr<EffectPass>;
+
+    class EffectPassCollection {
+    public:
+        EffectPassCollection(){}
+
+        EffectPassCollection(std::vector<PEffectPass> const& data) : data(data)
+        {
+        }
+
+        constexpr size_t Count() const {
+            return data.size();
+        }
+
+        PEffectPass operator[](size_t index) {
+            if (index >= data.size())
+                return nullptr;
+
+            return data[index];
+        }
+
+        PEffectPass operator[](String const& name) {
+            for (size_t i = 0; i < data.size(); ++i) {
+                const auto& p = data[i];
+
+                if (p->Name() == name)
+                    return p;
+            }
+
+            return nullptr;
+        }
+
+    public:
+        std::vector<PEffectPass> data;
+    };
+
+    using PEffectPassCollection = sptr<EffectPassCollection>;
+
+    class EffectTechnique {
+    public:
+        PEffectAnnotationCollection Annotations() const;
+        String Name() const;
+        PEffectPassCollection Passes() const;
+
+    public:
+        struct PlatformImplementation;
+        uptr<PlatformImplementation> impl;
+
+    public:
+        EffectTechnique(sptr<GraphicsDevice> const& device);
     };
 
     class IEffectMatrices {

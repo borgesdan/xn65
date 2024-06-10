@@ -969,6 +969,18 @@ namespace xna {
 		PGraphicsDevice graphicsDevice = nullptr;
 	};
 
+	struct EffectTechnique::PlatformImplementation {
+		~PlatformImplementation() {
+			if (dxTechnique) {
+				dxTechnique->Release();
+				dxTechnique = nullptr;
+			}
+		}
+
+		ID3DX11EffectTechnique* dxTechnique = nullptr;
+		PGraphicsDevice graphicsDevice = nullptr;
+	};
+
 	template <typename T>
 	inline bool IndexBuffer::Initialize(std::vector<T> const& data, xna_error_ptr_arg) {
 		if (!impl || !m_device || !m_device->impl->_device || data.empty()) {
