@@ -27,6 +27,22 @@ namespace xna {
 			throw std::runtime_error("Effect::Effect: Unable to create an effect with memory data.");
 	}
 
+	PEffectTechnique Effect::CurrentTechnique() const {
+		D3DX11_EFFECT_DESC desc;
+		impl->dxEffect->GetDesc(&desc);
+
+		auto tech = impl->dxEffect->GetTechniqueByIndex(0);
+		
+		auto technique = snew<EffectTechnique>();
+		technique->impl->dxContext = m_device->impl->_context;
+		technique->impl->dxContext->AddRef();
+
+		tech->Release();
+		tech = nullptr;
+
+		return technique;
+	}
+
 	EffectAnnotation::EffectAnnotation() {
 		impl = unew<PlatformImplementation>();
 	}
@@ -36,6 +52,9 @@ namespace xna {
 		D3DX11_EFFECT_TYPE_DESC desc{};
 		type->GetDesc(&desc);
 
+		type->Release();
+		type = nullptr;
+
 		return static_cast<Int>(desc.Columns);
 	}
 
@@ -44,6 +63,9 @@ namespace xna {
 		D3DX11_EFFECT_TYPE_DESC desc{};
 		type->GetDesc(&desc);
 
+		type->Release();
+		type = nullptr;
+
 		return String(desc.TypeName);
 	}
 
@@ -51,6 +73,9 @@ namespace xna {
 		auto type = impl->dxVariable->GetType();
 		D3DX11_EFFECT_TYPE_DESC desc{};
 		type->GetDesc(&desc);
+
+		type->Release();
+		type = nullptr;
 
 		switch (desc.Class)
 		{
@@ -75,17 +100,23 @@ namespace xna {
 		D3DX11_EFFECT_TYPE_DESC desc{};
 		type->GetDesc(&desc);
 
+		type->Release();
+		type = nullptr;
+
 		return static_cast<Int>(desc.Rows);
 	}
 
 	String EffectAnnotation::Semantic() const {
 		auto type = impl->dxVariable->GetType();
 		auto semantic = type->GetMemberSemantic(0);
+
+		type->Release();
+		type = nullptr;
+
 		return std::string(semantic);
 	}
 
 	bool EffectAnnotation::GetValueBoolean() const {
-		auto type = impl->dxVariable->GetType();
 		auto scalar = impl->dxVariable->AsScalar();
 		
 		bool value = false;
@@ -94,31 +125,35 @@ namespace xna {
 		if FAILED(hr)
 			throw std::runtime_error("EffectAnnotation::GetValueBoolean: Unable to get boolean value.");
 
+		scalar->Release();
+		scalar = nullptr;
+
 		return value;
 	}
 
 	Int EffectAnnotation::GetValueInt32() const {
-		auto type = impl->dxVariable->GetType();
 		auto scalar = impl->dxVariable->AsScalar();
 
 		int value = 0;
 		auto hr = scalar->GetInt(&value);
 
 		if FAILED(hr)
-			throw std::runtime_error("EffectAnnotation::GetValueBoolean: Unable to get interger value.");
+			throw std::runtime_error("EffectAnnotation::GetValueInt32: Unable to get interger value.");
+
+		scalar->Release();
+		scalar = nullptr;
 
 		return static_cast<Int>(value);
 	}
 
 	Matrix EffectAnnotation::GetValueMatrix() const {
-		auto type = impl->dxVariable->GetType();
 		auto matrix = impl->dxVariable->AsMatrix();
 
 		float values[16];
 		auto hr = matrix->GetMatrix(values);
 
 		if FAILED(hr)
-			throw std::runtime_error("EffectAnnotation::GetValueBoolean: Unable to get matrix value.");
+			throw std::runtime_error("EffectAnnotation::GetValueMatrix: Unable to get matrix value.");
 
 		Matrix m;
 		m.M11 = values[0];
@@ -138,70 +173,86 @@ namespace xna {
 		m.M43 = values[14];
 		m.M44 = values[15];
 
+		matrix->Release();
+		matrix = nullptr;
+
 		return m;
 	}
 
 	float EffectAnnotation::GetValueSingle() const {
-		auto type = impl->dxVariable->GetType();
 		auto scalar = impl->dxVariable->AsScalar();
 
 		float value = 0;
 		auto hr = scalar->GetFloat(&value);
 
 		if FAILED(hr)
-			throw std::runtime_error("EffectAnnotation::GetValueBoolean: Unable to get float value.");
+			throw std::runtime_error("EffectAnnotation::GetValueSingle: Unable to get float value.");
+
+		scalar->Release();
+		scalar = nullptr;
 
 		return value;
 	}
 
 	String EffectAnnotation::GetValueString() const {
-		return {};
+		auto str = impl->dxVariable->AsString();
+		
+		LPCSTR data;
+		str->GetString(&data);
+		
+		str->Release();
+		str = nullptr;
+		
+		return String(data);
 	}
 
 	Vector2 EffectAnnotation::GetValueVector2() const {
-		auto type = impl->dxVariable->GetType();
 		auto scalar = impl->dxVariable->AsScalar();
 
 		float values[2];
 		auto hr = scalar->GetFloatArray(values, 0, 2);
 
 		if FAILED(hr)
-			throw std::runtime_error("EffectAnnotation::GetValueBoolean: Unable to get Vector2 value.");
+			throw std::runtime_error("EffectAnnotation::GetValueVector2: Unable to get Vector2 value.");
 
 		Vector2 v;
 		v.X = values[0];
 		v.Y = values[1];
 
+		scalar->Release();
+		scalar = nullptr;
+
 		return v;
 	}
 
-	Vector3 EffectAnnotation::GetValueVector3() const {
-		auto type = impl->dxVariable->GetType();
+	Vector3 EffectAnnotation::GetValueVector3() const {		
 		auto scalar = impl->dxVariable->AsScalar();
 
 		float values[3];
 		auto hr = scalar->GetFloatArray(values, 0, 3);
 
 		if FAILED(hr)
-			throw std::runtime_error("EffectAnnotation::GetValueBoolean: Unable to get Vector3 value.");
+			throw std::runtime_error("EffectAnnotation::GetValueVector3: Unable to get Vector3 value.");
 
 		Vector3 v;
 		v.X = values[0];
 		v.Y = values[1];
 		v.Z = values[2];
 
+		scalar->Release();
+		scalar = nullptr;
+
 		return v;
 	}
 
-	Vector4 EffectAnnotation::GetValueVector4() const {
-		auto type = impl->dxVariable->GetType();
+	Vector4 EffectAnnotation::GetValueVector4() const {		
 		auto scalar = impl->dxVariable->AsScalar();
 
 		float values[4];
 		auto hr = scalar->GetFloatArray(values, 0, 4);
 
 		if FAILED(hr)
-			throw std::runtime_error("EffectAnnotation::GetValueBoolean: Unable to get Vector4 value.");
+			throw std::runtime_error("EffectAnnotation::GetValueVector4: Unable to get Vector4 value.");		
 
 		Vector4 v;
 		v.X = values[0];
@@ -209,15 +260,14 @@ namespace xna {
 		v.Z = values[2];
 		v.W = values[3];
 
+		scalar->Release();
+		scalar = nullptr;
+
 		return v;
 	}
 
-	EffectPass::EffectPass(PGraphicsDevice const& device) {
-		if (!device || !device->impl || !device->impl->_context)
-			throw std::invalid_argument("EffectPass::EffectPass: device is null");
-
+	EffectPass::EffectPass() {
 		impl = unew<PlatformImplementation>();
-		impl->graphicsDevice = device;
 	}
 
 	String EffectPass::Name() const {
@@ -247,7 +297,11 @@ namespace xna {
 		for (size_t i = 0; i < annotCount; ++i) {
 			auto current = impl->dxPass->GetAnnotationByIndex(i);
 			auto annotation = snew<EffectAnnotation>();
-			annotation->impl->dxVariable = current;			
+			annotation->impl->dxVariable = current;		
+			annotation->impl->dxVariable->AddRef();
+
+			current->Release();
+			current = nullptr;
 
 			list[i] = annotation;
 		}
@@ -260,12 +314,11 @@ namespace xna {
 		if (!impl->dxPass)
 			throw std::runtime_error("EffectPass::Apply: The class was not initialized correctly");
 
-		impl->dxPass->Apply(0, impl->graphicsDevice->impl->_context);
+		impl->dxPass->Apply(0, impl->dxContext);
 	}
 
-	EffectTechnique::EffectTechnique(sptr<GraphicsDevice> const& device) {
+	EffectTechnique::EffectTechnique() {
 		impl = unew<PlatformImplementation>();
-		impl->graphicsDevice = device;
 	}
 
 	String EffectTechnique::Name() const {
@@ -290,6 +343,10 @@ namespace xna {
 			auto current = impl->dxTechnique->GetAnnotationByIndex(i);
 			auto annotation = snew<EffectAnnotation>();
 			annotation->impl->dxVariable = current;
+			annotation->impl->dxVariable->AddRef();
+
+			current->Release();
+			current = nullptr;
 
 			list[i] = annotation;
 		}
@@ -311,8 +368,16 @@ namespace xna {
 
 		for (size_t i = 0; i < passCount; ++i) {
 			auto current = impl->dxTechnique->GetPassByIndex(i);
-			auto pass = snew<EffectPass>(impl->graphicsDevice);
+			
+			auto pass = snew<EffectPass>();
 			pass->impl->dxPass = current;
+			pass->impl->dxPass->AddRef();
+
+			current->Release();
+			current = nullptr;
+
+			pass->impl->dxContext = impl->dxContext;
+			pass->impl->dxContext->AddRef();
 
 			list[i] = pass;
 		}

@@ -966,7 +966,7 @@ namespace xna {
 		}
 
 		ID3DX11EffectPass* dxPass = nullptr;
-		PGraphicsDevice graphicsDevice = nullptr;
+		ID3D11DeviceContext* dxContext = nullptr;
 	};
 
 	struct EffectTechnique::PlatformImplementation {
@@ -978,7 +978,7 @@ namespace xna {
 		}
 
 		ID3DX11EffectTechnique* dxTechnique = nullptr;
-		PGraphicsDevice graphicsDevice = nullptr;
+		ID3D11DeviceContext* dxContext = nullptr;
 	};
 
 	template <typename T>

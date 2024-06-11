@@ -83,15 +83,7 @@ namespace xna {
         uptr<PlatformImplementation> impl;    
 
     public:
-        EffectPass(sptr<GraphicsDevice> const& device);
-    };
-
-	class Effect : public GraphicsResource {
-        Effect(sptr<GraphicsDevice> const& device, std::vector<Byte> const& effectCode);
-
-    public:
-        struct PlatformImplementation;
-        uptr<PlatformImplementation> impl;
+        EffectPass();
     };
 
     using PEffectPass = sptr<EffectPass>;
@@ -143,7 +135,19 @@ namespace xna {
         uptr<PlatformImplementation> impl;
 
     public:
-        EffectTechnique(sptr<GraphicsDevice> const& device);
+        EffectTechnique();
+    };
+
+    using PEffectTechnique = sptr<EffectTechnique>;
+
+    class Effect : public GraphicsResource {
+        Effect(sptr<GraphicsDevice> const& device, std::vector<Byte> const& effectCode);
+
+        PEffectTechnique CurrentTechnique() const;
+
+    public:
+        struct PlatformImplementation;
+        uptr<PlatformImplementation> impl;
     };
 
     class IEffectMatrices {
