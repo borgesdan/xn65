@@ -963,6 +963,11 @@ namespace xna {
 				dxPass->Release();
 				dxPass = nullptr;
 			}
+			
+			if (dxContext) {
+				dxContext->Release();
+				dxContext = nullptr;
+			}
 		}
 
 		ID3DX11EffectPass* dxPass = nullptr;
@@ -975,10 +980,33 @@ namespace xna {
 				dxTechnique->Release();
 				dxTechnique = nullptr;
 			}
+
+			if (dxContext) {
+				dxContext->Release();
+				dxContext = nullptr;
+			}
 		}
 
 		ID3DX11EffectTechnique* dxTechnique = nullptr;
 		ID3D11DeviceContext* dxContext = nullptr;
+	};
+
+	struct EffectParameter::PlatformImplementation {
+		PlatformImplementation(){}
+
+		PlatformImplementation(ID3DX11EffectVariable* value) {
+			dxVariable = value;
+			dxVariable->AddRef();
+		}
+
+		~PlatformImplementation() {
+			if (dxVariable) {
+				dxVariable->Release();
+				dxVariable = nullptr;
+			}
+		}
+
+		ID3DX11EffectVariable* dxVariable = nullptr;
 	};
 
 	template <typename T>
