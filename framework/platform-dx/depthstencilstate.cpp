@@ -39,11 +39,10 @@ namespace xna {
 		impl = nullptr;
 	}
 
-	bool DepthStencilState::Initialize(xna_error_ptr_arg)
+	bool DepthStencilState::Initialize()
 	{
 		if (!m_device || !m_device->impl->_device) {
-			xna_error_apply(err, XnaErrorCode::INVALID_OPERATION);
-			return false;
+			Exception::Throw(ExMessage::InitializeComponent);
 		}
 
 		if (impl->dxDepthStencil) {
@@ -56,23 +55,20 @@ namespace xna {
 			&impl->dxDepthStencil);
 
 		if (FAILED(hr)) {
-			xna_error_apply(err, XnaErrorCode::FAILED_OPERATION);
-			return false;
+			Exception::Throw(ExMessage::CreateComponent);
 		}
 
 		return true;
 	}
 
-	bool DepthStencilState::Apply(xna_error_ptr_arg)
+	bool DepthStencilState::Apply()
 	{
 		if (!m_device || !m_device->impl->_context) {
-			xna_error_apply(err, XnaErrorCode::INVALID_OPERATION);
-			return false;
+			Exception::Throw(ExMessage::InvalidOperation);
 		}
 
 		if (!impl->dxDepthStencil) {
-			xna_error_apply(err, XnaErrorCode::UNINTIALIZED_RESOURCE);
-			return false;
+			Exception::Throw(ExMessage::UnintializedComponent);
 		}
 
 		m_device->impl->_context->OMSetDepthStencilState(impl->dxDepthStencil, 0);

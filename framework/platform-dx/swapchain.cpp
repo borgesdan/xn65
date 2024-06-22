@@ -50,10 +50,9 @@ namespace xna {
         return true;
     }
 
-    bool SwapChain::Initialize(xna_error_ptr_arg) {
+    bool SwapChain::Initialize() {
         if (!impl || !m_device || !m_device->impl->_device) {
-            xna_error_apply(err, XnaErrorCode::INVALID_OPERATION);
-            return false;
+            Exception::Throw(ExMessage::InitializeComponent);
         }
         
         const auto parameters = m_device->impl->_presentationParameters;

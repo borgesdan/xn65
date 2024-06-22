@@ -61,11 +61,10 @@ namespace xna {
         impl = nullptr;
     }
 
-    bool VertexShader::Initialize(DataBuffer& buffer, xna_error_ptr_arg)
+    bool VertexShader::Initialize(DataBuffer& buffer)
     {
         if (!impl || !m_device || !m_device->impl->_device || !buffer.impl->_blob) {
-            xna_error_apply(err, XnaErrorCode::INVALID_OPERATION);
-            return false;
+            Exception::Throw(ExMessage::InitializeComponent);
         }
 
         if (impl->_vertexShader) {
@@ -80,18 +79,16 @@ namespace xna {
             &impl->_vertexShader);
 
         if (FAILED(hr)) {
-            xna_error_apply(err, XnaErrorCode::FAILED_OPERATION);
-            return false;
+            Exception::Throw(ExMessage::CreateComponent);
         }
 
         return true;
     }
 
-    bool PixelShader::Initialize(DataBuffer& buffer, xna_error_ptr_arg)
+    bool PixelShader::Initialize(DataBuffer& buffer)
     {
         if (!impl || !m_device || !m_device->impl->_device || !buffer.impl->_blob) {
-            xna_error_apply(err, XnaErrorCode::INVALID_OPERATION);
-            return false;
+            Exception::Throw(ExMessage::InitializeComponent);
         }
 
         if (impl->_pixelShader) {
@@ -106,8 +103,7 @@ namespace xna {
             &impl->_pixelShader);
 
         if (FAILED(hr)) {
-            xna_error_apply(err, XnaErrorCode::FAILED_OPERATION);
-            return false;
+            Exception::Throw(ExMessage::CreateComponent);
         }
 
         return true;

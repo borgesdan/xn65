@@ -12,11 +12,11 @@ namespace xna {
 		BlendState();
 		BlendState(sptr<GraphicsDevice> const& device);
 		~BlendState() override;
-		bool Initialize(xna_error_nullarg) ;
+		bool Initialize() ;
 		void AlphaToCoverageEnable(bool value) ;
 		void IndependentBlendEnable(bool value) ;
 		void RenderTargets(std::vector<BlendRenderTarget> const& value);
-		bool Apply(xna_error_nullarg);
+		bool Apply();
 
 		static uptr<BlendState> Opaque();
 		static uptr<BlendState> AlphaBlend();

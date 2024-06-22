@@ -1011,34 +1011,30 @@ namespace xna {
 	};
 
 	template <typename T>
-	inline bool IndexBuffer::Initialize(std::vector<T> const& data, xna_error_ptr_arg) {
+	inline bool IndexBuffer::Initialize(std::vector<T> const& data) {
 		if (!impl || !m_device || !m_device->impl->_device || data.empty()) {
-			xna_error_apply(err, XnaErrorCode::INVALID_OPERATION);
-			return false;
+			Exception::Throw(ExMessage::InitializeComponent);
 		}
 
 		const auto hr = DirectX::CreateStaticBuffer(m_device->impl->_device, data.data(), data.size(), sizeof(T), D3D11_BIND_INDEX_BUFFER, &impl->dxBuffer);
 
 		if (FAILED(hr)) {
-			xna_error_apply(err, XnaErrorCode::FAILED_OPERATION);
-			return false;
+			Exception::Throw(ExMessage::CreateComponent);
 		}
 
 		return true;
 	}
 
 	template <typename T>
-	inline bool VertexBuffer::Initialize(std::vector<T> const& data, xna_error_ptr_arg) {
+	inline bool VertexBuffer::Initialize(std::vector<T> const& data) {
 		if (!impl || !m_device || !m_device->impl->_device || data.empty()) {
-			xna_error_apply(err, XnaErrorCode::INVALID_OPERATION);
-			return false;
+			Exception::Throw(ExMessage::InitializeComponent);
 		}
 
 		const auto hr = DirectX::CreateStaticBuffer(m_device->impl->_device, data.data(), data.size(), sizeof(T), D3D11_BIND_VERTEX_BUFFER, &impl->dxBuffer);
 
 		if (FAILED(hr)) {
-			xna_error_apply(err, XnaErrorCode::FAILED_OPERATION);
-			return false;
+			Exception::Throw(ExMessage::CreateComponent);
 		}
 
 		impl->size = sizeof(T);

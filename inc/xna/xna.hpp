@@ -1,5 +1,4 @@
 #define NOMINMAX 
-#include "xnaerror.hpp"
 #include "types.hpp"
 #include "helpers.hpp"
 #include "enums.hpp"

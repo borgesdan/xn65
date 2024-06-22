@@ -19,7 +19,7 @@ namespace xna {
 		IDXGIFactory1* pFactory = nullptr;
 
 		if FAILED(CreateDXGIFactory1(__uuidof(IDXGIFactory1), (void**)&pFactory))
-			return nullptr;
+			Exception::Throw(ExMessage::CreateComponent);
 
 		IDXGIAdapter1* pAdapter = nullptr;
 		
@@ -42,7 +42,7 @@ namespace xna {
 		IDXGIFactory1* pFactory = nullptr;
 
 		if FAILED(CreateDXGIFactory1(__uuidof(IDXGIFactory1), (void**)&pFactory))
-			return;
+			Exception::Throw(ExMessage::CreateComponent);
 		
 		IDXGIAdapter1* pAdapter = nullptr;
 		UINT count = 0;
@@ -64,7 +64,7 @@ namespace xna {
 		IDXGIFactory1* pFactory = nullptr;
 
 		if FAILED(CreateDXGIFactory1(__uuidof(IDXGIFactory1), (void**)&pFactory))
-			return;
+			Exception::Throw(ExMessage::CreateComponent);
 
 		IDXGIAdapter1* pAdapter = nullptr;
 		UINT count = 0;

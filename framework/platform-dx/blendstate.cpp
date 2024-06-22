@@ -15,11 +15,10 @@ namespace xna {
 		impl = nullptr;
 	}
 
-	bool BlendState::Initialize(xna_error_ptr_arg)
+	bool BlendState::Initialize()
 	{
 		if (!m_device || !m_device->impl->_device) {
-			xna_error_apply(err, XnaErrorCode::INVALID_OPERATION);
-			return false;
+			Exception::Throw(ExMessage::InitializeComponent);
 		}
 
 		if (impl->dxBlendState) {
@@ -32,22 +31,19 @@ namespace xna {
 			&impl->dxBlendState);
 
 		if (FAILED(hr)) {
-			xna_error_apply(err, XnaErrorCode::FAILED_OPERATION);
-			return false;
+			Exception::Throw(ExMessage::CreateComponent);
 		}
 
 		return true;
 	}
 
-	bool BlendState::Apply(xna_error_ptr_arg) {
+	bool BlendState::Apply() {
 		if (!m_device || !m_device->impl->_context) {
-			xna_error_apply(err, XnaErrorCode::INVALID_OPERATION);
-			return false;
+			Exception::Throw(ExMessage::ApplyComponent);
 		}
 
 		if (!impl->dxBlendState) {
-			xna_error_apply(err, XnaErrorCode::UNINTIALIZED_RESOURCE);
-			return false;
+			Exception::Throw(ExMessage::UnintializedComponent);
 		}
 		
         m_device->impl->_context->OMSetBlendState(

@@ -10,8 +10,8 @@ namespace xna {
 		RasterizerState();
 		RasterizerState(sptr<GraphicsDevice> const& device);
 		~RasterizerState() override;
-		bool Initialize(xna_error_nullarg);
-		bool Apply(xna_error_nullarg);
+		bool Initialize();
+		bool Apply();
 		xna::CullMode CullMode() const;
 		void CullMode(xna::CullMode value);
 		xna::FillMode FillMode() const;

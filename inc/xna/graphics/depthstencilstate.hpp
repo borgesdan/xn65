@@ -12,8 +12,8 @@ namespace xna {
 		DepthStencilState(sptr<GraphicsDevice> const& device);
 
 		~DepthStencilState() override;
-		bool Initialize(xna_error_nullarg);
-		bool Apply(xna_error_ptr_arg);
+		bool Initialize();
+		bool Apply();
 		
 		void DepthEnabled(bool value);
 		void DepthWriteEnabled(bool value);

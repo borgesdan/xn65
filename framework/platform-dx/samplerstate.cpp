@@ -15,11 +15,10 @@ namespace xna {
 		impl = nullptr;
 	}
 
-	bool SamplerState::Initialize(xna_error_ptr_arg)
+	bool SamplerState::Initialize()
 	{
 		if (!impl || !m_device || !m_device->impl->_device) {
-			xna_error_apply(err, XnaErrorCode::INVALID_OPERATION);
-			return false;
+			Exception::Throw(ExMessage::InitializeComponent);
 		}
 
 		if (impl->_samplerState) {
@@ -32,23 +31,20 @@ namespace xna {
 			&impl->_samplerState);
 
 		if (FAILED(hr)) {
-			xna_error_apply(err, XnaErrorCode::FAILED_OPERATION);
-			return false;
+			Exception::Throw(ExMessage::CreateComponent);
 		}
 
 		return true;
 	}
 
-	bool SamplerState::Apply(xna_error_ptr_arg)
+	bool SamplerState::Apply()
 	{
 		if (!impl || !m_device || !m_device->impl->_context) {
-			xna_error_apply(err, XnaErrorCode::INVALID_OPERATION);
-			return false;
+			Exception::Throw(ExMessage::InvalidOperation);
 		}
 
 		if (!impl->_samplerState) {
-			xna_error_apply(err, XnaErrorCode::UNINTIALIZED_RESOURCE);
-			return false;
+			Exception::Throw(ExMessage::UnintializedComponent);
 		}
 
 		m_device->impl->_context->PSSetSamplers(0, 1, &impl->_samplerState);

@@ -10,7 +10,7 @@ namespace xna {
 		Shader();
 		Shader(sptr<GraphicsDevice> const& device);
 		~Shader() override {}
-		bool Initialize(DataBuffer& buffer, xna_error_nullarg);	
+		bool Initialize(DataBuffer& buffer);	
 		static bool CompileFromFile(WString srcFile, String entryPoint, String profile, DataBuffer& blob);
 	};
 
@@ -19,7 +19,7 @@ namespace xna {
 		VertexShader();
 		VertexShader(sptr<GraphicsDevice> const& device);
 		~VertexShader() override;
-		bool Initialize(DataBuffer& buffer, xna_error_nullarg);
+		bool Initialize(DataBuffer& buffer);
 
 	public:
 		struct PlatformImplementation;
@@ -31,7 +31,7 @@ namespace xna {
 		PixelShader();
 		PixelShader(sptr<GraphicsDevice> const& device);
 		~PixelShader() override;
-		bool Initialize(DataBuffer& buffer, xna_error_nullarg);
+		bool Initialize(DataBuffer& buffer);
 
 	public:
 		struct PlatformImplementation;

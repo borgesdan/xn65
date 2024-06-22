@@ -7,14 +7,19 @@
 
 namespace xna {
 	struct ExMessage {
+		inline static const std::string InvalidOperation = "An invalid operation occurred.";
 		inline static const std::string InitializeComponent = "Unable to initialize component";
+		inline static const std::string CreateComponent = "Failed to create component";
+		inline static const std::string ApplyComponent = "Failed to apply component";
+		inline static const std::string UnintializedComponent = "Component is not initialized";
+		inline static const std::string MakeWindowAssociation = "Failed to create association with window";
 	};
 
 	struct Exception {
 		static void Throw(std::string const& message, const std::source_location location = std::source_location::current()) {
 			std::string error;
-			error.append("Exception in: ");
 
+			error.append("Exception in: ");
 #if _DEBUG
 			error.append(location.file_name());
 			error.append("(");

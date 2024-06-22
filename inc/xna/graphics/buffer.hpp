@@ -10,7 +10,7 @@ namespace xna {
 		ConstantBuffer();
 		ConstantBuffer(sptr<GraphicsDevice> const&);
 		~ConstantBuffer() override;
-		bool Initialize(xna_error_nullarg);
+		bool Initialize();
 
 	public:
 		struct PlatformImplementation;
@@ -22,7 +22,7 @@ namespace xna {
 		DataBuffer();
 		DataBuffer(sptr<GraphicsDevice> const&);
 		~DataBuffer() override;
-		bool Initialize(xna_error_nullarg);
+		bool Initialize();
 
 	public:
 		struct PlatformImplementation;
@@ -36,8 +36,8 @@ namespace xna {
 		~IndexBuffer() override;
 
 		template <typename T>
-		bool Initialize(std::vector<T> const& data, xna_error_nullarg);	
-		bool Apply(xna_error_nullarg);
+		bool Initialize(std::vector<T> const& data);	
+		bool Apply();
 
 	public:
 		struct PlatformImplementation;
@@ -50,8 +50,8 @@ namespace xna {
 		VertexBuffer(sptr<GraphicsDevice> const&);
 		~VertexBuffer();
 		template <typename T>
-		bool Initialize(std::vector<T> const& data, xna_error_nullarg);
-		bool Apply(xna_error_nullarg);
+		bool Initialize(std::vector<T> const& data);
+		bool Apply();
 
 	public:
 		struct PlatformImplementation;
@@ -64,7 +64,7 @@ namespace xna {
 		VertexInputLayout(sptr<GraphicsDevice> const&);		
 		~VertexInputLayout();
 
-		bool Initialize(DataBuffer& blob, xna_error_nullarg);
+		bool Initialize(DataBuffer& blob);
 
 	public:
 		struct PlatformImplementation;

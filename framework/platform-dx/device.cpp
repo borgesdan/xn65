@@ -24,13 +24,11 @@ namespace xna {
 		impl._renderTarget2D = nullptr;
 	}
 
-	static bool createDevice(GraphicsDevice::PlatformImplementation& impl) {
+	static void createDevice(GraphicsDevice::PlatformImplementation& impl) {
 		auto createDeviceFlags = 0;
 #if _DEBUG
 		createDeviceFlags = D3D11_CREATE_DEVICE_FLAG::D3D11_CREATE_DEVICE_DEBUG;
 #endif        
-		
-
 		auto hr = D3D11CreateDevice(
 			impl._adapter->impl->dxadapter,
 			D3D_DRIVER_TYPE_UNKNOWN,
@@ -56,10 +54,11 @@ namespace xna {
 				D3D11_SDK_VERSION,
 				&impl._device,
 				&impl._featureLevel,
-				&impl._context);						
+				&impl._context);
+
+			if FAILED(hr)
+				Exception::Throw(ExMessage::CreateComponent);
 		}
-		
-		return SUCCEEDED(hr);
 	}
 
 	GraphicsDevice::GraphicsDevice() {		
@@ -95,12 +94,12 @@ namespace xna {
 
 		auto _this = shared_from_this();
 		
-		if (!createDevice(*impl))
-			return false;
+		createDevice(*impl);
 
 		auto hr = CreateDXGIFactory1(__uuidof(IDXGIFactory1), (void**)&impl->_factory);
-		if (FAILED(hr)) 
-			return false;		
+		
+		if FAILED(hr)
+			Exception::Throw(ExMessage::CreateComponent);
 
 		const auto bounds = impl->_gameWindow->ClientBounds();
 
@@ -119,9 +118,12 @@ namespace xna {
 		impl->_swapChain->Initialize();
 
 		hr = impl->_factory->MakeWindowAssociation(impl->_gameWindow->impl->WindowHandle(), DXGI_MWA_NO_ALT_ENTER);
-		if (FAILED(hr)) return false;
+		
+		if (FAILED(hr)) 
+			Exception::Throw(ExMessage::MakeWindowAssociation);
 
 		impl->_renderTarget2D = New<RenderTarget2D>(_this);
+		
 		if (!impl->_renderTarget2D->Initialize())
 			return false;
 
@@ -139,6 +141,7 @@ namespace xna {
 
 		impl->_blendState = BlendState::NonPremultiplied();
 		impl->_blendState->Bind(_this);
+		impl->_blendState->Initialize();
 		impl->_blendState->Apply();
 
 		return true;

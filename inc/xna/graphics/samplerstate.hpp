@@ -10,8 +10,8 @@ namespace xna {
 		SamplerState();
 		SamplerState(sptr<GraphicsDevice> const& device);
 		~SamplerState() override;
-		bool Initialize(xna_error_nullarg);
-		bool Apply(xna_error_nullarg);
+		bool Initialize();
+		bool Apply();
 		void Filter(TextureFilter value);
 		void AddressU(TextureAddressMode value);
 		void AddressV(TextureAddressMode value);

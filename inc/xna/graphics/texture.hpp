@@ -20,13 +20,13 @@ namespace xna {
 		Int Width() const;
 		Int Height() const;
 		Rectangle Bounds() const;
-		bool Initialize(xna_error_nullarg);
-		void SetData(std::vector<Color> const& data, size_t startIndex = 0, size_t elementCount = 0, xna_error_nullarg);
-		void SetData(std::vector<Uint> const& data, size_t startIndex = 0, size_t elementCount = 0, xna_error_nullarg);
-		void SetData(std::vector<Byte> const& data, size_t startIndex = 0, size_t elementCount = 0, xna_error_nullarg);
-		void SetData(Int level, Rectangle* rect, std::vector<Byte> const& data, size_t startIndex, size_t elementCount, xna_error_nullarg);
-		static sptr<Texture2D> FromStream(GraphicsDevice& device, String const& fileName, xna_error_nullarg);
-		static sptr<Texture2D> FromMemory(GraphicsDevice& device, std::vector<Byte> const& data, xna_error_nullarg);	
+		bool Initialize();
+		void SetData(std::vector<Color> const& data, size_t startIndex = 0, size_t elementCount = 0);
+		void SetData(std::vector<Uint> const& data, size_t startIndex = 0, size_t elementCount = 0);
+		void SetData(std::vector<Byte> const& data, size_t startIndex = 0, size_t elementCount = 0);
+		void SetData(Int level, Rectangle* rect, std::vector<Byte> const& data, size_t startIndex, size_t elementCount);
+		static sptr<Texture2D> FromStream(GraphicsDevice& device, String const& fileName);
+		static sptr<Texture2D> FromMemory(GraphicsDevice& device, std::vector<Byte> const& data);	
 
 	public:
 		struct PlatformImplementation;
