@@ -6,6 +6,8 @@
 #include <source_location>
 
 namespace xna {
+	
+	//A list of standard exceptions
 	struct ExMessage {
 		inline static const std::string InvalidOperation = "An invalid operation occurred.";
 		inline static const std::string InitializeComponent = "Unable to initialize component";
@@ -13,9 +15,13 @@ namespace xna {
 		inline static const std::string ApplyComponent = "Failed to apply component";
 		inline static const std::string UnintializedComponent = "Component is not initialized";
 		inline static const std::string MakeWindowAssociation = "Failed to create association with window";
+		inline static const std::string BuildObject = "Unable to build object";
 	};
 
+	//Structure for throwing exceptions with a message and information from the source file
 	struct Exception {
+
+		//Raises an exception with a message. Source file information is automatically captured.
 		static void Throw(std::string const& message, const std::source_location location = std::source_location::current()) {
 			std::string error;
 

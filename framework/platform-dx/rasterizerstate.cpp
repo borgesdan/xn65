@@ -54,7 +54,7 @@ namespace xna {
 
 	uptr<RasterizerState> RasterizerState::CullNone()
 	{
-		auto raster = uNew<RasterizerState>();
+		auto raster = unew<RasterizerState>();
 		raster->impl->dxDescription.FillMode = D3D11_FILL_SOLID;
 		raster->impl->dxDescription.CullMode = D3D11_CULL_MODE::D3D11_CULL_NONE;
 		raster->impl->dxDescription.DepthClipEnable = true;
@@ -63,7 +63,7 @@ namespace xna {
 
 	uptr<RasterizerState> RasterizerState::CullClockwise()
 	{
-		auto raster = uNew<RasterizerState>();
+		auto raster = unew<RasterizerState>();
 		raster->impl->dxDescription.FillMode = D3D11_FILL_SOLID;
 		raster->impl->dxDescription.CullMode = D3D11_CULL_MODE::D3D11_CULL_FRONT;
 		raster->impl->dxDescription.DepthClipEnable = true;
@@ -72,7 +72,7 @@ namespace xna {
 
 	uptr<RasterizerState> RasterizerState::CullCounterClockwise()
 	{
-		auto raster = uNew<RasterizerState>();
+		auto raster = unew<RasterizerState>();
 		raster->impl->dxDescription.FillMode = D3D11_FILL_SOLID;
 		raster->impl->dxDescription.CullMode = D3D11_CULL_MODE::D3D11_CULL_BACK;
 		raster->impl->dxDescription.DepthClipEnable = true;

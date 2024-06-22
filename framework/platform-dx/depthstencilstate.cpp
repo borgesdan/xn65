@@ -26,12 +26,12 @@ namespace xna {
 	}
 
 	DepthStencilState::DepthStencilState() : GraphicsResource(nullptr) {
-		impl = uNew<PlatformImplementation>();
+		impl = unew<PlatformImplementation>();
 		impl->dxDescription = defaultDesc();
 	}
 
 	DepthStencilState::DepthStencilState(sptr<GraphicsDevice> const& device) : GraphicsResource(device) {
-		impl = uNew<PlatformImplementation>();
+		impl = unew<PlatformImplementation>();
 		impl->dxDescription = defaultDesc();
 	}
 
@@ -77,7 +77,7 @@ namespace xna {
 	}
 
 	uptr<DepthStencilState> DepthStencilState::None() {
-		auto stencil = uNew<DepthStencilState>();
+		auto stencil = unew<DepthStencilState>();
 		stencil->impl->dxDescription.DepthEnable = false;
 		stencil->impl->dxDescription.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO;
 
@@ -85,7 +85,7 @@ namespace xna {
 	}
 
 	uptr<DepthStencilState> DepthStencilState::Default() {
-		auto stencil = uNew<DepthStencilState>();
+		auto stencil = unew<DepthStencilState>();
 		stencil->impl->dxDescription.DepthEnable = true;
 		stencil->impl->dxDescription.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
 
@@ -93,7 +93,7 @@ namespace xna {
 	}
 
 	uptr<DepthStencilState> DepthStencilState::DepthRead() {
-		auto stencil = uNew<DepthStencilState>();
+		auto stencil = unew<DepthStencilState>();
 		stencil->impl->dxDescription.DepthEnable = true;
 		stencil->impl->dxDescription.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO;
 

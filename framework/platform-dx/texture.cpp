@@ -8,7 +8,7 @@ namespace xna {
 	sptr<Texture2D> Texture2D::FromStream(GraphicsDevice& device, String const& fileName)
 	{		
 		auto _this = device.shared_from_this();
-		auto texture2d = New<Texture2D>(_this);
+		auto texture2d = snew<Texture2D>(_this);
 		ID3D11Resource* resource = nullptr;		
 		auto wstr = XnaHelper::ToWString(fileName);
 		
@@ -285,7 +285,7 @@ namespace xna {
 	sptr<Texture2D> Texture2D::FromMemory(GraphicsDevice& device, std::vector<Byte> const& data)
 	{
 		auto _this = device.shared_from_this();
-		auto texture2d = New<Texture2D>(_this);
+		auto texture2d = snew<Texture2D>(_this);
 		ID3D11Resource* resource = nullptr;
 
 		auto hr = DirectX::CreateWICTextureFromMemory(

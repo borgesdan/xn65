@@ -3,7 +3,7 @@
 
 namespace xna {
 	DisplayMode::DisplayMode() {
-		impl = uNew<PlatformImplementation>();
+		impl = unew<PlatformImplementation>();
 	}
 
 	DisplayMode::~DisplayMode() {

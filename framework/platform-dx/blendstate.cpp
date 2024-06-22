@@ -4,11 +4,11 @@
 
 namespace xna {
 	BlendState::BlendState() : GraphicsResource(nullptr) {
-		impl = uNew<PlatformImplementation>();
+		impl = unew<PlatformImplementation>();
 	}
 
 	BlendState::BlendState(sptr<GraphicsDevice> const& device) : GraphicsResource(device) {
-		impl = uNew<PlatformImplementation>();
+		impl = unew<PlatformImplementation>();
 	}
 
 	BlendState::~BlendState() {
@@ -76,7 +76,7 @@ namespace xna {
 	}
 
 	uptr<BlendState> BlendState::Opaque() {
-		auto blendState = uNew<BlendState>();
+		auto blendState = unew<BlendState>();
 		blendState->impl->dxDescription.RenderTarget[0].SrcBlend = D3D11_BLEND_ONE;
 		blendState->impl->dxDescription.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ZERO;
 		blendState->impl->dxDescription.RenderTarget[0].DestBlend = D3D11_BLEND_DEST_ALPHA;

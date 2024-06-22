@@ -8,7 +8,7 @@ namespace xna {
 	static uptr<DisplayModeCollection> createDisplayModeCollection(std::vector<DXGI_MODE_DESC> const& source);
 
 	GraphicsAdapter::GraphicsAdapter() {
-		impl = uNew<PlatformImplementation>();
+		impl = unew<PlatformImplementation>();
 	}
 
 	GraphicsAdapter::~GraphicsAdapter() {
@@ -24,7 +24,7 @@ namespace xna {
 		IDXGIAdapter1* pAdapter = nullptr;
 		
 		if (pFactory->EnumAdapters1(0, &pAdapter) != DXGI_ERROR_NOT_FOUND) {
-			auto adp = uNew<GraphicsAdapter>();
+			auto adp = unew<GraphicsAdapter>();
 
 			adp->impl->_index = 0;
 			adp->impl->dxadapter = pAdapter;
@@ -48,7 +48,7 @@ namespace xna {
 		UINT count = 0;
 
 		for (; pFactory->EnumAdapters1(count, &pAdapter) != DXGI_ERROR_NOT_FOUND; ++count) {
-			auto adp = New<GraphicsAdapter>();
+			auto adp = snew<GraphicsAdapter>();
 
 			adp->impl->_index = count;
 			adp->impl->dxadapter = pAdapter;
@@ -70,7 +70,7 @@ namespace xna {
 		UINT count = 0;
 
 		for (; pFactory->EnumAdapters1(count, &pAdapter) != DXGI_ERROR_NOT_FOUND; ++count) {
-			auto adp = uNew<GraphicsAdapter>();
+			auto adp = unew<GraphicsAdapter>();
 
 			adp->impl->_index = count;
 			adp->impl->dxadapter = pAdapter;
@@ -218,7 +218,7 @@ namespace xna {
 			pOutput->GetDisplayModeList(format, 0, &numModes, nullptr);
 
 			if (numModes == 0)
-				return uNew<DisplayModeCollection>();
+				return unew<DisplayModeCollection>();
 
 			std::vector<DXGI_MODE_DESC> buffer(numModes);
 			pOutput->GetDisplayModeList(format, 0, &numModes, buffer.data());
@@ -229,7 +229,7 @@ namespace xna {
 			return createDisplayModeCollection(buffer);
 		}		
 
-		return uNew<DisplayModeCollection>();
+		return unew<DisplayModeCollection>();
 	}
 
 	sptr<DisplayMode> GraphicsAdapter::CurrentDisplayMode() {
@@ -289,7 +289,7 @@ namespace xna {
 	}
 
 	static uptr<DisplayModeCollection> createDisplayModeCollection(std::vector<DXGI_MODE_DESC> const& source) {
-		auto collection = uNew<DisplayModeCollection>();
+		auto collection = unew<DisplayModeCollection>();
 		DisplayMode currentDisplayMode;
 		std::vector<sptr<DisplayMode>> displayList;
 		sptr<DisplayMode> pDisplay = nullptr;
@@ -306,7 +306,7 @@ namespace xna {
 				pDisplay->impl->Descriptions.push_back(description);
 			}
 			else {
-				pDisplay = New<DisplayMode>();
+				pDisplay = snew<DisplayMode>();
 				pDisplay->Width = modedesc.Width;
 				pDisplay->Height = modedesc.Height;
 				pDisplay->Format = DxHelpers::ConvertDXGIFORMATToSurface(modedesc.Format);

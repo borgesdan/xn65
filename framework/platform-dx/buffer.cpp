@@ -4,11 +4,11 @@
 
 namespace xna {
 	ConstantBuffer::ConstantBuffer() : GraphicsResource(nullptr){
-		impl = uNew<PlatformImplementation>();		
+		impl = unew<PlatformImplementation>();		
 	}
 
 	ConstantBuffer::ConstantBuffer(sptr<GraphicsDevice> const& device) : GraphicsResource(device){
-		impl = uNew<PlatformImplementation>();
+		impl = unew<PlatformImplementation>();
 	}
 	
 	ConstantBuffer::~ConstantBuffer() {
@@ -39,11 +39,11 @@ namespace xna {
 	}
 
 	DataBuffer::DataBuffer() : GraphicsResource(nullptr) {
-		impl = uNew<PlatformImplementation>();
+		impl = unew<PlatformImplementation>();
 	}
 
 	DataBuffer::DataBuffer(sptr<GraphicsDevice> const& device) : GraphicsResource(device) {
-		impl = uNew<PlatformImplementation>();
+		impl = unew<PlatformImplementation>();
 	}
 
 	DataBuffer::~DataBuffer() {
@@ -64,11 +64,11 @@ namespace xna {
 	}
 
 	IndexBuffer::IndexBuffer() : GraphicsResource(nullptr) {
-		impl = uNew<PlatformImplementation>();
+		impl = unew<PlatformImplementation>();
 	}
 	
 	IndexBuffer::IndexBuffer(sptr<GraphicsDevice> const& device) : GraphicsResource(device) {
-		impl = uNew<PlatformImplementation>();
+		impl = unew<PlatformImplementation>();
 	}
 
 	IndexBuffer::~IndexBuffer() {
@@ -86,11 +86,11 @@ namespace xna {
 	}
 
 	VertexBuffer::VertexBuffer() : GraphicsResource(nullptr) {
-		impl = uNew<PlatformImplementation>();
+		impl = unew<PlatformImplementation>();
 	}
 
 	VertexBuffer::VertexBuffer(sptr<GraphicsDevice> const& device) : GraphicsResource(device) {
-		impl = uNew<PlatformImplementation>();
+		impl = unew<PlatformImplementation>();
 	}
 
 	VertexBuffer::~VertexBuffer() {
@@ -115,11 +115,11 @@ namespace xna {
 	}
 
 	VertexInputLayout::VertexInputLayout() : GraphicsResource(nullptr) {
-		impl = uNew<PlatformImplementation>();
+		impl = unew<PlatformImplementation>();
 	}
 
 	VertexInputLayout::VertexInputLayout(sptr<GraphicsDevice> const& device) : GraphicsResource(device) {
-		impl = uNew<PlatformImplementation>();
+		impl = unew<PlatformImplementation>();
 	}
 
 	VertexInputLayout::~VertexInputLayout() {

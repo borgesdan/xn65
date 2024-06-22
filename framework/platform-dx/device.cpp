@@ -114,7 +114,7 @@ namespace xna {
 		impl->_backgroundColor[2] = GetBValue(color) / 255.0f;
 		impl->_backgroundColor[3] = 1.0f;
 
-		impl->_swapChain = New<xna::SwapChain>(_this);
+		impl->_swapChain = snew<xna::SwapChain>(_this);
 		impl->_swapChain->Initialize();
 
 		hr = impl->_factory->MakeWindowAssociation(impl->_gameWindow->impl->WindowHandle(), DXGI_MWA_NO_ALT_ENTER);
@@ -122,7 +122,7 @@ namespace xna {
 		if (FAILED(hr)) 
 			Exception::Throw(ExMessage::MakeWindowAssociation);
 
-		impl->_renderTarget2D = New<RenderTarget2D>(_this);
+		impl->_renderTarget2D = snew<RenderTarget2D>(_this);
 		
 		if (!impl->_renderTarget2D->Initialize())
 			return false;

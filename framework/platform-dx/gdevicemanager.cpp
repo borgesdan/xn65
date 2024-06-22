@@ -84,7 +84,7 @@ namespace xna {
 
 	bool initDevice(GraphicsDeviceInformation& info, Game& game, sptr<GraphicsDevice>& device)
 	{		
-		device = New<GraphicsDevice>(info);
+		device = snew<GraphicsDevice>(info);
 
 		if (!device->Initialize()) {
 			MessageBox(info.Window->impl->WindowHandle(), "Falha na inicialização do dispositivo gráfico", "XN65", MB_OK);

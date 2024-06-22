@@ -3,13 +3,20 @@
 
 #include <string>
 #include <utility>
-#include <stdexcept>
+#include "exception.hpp"
 
 namespace xna {
+	//Class for helper functions
 	struct XnaHelper {
+
+		//
+		// Smart Pointer Comparator
+		//
+
 		template<typename T> struct is_shared_ptr : std::false_type {};
 		template<typename T> struct is_shared_ptr<std::shared_ptr<T>> : std::true_type {};
 
+		//Convert a string to wstring
 		static inline std::wstring ToWString(const std::string& str)
 		{
 			std::wstring wstr;
@@ -19,6 +26,7 @@ namespace xna {
 			return wstr;
 		}
 
+		//Convert a wstring to string
 		static inline std::string ToString(const std::wstring& wstr)
 		{
 			std::string str;
@@ -28,20 +36,23 @@ namespace xna {
 			return str;
 		}
 
+		//Returns a hash reporting input values
 		template <class T>
 		static constexpr void HashCombine(std::size_t& seed, const T& v) {
 			std::hash<T> hasher;
 			seed ^= hasher(v) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
 		}		
 
+		//Returns null if the type is a smart pointer or default value if the type has a default constructor.
+		//Throws an exception if the object cannot be created
 		template<typename T>
-		static inline auto ReturnDefaultOrNull() {
+		static inline auto ReturnDefaultOrNull(const std::source_location location = std::source_location::current()) {
 			if constexpr (is_shared_ptr<T>::value)
 				return (T)nullptr;
 			else if (std::is_default_constructible<T>::value)
 				return T();
 			else
-				throw std::runtime_error("Unable to build object");
+				Exception::Throw(ExMessage::BuildObject, location);
 		}
 	};		
 }

@@ -51,7 +51,7 @@ namespace xna {
 	template <class T>
 	inline sptr<Type> typeof() {
 		if (std::is_arithmetic<T>::value) {
-			auto primitiveType = New<Type>();			
+			auto primitiveType = snew<Type>();			
 			primitiveType->fullName = typeid(T).name();
 			primitiveType->isPrimitive = true;
 			primitiveType->isValueType = true;
@@ -59,7 +59,7 @@ namespace xna {
 		}
 
 		if (std::is_enum<T>::value) {
-			auto enumType = New<Type>();
+			auto enumType = snew<Type>();
 			enumType->fullName = typeid(T).name();
 			enumType->isValueType = true;
 			enumType->isEnum = true;
@@ -67,14 +67,14 @@ namespace xna {
 		}
 
 		if (std::is_pointer<T>::value) {
-			auto pointerType = New<Type>();
+			auto pointerType = snew<Type>();
 			pointerType->fullName = typeid(T).name();
 			pointerType->isPointer = true;
 			return pointerType;
 		}
 
 		if (std::is_class<T>::value) {
-			auto classType = New<Type>();
+			auto classType = snew<Type>();
 			classType->fullName = typeid(T).name();
 			classType->isClass = true;
 			

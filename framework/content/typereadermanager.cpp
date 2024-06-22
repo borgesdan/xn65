@@ -157,7 +157,7 @@ namespace xna {
 	void ContentTypeReaderManager::initMaps()
 	{
 		if (targetTypeToReader.empty() && readerTypeToReader.empty()) {
-			auto typeReader = New<ObjectReader>();
+			auto typeReader = snew<ObjectReader>();
 			auto contentTypeReader = reinterpret_pointer_cast<ContentTypeReader>(typeReader);
 			
 			targetTypeToReader.insert({ typeof<Object>(), contentTypeReader});

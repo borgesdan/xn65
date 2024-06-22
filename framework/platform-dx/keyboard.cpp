@@ -14,8 +14,8 @@ namespace xna {
 	}
 
 	void Keyboard::Initialize() {
-		impl = uNew<PlatformImplementation>();
-		impl->_dxKeyboard = uNew<DirectX::Keyboard>();
+		impl = unew<PlatformImplementation>();
+		impl->_dxKeyboard = unew<DirectX::Keyboard>();
 	}
 
 	bool Keyboard::IsConnected() {

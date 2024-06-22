@@ -60,7 +60,7 @@ namespace xna {
 			dxGlyps[i] = g;
 		}		
 		
-		impl = uNew<PlatformImplementation>();
+		impl = unew<PlatformImplementation>();
 		impl->_dxSpriteFont = unew<DxSpriteFont>(
 			//ID3D11ShaderResourceView* texture
 			texture->impl->dxShaderResource,
@@ -127,8 +127,8 @@ namespace xna {
 		if (!device->impl->_context)
 			return;
 
-		implementation = uNew<PlatformImplementation>();
-		implementation->_dxspriteBatch = New<DxSpriteBatch>(
+		implementation = unew<PlatformImplementation>();
+		implementation->_dxspriteBatch = snew<DxSpriteBatch>(
 			//ID3D11DeviceContext* deviceContext
 			device->impl->_context
 		);
