@@ -3,6 +3,7 @@
 #include "types.hpp"
 #include "helpers.hpp"
 #include "enums.hpp"
+#include "exception.hpp"
 #include "audio/audioengine.hpp"
 #include "audio/soundeffect.hpp"
 #include "common/color.hpp"

@@ -59,6 +59,7 @@ using comptr = Microsoft::WRL::ComPtr<T>;
 // OTHERS INCLUDES
 //--------------------------------//
 
+#include "../exception.hpp"
 #include "../graphics/blendstate.hpp"
 #include "../graphics/adapter.hpp"
 #include "../graphics/device.hpp"
