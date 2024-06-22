@@ -3,8 +3,7 @@
 
 namespace xna {
 	void GamePad::Initialize() {
-		impl = unew<PlatformImplementation>();
-		impl->_dxGamePad = unew<DirectX::GamePad>();		
+		impl = unew<PlatformImplementation>();	
 	}
 
 	GamePadState GamePad::GetState(PlayerIndex index) {

@@ -50,6 +50,5 @@ namespace xna {
 
 	void Mouse::Initialize() {
 		impl = unew<PlatformImplementation>();
-		impl->_dxMouse = unew<DirectX::Mouse>();
 	}
 }

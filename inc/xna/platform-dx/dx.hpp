@@ -59,6 +59,7 @@ using comptr = Microsoft::WRL::ComPtr<T>;
 // OTHERS INCLUDES
 //--------------------------------//
 
+#include "../default.hpp"
 #include "../exception.hpp"
 #include "../graphics/blendstate.hpp"
 #include "../graphics/adapter.hpp"
@@ -586,14 +587,14 @@ namespace xna {
 	};
 
 	struct GamePad::PlatformImplementation {
-		inline static uptr<DirectX::GamePad> _dxGamePad = nullptr;
+		uptr<DirectX::GamePad> _dxGamePad = unew<DirectX::GamePad>();
 
-		void Suspend() {
+		void Suspend() const {
 			if (_dxGamePad)
 				_dxGamePad->Suspend();
 		}
 
-		void Resume() {
+		void Resume() const {
 			if (_dxGamePad)
 				_dxGamePad->Resume();
 		}
@@ -611,18 +612,18 @@ namespace xna {
 	};
 
 	struct Keyboard::PlatformImplementation {
-		inline static uptr<DirectX::Keyboard> _dxKeyboard = nullptr;
+		uptr<DirectX::Keyboard> _dxKeyboard = unew<DirectX::Keyboard>();
 
-		void ProcessMessage(UINT message, WPARAM wParam, LPARAM lParam) {
+		void ProcessMessage(UINT message, WPARAM wParam, LPARAM lParam) const {
 			if (_dxKeyboard)
 				_dxKeyboard->ProcessMessage(message, wParam, lParam);
 		}
 	};
 
 	struct Mouse::PlatformImplementation {
-		inline static uptr<DirectX::Mouse> _dxMouse = nullptr;
+		uptr<DirectX::Mouse> _dxMouse = unew<DirectX::Mouse>();
 
-		void ProcessMessage(UINT message, WPARAM wParam, LPARAM lParam) {
+		void ProcessMessage(UINT message, WPARAM wParam, LPARAM lParam) const {
 			if (_dxMouse)
 				_dxMouse->ProcessMessage(message, wParam, lParam);
 		}
