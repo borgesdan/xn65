@@ -166,7 +166,7 @@ namespace xna {
 	}
 
 	uptr<BlendState> BlendState::AlphaBlend() {
-		auto blendState = std::unique_ptr<BlendState>();
+		auto blendState = unew<BlendState>();
 		blendState->impl->dxDescription.RenderTarget[0].SrcBlend = D3D11_BLEND_ONE;
 		blendState->impl->dxDescription.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;
 		blendState->impl->dxDescription.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
@@ -176,7 +176,7 @@ namespace xna {
 	}
 
 	uptr<BlendState> BlendState::Additive() {
-		auto blendState = std::unique_ptr<BlendState>();
+		auto blendState = unew<BlendState>();
 		blendState->impl->dxDescription.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
 		blendState->impl->dxDescription.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_SRC_ALPHA;
 		blendState->impl->dxDescription.RenderTarget[0].DestBlend = D3D11_BLEND_ONE;
@@ -186,7 +186,7 @@ namespace xna {
 	}
 
 	uptr<BlendState> BlendState::NonPremultiplied() {
-		auto blendState = std::unique_ptr<BlendState>();
+		auto blendState = unew<BlendState>();
 		blendState->impl->dxDescription.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
 		blendState->impl->dxDescription.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_SRC_ALPHA;
 		blendState->impl->dxDescription.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;

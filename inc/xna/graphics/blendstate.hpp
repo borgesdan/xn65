@@ -1,9 +1,9 @@
 #ifndef XNA_GRAPHICS_BLENDSTATE_HPP
 #define XNA_GRAPHICS_BLENDSTATE_HPP
 
+#include "../common/color.hpp"
 #include "../default.hpp"
 #include "gresource.hpp"
-#include "../common/color.hpp"
 
 namespace xna {
 	struct BlendRenderTarget;
