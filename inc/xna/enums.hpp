@@ -119,7 +119,8 @@ namespace xna {
 		Green,
 		Blue,
 		Alpha,
-		All
+		All,
+        None
 	};    
 
     enum class ContainmentType {

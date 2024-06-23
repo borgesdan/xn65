@@ -11,10 +11,6 @@ namespace xna {
 		impl = unew<PlatformImplementation>();
 	}
 
-	GraphicsAdapter::~GraphicsAdapter() {
-		impl = nullptr;
-	}
-
 	uptr<GraphicsAdapter> GraphicsAdapter::DefaultAdapter() {
 		IDXGIFactory1* pFactory = nullptr;
 
@@ -36,28 +32,6 @@ namespace xna {
 		pFactory = nullptr;
 
 		return nullptr;
-	}
-
-	void GraphicsAdapter::Adapters(std::vector<sptr<GraphicsAdapter>>& adapters){
-		IDXGIFactory1* pFactory = nullptr;
-
-		if FAILED(CreateDXGIFactory1(__uuidof(IDXGIFactory1), (void**)&pFactory))
-			Exception::Throw(ExMessage::CreateComponent);
-		
-		IDXGIAdapter1* pAdapter = nullptr;
-		UINT count = 0;
-
-		for (; pFactory->EnumAdapters1(count, &pAdapter) != DXGI_ERROR_NOT_FOUND; ++count) {
-			auto adp = snew<GraphicsAdapter>();
-
-			adp->impl->_index = count;
-			adp->impl->dxadapter = pAdapter;
-
-			adapters.push_back(adp);
-		}
-
-		pFactory->Release();
-		pFactory = nullptr;
 	}
 
 	void GraphicsAdapter::Adapters(std::vector<uptr<GraphicsAdapter>>& adapters) {
@@ -180,7 +154,7 @@ namespace xna {
 		if (impl->dxadapter->EnumOutputs(0, &pOutput) != DXGI_ERROR_NOT_FOUND) {
 			for (size_t f = 0; f < SURFACE_FORMAT_COUNT; ++f) {
 				const auto currentSurface = static_cast<SurfaceFormat>(f);
-				DXGI_FORMAT format = DxHelpers::ConvertSurfaceToDXGIFORMAT(currentSurface);
+				DXGI_FORMAT format = DxHelpers::SurfaceFormatToDx(currentSurface);
 
 				UINT numModes = 0;
 				pOutput->GetDisplayModeList(format, 0, &numModes, nullptr);
@@ -211,7 +185,7 @@ namespace xna {
 		UINT bufferOffset = 0;		
 
 		if (impl->dxadapter->EnumOutputs(0, &pOutput) != DXGI_ERROR_NOT_FOUND) {			
-			DXGI_FORMAT format = DxHelpers::ConvertSurfaceToDXGIFORMAT(surfaceFormat);
+			DXGI_FORMAT format = DxHelpers::SurfaceFormatToDx(surfaceFormat);
 
 			UINT numModes = 0;
 
@@ -273,7 +247,7 @@ namespace xna {
 		if (adapter->EnumOutputs(0, &pOutput) != DXGI_ERROR_NOT_FOUND) {
 			for (size_t f = 0; f < SURFACE_FORMAT_COUNT; ++f) {
 				const auto currentSurface = static_cast<SurfaceFormat>(f);
-				DXGI_FORMAT format = DxHelpers::ConvertSurfaceToDXGIFORMAT(currentSurface);
+				DXGI_FORMAT format = DxHelpers::SurfaceFormatToDx(currentSurface);
 
 				UINT num = 0;
 				pOutput->GetDisplayModeList(format, 0, &num, nullptr);

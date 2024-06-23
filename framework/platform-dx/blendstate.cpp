@@ -3,16 +3,96 @@
 #include "xna/platform-dx/dx.hpp"
 
 namespace xna {
-	BlendState::BlendState() : GraphicsResource(nullptr) {
-		impl = unew<PlatformImplementation>();
-	}
+	BlendState::BlendState() : BlendState(nullptr) {}
 
 	BlendState::BlendState(sptr<GraphicsDevice> const& device) : GraphicsResource(device) {
 		impl = unew<PlatformImplementation>();
+		impl->dxDescription.AlphaToCoverageEnable = false;
+		impl->dxDescription.IndependentBlendEnable = false;
+		impl->dxDescription.RenderTarget[0].BlendEnable = true;
+		impl->dxDescription.RenderTarget[0].SrcBlend = DxHelpers::ConvertBlend(Blend::One);
+		impl->dxDescription.RenderTarget[0].DestBlend = DxHelpers::ConvertBlend(Blend::One);
+		impl->dxDescription.RenderTarget[0].BlendOp = DxHelpers::ConvertOperation(BlendFunction::Add);
+		impl->dxDescription.RenderTarget[0].SrcBlendAlpha = DxHelpers::ConvertBlend(Blend::One);
+		impl->dxDescription.RenderTarget[0].DestBlendAlpha = DxHelpers::ConvertBlend(Blend::One);
+		impl->dxDescription.RenderTarget[0].BlendOpAlpha = DxHelpers::ConvertOperation(BlendFunction::Add);
+		impl->dxDescription.RenderTarget[0].RenderTargetWriteMask = DxHelpers::ConvertColorWrite(ColorWriteChannels::All);
 	}
 
-	BlendState::~BlendState() {
-		impl = nullptr;
+	BlendFunction BlendState::AlphaBlendFunction() const {
+		return DxHelpers::ConvertOperationDx(impl->dxDescription.RenderTarget[0].BlendOpAlpha);
+	}
+
+	void BlendState::AlphaBlendFunction(BlendFunction value) {
+		impl->dxDescription.RenderTarget[0].BlendOpAlpha = DxHelpers::ConvertOperation(value);
+	}
+
+	Blend BlendState::AlphaDestinationBlend() const {
+		return DxHelpers::ConvertBlendDx(impl->dxDescription.RenderTarget[0].DestBlendAlpha);
+	}
+
+	void BlendState::AlphaDestinationBlend(Blend value) {
+		impl->dxDescription.RenderTarget[0].DestBlendAlpha = DxHelpers::ConvertBlend(value);
+	}
+
+	Blend BlendState::AlphaSourceBlend() const {
+		return DxHelpers::ConvertBlendDx(impl->dxDescription.RenderTarget[0].SrcBlendAlpha);
+	}
+
+	void BlendState::AlphaSourceBlend(Blend value) {
+		impl->dxDescription.RenderTarget[0].SrcBlendAlpha = DxHelpers::ConvertBlend(value);
+	}
+
+	BlendFunction BlendState::ColorBlendFunction() const {
+		return DxHelpers::ConvertOperationDx(impl->dxDescription.RenderTarget[0].BlendOp);
+	}
+
+	void BlendState::ColorBlendFunction(BlendFunction value) {
+		impl->dxDescription.RenderTarget[0].BlendOp = DxHelpers::ConvertOperation(value);
+	}
+
+	Blend BlendState::ColorDestinationBlend() const {
+		return DxHelpers::ConvertBlendDx(impl->dxDescription.RenderTarget[0].DestBlend);
+	}
+
+	void BlendState::ColorDestinationBlend(Blend value) {
+		impl->dxDescription.RenderTarget[0].DestBlend = DxHelpers::ConvertBlend(value);
+	}
+
+	Blend BlendState::ColorSourceBlend() const {
+		return DxHelpers::ConvertBlendDx(impl->dxDescription.RenderTarget[0].SrcBlend);
+	}
+
+	void BlendState::ColorSourceBlend(Blend value) {
+		impl->dxDescription.RenderTarget[0].SrcBlend = DxHelpers::ConvertBlend(value);
+	}
+	
+	Color BlendState::BlendFactor() const {
+		auto color = Color(
+			impl->blendFactor[0],
+			impl->blendFactor[1],
+			impl->blendFactor[2],
+			impl->blendFactor[3]
+		);
+
+		return color;
+	}
+
+	void BlendState::BlendFactor(Color const& value) {
+		auto v4 = value.ToVector4();
+
+		impl->blendFactor[0] = v4.X;
+		impl->blendFactor[1] = v4.Y;
+		impl->blendFactor[2] = v4.Z;
+		impl->blendFactor[3] = v4.W;
+	}
+
+	Int BlendState::MultiSampleMask() const {
+		return static_cast<Int>(impl->sampleMask);
+	}
+	
+	void BlendState::MultiSampleMast(Int value) {
+		impl->sampleMask = static_cast<UINT>(value);
 	}
 
 	bool BlendState::Initialize()
@@ -45,13 +125,13 @@ namespace xna {
 		if (!impl->dxBlendState) {
 			Exception::Throw(ExMessage::UnintializedComponent);
 		}
-		
-        m_device->impl->_context->OMSetBlendState(
-			impl->dxBlendState, 
-			impl->blendFactor, 
+
+		m_device->impl->_context->OMSetBlendState(
+			impl->dxBlendState,
+			impl->blendFactor,
 			impl->sampleMask);
 
-        return true;
+		return true;
 	}
 
 	void BlendState::AlphaToCoverageEnable(bool value) {
@@ -78,15 +158,15 @@ namespace xna {
 	uptr<BlendState> BlendState::Opaque() {
 		auto blendState = unew<BlendState>();
 		blendState->impl->dxDescription.RenderTarget[0].SrcBlend = D3D11_BLEND_ONE;
-		blendState->impl->dxDescription.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ZERO;
-		blendState->impl->dxDescription.RenderTarget[0].DestBlend = D3D11_BLEND_DEST_ALPHA;
+		blendState->impl->dxDescription.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;
+		blendState->impl->dxDescription.RenderTarget[0].DestBlend = D3D11_BLEND_ZERO;
 		blendState->impl->dxDescription.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ZERO;
 
 		return blendState;
 	}
 
 	uptr<BlendState> BlendState::AlphaBlend() {
-		auto blendState = std::unique_ptr<BlendState>(new BlendState());
+		auto blendState = std::unique_ptr<BlendState>();
 		blendState->impl->dxDescription.RenderTarget[0].SrcBlend = D3D11_BLEND_ONE;
 		blendState->impl->dxDescription.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;
 		blendState->impl->dxDescription.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
@@ -96,7 +176,7 @@ namespace xna {
 	}
 
 	uptr<BlendState> BlendState::Additive() {
-		auto blendState = std::unique_ptr<BlendState>(new BlendState());
+		auto blendState = std::unique_ptr<BlendState>();
 		blendState->impl->dxDescription.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
 		blendState->impl->dxDescription.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_SRC_ALPHA;
 		blendState->impl->dxDescription.RenderTarget[0].DestBlend = D3D11_BLEND_ONE;
@@ -106,7 +186,7 @@ namespace xna {
 	}
 
 	uptr<BlendState> BlendState::NonPremultiplied() {
-		auto blendState = std::unique_ptr<BlendState>(new BlendState());
+		auto blendState = std::unique_ptr<BlendState>();
 		blendState->impl->dxDescription.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
 		blendState->impl->dxDescription.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_SRC_ALPHA;
 		blendState->impl->dxDescription.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;

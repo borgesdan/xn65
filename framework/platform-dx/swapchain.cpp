@@ -59,7 +59,7 @@ namespace xna {
 
         impl->dxDescription.Width = static_cast<UINT>(parameters->BackBufferWidth);
         impl->dxDescription.Height = static_cast<UINT>(parameters->BackBufferHeight);
-        impl->dxDescription.Format = DxHelpers::ConvertSurfaceToDXGIFORMAT(parameters->BackBufferFormat);
+        impl->dxDescription.Format = DxHelpers::SurfaceFormatToDx(parameters->BackBufferFormat);
         impl->dxDescription.SampleDesc.Count = 1;
         impl->dxDescription.SampleDesc.Quality = 0;
         impl->dxDescription.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;

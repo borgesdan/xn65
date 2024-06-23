@@ -142,7 +142,7 @@ namespace xna {
 			return;
 
 		DxSpriteSortMode sort;
-		DxHelpers::ConvertSpriteSort(sortMode, sort);
+		DxHelpers::SpriteSortToDx(sortMode, sort);
 
 		const auto& t = transformMatrix;
 		DxMatrix matrix = DxMatrix(

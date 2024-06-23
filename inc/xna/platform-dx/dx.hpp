@@ -101,11 +101,11 @@ namespace xna {
 	//==============================================//
 
 	struct DxHelpers {
-		static constexpr void ConvertSpriteSort(SpriteSortMode value, DirectX::SpriteSortMode& target) {
+		static constexpr void SpriteSortToDx(SpriteSortMode value, DirectX::SpriteSortMode& target) {
 			target = static_cast<DirectX::SpriteSortMode>(static_cast<int>(value));
 		}
 
-		static constexpr DXGI_FORMAT ConvertSurfaceToDXGIFORMAT(SurfaceFormat format)
+		static constexpr DXGI_FORMAT SurfaceFormatToDx(SurfaceFormat format)
 		{
 			switch (format)
 			{
@@ -199,6 +199,47 @@ namespace xna {
 			}
 		}
 
+		static constexpr Blend ConvertBlendDx(D3D11_BLEND blend) {
+			switch (blend) {
+			case D3D11_BLEND_ZERO:
+				return Blend::Zero;
+			case D3D11_BLEND_ONE:
+				return Blend::One;
+			case D3D11_BLEND_SRC_COLOR:
+				return Blend::SourceColor;
+			case D3D11_BLEND_INV_SRC_COLOR:
+				return Blend::InverseSourceColor;
+			case D3D11_BLEND_SRC_ALPHA:
+				return Blend::SourceAlpha;
+			case D3D11_BLEND_INV_SRC_ALPHA:
+				return Blend::InverseSourceAlpha;
+			case D3D11_BLEND_DEST_ALPHA:
+				return Blend::DestinationAlpha;
+			case D3D11_BLEND_INV_DEST_ALPHA:
+				return Blend::InverseDestinationAlpha;
+			case D3D11_BLEND_DEST_COLOR:
+				return Blend::DestinationColor;
+			case D3D11_BLEND_INV_DEST_COLOR:
+				return Blend::InverseDestinationColor;
+			case D3D11_BLEND_SRC_ALPHA_SAT:
+				return Blend::SourceAlphaSaturation;
+			case D3D11_BLEND_BLEND_FACTOR:
+				return Blend::BlendFactor;
+			case D3D11_BLEND_INV_BLEND_FACTOR:
+				return Blend::InverseBlendFactor;
+			case D3D11_BLEND_SRC1_COLOR:
+				return Blend::Source1Color;
+			case D3D11_BLEND_INV_SRC1_COLOR:
+				return Blend::InverseSource1Color;
+			case D3D11_BLEND_SRC1_ALPHA:
+				return Blend::Source1Alpha;
+			case D3D11_BLEND_INV_SRC1_ALPHA:
+				return Blend::InverseSource1Alpha;
+			default:
+				return Blend::Zero;
+			}
+		}
+
 		static constexpr D3D11_BLEND ConvertBlend(Blend blend) {
 			switch (blend)
 			{
@@ -245,6 +286,10 @@ namespace xna {
 			return static_cast<D3D11_BLEND_OP>(static_cast<int>(op) + 1);
 		}
 
+		static constexpr BlendOperation ConvertOperationDx(D3D11_BLEND_OP op) {
+			return static_cast<BlendOperation>(static_cast<int>(op) - 1);
+		}
+
 		static constexpr D3D11_COLOR_WRITE_ENABLE ConvertColorWrite(ColorWriteChannels colorWrite) {
 			switch (colorWrite)
 			{
@@ -257,7 +302,7 @@ namespace xna {
 			case xna::ColorWriteChannels::Alpha:
 				return D3D11_COLOR_WRITE_ENABLE_ALPHA;
 			case xna::ColorWriteChannels::All:
-				return D3D11_COLOR_WRITE_ENABLE_ALL;
+				return D3D11_COLOR_WRITE_ENABLE_ALL;			
 			default:
 				return D3D11_COLOR_WRITE_ENABLE_ALL;
 			}

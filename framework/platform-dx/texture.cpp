@@ -122,7 +122,7 @@ namespace xna {
 		impl->dxDescription.Width = static_cast<UINT>(width);
 		impl->dxDescription.Height = static_cast<UINT>(height);
 		impl->dxDescription.MipLevels = static_cast<UINT>(mipMap);
-		impl->dxDescription.Format = DxHelpers::ConvertSurfaceToDXGIFORMAT(format);
+		impl->dxDescription.Format = DxHelpers::SurfaceFormatToDx(format);
 	}
 
 	HRESULT internalSetData(Texture2D::PlatformImplementation& impl, GraphicsDevice& device,  UINT const* data)
