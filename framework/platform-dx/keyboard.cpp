@@ -1,5 +1,5 @@
 #include "xna/input/keyboard.hpp"
-#include "xna/platform-dx/implementations.hpp"
+#include "xna/platform-dx/dx.hpp"
 
 namespace xna {
 	KeyboardState Keyboard::GetState() {
@@ -14,8 +14,7 @@ namespace xna {
 	}
 
 	void Keyboard::Initialize() {
-		impl = uNew<PlatformImplementation>();
-		impl->_dxKeyboard = uNew<DirectX::Keyboard>();
+		impl = unew<PlatformImplementation>();
 	}
 
 	bool Keyboard::IsConnected() {

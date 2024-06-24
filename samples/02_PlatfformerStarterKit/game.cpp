@@ -21,7 +21,7 @@ namespace PlatformerStarterKit {
 
 		void Initialize() override {
 			auto game = reinterpret_cast<Game*>(this);
-			graphics = New<GraphicsDeviceManager>(game->shared_from_this());			
+			graphics = snew<GraphicsDeviceManager>(game->shared_from_this());			
 			graphics->Initialize();
 
 			std::any device = graphicsDevice;
@@ -31,7 +31,7 @@ namespace PlatformerStarterKit {
 		}
 
 		void LoadContent() override {
-			spriteBatch = New<SpriteBatch>(*graphicsDevice);					
+			spriteBatch = snew<SpriteBatch>(graphicsDevice);					
 
 			// Load fonts
 			hudFont = Content()->Load<PSpriteFont>("Fonts/Hud");

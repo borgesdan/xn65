@@ -15,19 +15,28 @@ namespace xna {
 		int ScroolWheelValue{ 0 };
 	};
 
+	//Allows retrieval of position and button clicks from a mouse input device. 
 	class Mouse {
 	public:
+		//Gets the current state of the mouse, including mouse position and buttons pressed. 
 		static MouseState GetState();
+
 		static bool IsConnected();
 		static bool IsVisible();
 		static void IsVisible(bool value);
-		static void ResetScrollWheel();	
+		static void ResetScrollWheel();
 
+		Mouse() = delete;
+		Mouse(Mouse&) = delete;
+		Mouse(Mouse&&) = delete;
+
+	private:
+		friend class Game;
 		static void Initialize();
 
 	public:
 		struct PlatformImplementation;
-		inline static uptr<PlatformImplementation> impl = nullptr;
+		inline static uptr<PlatformImplementation> impl = nullptr;		
 	};
 }
 

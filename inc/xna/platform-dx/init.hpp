@@ -36,7 +36,7 @@ namespace xna {
 		template <typename T>
 		static void insertActivadorReader() {
 			ContentTypeReaderActivador::SetActivador(typeof<T>(), []() -> sptr<ContentTypeReader> {
-				auto obj = New <T>();
+				auto obj = snew<T>();
 				return reinterpret_pointer_cast<ContentTypeReader>(obj);
 				});
 		}

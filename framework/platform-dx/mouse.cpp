@@ -1,5 +1,5 @@
 #include "xna/input/mouse.hpp"
-#include "xna/platform-dx/implementations.hpp"
+#include "xna/platform-dx/dx.hpp"
 
 namespace xna {
 	MouseState Mouse::GetState() {
@@ -49,7 +49,6 @@ namespace xna {
 	}
 
 	void Mouse::Initialize() {
-		impl = uNew<PlatformImplementation>();
-		impl->_dxMouse = uNew<DirectX::Mouse>();
+		impl = unew<PlatformImplementation>();
 	}
 }

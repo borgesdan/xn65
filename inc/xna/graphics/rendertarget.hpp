@@ -11,8 +11,8 @@ namespace xna {
 		RenderTarget2D(sptr<GraphicsDevice> const& device);
 
 		~RenderTarget2D() override;
-		bool Initialize(xna_error_nullarg);
-		bool Apply(xna_error_nullarg);
+		bool Initialize();
+		bool Apply();
 
 	public:
 		struct PlatformImplementation;

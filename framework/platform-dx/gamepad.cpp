@@ -1,10 +1,9 @@
-#include "xna/platform-dx/implementations.hpp"
+#include "xna/platform-dx/dx.hpp"
 #include "xna/input/gamepad.hpp"
 
 namespace xna {
 	void GamePad::Initialize() {
-		impl = uNew<PlatformImplementation>();
-		impl->_dxGamePad = uNew<DirectX::GamePad>();		
+		impl = unew<PlatformImplementation>();	
 	}
 
 	GamePadState GamePad::GetState(PlayerIndex index) {

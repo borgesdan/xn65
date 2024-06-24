@@ -1,7 +1,6 @@
-#include "xna/platform-dx/helpers.hpp"
 #include "xna/graphics/adapter.hpp"
 #include "xna/graphics/swapchain.hpp"
-#include "xna/platform-dx/implementations.hpp"
+#include "xna/platform-dx/dx.hpp"
 #include "xna/graphics/device.hpp"
 
 namespace xna {
@@ -51,17 +50,16 @@ namespace xna {
         return true;
     }
 
-    bool SwapChain::Initialize(xna_error_ptr_arg) {
+    bool SwapChain::Initialize() {
         if (!impl || !m_device || !m_device->impl->_device) {
-            xna_error_apply(err, XnaErrorCode::INVALID_OPERATION);
-            return false;
+            Exception::Throw(ExMessage::InitializeComponent);
         }
         
         const auto parameters = m_device->impl->_presentationParameters;
 
         impl->dxDescription.Width = static_cast<UINT>(parameters->BackBufferWidth);
         impl->dxDescription.Height = static_cast<UINT>(parameters->BackBufferHeight);
-        impl->dxDescription.Format = DxHelpers::ConvertSurfaceToDXGIFORMAT(parameters->BackBufferFormat);
+        impl->dxDescription.Format = DxHelpers::SurfaceFormatToDx(parameters->BackBufferFormat);
         impl->dxDescription.SampleDesc.Count = 1;
         impl->dxDescription.SampleDesc.Quality = 0;
         impl->dxDescription.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;

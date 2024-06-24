@@ -1,8 +1,8 @@
-#include "xna/platform-dx/implementations.hpp"
+#include "xna/platform-dx/dx.hpp"
 #include "xna/game/gdevicemanager.hpp"
 
 namespace xna {
-	void reset(GraphicsDevice::PlatformImplementation& impl)
+	static void reset(GraphicsDevice::PlatformImplementation& impl)
 	{
 		if (impl._device) {
 			impl._device->Release();
@@ -18,19 +18,13 @@ namespace xna {
 			impl._factory->Release();
 			impl._factory = nullptr;
 		}
-
-		impl._blendState = nullptr;
-		impl._swapChain = nullptr;
-		impl._renderTarget2D = nullptr;
 	}
 
-	bool createDevice(GraphicsDevice::PlatformImplementation& impl) {
+	static void createDevice(GraphicsDevice::PlatformImplementation& impl) {
 		auto createDeviceFlags = 0;
 #if _DEBUG
 		createDeviceFlags = D3D11_CREATE_DEVICE_FLAG::D3D11_CREATE_DEVICE_DEBUG;
 #endif        
-		
-
 		auto hr = D3D11CreateDevice(
 			impl._adapter->impl->dxadapter,
 			D3D_DRIVER_TYPE_UNKNOWN,
@@ -56,10 +50,11 @@ namespace xna {
 				D3D11_SDK_VERSION,
 				&impl._device,
 				&impl._featureLevel,
-				&impl._context);						
+				&impl._context);
+
+			if FAILED(hr)
+				Exception::Throw(ExMessage::CreateComponent);
 		}
-		
-		return SUCCEEDED(hr);
 	}
 
 	GraphicsDevice::GraphicsDevice() {		
@@ -75,52 +70,52 @@ namespace xna {
 		impl = unew<PlatformImplementation>();
 		
 		impl->_adapter = info.Adapter;
+		impl->_gameWindow = info.Window;
 		impl->_presentationParameters = info.Parameters;
 		impl->_adapter->CurrentDisplayMode(
 			impl->_presentationParameters->BackBufferFormat, 
 			impl->_presentationParameters->BackBufferWidth,
 			impl->_presentationParameters->BackBufferHeight);
-	}
+	}	
 
-	GraphicsDevice::~GraphicsDevice() {
-		impl = nullptr;
-	}
+	bool GraphicsDevice::Initialize() {
+		auto _this = shared_from_this();
 
-	bool GraphicsDevice::Initialize(GameWindow& gameWindow) {
 		if (!impl)
 			impl = uptr<PlatformImplementation>();
 
 		reset(*impl);
-
-		auto _this = shared_from_this();
 		
-		if (!createDevice(*impl))
-			return false;
+		createDevice(*impl);
 
 		auto hr = CreateDXGIFactory1(__uuidof(IDXGIFactory1), (void**)&impl->_factory);
-		if (FAILED(hr)) 
-			return false;		
+		
+		if FAILED(hr)
+			Exception::Throw(ExMessage::CreateComponent);
 
-		const auto bounds = gameWindow.ClientBounds();
+		const auto bounds = impl->_gameWindow->ClientBounds();
 
 		impl->_viewport = xna::Viewport(0.0F, 0.0F,
 			static_cast<float>(bounds.Width),
 			static_cast<float>(bounds.Height),
 			0.0F, 1.F);
 
-		COLORREF color = gameWindow.impl->Color();
+		COLORREF color = impl->_gameWindow->impl->Color();
 		impl->_backgroundColor[0] = GetRValue(color) / 255.0f;
 		impl->_backgroundColor[1] = GetGValue(color) / 255.0f;
 		impl->_backgroundColor[2] = GetBValue(color) / 255.0f;
 		impl->_backgroundColor[3] = 1.0f;
 
-		impl->_swapChain = New<xna::SwapChain>(_this);
+		impl->_swapChain = snew<xna::SwapChain>(_this);
 		impl->_swapChain->Initialize();
 
-		hr = impl->_factory->MakeWindowAssociation(gameWindow.impl->WindowHandle(), DXGI_MWA_NO_ALT_ENTER);
-		if (FAILED(hr)) return false;
+		hr = impl->_factory->MakeWindowAssociation(impl->_gameWindow->impl->WindowHandle(), DXGI_MWA_NO_ALT_ENTER);
+		
+		if (FAILED(hr)) 
+			Exception::Throw(ExMessage::MakeWindowAssociation);
 
-		impl->_renderTarget2D = New<RenderTarget2D>(_this);
+		impl->_renderTarget2D = snew<RenderTarget2D>(_this);
+		
 		if (!impl->_renderTarget2D->Initialize())
 			return false;
 
@@ -136,9 +131,7 @@ namespace xna {
 
 		impl->_context->RSSetViewports(1, &view);
 
-		impl->_blendState = BlendState::NonPremultiplied();
-		impl->_blendState->Bind(_this);
-		impl->_blendState->Apply();
+		impl->InitializeAndApplyStates(_this);
 
 		return true;
 	}
@@ -177,13 +170,7 @@ namespace xna {
 		if (!impl) return nullptr;
 
 		return impl->_adapter;
-	}
-
-	void GraphicsDevice::Adapter(sptr<GraphicsAdapter> const& adapter) {
-		if (!impl) return;
-
-		impl->_adapter = adapter;
-	}
+	}	
 
 	xna::Viewport GraphicsDevice::Viewport() const {
 		if (!impl) return {};
@@ -202,4 +189,41 @@ namespace xna {
 
 		impl->_usevsync = use;
 	}	
+
+	
+	sptr<xna::BlendState> GraphicsDevice::BlendState() const {
+		return impl->_blendState;
+	}
+	
+	void GraphicsDevice::BlendState(sptr<xna::BlendState> const& value) {
+		impl->_blendState = value;
+	}
+	
+	sptr<xna::DepthStencilState> GraphicsDevice::DepthStencilState() const {
+		return impl->_depthStencilState;
+	}
+	
+	void GraphicsDevice::DepthStencilState(sptr<xna::DepthStencilState> const& value) {
+		impl->_depthStencilState = value;
+	}
+	
+	sptr<xna::RasterizerState> GraphicsDevice::RasterizerState() const {
+		return impl->_rasterizerState;
+	}
+	
+	void GraphicsDevice::RasterizerState(sptr<xna::RasterizerState> const& value) {
+		impl->_rasterizerState = value;
+	}
+
+	sptr<SamplerStateCollection> GraphicsDevice::SamplerStates() const {
+		return impl->_samplerStates;
+	}
+
+	Int GraphicsDevice::MultiSampleMask() const {
+		return impl->_multiSampleMask;
+	}
+
+	void GraphicsDevice::MultiSampleMask(Int value) {
+		impl->_multiSampleMask = value;
+	}
 }

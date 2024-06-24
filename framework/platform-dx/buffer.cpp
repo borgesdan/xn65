@@ -1,26 +1,24 @@
 #include "xna/graphics/buffer.hpp"
 #include "xna/common/numerics.hpp"
-#include "xna/platform-dx/headers.hpp"
-#include "xna/platform-dx/implementations.hpp"
+#include "xna/platform-dx/dx.hpp"
 
 namespace xna {
 	ConstantBuffer::ConstantBuffer() : GraphicsResource(nullptr){
-		impl = uNew<PlatformImplementation>();		
+		impl = unew<PlatformImplementation>();		
 	}
 
 	ConstantBuffer::ConstantBuffer(sptr<GraphicsDevice> const& device) : GraphicsResource(device){
-		impl = uNew<PlatformImplementation>();
+		impl = unew<PlatformImplementation>();
 	}
 	
 	ConstantBuffer::~ConstantBuffer() {
 		impl = nullptr;
 	}
 
-	bool ConstantBuffer::Initialize(xna_error_ptr_arg)
+	bool ConstantBuffer::Initialize()
 	{
 		if (!m_device || !m_device->impl->_device) {
-			xna_error_apply(err, XnaErrorCode::INVALID_OPERATION);
-			return false;
+			Exception::Throw(ExMessage::InitializeComponent);
 		}
 
 		if (impl->_buffer) {
@@ -34,29 +32,27 @@ namespace xna {
 			&impl->_buffer);
 
 		if (FAILED(hr)) {
-			xna_error_apply(err, XnaErrorCode::FAILED_OPERATION);
-			return false;
+			Exception::Throw(ExMessage::CreateComponent);
 		}
 
 		return true;
 	}
 
 	DataBuffer::DataBuffer() : GraphicsResource(nullptr) {
-		impl = uNew<PlatformImplementation>();
+		impl = unew<PlatformImplementation>();
 	}
 
 	DataBuffer::DataBuffer(sptr<GraphicsDevice> const& device) : GraphicsResource(device) {
-		impl = uNew<PlatformImplementation>();
+		impl = unew<PlatformImplementation>();
 	}
 
 	DataBuffer::~DataBuffer() {
 		impl = nullptr;
 	}
 
-	bool DataBuffer::Initialize(xna_error_ptr_arg) {
+	bool DataBuffer::Initialize() {
 		if (!m_device || !m_device->impl->_device) {
-			xna_error_apply(err, XnaErrorCode::INVALID_OPERATION);
-			return false;
+			Exception::Throw(ExMessage::InitializeComponent);
 		}
 
 		if (impl->_blob) {
@@ -68,21 +64,20 @@ namespace xna {
 	}
 
 	IndexBuffer::IndexBuffer() : GraphicsResource(nullptr) {
-		impl = uNew<PlatformImplementation>();
+		impl = unew<PlatformImplementation>();
 	}
 	
 	IndexBuffer::IndexBuffer(sptr<GraphicsDevice> const& device) : GraphicsResource(device) {
-		impl = uNew<PlatformImplementation>();
+		impl = unew<PlatformImplementation>();
 	}
 
 	IndexBuffer::~IndexBuffer() {
 		impl = nullptr;
 	}
 
-	bool IndexBuffer::Apply(xna_error_ptr_arg) {
+	bool IndexBuffer::Apply() {
 		if (!m_device || !m_device->impl->_context || !impl || !impl->dxBuffer) {
-			xna_error_apply(err, XnaErrorCode::INVALID_OPERATION);
-			return false;
+			Exception::Throw(ExMessage::ApplyComponent);
 		}
 
 		m_device->impl->_context->IASetIndexBuffer(impl->dxBuffer, DXGI_FORMAT_R16_UINT, 0);
@@ -91,26 +86,24 @@ namespace xna {
 	}
 
 	VertexBuffer::VertexBuffer() : GraphicsResource(nullptr) {
-		impl = uNew<PlatformImplementation>();
+		impl = unew<PlatformImplementation>();
 	}
 
 	VertexBuffer::VertexBuffer(sptr<GraphicsDevice> const& device) : GraphicsResource(device) {
-		impl = uNew<PlatformImplementation>();
+		impl = unew<PlatformImplementation>();
 	}
 
 	VertexBuffer::~VertexBuffer() {
 		impl = nullptr;
 	}
 
-	bool VertexBuffer::Apply(xna_error_ptr_arg) {
+	bool VertexBuffer::Apply() {
 		if (!impl || !m_device || !m_device->impl->_context) {
-			xna_error_apply(err, XnaErrorCode::INVALID_OPERATION);
-			return false;
+			Exception::Throw(ExMessage::ApplyComponent);
 		}
 
 		if (!impl->dxBuffer) {
-			xna_error_apply(err, XnaErrorCode::UNINTIALIZED_RESOURCE);
-			return false;
+			Exception::Throw(ExMessage::UnintializedComponent);
 		}
 
 		UINT stride = impl->size;
@@ -122,21 +115,20 @@ namespace xna {
 	}
 
 	VertexInputLayout::VertexInputLayout() : GraphicsResource(nullptr) {
-		impl = uNew<PlatformImplementation>();
+		impl = unew<PlatformImplementation>();
 	}
 
 	VertexInputLayout::VertexInputLayout(sptr<GraphicsDevice> const& device) : GraphicsResource(device) {
-		impl = uNew<PlatformImplementation>();
+		impl = unew<PlatformImplementation>();
 	}
 
 	VertexInputLayout::~VertexInputLayout() {
 		impl = nullptr;
 	}
 
-	bool VertexInputLayout::Initialize(DataBuffer& blob, xna_error_ptr_arg) {
+	bool VertexInputLayout::Initialize(DataBuffer& blob) {
 		if (!impl || !m_device || !m_device->impl->_device || !blob.impl->_blob) {
-			xna_error_apply(err, XnaErrorCode::INVALID_OPERATION);
-			return false;
+			Exception::Throw(ExMessage::InitializeComponent);
 		}
 
 		if (impl->_inputLayout) {
@@ -152,8 +144,7 @@ namespace xna {
 			&impl->_inputLayout);
 
 		if (FAILED(hr)) {
-			xna_error_apply(err, XnaErrorCode::FAILED_OPERATION);
-			return false;
+			Exception::Throw(ExMessage::CreateComponent);
 		}
 
 		return true;

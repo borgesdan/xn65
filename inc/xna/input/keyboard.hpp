@@ -4,9 +4,13 @@
 #include "../default.hpp"
 
 namespace xna {
+    //Represents a state of keystrokes recorded by a keyboard input device. 
 	struct KeyboardState {
+        //
+        //same implementation of the DirectX::Keyboard::State structure
+        //
 	public:
-        bool IsKeyDown(Keys key) const {
+        constexpr bool IsKeyDown(Keys key) const {
             const auto k = static_cast<unsigned char>(key);
 
             if (k <= 0xfe)
@@ -18,7 +22,7 @@ namespace xna {
             return false;
         }
 
-        bool IsKeyUp(Keys key) const {
+        constexpr bool IsKeyUp(Keys key) const {
             return !IsKeyDown(key);
         }
 
@@ -210,12 +214,20 @@ namespace xna {
         bool Reserved26 : 1;
 	};
 
+    //Allows retrieval of keystrokes from a keyboard input device. 
 	class Keyboard {
 	public:		
+        //Returns the current keyboard or Chatpad state. 
 		static KeyboardState GetState();
-		//static bool IsConnected();
-        static void Initialize();
         static bool IsConnected();
+
+        Keyboard() = delete;
+        Keyboard(Keyboard&) = delete;
+        Keyboard(Keyboard&&) = delete;
+
+    private:
+        friend class Game;
+        static void Initialize();
 
     public:
         struct PlatformImplementation;

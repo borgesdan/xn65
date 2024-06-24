@@ -1,14 +1,10 @@
-#include "xna/platform-dx/implementations.hpp"
+#include "xna/platform-dx/dx.hpp"
 #include "xna/graphics/displaymode.hpp"
 
 namespace xna {
 	DisplayMode::DisplayMode() {
-		impl = uNew<PlatformImplementation>();
-	}
-
-	DisplayMode::~DisplayMode() {
-		impl = nullptr;
-	}
+		impl = unew<PlatformImplementation>();
+	}	
 
 	size_t DisplayModeCollection::SurfaceCount(SurfaceFormat format) const
 	{

@@ -1,27 +1,27 @@
-#include "xna/csharp/type.hpp"
-#include "xna/game/time.hpp"
-#include "xna/game/component.hpp"
-#include "xna/game/servicecontainer.hpp"
-#include "xna/platform-dx/implementations.hpp"
-#include "xna/game/gdevicemanager.hpp"
 #include "xna/content/manager.hpp"
+#include "xna/csharp/type.hpp"
+#include "xna/game/component.hpp"
+#include "xna/game/gdevicemanager.hpp"
+#include "xna/game/servicecontainer.hpp"
+#include "xna/game/time.hpp"
+#include "xna/platform-dx/dx.hpp"
 
 namespace xna {
 	Game::Game() {
 		impl = unew<PlatformImplementation>();
-		services = New<GameServiceContainer>();
+		services = snew<GameServiceContainer>();
 		auto iservice = reinterpret_pointer_cast<IServiceProvider>(services);
-		_contentManager = New<ContentManager>(services, "");
+		_contentManager = snew<ContentManager>(services, "");
 		_contentManager->_gameServices = iservice;
 
-		_gameWindow = New<GameWindow>();
+		_gameWindow = snew<GameWindow>();
 		_gameWindow->impl->Color(146, 150, 154);
 		_gameWindow->Title("XN65");
 		_gameWindow->impl->Size(
 			GraphicsDeviceManager::DefaultBackBufferWidth,
 			GraphicsDeviceManager::DefaultBackBufferHeight, false);
 
-		_gameComponents = New<GameComponentCollection>();
+		_gameComponents = snew<GameComponentCollection>();
 	}
 
 	Game::~Game() {

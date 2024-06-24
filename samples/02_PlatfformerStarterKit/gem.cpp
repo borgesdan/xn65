@@ -34,6 +34,6 @@ namespace PlatformerStarterKit {
 
 	void Gem::Draw(xna::GameTime const& gameTime, xna::SpriteBatch& spriteBatch)
 	{			
-		spriteBatch.Draw(texture, Position(), nullptr, Color, 0.0f, origin, 1.0f, xna::SpriteEffects::None, 0.0f);
+		spriteBatch.Draw(texture, Position(), std::nullopt, Color, 0.0f, origin, 1.0f, xna::SpriteEffects::None, 0.0f);
 	}
 }

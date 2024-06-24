@@ -1,7 +1,7 @@
 #include "xna/game/gdevicemanager.hpp"
 #include "xna/graphics/presentparams.hpp"
 #include "xna/graphics/swapchain.hpp"
-#include "xna/platform-dx/implementations.hpp"
+#include "xna/platform-dx/dx.hpp"
 
 namespace xna {
 	GraphicsDeviceManager::GraphicsDeviceManager(sptr<Game> const& game) : _game(game)
@@ -83,12 +83,11 @@ namespace xna {
 	}
 
 	bool initDevice(GraphicsDeviceInformation& info, Game& game, sptr<GraphicsDevice>& device)
-	{
-		auto& window = info.Window;
-		device = New<GraphicsDevice>(info);
+	{		
+		device = snew<GraphicsDevice>(info);
 
-		if (!device->Initialize(*window)) {
-			MessageBox(window->impl->WindowHandle(), "Falha na inicialização do dispositivo gráfico", "XN65", MB_OK);
+		if (!device->Initialize()) {
+			MessageBox(info.Window->impl->WindowHandle(), "Falha na inicialização do dispositivo gráfico", "XN65", MB_OK);
 			device = nullptr;
 			return false;
 		}

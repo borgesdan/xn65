@@ -1,8 +1,8 @@
 #define NOMINMAX 
-#include "xnaerror.hpp"
 #include "types.hpp"
 #include "helpers.hpp"
 #include "enums.hpp"
+#include "exception.hpp"
 #include "audio/audioengine.hpp"
 #include "audio/soundeffect.hpp"
 #include "common/color.hpp"
@@ -53,4 +53,4 @@
 #include "input/keyboard.hpp"
 #include "input/mouse.hpp"
 #include "platforminit.hpp"
-#include "platform-dx/xna-dx.hpp"
+#include "xna/platform-dx/dx.hpp"

@@ -15,7 +15,7 @@ namespace xna {
 
 		void Initialize() override {
 			auto game = reinterpret_cast<Game*>(this);
-			graphics = New<GraphicsDeviceManager>(game->shared_from_this());
+			graphics = snew<GraphicsDeviceManager>(game->shared_from_this());
 			graphics->Initialize();
 
 			std::any device = graphicsDevice;
@@ -25,7 +25,7 @@ namespace xna {
 		}
 
 		void LoadContent() override {
-			spriteBatch = New<SpriteBatch>(*graphicsDevice);
+			spriteBatch = snew<SpriteBatch>(graphicsDevice);
 			auto texture = Content()->Load<PTexture2D>("Idle");
 			Game::LoadContent();
 		}

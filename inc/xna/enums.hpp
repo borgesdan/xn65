@@ -119,7 +119,8 @@ namespace xna {
 		Green,
 		Blue,
 		Alpha,
-		All
+		All,
+        None
 	};    
 
     enum class ContainmentType {
@@ -138,6 +139,8 @@ namespace xna {
 		GreaterEqual,
 		Always
 	};
+
+    using CompareFunction = ComparisonFunction;
     
     enum class CurveContinuity {
         Smooth,
@@ -195,6 +198,27 @@ namespace xna {
         Unspecified = 0,
         Centered = 1,
         Stretched = 2
+    };
+
+    enum class EffectParameterClass {
+        Matrix,
+        Object,
+        Scalar,
+        Struct,
+        Vector
+    };
+
+    enum class EffectParameterType {
+        Bool,
+        Int32,
+        Single,
+        String,
+        Texture,
+        Texture1D,
+        Texture2D,
+        Texture3D,
+        TextureCube,
+        Void
     };
 
     enum class FileMode {
@@ -449,6 +473,14 @@ namespace xna {
 		Two,
 		Immediate
 	};
+
+    enum class PrimitiveType
+    {
+        TriangleList,
+        TriangleStrip,
+        LineList,
+        LineStrip,
+    };
 
 	enum RenderTargetUsage {
 		DiscardContents,

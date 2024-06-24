@@ -28,7 +28,7 @@ namespace xna {
 			if (a_device.has_value())
 				device = std::any_cast<sptr<GraphicsDevice>>(a_device);
 
-			auto texture2D = New<Texture2D>(device, width, height, mipMaps, format);
+			auto texture2D = snew<Texture2D>(device, width, height, mipMaps, format);
 
 			for (size_t level = 0; level < mipMaps; ++level) {
 				auto elementCount = input.ReadInt32();

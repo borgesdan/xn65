@@ -1,4 +1,4 @@
-#include "xna/platform-dx/implementations.hpp"
+#include "xna/platform-dx/dx.hpp"
 
 namespace xna {
 	RenderTarget2D::RenderTarget2D() : Texture2D() {
@@ -13,10 +13,9 @@ namespace xna {
 		render_impl = nullptr;
 	}
 
-	bool RenderTarget2D::Initialize(xna_error_ptr_arg) {
+	bool RenderTarget2D::Initialize() {
 		if (!impl || !m_device || !m_device->impl->_device) {
-			xna_error_apply(err, XnaErrorCode::INVALID_OPERATION);
-			return false;
+			Exception::Throw(ExMessage::InitializeComponent);
 		}
 
 		if (impl->dxTexture2D) {
@@ -32,18 +31,19 @@ namespace xna {
 		const auto hr = dxdevice->CreateRenderTargetView(impl->dxTexture2D, NULL, &render_impl->_renderTargetView);
 
 		if (FAILED(hr)) {
-			xna_error_apply(err, XnaErrorCode::FAILED_OPERATION);
-			return false;		
+			Exception::Throw(ExMessage::CreateComponent);
 		}
 
 		return true;
 	}
 
-	bool RenderTarget2D::Apply(xna_error_ptr_arg) {
+	bool RenderTarget2D::Apply() {
 		if (!m_device || !m_device->impl->_context) {
-			xna_error_apply(err, XnaErrorCode::INVALID_OPERATION);
-			return false;
+			Exception::Throw(ExMessage::ApplyComponent);
 		}
+
+		if(!render_impl->_renderTargetView)
+			Exception::Throw(ExMessage::UnintializedComponent);
 
 		auto& context = m_device->impl->_context;
 		context->OMSetRenderTargets(1, &render_impl->_renderTargetView, nullptr);

@@ -2,4 +2,4 @@
 #include "forward.hpp"
 #include "enums.hpp"
 #include "helpers.hpp"
-#include "xnaerror.hpp"
+#include "exception.hpp"

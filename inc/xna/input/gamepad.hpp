@@ -5,6 +5,7 @@
 #include "../common/numerics.hpp"
 
 namespace xna {
+	//Structure that defines the position of the left and right triggers on an Xbox Controller.
 	struct GamePadTriggers {
 		constexpr GamePadTriggers() = default;
 
@@ -37,6 +38,7 @@ namespace xna {
 		}
 	};
 
+	//Structure that represents the position of left and right sticks (thumbsticks) on an Xbox Controller.
 	struct GamePadThumbSticks {
 		constexpr GamePadThumbSticks() = default;
 
@@ -69,6 +71,7 @@ namespace xna {
 		}
 	};
 
+	//Identifies which directions on the directional pad of an Xbox Controller are being pressed.
 	struct GamePadDPad {
 		constexpr GamePadDPad() = default;
 
@@ -83,6 +86,7 @@ namespace xna {
 		ButtonState Left{};
 	};	
 
+	//Identifies whether buttons on an Xbox Controller are pressed or released. 
 	struct GamePadButtons {
 		constexpr GamePadButtons() = default;
 
@@ -146,6 +150,7 @@ namespace xna {
 	using GamePadId = uint64_t;
 #endif
 
+	//Describes the capabilities of an Xbox Controller, including controller type, and identifies if the controller supports voice. 
 	struct GamePadCapabilities {
 		constexpr GamePadCapabilities() = default;		
 	
@@ -156,6 +161,7 @@ namespace xna {
 		GamePadId Id{};
 	};
 
+	//Represents specific information about the state of an Xbox Controller, including the current state of buttons and sticks.
 	struct GamePadState {
 		constexpr GamePadState() = default;			
 
@@ -229,22 +235,30 @@ namespace xna {
 		GamePadTriggers Triggers{};
 	};
 
+	//Allows retrieval of user interaction with an Xbox Controller and setting of controller vibration motors.
 	class GamePad {
 	public:		
+		//Gets the current state of a game pad controller. As an option, it specifies a dead zone processing method for the analog sticks.
 		static GamePadState GetState(PlayerIndex index);
+		//Gets the current state of a game pad controller. As an option, it specifies a dead zone processing method for the analog sticks.
 		static GamePadState GetState(PlayerIndex index, GamePadDeadZone deadZone);
+
+		//Retrieves the capabilities of an Xbox 360 Controller.
 		static GamePadCapabilities GetCapabilities(PlayerIndex index);
+		//Sets the vibration motor speeds on an Xbox 360 Controller.
 		static bool SetVibration(PlayerIndex index, float leftMotor, float rightMotor, float leftTrigger = 0, float rightTrigger = 0);
+		
+		GamePad() = delete;
+		GamePad(GamePad&) = delete;
+		GamePad(GamePad&&) = delete;
+
+	private:
+		friend class Game;
 		static void Initialize();
 
 	public:
 		struct PlatformImplementation;
-		inline static uptr<PlatformImplementation> impl = nullptr;	
-
-	private:
-		GamePad();
-		GamePad(GamePad&&);
-		GamePad(GamePad&);
+		inline static uptr<PlatformImplementation> impl = nullptr;		
 	};
 }
 

@@ -8,8 +8,14 @@
 #include <memory>
 #include <utility>
 #include <cassert>
+#include <optional>
 
 namespace xna {
+
+	//
+	// C# standard types
+	//
+
 	using Sbyte		= int8_t;
 	using Byte		= uint8_t;
 	using Short		= int16_t;
@@ -19,6 +25,10 @@ namespace xna {
 	using Long		= int64_t;
 	using Ulong		= uint64_t;
 	using Char		= char16_t;
+
+	//
+	// C# Min and Max Value
+	//
 
 	constexpr Sbyte		SbyteMaxValue	= (std::numeric_limits<Sbyte>::max)();
 	constexpr Sbyte		SbyteMinValue	= (std::numeric_limits<Sbyte>::min)();
@@ -47,29 +57,27 @@ namespace xna {
 	// About strings: https://stackoverflow.com/questions/402283/stdwstring-vs-stdstring
 	//
 
+	//Same as std::string
 	using String	= std::string;
-	using WString	= std::wstring;
+
+	//Same as std::wstring
+	using WString	= std::wstring;	
 	
+	//Same as std::shared_ptr
 	template <typename T>
 	using sptr		= std::shared_ptr<T>;
+
+	//Same as std::unique_ptr
 	template <typename T>
-	using uptr = std::unique_ptr<T>;
-
-	template <class _Ty, class... _Types>
-	inline std::shared_ptr<_Ty> New(_Types&&... _Args) {
-		return std::make_shared<_Ty>(std::forward<_Types>(_Args)...);
-	}
-
-	template <class _Ty, class... _Types>
-	inline std::unique_ptr<_Ty> uNew(_Types&&... _Args) {
-		return std::make_unique<_Ty>(std::forward<_Types>(_Args)...);
-	}
-
+	using uptr = std::unique_ptr<T>;		
+		
+	//Same as std::make_shared
 	template <class _Ty, class... _Types>
 	inline std::shared_ptr<_Ty> snew(_Types&&... _Args) {
 		return std::make_shared<_Ty>(std::forward<_Types>(_Args)...);
 	}
 
+	//Same as std::make_unique
 	template <class _Ty, class... _Types>
 	inline std::unique_ptr<_Ty> unew(_Types&&... _Args) {
 		return std::make_unique<_Ty>(std::forward<_Types>(_Args)...);
