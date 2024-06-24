@@ -74,6 +74,7 @@ namespace xna {
 	class TextureCube;
 	class RasterizerState;
 	class SamplerState;
+	class SamplerStateCollection;
 	class Shader;
 	class SpriteBatch;
 	class SpriteFont;

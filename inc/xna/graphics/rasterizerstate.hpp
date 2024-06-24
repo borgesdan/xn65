@@ -6,7 +6,7 @@
 
 namespace xna {
 	//Contains rasterizer state, which determines how to convert vector data (shapes) into raster data (pixels). 
-	class RasterizerState : GraphicsResource {
+	class RasterizerState : public GraphicsResource {
 	public:
 		RasterizerState();
 		RasterizerState(sptr<GraphicsDevice> const& device);
@@ -58,6 +58,8 @@ namespace xna {
 		struct PlatformImplementation;
 		uptr<PlatformImplementation> impl = nullptr;
 	};
+
+	using PRasterizerState = sptr<RasterizerState>;
 }
 
 #endif

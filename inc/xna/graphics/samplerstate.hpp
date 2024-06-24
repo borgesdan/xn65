@@ -6,7 +6,7 @@
 
 namespace xna {
 	//Contains sampler state, which determines how to sample texture data. 
-	class SamplerState : GraphicsResource {
+	class SamplerState : public GraphicsResource {
 	public:
 		SamplerState();
 		SamplerState(sptr<GraphicsDevice> const& device);
@@ -70,6 +70,32 @@ namespace xna {
 		struct PlatformImplementation;
 		uptr<PlatformImplementation> impl = nullptr;
 	};
+
+	using PSamplerState = sptr<SamplerState>;
+
+	//Collection of SamplerState objects. 
+	class SamplerStateCollection {
+	public:
+		SamplerStateCollection(){}
+
+		SamplerStateCollection(size_t size) 
+			: samplers(size){}
+
+		SamplerStateCollection(std::vector<PSamplerState> const& samplers) 
+			: samplers(samplers) {}
+
+		PSamplerState operator[](size_t index) {
+			if (index >= samplers.size())
+				return nullptr;
+
+			return samplers[index];
+		}
+
+	public:
+		std::vector<PSamplerState> samplers;
+	};
+
+	using PSamplerStateCollection = sptr<SamplerStateCollection>;
 }
 
 #endif

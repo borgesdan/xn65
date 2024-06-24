@@ -76,6 +76,8 @@ namespace xna {
 		struct PlatformImplementation;
 		uptr<PlatformImplementation> impl = nullptr;
 	};	
+
+	using PBlendState = sptr<BlendState>;
 }
 
 #endif

@@ -929,6 +929,13 @@ namespace xna {
 	};
 
 	struct GraphicsDevice::PlatformImplementation {
+		PlatformImplementation() {
+			_blendState = xna::BlendState::Opaque();
+			_depthStencilState = xna::DepthStencilState::Default();			
+			_rasterizerState = xna::RasterizerState::CullCounterClockwise();
+			_samplerStates = snew<SamplerStateCollection>();
+		}
+
 		~PlatformImplementation() {
 			if (_device) {
 				_device->Release();
@@ -944,15 +951,37 @@ namespace xna {
 				_factory->Release();
 				_factory = nullptr;
 			}
+		}	
+
+	private:
+		void InitializeAndApplyStates(PGraphicsDevice const& device) {
+			_blendState->Bind(device);
+			_blendState->Initialize();
+			_blendState->Apply();
+
+			_rasterizerState->Bind(device);
+			_rasterizerState->Initialize();
+			_rasterizerState->Apply();
+
+			_depthStencilState->Bind(device);
+			_depthStencilState->Initialize();
+			_depthStencilState->Apply();
 		}
 
-		ID3D11Device* _device{ nullptr };
-		ID3D11DeviceContext* _context{ nullptr };
+	public:
+		ID3D11Device* _device = nullptr;
+		ID3D11DeviceContext* _context = nullptr;
 		IDXGIFactory1* _factory = nullptr;
-		sptr<SwapChain> _swapChain{ nullptr };
-		sptr<GraphicsAdapter> _adapter{ nullptr };
-		sptr<RenderTarget2D> _renderTarget2D{ nullptr };
-		sptr<BlendState> _blendState{ nullptr };
+		
+		PBlendState _blendState = nullptr;
+		PRasterizerState _rasterizerState = nullptr;
+		PDepthStencilState _depthStencilState = nullptr;
+		PSamplerStateCollection _samplerStates = nullptr;
+		Int _multiSampleMask = 0xffffffff;
+		
+		sptr<SwapChain> _swapChain = nullptr;
+		sptr<GraphicsAdapter> _adapter = nullptr;
+		sptr<RenderTarget2D> _renderTarget2D = nullptr;
 		sptr<GameWindow> _gameWindow = nullptr;
 		xna::Viewport _viewport{};
 		sptr<xna::PresentationParameters> _presentationParameters;

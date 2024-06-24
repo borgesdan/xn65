@@ -6,7 +6,7 @@
 
 The project is still under development and the next updates will focus on the following tasks:
 - [x] Finish basic classes
-- [x] Code refactoring and cleaning
+- [ ] Code refactoring and cleaning
 - [ ] 3D support
 - [ ] Implementation of missing classes and functions
 - [ ] Content Pipeline

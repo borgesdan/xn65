@@ -18,10 +18,6 @@ namespace xna {
 			impl._factory->Release();
 			impl._factory = nullptr;
 		}
-
-		impl._blendState = nullptr;
-		impl._swapChain = nullptr;
-		impl._renderTarget2D = nullptr;
 	}
 
 	static void createDevice(GraphicsDevice::PlatformImplementation& impl) {
@@ -80,19 +76,15 @@ namespace xna {
 			impl->_presentationParameters->BackBufferFormat, 
 			impl->_presentationParameters->BackBufferWidth,
 			impl->_presentationParameters->BackBufferHeight);
-	}
-
-	GraphicsDevice::~GraphicsDevice() {
-		impl = nullptr;
-	}
+	}	
 
 	bool GraphicsDevice::Initialize() {
+		auto _this = shared_from_this();
+
 		if (!impl)
 			impl = uptr<PlatformImplementation>();
 
 		reset(*impl);
-
-		auto _this = shared_from_this();
 		
 		createDevice(*impl);
 
@@ -139,10 +131,7 @@ namespace xna {
 
 		impl->_context->RSSetViewports(1, &view);
 
-		impl->_blendState = BlendState::NonPremultiplied();
-		impl->_blendState->Bind(_this);
-		impl->_blendState->Initialize();
-		impl->_blendState->Apply();
+		impl->InitializeAndApplyStates(_this);
 
 		return true;
 	}
@@ -199,5 +188,42 @@ namespace xna {
 		if (!impl) return;
 
 		impl->_usevsync = use;
-	}		
+	}	
+
+	
+	sptr<xna::BlendState> GraphicsDevice::BlendState() const {
+		return impl->_blendState;
+	}
+	
+	void GraphicsDevice::BlendState(sptr<xna::BlendState> const& value) {
+		impl->_blendState = value;
+	}
+	
+	sptr<xna::DepthStencilState> GraphicsDevice::DepthStencilState() const {
+		return impl->_depthStencilState;
+	}
+	
+	void GraphicsDevice::DepthStencilState(sptr<xna::DepthStencilState> const& value) {
+		impl->_depthStencilState = value;
+	}
+	
+	sptr<xna::RasterizerState> GraphicsDevice::RasterizerState() const {
+		return impl->_rasterizerState;
+	}
+	
+	void GraphicsDevice::RasterizerState(sptr<xna::RasterizerState> const& value) {
+		impl->_rasterizerState = value;
+	}
+
+	sptr<SamplerStateCollection> GraphicsDevice::SamplerStates() const {
+		return impl->_samplerStates;
+	}
+
+	Int GraphicsDevice::MultiSampleMask() const {
+		return impl->_multiSampleMask;
+	}
+
+	void GraphicsDevice::MultiSampleMask(Int value) {
+		impl->_multiSampleMask = value;
+	}
 }

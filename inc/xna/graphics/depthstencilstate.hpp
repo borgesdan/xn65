@@ -92,6 +92,8 @@ namespace xna {
 		struct PlatformImplementation;
 		uptr<PlatformImplementation> impl = nullptr;
 	};
+
+	using PDepthStencilState = sptr<DepthStencilState>;
 }
 
 #endif
