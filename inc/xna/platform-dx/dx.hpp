@@ -966,6 +966,8 @@ namespace xna {
 			_depthStencilState->Bind(device);
 			_depthStencilState->Initialize();
 			_depthStencilState->Apply();
+
+			_samplerStates->Apply(*device);
 		}
 
 	public:

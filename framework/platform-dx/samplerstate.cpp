@@ -45,6 +45,35 @@ namespace xna {
 
 		return true;
 	}
+
+	void SamplerStateCollection::Apply(GraphicsDevice const& device) {
+		if (samplers.empty())
+			return;
+
+		if (!device.impl || !device.impl->_device || !device.impl->_context) {
+			Exception::Throw(ExMessage::InvalidOperation);
+		}
+
+		std::vector<ID3D11SamplerState*> states(samplers.size());
+
+		for (size_t i = 0; i < samplers.size(); ++i) {
+			const auto& current = samplers[0];
+
+			if (!current || !current->impl || !current->impl->_samplerState)
+				Exception::Throw(ExMessage::InvalidOperation);
+
+			states[i] = current->impl->_samplerState;
+			states[i]->AddRef();
+		}
+
+		device.impl->_context->PSSetSamplers(0, states.size(), states.data());
+
+		for (size_t i = 0; i < samplers.size(); ++i) {			
+			states[i]->Release();
+			states[i] = nullptr;
+		}
+	}
+
 	uptr<SamplerState> SamplerState::PoinWrap() {
 		auto state = unew<SamplerState>();
 		state->impl->_description.Filter = D3D11_FILTER_MIN_MAG_MIP_POINT;

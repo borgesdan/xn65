@@ -91,6 +91,8 @@ namespace xna {
 			return samplers[index];
 		}
 
+		void Apply(GraphicsDevice const& device);
+
 	public:
 		std::vector<PSamplerState> samplers;
 	};
