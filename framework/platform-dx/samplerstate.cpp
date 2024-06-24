@@ -3,16 +3,10 @@
 #include "xna/platform-dx/dx.hpp"
 
 namespace xna {
-	SamplerState::SamplerState() : GraphicsResource(nullptr) {
-		impl = unew<PlatformImplementation>();		
-	}
+	SamplerState::SamplerState() : SamplerState(nullptr){}
 
 	SamplerState::SamplerState(sptr<GraphicsDevice> const& device) : GraphicsResource(device) {
 		impl = unew<PlatformImplementation>();
-	}
-
-	SamplerState::~SamplerState() {
-		impl = nullptr;
 	}
 
 	bool SamplerState::Initialize()
@@ -156,15 +150,15 @@ namespace xna {
 		impl->_description.ComparisonFunc = static_cast<D3D11_COMPARISON_FUNC>(static_cast<int>(value) + 1);
 	}
 
-	void SamplerState::MipLODBias(float value) {
+	void SamplerState::MipMapLevelOfDetailBias(float value) {
 		impl->_description.MipLODBias = value;
 	}
 
-	void SamplerState::MinLOD(float value) {
+	void SamplerState::MinMipLevel(float value) {
 		impl->_description.MinLOD = value;
 	}
 
-	void SamplerState::MaxLOD(float value) {
+	void SamplerState::MaxMipLevel (float value) {
 		impl->_description.MaxLOD = value;
 	}
 
@@ -220,15 +214,15 @@ namespace xna {
 		return static_cast<ComparisonFunction>(impl->_description.ComparisonFunc - 1);
 	}
 
-	float SamplerState::MipLODBias() const {
+	float SamplerState::MipMapLevelOfDetailBias() const {
 		return impl->_description.MipLODBias;
 	}
 
-	float SamplerState::MinLOD() const {
+	float SamplerState::MinMipLevel() const {
 		return impl->_description.MinLOD;
 	}
 
-	float SamplerState::MaxLOD() const {
+	float SamplerState::MaxMipLevel() const {
 		return impl->_description.MaxLOD;
 	}
 

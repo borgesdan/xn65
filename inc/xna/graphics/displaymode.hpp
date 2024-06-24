@@ -6,11 +6,12 @@
 namespace xna {
 	struct DisplayModeDescription;
 
+	//Describes the display mode. 
 	class DisplayMode {
 	public:
-		DisplayMode();		
-		~DisplayMode();
+		DisplayMode();	
 
+		//Gets the aspect ratio used by the graphics device.
 		constexpr float AspectRatio() const {
 			if (Height == 0 || Width == 0)
 				return 0;
@@ -25,8 +26,11 @@ namespace xna {
 		}
 
 	public:
+		//Gets a value indicating the screen width, in pixels. 
 		Int Width{ 0 };
+		//Gets a value indicating the screen height, in pixels. 
 		Int Height{ 0 };
+		//Gets a value indicating the surface format of the display mode. 
 		SurfaceFormat Format{ SurfaceFormat::Color };		
 
 	public:
@@ -34,6 +38,7 @@ namespace xna {
 		uptr<PlatformImplementation> impl;
 	};
 
+	//Manipulates a collection of DisplayMode structures. 
 	class DisplayModeCollection {
 	public:
 		constexpr DisplayModeCollection() = default;

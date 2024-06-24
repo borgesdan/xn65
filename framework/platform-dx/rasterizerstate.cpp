@@ -3,18 +3,18 @@
 
 namespace xna {
 
-	RasterizerState::RasterizerState() : GraphicsResource(nullptr){
-		impl = unew<PlatformImplementation>();
-	}
+	RasterizerState::RasterizerState() : RasterizerState(nullptr){}
 
 	RasterizerState::RasterizerState(sptr<GraphicsDevice> const& device) : GraphicsResource(device) {
 		impl = unew<PlatformImplementation>();
+		impl->dxDescription.CullMode = D3D11_CULL_MODE::D3D11_CULL_BACK;
+		impl->dxDescription.FillMode = D3D11_FILL_MODE::D3D11_FILL_SOLID;
+		impl->dxDescription.MultisampleEnable = true;
+		impl->dxDescription.DepthBias = 0;
+		impl->dxDescription.SlopeScaledDepthBias = 0;
+		impl->dxDescription.ScissorEnable = false;
 	}
-
-	RasterizerState::~RasterizerState() {
-		impl = nullptr;
-	}
-
+	
 	bool RasterizerState::Initialize()
 	{
 		if (!impl || !m_device || !m_device->impl->_device) {
@@ -50,6 +50,38 @@ namespace xna {
 		m_device->impl->_context->RSSetState(impl->dxRasterizerState);
 
 		return true;
+	}
+
+	bool RasterizerState::ScissorTestEnable() const {
+		return impl->dxDescription.ScissorEnable;
+	}
+
+	void  RasterizerState::ScissorTestEnable(bool value) {
+		impl->dxDescription.ScissorEnable = value;
+	}
+
+	bool RasterizerState::MultiSampleAntiAlias() const {
+		return impl->dxDescription.MultisampleEnable;
+	}
+
+	void  RasterizerState::MultiSampleAntiAlias(bool value) {
+		impl->dxDescription.MultisampleEnable = value;
+	}
+
+	float RasterizerState::DepthBias() const {
+		return impl->dxDescription.DepthBias;
+	}
+
+	void RasterizerState::DepthBias(float value) {
+		impl->dxDescription.DepthBias = value;
+	}
+
+	float RasterizerState::SlopeScaleDepthBias() const {
+		return impl->dxDescription.SlopeScaledDepthBias;
+	}
+
+	void RasterizerState::SlopeScaleDepthBias(float value) {
+		impl->dxDescription.SlopeScaledDepthBias = value;
 	}
 
 	uptr<RasterizerState> RasterizerState::CullNone()

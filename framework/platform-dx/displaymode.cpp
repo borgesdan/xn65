@@ -4,11 +4,7 @@
 namespace xna {
 	DisplayMode::DisplayMode() {
 		impl = unew<PlatformImplementation>();
-	}
-
-	DisplayMode::~DisplayMode() {
-		impl = nullptr;
-	}
+	}	
 
 	size_t DisplayModeCollection::SurfaceCount(SurfaceFormat format) const
 	{
