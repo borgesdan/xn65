@@ -139,6 +139,8 @@ namespace xna {
 		GreaterEqual,
 		Always
 	};
+
+    using CompareFunction = ComparisonFunction;
     
     enum class CurveContinuity {
         Smooth,

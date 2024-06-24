@@ -26,12 +26,13 @@ namespace xna {
 		//Retrieves a value used to identify the manufacturer.
 		Uint VendorId() const;
 
+		//Returns a collection of supported display modes for the current adapter.
 		uptr<DisplayModeCollection> SupportedDisplayModes() const;
+		//Returns a collection of supported display modes for the current adapter.
 		uptr<DisplayModeCollection> SupportedDisplayModes(SurfaceFormat surfaceFormat) const;
 		
 		//Gets the current display mode.
 		sptr<DisplayMode> CurrentDisplayMode();
-
 		//Gets the current display mode.
 		void CurrentDisplayMode(SurfaceFormat surfaceFormat, Uint width, Uint height);
 

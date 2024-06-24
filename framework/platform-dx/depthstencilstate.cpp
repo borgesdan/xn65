@@ -18,9 +18,9 @@ namespace xna {
 		_description.BackFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
 		_description.BackFace.StencilDepthFailOp = D3D11_STENCIL_OP_KEEP;
 
-		_description.StencilReadMask = 0;
-		_description.StencilWriteMask = 0;
-		_description.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO;
+		_description.StencilReadMask = IntMaxValue;
+		_description.StencilWriteMask = IntMaxValue;
+		_description.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
 
 		return _description;
 	}
@@ -33,11 +33,7 @@ namespace xna {
 	DepthStencilState::DepthStencilState(sptr<GraphicsDevice> const& device) : GraphicsResource(device) {
 		impl = unew<PlatformImplementation>();
 		impl->dxDescription = defaultDesc();
-	}
-
-	DepthStencilState::~DepthStencilState() {
-		impl = nullptr;
-	}
+	}	
 
 	bool DepthStencilState::Initialize()
 	{
@@ -100,24 +96,24 @@ namespace xna {
 		return stencil;
 	}
 
-	void DepthStencilState::DepthEnabled(bool value) {
+	void DepthStencilState::DepthBufferEnable(bool value) {
 		impl->dxDescription.DepthEnable = value;
 	}
 
-	void DepthStencilState::DepthWriteEnabled(bool value) {
+	void DepthStencilState::DepthBufferWriteEnable(bool value) {
 		impl->dxDescription.DepthWriteMask = static_cast<D3D11_DEPTH_WRITE_MASK>(value);
 	}
 
-	void DepthStencilState::DepthCompareFunction(ComparisonFunction value) {
+	void DepthStencilState::DepthBufferFunction(ComparisonFunction value) {
 		const auto _value = static_cast<int>(value) + 1;
 		impl->dxDescription.DepthFunc = static_cast<D3D11_COMPARISON_FUNC>(_value);
 	}
 
-	void DepthStencilState::StencilEnabled(bool value) {
+	void DepthStencilState::StencilEnable(bool value) {
 		impl->dxDescription.StencilEnable = value;
 	}
 
-	void DepthStencilState::StencilReadMask(int value) {
+	void DepthStencilState::StencilMask(int value) {
 		impl->dxDescription.StencilReadMask = static_cast<UINT8>(value);
 	}
 
@@ -125,64 +121,64 @@ namespace xna {
 		impl->dxDescription.StencilWriteMask = static_cast<UINT8>(value);
 	}
 
-	void DepthStencilState::StencilFrontFacePass(StencilOperation value) {
+	void DepthStencilState::StencilPass(StencilOperation value) {
 		const auto _value = static_cast<int>(value) + 1;
 		impl->dxDescription.FrontFace.StencilPassOp = static_cast<D3D11_STENCIL_OP>(_value);
 	}
 
-	void DepthStencilState::StencilFrontFaceFail(StencilOperation value) {
+	void DepthStencilState::StencilFail(StencilOperation value) {
 		const auto _value = static_cast<int>(value) + 1;
 		impl->dxDescription.FrontFace.StencilFailOp = static_cast<D3D11_STENCIL_OP>(_value);
 	}
 
-	void DepthStencilState::StencilFrontFaceDepthFail(StencilOperation value) {
+	void DepthStencilState::StencilDepthBufferFail(StencilOperation value) {
 		const auto _value = static_cast<int>(value) + 1;
 		impl->dxDescription.FrontFace.StencilDepthFailOp = static_cast<D3D11_STENCIL_OP>(_value);
 	}
 
-	void DepthStencilState::StencilFrontFaceCompare(ComparisonFunction value) {
+	void DepthStencilState::StencilFunction(ComparisonFunction value) {
 		const auto _value = static_cast<int>(value) + 1;
 		impl->dxDescription.FrontFace.StencilFunc = static_cast<D3D11_COMPARISON_FUNC>(_value);
 	}
 
-	void DepthStencilState::StencilBackFacePass(StencilOperation value) {
+	void DepthStencilState::CounterClockwiseStencilPass(StencilOperation value) {
 		const auto _value = static_cast<int>(value) + 1;
 		impl->dxDescription.BackFace.StencilPassOp = static_cast<D3D11_STENCIL_OP>(_value);
 	}
 
-	void DepthStencilState::StencilBackFaceFail(StencilOperation value) {
+	void DepthStencilState::CounterClockwiseStencilFail(StencilOperation value) {
 		const auto _value = static_cast<int>(value) + 1;
 		impl->dxDescription.BackFace.StencilFailOp = static_cast<D3D11_STENCIL_OP>(_value);
 	}
 
-	void DepthStencilState::StencilBackFaceDepthFail(StencilOperation value) {
+	void DepthStencilState::CounterClockwiseStencilDepthBufferFail(StencilOperation value) {
 		const auto _value = static_cast<int>(value) + 1;
 		impl->dxDescription.BackFace.StencilDepthFailOp = static_cast<D3D11_STENCIL_OP>(_value);
 	}
 
-	void DepthStencilState::StencilBackFaceCompare(ComparisonFunction value) {
+	void DepthStencilState::CounterClockwiseStencilFunction(ComparisonFunction value) {
 		const auto _value = static_cast<int>(value) + 1;
 		impl->dxDescription.BackFace.StencilFunc = static_cast<D3D11_COMPARISON_FUNC>(_value);
 	}
 
-	bool DepthStencilState::DepthEnabled() const {
+	bool DepthStencilState::DepthBufferEnable() const {
 		return impl->dxDescription.DepthEnable;
 	}
 
-	bool DepthStencilState::DepthWriteEnabled() const {
+	bool DepthStencilState::DepthBufferWriteEnable() const {
 		return static_cast<bool>(impl->dxDescription.DepthWriteMask);
 	}
 
-	ComparisonFunction DepthStencilState::DepthCompareFunction() const {
+	ComparisonFunction DepthStencilState::DepthBufferFunction() const {
 		const auto _value = static_cast<int>(impl->dxDescription.DepthFunc) - 1;
 		return static_cast<ComparisonFunction>(_value);
 	}
 
-	bool DepthStencilState::StencilEnabled() const {
+	bool DepthStencilState::StencilEnable() const {
 		return impl->dxDescription.StencilEnable;
 	}
 
-	Int DepthStencilState::StencilReadMask() const {
+	Int DepthStencilState::StencilMask() const {
 		return static_cast<int>(impl->dxDescription.StencilReadMask);
 	}
 
@@ -190,42 +186,42 @@ namespace xna {
 		return static_cast<int>(impl->dxDescription.StencilWriteMask);
 	}
 
-	StencilOperation DepthStencilState::StencilFrontFacePass() const {
+	StencilOperation DepthStencilState::StencilPass() const {
 		const auto _value = static_cast<int>(impl->dxDescription.FrontFace.StencilPassOp) - 1;
 		return static_cast<StencilOperation>(_value);
 	}
 
-	StencilOperation DepthStencilState::StencilFrontFaceFail() const {
+	StencilOperation DepthStencilState::StencilFail() const {
 		const auto _value = static_cast<int>(impl->dxDescription.FrontFace.StencilFailOp) - 1;
 		return static_cast<StencilOperation>(_value);
 	}
 
-	StencilOperation DepthStencilState::StencilFrontFaceDepthFail() const {
+	StencilOperation DepthStencilState::StencilDepthBufferFail() const {
 		const auto _value = static_cast<int>(impl->dxDescription.FrontFace.StencilDepthFailOp) - 1;
 		return static_cast<StencilOperation>(_value);
 	}
 
-	ComparisonFunction DepthStencilState::StencilFrontFaceCompare() const {
+	ComparisonFunction DepthStencilState::StencilFunction() const {
 		const auto _value = static_cast<int>(impl->dxDescription.FrontFace.StencilFunc) - 1;
 		return static_cast<ComparisonFunction>(_value);
 	}
 
-	StencilOperation DepthStencilState::StencilBackFacePass() const {
+	StencilOperation DepthStencilState::CounterClockwiseStencilPass() const {
 		const auto _value = static_cast<int>(impl->dxDescription.BackFace.StencilPassOp) - 1;
 		return static_cast<StencilOperation>(_value);
 	}
 
-	StencilOperation DepthStencilState::StencilBackFaceFail() const {
+	StencilOperation DepthStencilState::CounterClockwiseStencilFail() const {
 		const auto _value = static_cast<int>(impl->dxDescription.BackFace.StencilFailOp) - 1;
 		return static_cast<StencilOperation>(_value);
 	}
 
-	StencilOperation DepthStencilState::StencilBackFaceDepthFail() const {
+	StencilOperation DepthStencilState::CounterClockwiseStencilDepthBufferFail() const {
 		const auto _value = static_cast<int>(impl->dxDescription.BackFace.StencilDepthFailOp) - 1;
 		return static_cast<StencilOperation>(_value);
 	}
 
-	ComparisonFunction DepthStencilState::StencilBackFaceCompare() const {
+	ComparisonFunction DepthStencilState::CounterClockwiseStencilFunction() const {
 		const auto _value = static_cast<int>(impl->dxDescription.BackFace.StencilFunc) - 1;
 		return static_cast<ComparisonFunction>(_value);
 	}

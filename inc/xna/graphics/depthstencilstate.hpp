@@ -5,49 +5,88 @@
 #include "gresource.hpp"
 
 namespace xna {
+	//Contains depth-stencil state for the device. 
 	class DepthStencilState : public GraphicsResource {
 	public:
-
 		DepthStencilState();
 		DepthStencilState(sptr<GraphicsDevice> const& device);
+		
+		//Gets or sets the stencil operation to perform if the stencil test passes and the depth-buffer test fails for a counterclockwise triangle.
+		//The default is StencilOperation.Keep. 
+		void CounterClockwiseStencilDepthBufferFail(StencilOperation value);
+		//Gets or sets the stencil operation to perform if the stencil test passes and the depth-buffer test fails for a counterclockwise triangle.
+		//The default is StencilOperation.Keep. 
+		StencilOperation CounterClockwiseStencilDepthBufferFail() const;
+		//Gets or sets the stencil operation to perform if the stencil test fails for a counterclockwise triangle. 
+		//The default is StencilOperation.Keep.
+		void CounterClockwiseStencilFail(StencilOperation value);
+		//Gets or sets the stencil operation to perform if the stencil test fails for a counterclockwise triangle. 
+		//The default is StencilOperation.Keep.
+		StencilOperation CounterClockwiseStencilFail() const;
+		//Gets or sets the comparison function to use for counterclockwise stencil tests. The default is CompareFunction.Always. 
+		void CounterClockwiseStencilFunction(CompareFunction value);
+		//Gets or sets the comparison function to use for counterclockwise stencil tests. The default is CompareFunction.Always. 
+		CompareFunction CounterClockwiseStencilFunction() const;
+		//Gets or sets the stencil operation to perform if the stencil and depth-tests pass for a counterclockwise triangle. 
+		//The default is StencilOperation.Keep. 
+		void CounterClockwiseStencilPass(StencilOperation value);
+		//Gets or sets the stencil operation to perform if the stencil and depth-tests pass for a counterclockwise triangle. 
+		//The default is StencilOperation.Keep. 
+		StencilOperation CounterClockwiseStencilPass() const;
+		
+		//Enables or disables depth buffering. The default is true.
+		void DepthBufferEnable(bool value);
+		//Enables or disables depth buffering. The default is true.
+		bool DepthBufferEnable() const;
+		//Enables or disables writing to the depth buffer. The default is true. 
+		void DepthBufferWriteEnable(bool value);
+		//Enables or disables writing to the depth buffer. The default is true. 
+		bool DepthBufferWriteEnable() const;
+		//Gets or sets the comparison function for the depth-buffer test. The default is CompareFunction.LessEqual
+		void DepthBufferFunction(CompareFunction value);
+		//Gets or sets the comparison function for the depth-buffer test. The default is CompareFunction.LessEqual
+		CompareFunction DepthBufferFunction() const;		
+		
+		//Gets or sets stencil enabling. The default is false.
+		void StencilEnable(bool value);
+		//Gets or sets stencil enabling. The default is false. 
+		bool StencilEnable() const;
+		//Gets or sets the stencil operation to perform if the stencil test fails. The default is StencilOperation.Keep. 
+		void StencilFail(StencilOperation value);
+		//Gets or sets the stencil operation to perform if the stencil test fails. The default is StencilOperation.Keep. 
+		StencilOperation StencilFail() const;	
+		//Gets or sets the comparison function for the stencil test.The default is CompareFunction.Always.
+		void StencilFunction(CompareFunction value);
+		//Gets or sets the comparison function for the stencil test. The default is CompareFunction.Always. 
+		CompareFunction StencilFunction() const;		
+		//Gets or sets the mask applied to the reference value and each stencil buffer entry to determine the significant bits for the stencil test.
+		//The default mask is Int32.MaxValue. 
+		void StencilMask(Int value);
+		//Gets or sets the mask applied to the reference value and each stencil buffer entry to determine the significant bits for the stencil test.
+		//The default mask is Int32.MaxValue. 
+		Int StencilMask() const;
+		//Gets or sets the write mask applied to values written into the stencil buffer. The default mask is Int32.MaxValue. 
+		void StencilWriteMask(Int value);
+		//Gets or sets the write mask applied to values written into the stencil buffer. The default mask is Int32.MaxValue. 
+		Int StencilWriteMask() const;
+		//Gets or sets the stencil operation to perform if the stencil test passes. The default is StencilOperation.Keep. 
+		void StencilPass(StencilOperation value);
+		//Gets or sets the stencil operation to perform if the stencil test passes. The default is StencilOperation.Keep. 
+		StencilOperation StencilPass() const;
+		//Gets or sets the stencil operation to perform if the stencil test passes and the depth-test fails. The default is StencilOperation.Keep. 
+		void StencilDepthBufferFail(StencilOperation value);
+		//Gets or sets the stencil operation to perform if the stencil test passes and the depth-test fails. The default is StencilOperation.Keep. 
+		StencilOperation StencilDepthBufferFail() const;		
 
-		~DepthStencilState() override;
+		//A built-in state object with settings for not using a depth stencil buffer.
+		static uptr<DepthStencilState> None();
+		//A built-in state object with default settings for using a depth stencil buffer.
+		static uptr<DepthStencilState> Default();
+		//A built-in state object with settings for enabling a read-only depth stencil buffer.
+		static uptr<DepthStencilState> DepthRead();
+
 		bool Initialize();
 		bool Apply();
-		
-		void DepthEnabled(bool value);
-		void DepthWriteEnabled(bool value);
-		void DepthCompareFunction(ComparisonFunction value);
-		void StencilEnabled(bool value);
-		void StencilReadMask(Int value);
-		void StencilWriteMask(Int value);
-		void StencilFrontFacePass(StencilOperation value);
-		void StencilFrontFaceFail(StencilOperation value);
-		void StencilFrontFaceDepthFail(StencilOperation value);
-		void StencilFrontFaceCompare(ComparisonFunction value);
-		void StencilBackFacePass(StencilOperation value);
-		void StencilBackFaceFail(StencilOperation value);
-		void StencilBackFaceDepthFail(StencilOperation value);
-		void StencilBackFaceCompare(ComparisonFunction value);
-
-		bool DepthEnabled() const;
-		bool DepthWriteEnabled() const;
-		ComparisonFunction DepthCompareFunction() const;
-		bool StencilEnabled() const;
-		Int StencilReadMask() const;
-		Int StencilWriteMask() const;
-		StencilOperation StencilFrontFacePass() const;
-		StencilOperation StencilFrontFaceFail() const;
-		StencilOperation StencilFrontFaceDepthFail() const;
-		ComparisonFunction StencilFrontFaceCompare() const;
-		StencilOperation StencilBackFacePass() const;
-		StencilOperation StencilBackFaceFail() const;
-		StencilOperation StencilBackFaceDepthFail() const;
-		ComparisonFunction StencilBackFaceCompare() const;
-
-		static uptr<DepthStencilState> None();
-		static uptr<DepthStencilState> Default();
-		static uptr<DepthStencilState> DepthRead();
 
 	public:
 		struct PlatformImplementation;
