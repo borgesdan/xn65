@@ -22,14 +22,13 @@ namespace xna {
 		}
 
 		if (impl->_buffer) {
-			impl->_buffer->Release();
 			impl->_buffer = nullptr;
 		}
 
 		const auto hr = m_device->impl->_device->CreateBuffer(
 			&impl->_description,
 			&impl->_subResource,
-			&impl->_buffer);
+			impl->_buffer.GetAddressOf());
 
 		if (FAILED(hr)) {
 			Exception::Throw(ExMessage::CreateComponent);
@@ -56,7 +55,6 @@ namespace xna {
 		}
 
 		if (impl->_blob) {
-			impl->_blob->Release();
 			impl->_blob = nullptr;
 		}
 
@@ -80,7 +78,7 @@ namespace xna {
 			Exception::Throw(ExMessage::ApplyComponent);
 		}
 
-		m_device->impl->_context->IASetIndexBuffer(impl->dxBuffer, DXGI_FORMAT_R16_UINT, 0);
+		m_device->impl->_context->IASetIndexBuffer(impl->dxBuffer.Get(), DXGI_FORMAT_R16_UINT, 0);
 
 		return true;
 	}
@@ -109,7 +107,7 @@ namespace xna {
 		UINT stride = impl->size;
 		UINT offset = 0;
 		m_device->impl->_context->IASetVertexBuffers(0, 1,
-			&impl->dxBuffer, &stride, &offset);
+			impl->dxBuffer.GetAddressOf(), &stride, &offset);
 
 		return true;
 	}
@@ -132,7 +130,6 @@ namespace xna {
 		}
 
 		if (impl->_inputLayout) {
-			impl->_inputLayout->Release();
 			impl->_inputLayout = nullptr;
 		}
 
@@ -141,7 +138,7 @@ namespace xna {
 			static_cast<UINT>(impl->_description.size()),
 			blob.impl->_blob->GetBufferPointer(),
 			blob.impl->_blob->GetBufferSize(),
-			&impl->_inputLayout);
+			impl->_inputLayout.GetAddressOf());
 
 		if (FAILED(hr)) {
 			Exception::Throw(ExMessage::CreateComponent);

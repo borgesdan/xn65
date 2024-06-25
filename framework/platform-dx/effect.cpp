@@ -18,9 +18,9 @@ namespace xna {
 			//UINT          FXFlags,
 			0,
 			//ID3D11Device * pDevice,
-			device->impl->_device,
+			device->impl->_device.Get(),
 			//ID3DX11Effect * *ppEffect
-			&impl->dxEffect
+			impl->dxEffect.ReleaseAndGetAddressOf()
 		);
 
 		if FAILED(result)
@@ -331,7 +331,7 @@ namespace xna {
 		if (!impl->dxPass)
 			throw std::runtime_error("EffectPass::Apply: The class was not initialized correctly");
 
-		const auto hr = impl->dxPass->Apply(0, impl->dxContext);
+		const auto hr = impl->dxPass->Apply(0, impl->dxContext.Get());
 
 		if FAILED(hr)
 			throw std::runtime_error("EffectPass::Apply: error to call Apply");
@@ -399,14 +399,12 @@ namespace xna {
 			auto current = impl->dxTechnique->GetPassByIndex(i);
 
 			auto pass = snew<EffectPass>();
-			pass->impl->dxPass = current;
-			pass->impl->dxPass->AddRef();
+			pass->impl->dxPass.Attach(current);
 
 			current->Release();
 			current = nullptr;
 
 			pass->impl->dxContext = impl->dxContext;
-			pass->impl->dxContext->AddRef();
 
 			list[i] = pass;
 		}
@@ -580,8 +578,7 @@ namespace xna {
 				break;
 
 			auto efparam = snew<EffectParameter>();
-			efparam->impl->dxVariable = el;
-			efparam->impl->dxVariable->AddRef();
+			efparam->impl->dxVariable.Attach(el);
 
 			el->Release();
 			el = nullptr;
@@ -603,8 +600,7 @@ namespace xna {
 				break;
 
 			auto efparam = snew<EffectParameter>();
-			efparam->impl->dxVariable = member;
-			efparam->impl->dxVariable->AddRef();
+			efparam->impl->dxVariable.Attach(member);
 
 			member->Release();
 			member = nullptr;

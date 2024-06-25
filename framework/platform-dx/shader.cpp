@@ -68,15 +68,14 @@ namespace xna {
         }
 
         if (impl->_vertexShader) {
-            impl->_vertexShader->Release();
-            impl->_vertexShader = nullptr;
+            impl->_vertexShader.ReleaseAndGetAddressOf();
         }
 
         const auto hr = m_device->impl->_device->CreateVertexShader(
             buffer.impl->_blob->GetBufferPointer(),
             buffer.impl->_blob->GetBufferSize(),
             NULL,
-            &impl->_vertexShader);
+            impl->_vertexShader.GetAddressOf());
 
         if (FAILED(hr)) {
             Exception::Throw(ExMessage::CreateComponent);
@@ -92,15 +91,14 @@ namespace xna {
         }
 
         if (impl->_pixelShader) {
-            impl->_pixelShader->Release();
-            impl->_pixelShader = nullptr;
+            impl->_pixelShader.ReleaseAndGetAddressOf();
         }
 
         const auto hr = m_device->impl->_device->CreatePixelShader(
             buffer.impl->_blob->GetBufferPointer(),
             buffer.impl->_blob->GetBufferSize(),
             NULL,
-            &impl->_pixelShader);
+            impl->_pixelShader.GetAddressOf());
 
         if (FAILED(hr)) {
             Exception::Throw(ExMessage::CreateComponent);

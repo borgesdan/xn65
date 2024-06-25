@@ -22,13 +22,12 @@ namespace xna {
 		}
 
 		if (impl->dxRasterizerState) {
-			impl->dxRasterizerState->Release();
 			impl->dxRasterizerState = nullptr;
 		}
 
 		const auto hr = m_device->impl->_device->CreateRasterizerState(
 			&impl->dxDescription, 
-			&impl->dxRasterizerState);
+			impl->dxRasterizerState.GetAddressOf());
 
 		if (FAILED(hr)) {
 			Exception::Throw(ExMessage::CreateComponent);
@@ -47,7 +46,7 @@ namespace xna {
 			Exception::Throw(ExMessage::UnintializedComponent);
 		}
 
-		m_device->impl->_context->RSSetState(impl->dxRasterizerState);
+		m_device->impl->_context->RSSetState(impl->dxRasterizerState.Get());
 
 		return true;
 	}

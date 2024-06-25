@@ -102,13 +102,12 @@ namespace xna {
 		}
 
 		if (impl->dxBlendState) {
-			impl->dxBlendState->Release();
 			impl->dxBlendState = nullptr;
 		}
 
 		const auto hr = m_device->impl->_device->CreateBlendState(
 			&impl->dxDescription,
-			&impl->dxBlendState);
+			impl->dxBlendState.GetAddressOf());
 
 		if (FAILED(hr)) {
 			Exception::Throw(ExMessage::CreateComponent);
@@ -127,7 +126,7 @@ namespace xna {
 		}
 
 		m_device->impl->_context->OMSetBlendState(
-			impl->dxBlendState,
+			impl->dxBlendState.Get(),
 			impl->blendFactor,
 			impl->sampleMask);
 

@@ -63,7 +63,7 @@ namespace xna {
 		impl = unew<PlatformImplementation>();
 		impl->_dxSpriteFont = unew<DxSpriteFont>(
 			//ID3D11ShaderResourceView* texture
-			texture->impl->dxShaderResource,
+			texture->impl->dxShaderResource.Get(),
 			//Glyph const* glyphs
 			dxGlyps.data(),
 			//size_t glyphCount
@@ -130,7 +130,7 @@ namespace xna {
 		implementation = unew<PlatformImplementation>();
 		implementation->_dxspriteBatch = snew<DxSpriteBatch>(
 			//ID3D11DeviceContext* deviceContext
-			device->impl->_context
+			device->impl->_context.Get()
 		);
 
 		Viewport(device->Viewport());
@@ -154,10 +154,10 @@ namespace xna {
 
 		implementation->_dxspriteBatch->Begin(
 			sort,
-			blendState ? blendState->impl->dxBlendState : nullptr,
-			samplerState ? samplerState->impl->_samplerState : nullptr,
-			depthStencil ? depthStencil->impl->dxDepthStencil : nullptr,
-			rasterizerState ? rasterizerState->impl->dxRasterizerState : nullptr,
+			blendState ? blendState->impl->dxBlendState.Get() : nullptr,
+			samplerState ? samplerState->impl->_samplerState.Get() : nullptr,
+			depthStencil ? depthStencil->impl->dxDepthStencil.Get() : nullptr,
+			rasterizerState ? rasterizerState->impl->dxRasterizerState.Get() : nullptr,
 			nullptr,
 			matrix
 		);
@@ -182,7 +182,7 @@ namespace xna {
 		XMVECTORF32 _color = { v4.X, v4.Y, v4.Z, v4.W };
 
 		implementation->_dxspriteBatch->Draw(
-			texture.impl->dxShaderResource,
+			texture.impl->dxShaderResource.Get(),
 			_position,
 			_color
 		);
@@ -209,7 +209,7 @@ namespace xna {
 		};
 
 		implementation->_dxspriteBatch->Draw(
-			texture.impl->dxShaderResource,
+			texture.impl->dxShaderResource.Get(),
 			_position,
 			sourceRectangle ? &_sourceRect : nullptr,
 			_color);
@@ -239,7 +239,7 @@ namespace xna {
 		const DxSpriteEffects _effects = static_cast<DxSpriteEffects>(effects);
 
 		implementation->_dxspriteBatch->Draw(
-			texture.impl->dxShaderResource,
+			texture.impl->dxShaderResource.Get(),
 			_position,
 			sourceRectangle ? &_sourceRect : nullptr,
 			_color,
@@ -275,7 +275,7 @@ namespace xna {
 		const XMFLOAT2 _scale = { scale.X, scale.Y };
 
 		implementation->_dxspriteBatch->Draw(
-			texture.impl->dxShaderResource,
+			texture.impl->dxShaderResource.Get(),
 			_position,
 			sourceRectangle ? &_sourceRect : nullptr,
 			_color,
@@ -302,7 +302,7 @@ namespace xna {
 		const auto v4 = color.ToVector4();
 		const XMVECTORF32 _color = { v4.X, v4.Y, v4.Z, v4.W };
 
-		implementation->_dxspriteBatch->Draw(texture.impl->dxShaderResource, _destinationRect, _color);
+		implementation->_dxspriteBatch->Draw(texture.impl->dxShaderResource.Get(), _destinationRect, _color);
 	}
 
 	void SpriteBatch::Draw(Texture2D& texture, Rectangle const& destinationRectangle, std::optional<Rectangle> const& sourceRectangle, Color const& color) {
@@ -330,7 +330,7 @@ namespace xna {
 			_sourceRect.bottom = sourceRectangle->Y + sourceRectangle->Height;
 		};
 
-		implementation->_dxspriteBatch->Draw(texture.impl->dxShaderResource, _destinationRect, sourceRectangle ? &_sourceRect : nullptr, _color);
+		implementation->_dxspriteBatch->Draw(texture.impl->dxShaderResource.Get(), _destinationRect, sourceRectangle ? &_sourceRect : nullptr, _color);
 	}
 
 	void SpriteBatch::Draw(Texture2D& texture, Rectangle const& destinationRectangle, std::optional<Rectangle> const& sourceRectangle, Color const& color, float rotation, Vector2 const& origin, SpriteEffects effects, float layerDepth) {
@@ -362,7 +362,7 @@ namespace xna {
 		const auto _effects = static_cast<DxSpriteEffects>(effects);
 
 		implementation->_dxspriteBatch->Draw(
-			texture.impl->dxShaderResource,
+			texture.impl->dxShaderResource.Get(),
 			_destinationRect,
 			sourceRectangle ? &_sourceRect : nullptr,
 			_color,

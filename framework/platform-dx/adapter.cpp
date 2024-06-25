@@ -12,14 +12,14 @@ namespace xna {
 	}
 
 	uptr<GraphicsAdapter> GraphicsAdapter::DefaultAdapter() {
-		IDXGIFactory1* pFactory = nullptr;
+		comptr<IDXGIFactory1> pFactory = nullptr;
 
-		if FAILED(CreateDXGIFactory1(__uuidof(IDXGIFactory1), (void**)&pFactory))
+		if FAILED(CreateDXGIFactory1(__uuidof(IDXGIFactory1), (void**)pFactory.GetAddressOf()))
 			Exception::Throw(ExMessage::CreateComponent);
 
-		IDXGIAdapter1* pAdapter = nullptr;
+		comptr<IDXGIAdapter1> pAdapter = nullptr;
 		
-		if (pFactory->EnumAdapters1(0, &pAdapter) != DXGI_ERROR_NOT_FOUND) {
+		if (pFactory->EnumAdapters1(0, pAdapter.GetAddressOf()) != DXGI_ERROR_NOT_FOUND) {
 			auto adp = unew<GraphicsAdapter>();
 
 			adp->impl->_index = 0;
@@ -28,22 +28,19 @@ namespace xna {
 			return adp;
 		}
 
-		pFactory->Release();
-		pFactory = nullptr;
-
 		return nullptr;
 	}
 
 	void GraphicsAdapter::Adapters(std::vector<uptr<GraphicsAdapter>>& adapters) {
-		IDXGIFactory1* pFactory = nullptr;
+		comptr<IDXGIFactory1> pFactory = nullptr;
 
-		if FAILED(CreateDXGIFactory1(__uuidof(IDXGIFactory1), (void**)&pFactory))
+		if FAILED(CreateDXGIFactory1(__uuidof(IDXGIFactory1), (void**)pFactory.GetAddressOf()))
 			Exception::Throw(ExMessage::CreateComponent);
 
-		IDXGIAdapter1* pAdapter = nullptr;
+		comptr<IDXGIAdapter1> pAdapter = nullptr;
 		UINT count = 0;
 
-		for (; pFactory->EnumAdapters1(count, &pAdapter) != DXGI_ERROR_NOT_FOUND; ++count) {
+		for (; pFactory->EnumAdapters1(count, pAdapter.GetAddressOf()) != DXGI_ERROR_NOT_FOUND; ++count) {
 			auto adp = unew<GraphicsAdapter>();
 
 			adp->impl->_index = count;
@@ -51,9 +48,6 @@ namespace xna {
 
 			adapters.push_back(std::move(adp));
 		}
-
-		pFactory->Release();
-		pFactory = nullptr;
 	}	
 
 	String GraphicsAdapter::Description() const {
@@ -141,7 +135,7 @@ namespace xna {
 	uptr<DisplayModeCollection> GraphicsAdapter::SupportedDisplayModes() const {
 		if (!impl->dxadapter) return nullptr;
 
-		const auto totalDisplay = getDisplayModesCount(impl->dxadapter);
+		const auto totalDisplay = getDisplayModesCount(impl->dxadapter.Get());
 
 		if (totalDisplay == 0)
 			return nullptr;

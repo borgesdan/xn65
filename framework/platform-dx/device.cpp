@@ -26,16 +26,16 @@ namespace xna {
 		createDeviceFlags = D3D11_CREATE_DEVICE_FLAG::D3D11_CREATE_DEVICE_DEBUG;
 #endif        
 		auto hr = D3D11CreateDevice(
-			impl._adapter->impl->dxadapter,
+			impl._adapter->impl->dxadapter.Get(),
 			D3D_DRIVER_TYPE_UNKNOWN,
 			NULL,
 			createDeviceFlags,
 			NULL,
 			0,
 			D3D11_SDK_VERSION,
-			&impl._device,
+			impl._device.GetAddressOf(),
 			&impl._featureLevel,
-			&impl._context);
+			impl._context.GetAddressOf());
 
 		if (FAILED(hr)) {
 			OutputDebugString("---> Usando Adaptador WARP: não há suporte ao D3D11\n");
@@ -48,9 +48,9 @@ namespace xna {
 				NULL,
 				0,
 				D3D11_SDK_VERSION,
-				&impl._device,
+				impl._device.GetAddressOf(),
 				&impl._featureLevel,
-				&impl._context);
+				impl._context.GetAddressOf());
 
 			if FAILED(hr)
 				Exception::Throw(ExMessage::CreateComponent);
@@ -156,7 +156,10 @@ namespace xna {
 		if (!impl) return false;
 
 		const auto result = impl->_swapChain->Present(impl->_usevsync);
-		impl->_context->OMSetRenderTargets(1, &impl->_renderTarget2D->render_impl->_renderTargetView, nullptr);
+		impl->_context->OMSetRenderTargets(
+			1, 
+			impl->_renderTarget2D->render_impl->_renderTargetView.GetAddressOf(), 
+			nullptr);
 
 		return result;
 	}		
@@ -172,7 +175,7 @@ namespace xna {
 		impl->_backgroundColor[3] = v4.W;
 		
 		impl->_context->ClearRenderTargetView(
-			impl->_renderTarget2D->render_impl->_renderTargetView, 
+			impl->_renderTarget2D->render_impl->_renderTargetView.Get(),
 			impl->_backgroundColor);
 	}
 

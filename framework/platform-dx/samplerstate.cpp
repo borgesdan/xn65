@@ -16,13 +16,12 @@ namespace xna {
 		}
 
 		if (impl->_samplerState) {
-			impl->_samplerState->Release();
 			impl->_samplerState = nullptr;
 		}
 
 		const auto hr = m_device->impl->_device->CreateSamplerState(
 			&impl->_description,
-			&impl->_samplerState);
+			impl->_samplerState.GetAddressOf());
 
 		if (FAILED(hr)) {
 			Exception::Throw(ExMessage::CreateComponent);
@@ -41,7 +40,7 @@ namespace xna {
 			Exception::Throw(ExMessage::UnintializedComponent);
 		}
 
-		m_device->impl->_context->PSSetSamplers(0, 1, &impl->_samplerState);
+		m_device->impl->_context->PSSetSamplers(0, 1, impl->_samplerState.GetAddressOf());
 
 		return true;
 	}
@@ -62,7 +61,7 @@ namespace xna {
 			if (!current || !current->impl || !current->impl->_samplerState)
 				Exception::Throw(ExMessage::InvalidOperation);
 
-			states[i] = current->impl->_samplerState;
+			states[i] = current->impl->_samplerState.Get();
 			states[i]->AddRef();
 		}
 
