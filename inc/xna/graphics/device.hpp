@@ -32,9 +32,10 @@ namespace xna {
 		Int MultiSampleMask() const;
 		//Gets or sets a bitmask controlling modification of the samples in a multisample render target. The default value is -1 (0xffffffff). 
 		void MultiSampleMask(Int value);
-
-		void Clear();
+		
 		void Clear(Color const& color);
+		void Clear(ClearOptions options, Color const& color, float depth, Int stencil);
+		void Clear(ClearOptions options, Vector4 const& color, float depth, Int stencil);
 		bool Initialize();
 		bool Present();
 

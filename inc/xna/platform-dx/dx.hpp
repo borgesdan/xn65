@@ -951,24 +951,7 @@ namespace xna {
 				_factory->Release();
 				_factory = nullptr;
 			}
-		}	
-
-	private:
-		void InitializeAndApplyStates(PGraphicsDevice const& device) {
-			_blendState->Bind(device);
-			_blendState->Initialize();
-			_blendState->Apply();
-
-			_rasterizerState->Bind(device);
-			_rasterizerState->Initialize();
-			_rasterizerState->Apply();
-
-			_depthStencilState->Bind(device);
-			_depthStencilState->Initialize();
-			_depthStencilState->Apply();
-
-			_samplerStates->Apply(*device);
-		}
+		}		
 
 	public:
 		ID3D11Device* _device = nullptr;

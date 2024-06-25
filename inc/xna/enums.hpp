@@ -114,6 +114,12 @@ namespace xna {
         Pressed,
     };
 
+    enum class ClearOptions {
+        DepthBuffer,
+        Stencil,
+        Target,
+    };
+
 	enum class ColorWriteChannels {
 		Red,
 		Green,

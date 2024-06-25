@@ -16,6 +16,7 @@ namespace xna {
 		inline static const std::string UnintializedComponent = "Component is not initialized";
 		inline static const std::string MakeWindowAssociation = "Failed to create association with window";
 		inline static const std::string BuildObject = "Unable to build object";
+		inline static const std::string NotImplemented = "Not Implemented";
 	};
 
 	//Structure for throwing exceptions with a message and information from the source file

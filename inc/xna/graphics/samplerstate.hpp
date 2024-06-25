@@ -91,6 +91,10 @@ namespace xna {
 			return samplers[index];
 		}
 
+		constexpr size_t Count() const {
+			return samplers.size();
+		}
+
 		void Apply(GraphicsDevice const& device);
 
 	public:
