@@ -43,7 +43,6 @@
 #include "graphics/rasterizerstate.hpp"
 #include "graphics/rendertarget.hpp"
 #include "graphics/samplerstate.hpp"
-#include "graphics/shader.hpp"
 #include "graphics/sprite.hpp"
 #include "graphics/swapchain.hpp"
 #include "graphics/texture.hpp"

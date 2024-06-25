@@ -66,7 +66,6 @@ using comptr = Microsoft::WRL::ComPtr<T>;
 #include "../graphics/device.hpp"
 #include "../graphics/adapter.hpp"
 #include "../graphics/blendstate.hpp"
-#include "../graphics/buffer.hpp"
 #include "../graphics/depthstencilstate.hpp"
 #include "../graphics/displaymode.hpp"
 #include "../graphics/sprite.hpp"
@@ -77,7 +76,6 @@ using comptr = Microsoft::WRL::ComPtr<T>;
 #include "../input/mouse.hpp"
 #include "../graphics/rasterizerstate.hpp"
 #include "../graphics/presentparams.hpp"
-#include "../graphics/shader.hpp"
 #include "../graphics/swapchain.hpp"
 #include "../graphics/texture.hpp"
 #include "../graphics/rendertarget.hpp"
@@ -541,22 +539,7 @@ namespace xna {
 		D3D11_BLEND_DESC dxDescription{};
 		float blendFactor[4]{ 1.0F, 1.0F, 1.0F, 1.0F };
 		UINT sampleMask{ 0xffffffff };
-	};
-
-	struct ConstantBuffer::PlatformImplementation {
-		D3D11_BUFFER_DESC _description{};
-		D3D11_SUBRESOURCE_DATA _subResource{};
-		comptr<ID3D11Buffer> _buffer = nullptr;
-		DirectX::XMMATRIX _worldViewProjection{};
-	};
-
-	struct DataBuffer::PlatformImplementation {
-		comptr<ID3DBlob> _blob = nullptr;
-
-		void Set(comptr<ID3DBlob> const& blob) {
-			_blob = blob;
-		}
-	};
+	};	
 
 	struct DepthStencilState::PlatformImplementation {
 		comptr<ID3D11DepthStencilState> dxDepthStencil = nullptr;
@@ -611,10 +594,6 @@ namespace xna {
 		}
 	};
 
-	struct IndexBuffer::PlatformImplementation {
-		comptr<ID3D11Buffer> dxBuffer = nullptr;
-	};
-
 	struct Keyboard::PlatformImplementation {
 		uptr<DirectX::Keyboard> _dxKeyboard = unew<DirectX::Keyboard>();
 
@@ -641,15 +620,7 @@ namespace xna {
 	struct SamplerState::PlatformImplementation {
 		comptr<ID3D11SamplerState> _samplerState = nullptr;
 		D3D11_SAMPLER_DESC _description{};
-	};
-
-	struct VertexShader::PlatformImplementation {
-		comptr<ID3D11VertexShader> _vertexShader = nullptr;
-	};
-
-	struct PixelShader::PlatformImplementation {
-		comptr<ID3D11PixelShader> _pixelShader = nullptr;
-	};
+	};	
 
 	struct SwapChain::PlatformImplementation {
 		comptr<IDXGISwapChain1> dxSwapChain{ nullptr };
@@ -677,17 +648,7 @@ namespace xna {
 	struct RenderTarget2D::PlatformImplementation {		
 		comptr<ID3D11RenderTargetView> _renderTargetView = nullptr;
 		D3D11_RENDER_TARGET_VIEW_DESC _renderTargetDesc{};
-	};
-
-	struct VertexBuffer::PlatformImplementation {
-		comptr<ID3D11Buffer> dxBuffer = nullptr;
-		UINT size{ 0 };
-	};
-
-	struct VertexInputLayout::PlatformImplementation {
-		comptr<ID3D11InputLayout> _inputLayout{ nullptr };
-		std::vector<D3D11_INPUT_ELEMENT_DESC> _description{};
-	};
+	};	
 
 	enum class GameWindowMode : UINT {
 		Fullscreen = WS_POPUP | WS_VISIBLE,
@@ -887,54 +848,6 @@ namespace xna {
 
 	struct EffectParameter::PlatformImplementation {
 		comptr<ID3DX11EffectVariable> dxVariable = nullptr;
-	};
-
-	template <typename T>
-	inline bool IndexBuffer::Initialize(std::vector<T> const& data) {
-		if (!impl || !m_device || !m_device->impl->_device || data.empty()) {
-			Exception::Throw(ExMessage::InitializeComponent);
-		}
-
-		if (impl->dxBuffer) {
-			impl->dxBuffer = nullptr;
-		}
-
-		const auto hr = DirectX::CreateStaticBuffer(
-			m_device->impl->_device.Get(),
-			data.data(),
-			data.size(),
-			sizeof(T), 
-			D3D11_BIND_INDEX_BUFFER, 
-			impl->dxBuffer.GetAddressOf());
-
-		if (FAILED(hr)) {
-			Exception::Throw(ExMessage::CreateComponent);
-		}
-
-		return true;
-	}
-
-	template <typename T>
-	inline bool VertexBuffer::Initialize(std::vector<T> const& data) {
-		if (!impl || !m_device || !m_device->impl->_device || data.empty()) {
-			Exception::Throw(ExMessage::InitializeComponent);
-		}
-
-		const auto hr = DirectX::CreateStaticBuffer(
-			m_device->impl->_device.Get(),
-			data.data(),
-			data.size(),
-			sizeof(T),
-			D3D11_BIND_VERTEX_BUFFER,
-			impl->dxBuffer.GetAddressOf());
-
-		if (FAILED(hr)) {
-			Exception::Throw(ExMessage::CreateComponent);
-		}
-
-		impl->size = sizeof(T);
-
-		return true;
-	}
+	};	
 }
 #endif
