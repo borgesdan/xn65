@@ -20,7 +20,7 @@ namespace xna {
 			SamplerState* samplerState = nullptr,
 			DepthStencilState* depthStencil = nullptr,
 			RasterizerState* rasterizerState = nullptr,
-			//Effect
+			Effect* effect = nullptr,
 			Matrix const& transformMatrix = Matrix::Identity()
 		);
 

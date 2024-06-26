@@ -136,13 +136,12 @@ namespace xna {
 		Viewport(device->Viewport());
 	}	
 
-	void SpriteBatch::Begin(SpriteSortMode sortMode, BlendState* blendState, SamplerState* samplerState, DepthStencilState* depthStencil, RasterizerState* rasterizerState, Matrix const& transformMatrix) {
+	void SpriteBatch::Begin(SpriteSortMode sortMode, BlendState* blendState, SamplerState* samplerState, DepthStencilState* depthStencil, RasterizerState* rasterizerState, Effect* effect, Matrix const& transformMatrix) {
 
 		if (!implementation->_dxspriteBatch)
 			return;
 
-		DxSpriteSortMode sort;
-		DxHelpers::SpriteSortToDx(sortMode, sort);
+		DxSpriteSortMode sort =	DxHelpers::SpriteSortToDx(sortMode);
 
 		const auto& t = transformMatrix;
 		DxMatrix matrix = DxMatrix(
@@ -150,7 +149,6 @@ namespace xna {
 			t.M21, t.M22, t.M23, t.M24,
 			t.M31, t.M32, t.M33, t.M34,
 			t.M41, t.M42, t.M43, t.M44);
-
 
 		implementation->_dxspriteBatch->Begin(
 			sort,

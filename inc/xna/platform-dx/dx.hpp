@@ -99,8 +99,8 @@ namespace xna {
 	//==============================================//
 
 	struct DxHelpers {
-		static constexpr void SpriteSortToDx(SpriteSortMode value, DirectX::SpriteSortMode& target) {
-			target = static_cast<DirectX::SpriteSortMode>(static_cast<int>(value));
+		static constexpr DirectX::SpriteSortMode SpriteSortToDx(SpriteSortMode value) {
+			return static_cast<DirectX::SpriteSortMode>(static_cast<int>(value));
 		}
 
 		static constexpr DXGI_FORMAT SurfaceFormatToDx(SurfaceFormat format)
@@ -152,7 +152,7 @@ namespace xna {
 			}
 		}
 
-		static constexpr SurfaceFormat ConvertDXGIFORMATToSurface(DXGI_FORMAT format) {
+		static constexpr SurfaceFormat SurfaceFormatToXna(DXGI_FORMAT format) {
 			switch (format)
 			{
 			case DXGI_FORMAT_R8G8B8A8_UNORM:
@@ -197,7 +197,7 @@ namespace xna {
 			}
 		}
 
-		static constexpr Blend ConvertBlendDx(D3D11_BLEND blend) {
+		static constexpr Blend BlendToXna(D3D11_BLEND blend) {
 			switch (blend) {
 			case D3D11_BLEND_ZERO:
 				return Blend::Zero;
@@ -238,7 +238,7 @@ namespace xna {
 			}
 		}
 
-		static constexpr D3D11_BLEND ConvertBlend(Blend blend) {
+		static constexpr D3D11_BLEND BlendToDx(Blend blend) {
 			switch (blend)
 			{
 			case xna::Blend::Zero:
@@ -280,15 +280,15 @@ namespace xna {
 			}
 		}
 
-		static constexpr D3D11_BLEND_OP ConvertOperation(BlendOperation op) {
+		static constexpr D3D11_BLEND_OP BlendOperationToDx(BlendOperation op) {
 			return static_cast<D3D11_BLEND_OP>(static_cast<int>(op) + 1);
 		}
 
-		static constexpr BlendOperation ConvertOperationDx(D3D11_BLEND_OP op) {
+		static constexpr BlendOperation BlendOperationToXna(D3D11_BLEND_OP op) {
 			return static_cast<BlendOperation>(static_cast<int>(op) - 1);
 		}
 
-		static constexpr D3D11_COLOR_WRITE_ENABLE ConvertColorWrite(ColorWriteChannels colorWrite) {
+		static constexpr D3D11_COLOR_WRITE_ENABLE ColorWriteChannelsToDx(ColorWriteChannels colorWrite) {
 			switch (colorWrite)
 			{
 			case xna::ColorWriteChannels::Red:
@@ -306,12 +306,12 @@ namespace xna {
 			}
 		}
 
-		static constexpr void ConvertAddressMode(TextureAddressMode value, D3D11_TEXTURE_ADDRESS_MODE& target) {
-			target = static_cast<D3D11_TEXTURE_ADDRESS_MODE>(static_cast<int>(value) + 1);
+		static constexpr D3D11_TEXTURE_ADDRESS_MODE TextureAddresModeToDx(TextureAddressMode value) {
+			return static_cast<D3D11_TEXTURE_ADDRESS_MODE>(static_cast<int>(value) + 1);
 		}
 
-		static constexpr void ConvertAddressMode(D3D11_TEXTURE_ADDRESS_MODE value, TextureAddressMode& target) {
-			target = static_cast<TextureAddressMode>(value - 1);
+		static constexpr TextureAddressMode TextureAddresModeToXna(D3D11_TEXTURE_ADDRESS_MODE value) {
+			return static_cast<TextureAddressMode>(value - 1);
 		}
 	};
 

@@ -270,14 +270,14 @@ namespace xna {
 			description._scaling = static_cast<DisplayModeScaling>(modedesc.Scaling);
 			description._scanlineOrdering = static_cast<DisplayModeScanlineOrder>(modedesc.ScanlineOrdering);
 
-			if (pDisplay && pDisplay->Width == modedesc.Width && pDisplay->Height == modedesc.Height && pDisplay->Format == DxHelpers::ConvertDXGIFORMATToSurface(modedesc.Format)) {
+			if (pDisplay && pDisplay->Width == modedesc.Width && pDisplay->Height == modedesc.Height && pDisplay->Format == DxHelpers::SurfaceFormatToXna(modedesc.Format)) {
 				pDisplay->impl->Descriptions.push_back(description);
 			}
 			else {
 				pDisplay = snew<DisplayMode>();
 				pDisplay->Width = modedesc.Width;
 				pDisplay->Height = modedesc.Height;
-				pDisplay->Format = DxHelpers::ConvertDXGIFORMATToSurface(modedesc.Format);
+				pDisplay->Format = DxHelpers::SurfaceFormatToXna(modedesc.Format);
 				pDisplay->impl->Descriptions.push_back(description);
 				displayList.push_back(pDisplay);
 			}

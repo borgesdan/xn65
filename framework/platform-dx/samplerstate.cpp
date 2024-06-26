@@ -163,15 +163,15 @@ namespace xna {
 	}
 
 	void SamplerState::AddressU(TextureAddressMode value) {
-		DxHelpers::ConvertAddressMode(value, impl->_description.AddressU);
+		impl->_description.AddressU = DxHelpers::TextureAddresModeToDx(value);
 	}
 
 	void SamplerState::AddressV(TextureAddressMode value) {
-		DxHelpers::ConvertAddressMode(value, impl->_description.AddressV);
+		impl->_description.AddressV = DxHelpers::TextureAddresModeToDx(value);
 	}
 
 	void SamplerState::AddressW(TextureAddressMode value) {
-		DxHelpers::ConvertAddressMode(value, impl->_description.AddressW);
+		impl->_description.AddressW = DxHelpers::TextureAddresModeToDx(value);
 	}
 
 	void SamplerState::Comparison(ComparisonFunction value) {
@@ -221,21 +221,15 @@ namespace xna {
 	}
 
 	TextureAddressMode SamplerState::AddressU() const {
-		TextureAddressMode mode;
-		DxHelpers::ConvertAddressMode(impl->_description.AddressU, mode);
-		return mode;
+		return DxHelpers::TextureAddresModeToXna(impl->_description.AddressU);
 	}
 
-	TextureAddressMode SamplerState::AddressV() const {
-		TextureAddressMode mode;
-		DxHelpers::ConvertAddressMode(impl->_description.AddressV, mode);
-		return mode;
+	TextureAddressMode SamplerState::AddressV() const {		
+		return DxHelpers::TextureAddresModeToXna(impl->_description.AddressV);
 	}
 
-	TextureAddressMode SamplerState::AddressW() const {
-		TextureAddressMode mode;
-		DxHelpers::ConvertAddressMode(impl->_description.AddressW, mode);
-		return mode;
+	TextureAddressMode SamplerState::AddressW() const {		
+		return DxHelpers::TextureAddresModeToXna(impl->_description.AddressW);
 	}
 
 	ComparisonFunction SamplerState::Comparison() const {

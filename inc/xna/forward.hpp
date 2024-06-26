@@ -62,6 +62,7 @@ namespace xna {
 	class DepthStencilState;
 	class DisplayMode;
 	class DisplayModeCollection;
+	class Effect;
 	class GraphicsAdapter;
 	class GraphicsDevice;
 	class GraphicsDeviceInformation;
