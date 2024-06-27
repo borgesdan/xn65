@@ -87,7 +87,7 @@ namespace xna {
 
 	public:
 		struct PlatformImplementation;
-		uptr<PlatformImplementation> implementation = nullptr;
+		uptr<PlatformImplementation> impl = nullptr;		
 	};
 
 	//Represents a font texture.

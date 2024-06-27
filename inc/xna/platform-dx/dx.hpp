@@ -572,6 +572,7 @@ namespace xna {
 
 	struct SpriteBatch::PlatformImplementation {
 		sptr<DirectX::SpriteBatch> _dxspriteBatch = nullptr;
+		comptr<ID3D11InputLayout> dxInputLayout = nullptr;
 	};
 
 	struct GraphicsAdapter::PlatformImplementation {
