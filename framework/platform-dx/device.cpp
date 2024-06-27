@@ -26,16 +26,16 @@ namespace xna {
 		createDeviceFlags = D3D11_CREATE_DEVICE_FLAG::D3D11_CREATE_DEVICE_DEBUG;
 #endif        
 		auto hr = D3D11CreateDevice(
-			impl._adapter->impl->dxadapter,
+			impl._adapter->impl->dxadapter.Get(),
 			D3D_DRIVER_TYPE_UNKNOWN,
 			NULL,
 			createDeviceFlags,
 			NULL,
 			0,
 			D3D11_SDK_VERSION,
-			&impl._device,
+			impl._device.GetAddressOf(),
 			&impl._featureLevel,
-			&impl._context);
+			impl._context.GetAddressOf());
 
 		if (FAILED(hr)) {
 			OutputDebugString("---> Usando Adaptador WARP: não há suporte ao D3D11\n");
@@ -48,13 +48,29 @@ namespace xna {
 				NULL,
 				0,
 				D3D11_SDK_VERSION,
-				&impl._device,
+				impl._device.GetAddressOf(),
 				&impl._featureLevel,
-				&impl._context);
+				impl._context.GetAddressOf());
 
 			if FAILED(hr)
 				Exception::Throw(ExMessage::CreateComponent);
 		}
+	}
+
+	void initAndApplyState(GraphicsDevice::PlatformImplementation& impl, PGraphicsDevice const& device) {
+		impl._blendState->Bind(device);
+		impl._blendState->Initialize();
+		impl._blendState->Apply();
+
+		impl._rasterizerState->Bind(device);
+		impl._rasterizerState->Initialize();
+		impl._rasterizerState->Apply();
+
+		impl._depthStencilState->Bind(device);
+		impl._depthStencilState->Initialize();
+		impl._depthStencilState->Apply();
+
+		impl._samplerStates->Apply(*device);
 	}
 
 	GraphicsDevice::GraphicsDevice() {		
@@ -131,7 +147,7 @@ namespace xna {
 
 		impl->_context->RSSetViewports(1, &view);
 
-		impl->InitializeAndApplyStates(_this);
+		initAndApplyState(*impl, _this);
 
 		return true;
 	}
@@ -140,16 +156,13 @@ namespace xna {
 		if (!impl) return false;
 
 		const auto result = impl->_swapChain->Present(impl->_usevsync);
-		impl->_context->OMSetRenderTargets(1, &impl->_renderTarget2D->render_impl->_renderTargetView, nullptr);
+		impl->_context->OMSetRenderTargets(
+			1, 
+			impl->_renderTarget2D->render_impl->_renderTargetView.GetAddressOf(), 
+			nullptr);
 
 		return result;
-	}	
-
-	void GraphicsDevice::Clear() {
-		if (!impl) return;
-
-		impl->_context->ClearRenderTargetView(impl->_renderTarget2D->render_impl->_renderTargetView, impl->_backgroundColor);
-	}
+	}		
 
 	void GraphicsDevice::Clear(Color const& color) {
 		if (!impl) return;
@@ -160,10 +173,35 @@ namespace xna {
 		impl->_backgroundColor[1] = v4.Y;
 		impl->_backgroundColor[2] = v4.Z;
 		impl->_backgroundColor[3] = v4.W;
-
+		
 		impl->_context->ClearRenderTargetView(
-			impl->_renderTarget2D->render_impl->_renderTargetView, 
+			impl->_renderTarget2D->render_impl->_renderTargetView.Get(),
 			impl->_backgroundColor);
+	}
+
+	void GraphicsDevice::Clear(ClearOptions options, Color const& color, float depth, Int stencil) {
+		if (!impl) return;
+
+		switch (options)
+		{
+		case xna::ClearOptions::DepthBuffer:
+			Exception::Throw(ExMessage::NotImplemented);
+			break;
+		case xna::ClearOptions::Stencil:
+			Exception::Throw(ExMessage::NotImplemented);
+			break;
+		case xna::ClearOptions::Target:
+			Clear(color);
+			break;
+		default:
+			return;
+		}
+	}
+
+	void GraphicsDevice::Clear(ClearOptions options, Vector4 const& color, float depth, Int stencil) {
+		if (!impl) return;
+
+
 	}
 
 	sptr<GraphicsAdapter> GraphicsDevice::Adapter() const {

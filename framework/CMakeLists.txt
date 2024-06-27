@@ -29,7 +29,7 @@ add_library (Xn65 STATIC
 "platform-dx/blendstate.cpp"
 "platform-dx/game.cpp"
 "platform-dx/gdevicemanager.cpp"
-"platform-dx/shader.cpp"
+
 "platform-dx/rasterizerstate.cpp"
 "platform-dx/samplerstate.cpp"
 "platform-dx/sprite.cpp"
@@ -40,8 +40,8 @@ add_library (Xn65 STATIC
 "platform-dx/soundeffect.cpp"
 "platform-dx/displaymode.cpp"
 "platform-dx/init.cpp"
-"platform-dx/buffer.cpp"
-"platform-dx/audioengine.cpp"  "graphics/gresource.cpp" "platform-dx/effect.cpp")
+
+"platform-dx/audioengine.cpp"  "graphics/gresource.cpp" "platform-dx/effect.cpp" "platform-dx/impl.cpp")
 
 if (CMAKE_VERSION VERSION_GREATER 3.12)
   set_property(TARGET Xn65 PROPERTY CXX_STANDARD 20)

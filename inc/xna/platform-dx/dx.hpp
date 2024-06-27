@@ -66,7 +66,6 @@ using comptr = Microsoft::WRL::ComPtr<T>;
 #include "../graphics/device.hpp"
 #include "../graphics/adapter.hpp"
 #include "../graphics/blendstate.hpp"
-#include "../graphics/buffer.hpp"
 #include "../graphics/depthstencilstate.hpp"
 #include "../graphics/displaymode.hpp"
 #include "../graphics/sprite.hpp"
@@ -77,7 +76,6 @@ using comptr = Microsoft::WRL::ComPtr<T>;
 #include "../input/mouse.hpp"
 #include "../graphics/rasterizerstate.hpp"
 #include "../graphics/presentparams.hpp"
-#include "../graphics/shader.hpp"
 #include "../graphics/swapchain.hpp"
 #include "../graphics/texture.hpp"
 #include "../graphics/rendertarget.hpp"
@@ -101,8 +99,73 @@ namespace xna {
 	//==============================================//
 
 	struct DxHelpers {
-		static constexpr void SpriteSortToDx(SpriteSortMode value, DirectX::SpriteSortMode& target) {
-			target = static_cast<DirectX::SpriteSortMode>(static_cast<int>(value));
+		static constexpr DirectX::XMVECTOR VectorToDx(Vector2 const& value) {
+			DirectX::XMVECTOR v;
+
+			v.m128_f32[0] = value.X;
+			v.m128_f32[1] = value.Y;
+
+			return v;
+		}
+
+
+		static constexpr DirectX::XMVECTOR VectorToDx(Vector3 const& value) {
+			DirectX::XMVECTOR v;
+
+			v.m128_f32[0] = value.X;
+			v.m128_f32[1] = value.Y;
+			v.m128_f32[2] = value.Z;
+
+			return v;
+		}
+
+		static constexpr DirectX::XMFLOAT3 Vector3ToDx(Vector3 const& value) {
+			DirectX::XMFLOAT3 v;
+
+			v.x = value.X;
+			v.y = value.Y;
+			v.z = value.Z;
+
+			return v;
+		}
+
+		static constexpr DirectX::XMVECTOR VectorToDx(Vector4 const& value) {
+			DirectX::XMVECTOR v;
+
+			v.m128_f32[0] = value.X;
+			v.m128_f32[1] = value.Y;
+			v.m128_f32[2] = value.Z;
+			v.m128_f32[3] = value.W;
+
+			return v;
+		}
+
+		static constexpr DirectX::XMMATRIX MatrixToDx(Matrix const& value) {
+			auto m = DirectX::XMMATRIX(
+				value.M11,
+				value.M12,
+				value.M13,
+				value.M14,
+				value.M21,
+				value.M22,
+				value.M23,
+				value.M24,
+				value.M31,
+				value.M32,
+				value.M33,
+				value.M34,
+				value.M41,
+				value.M42,
+				value.M43,
+				value.M44
+			);
+
+			return m;
+		}
+
+
+		static constexpr DirectX::SpriteSortMode SpriteSortToDx(SpriteSortMode value) {
+			return static_cast<DirectX::SpriteSortMode>(static_cast<int>(value));
 		}
 
 		static constexpr DXGI_FORMAT SurfaceFormatToDx(SurfaceFormat format)
@@ -154,7 +217,7 @@ namespace xna {
 			}
 		}
 
-		static constexpr SurfaceFormat ConvertDXGIFORMATToSurface(DXGI_FORMAT format) {
+		static constexpr SurfaceFormat SurfaceFormatToXna(DXGI_FORMAT format) {
 			switch (format)
 			{
 			case DXGI_FORMAT_R8G8B8A8_UNORM:
@@ -199,7 +262,7 @@ namespace xna {
 			}
 		}
 
-		static constexpr Blend ConvertBlendDx(D3D11_BLEND blend) {
+		static constexpr Blend BlendToXna(D3D11_BLEND blend) {
 			switch (blend) {
 			case D3D11_BLEND_ZERO:
 				return Blend::Zero;
@@ -240,7 +303,7 @@ namespace xna {
 			}
 		}
 
-		static constexpr D3D11_BLEND ConvertBlend(Blend blend) {
+		static constexpr D3D11_BLEND BlendToDx(Blend blend) {
 			switch (blend)
 			{
 			case xna::Blend::Zero:
@@ -282,15 +345,15 @@ namespace xna {
 			}
 		}
 
-		static constexpr D3D11_BLEND_OP ConvertOperation(BlendOperation op) {
+		static constexpr D3D11_BLEND_OP BlendOperationToDx(BlendOperation op) {
 			return static_cast<D3D11_BLEND_OP>(static_cast<int>(op) + 1);
 		}
 
-		static constexpr BlendOperation ConvertOperationDx(D3D11_BLEND_OP op) {
+		static constexpr BlendOperation BlendOperationToXna(D3D11_BLEND_OP op) {
 			return static_cast<BlendOperation>(static_cast<int>(op) - 1);
 		}
 
-		static constexpr D3D11_COLOR_WRITE_ENABLE ConvertColorWrite(ColorWriteChannels colorWrite) {
+		static constexpr D3D11_COLOR_WRITE_ENABLE ColorWriteChannelsToDx(ColorWriteChannels colorWrite) {
 			switch (colorWrite)
 			{
 			case xna::ColorWriteChannels::Red:
@@ -308,12 +371,12 @@ namespace xna {
 			}
 		}
 
-		static constexpr void ConvertAddressMode(TextureAddressMode value, D3D11_TEXTURE_ADDRESS_MODE& target) {
-			target = static_cast<D3D11_TEXTURE_ADDRESS_MODE>(static_cast<int>(value) + 1);
+		static constexpr D3D11_TEXTURE_ADDRESS_MODE TextureAddresModeToDx(TextureAddressMode value) {
+			return static_cast<D3D11_TEXTURE_ADDRESS_MODE>(static_cast<int>(value) + 1);
 		}
 
-		static constexpr void ConvertAddressMode(D3D11_TEXTURE_ADDRESS_MODE value, TextureAddressMode& target) {
-			target = static_cast<TextureAddressMode>(value - 1);
+		static constexpr TextureAddressMode TextureAddresModeToXna(D3D11_TEXTURE_ADDRESS_MODE value) {
+			return static_cast<TextureAddressMode>(value - 1);
 		}
 	};
 
@@ -509,17 +572,12 @@ namespace xna {
 
 	struct SpriteBatch::PlatformImplementation {
 		sptr<DirectX::SpriteBatch> _dxspriteBatch = nullptr;
+		comptr<ID3D11InputLayout> dxInputLayout = nullptr;
 	};
 
 	struct GraphicsAdapter::PlatformImplementation {
-		~PlatformImplementation() {
-			if (dxadapter) {
-				dxadapter->Release();
-				dxadapter = nullptr;
-			}
-		}
+		comptr<IDXGIAdapter1> dxadapter = nullptr;
 
-		IDXGIAdapter1* dxadapter = nullptr;
 	private:
 		friend class GraphicsAdapter;
 		Uint _index{ 0 };
@@ -543,57 +601,14 @@ namespace xna {
 	};
 
 	struct BlendState::PlatformImplementation {
-		~PlatformImplementation() {
-			if (dxBlendState) {
-				dxBlendState->Release();
-				dxBlendState = nullptr;
-			}
-		}
-
-		ID3D11BlendState* dxBlendState = nullptr;
+		comptr<ID3D11BlendState> dxBlendState = nullptr;
 		D3D11_BLEND_DESC dxDescription{};
 		float blendFactor[4]{ 1.0F, 1.0F, 1.0F, 1.0F };
 		UINT sampleMask{ 0xffffffff };
-	};
-
-	struct ConstantBuffer::PlatformImplementation {
-		~PlatformImplementation() {
-			if (_buffer) {
-				_buffer->Release();
-				_buffer = nullptr;
-			}
-		}
-
-		D3D11_BUFFER_DESC _description{};
-		D3D11_SUBRESOURCE_DATA _subResource{};
-		ID3D11Buffer* _buffer = nullptr;
-		DirectX::XMMATRIX _worldViewProjection{};
-	};
-
-	struct DataBuffer::PlatformImplementation {
-		~PlatformImplementation() {
-			if (_blob) {
-				_blob->Release();
-				_blob = nullptr;
-			}
-		}
-
-		ID3DBlob* _blob = nullptr;
-
-		void Set(ID3DBlob*& blob) {
-			_blob = blob;
-		}
-	};
+	};	
 
 	struct DepthStencilState::PlatformImplementation {
-		~PlatformImplementation() {
-			if (dxDepthStencil) {
-				dxDepthStencil->Release();
-				dxDepthStencil = nullptr;
-			}
-		}
-
-		ID3D11DepthStencilState* dxDepthStencil = nullptr;
+		comptr<ID3D11DepthStencilState> dxDepthStencil = nullptr;
 		D3D11_DEPTH_STENCIL_DESC dxDescription{};
 	};
 
@@ -645,17 +660,6 @@ namespace xna {
 		}
 	};
 
-	struct IndexBuffer::PlatformImplementation {
-		~PlatformImplementation() {
-			if (dxBuffer) {
-				dxBuffer->Release();
-				dxBuffer = nullptr;
-			}
-		}
-
-		ID3D11Buffer* dxBuffer = nullptr;
-	};
-
 	struct Keyboard::PlatformImplementation {
 		uptr<DirectX::Keyboard> _dxKeyboard = unew<DirectX::Keyboard>();
 
@@ -675,128 +679,42 @@ namespace xna {
 	};
 
 	struct RasterizerState::PlatformImplementation {
-		~PlatformImplementation() {
-			if (dxRasterizerState) {
-				dxRasterizerState->Release();
-				dxRasterizerState = nullptr;
-			}
-		}
-
-		ID3D11RasterizerState* dxRasterizerState = nullptr;
+		comptr<ID3D11RasterizerState> dxRasterizerState = nullptr;
 		D3D11_RASTERIZER_DESC dxDescription{};
 	};
 
 	struct SamplerState::PlatformImplementation {
-		~PlatformImplementation() {
-			if (_samplerState) {
-				_samplerState->Release();
-				_samplerState = nullptr;
-			}
-		}
-
-		ID3D11SamplerState* _samplerState = nullptr;
+		comptr<ID3D11SamplerState> _samplerState = nullptr;
 		D3D11_SAMPLER_DESC _description{};
-	};
-
-	struct VertexShader::PlatformImplementation {
-		~PlatformImplementation() {
-			if (_vertexShader) {
-				_vertexShader->Release();
-				_vertexShader = nullptr;
-			}
-		}
-
-		ID3D11VertexShader* _vertexShader = nullptr;
-	};
-
-	struct PixelShader::PlatformImplementation {
-		~PlatformImplementation() {
-			if (_pixelShader) {
-				_pixelShader->Release();
-				_pixelShader = nullptr;
-			}
-		}
-
-		ID3D11PixelShader* _pixelShader = nullptr;
-	};
+	};	
 
 	struct SwapChain::PlatformImplementation {
-		~PlatformImplementation() {
-			if (dxSwapChain) {
-				dxSwapChain->Release();
-				dxSwapChain = nullptr;
-			}
-		}
-
-		IDXGISwapChain1* dxSwapChain{ nullptr };
+		comptr<IDXGISwapChain1> dxSwapChain{ nullptr };
 		DXGI_SWAP_CHAIN_DESC1 dxDescription{};
 		DXGI_SWAP_CHAIN_FULLSCREEN_DESC dxFullScreenDescription{};
 
-		bool GetBackBuffer(ID3D11Texture2D*& texture2D) {
+		bool GetBackBuffer(comptr<ID3D11Texture2D>& texture2D) {
 			if (!dxSwapChain)
 				return false;
 
-			const auto hr = dxSwapChain->GetBuffer(0, __uuidof(texture2D), (void**)(&texture2D));
+			const auto hr = dxSwapChain->GetBuffer(0, __uuidof(texture2D), (void**)texture2D.GetAddressOf());
 
 			return !FAILED(hr);
 		}
 	};
 
 	struct Texture2D::PlatformImplementation {
-		~PlatformImplementation() {
-			if (dxTexture2D) {
-				dxTexture2D->Release();
-				dxTexture2D = nullptr;
-			}
-
-			if (dxShaderResource) {
-				dxShaderResource->Release();
-				dxShaderResource = nullptr;
-			}
-		}
-
-		ID3D11Texture2D* dxTexture2D{ nullptr };
-		ID3D11ShaderResourceView* dxShaderResource{ nullptr };
+		comptr<ID3D11Texture2D> dxTexture2D{ nullptr };
+		comptr<ID3D11ShaderResourceView> dxShaderResource{ nullptr };
 		D3D11_SUBRESOURCE_DATA dxSubResource{};
 		D3D11_TEXTURE2D_DESC dxDescription{};
 		D3D11_SHADER_RESOURCE_VIEW_DESC dxShaderDescription{};
 	};
 
-	struct RenderTarget2D::PlatformImplementation {
-		~PlatformImplementation() {
-			if (_renderTargetView) {
-				_renderTargetView->Release();
-				_renderTargetView = nullptr;
-			}
-		}
-
-		ID3D11RenderTargetView* _renderTargetView = nullptr;
+	struct RenderTarget2D::PlatformImplementation {		
+		comptr<ID3D11RenderTargetView> _renderTargetView = nullptr;
 		D3D11_RENDER_TARGET_VIEW_DESC _renderTargetDesc{};
-	};
-
-	struct VertexBuffer::PlatformImplementation {
-		~PlatformImplementation() {
-			if (dxBuffer) {
-				dxBuffer->Release();
-				dxBuffer = nullptr;
-			}
-		}
-
-		ID3D11Buffer* dxBuffer = nullptr;
-		UINT size{ 0 };
-	};
-
-	struct VertexInputLayout::PlatformImplementation {
-		~PlatformImplementation() {
-			if (_inputLayout) {
-				_inputLayout->Release();
-				_inputLayout = nullptr;
-			}
-		}
-
-		ID3D11InputLayout* _inputLayout{ nullptr };
-		std::vector<D3D11_INPUT_ELEMENT_DESC> _description{};
-	};
+	};	
 
 	enum class GameWindowMode : UINT {
 		Fullscreen = WS_POPUP | WS_VISIBLE,
@@ -934,44 +852,12 @@ namespace xna {
 			_depthStencilState = xna::DepthStencilState::Default();			
 			_rasterizerState = xna::RasterizerState::CullCounterClockwise();
 			_samplerStates = snew<SamplerStateCollection>();
-		}
-
-		~PlatformImplementation() {
-			if (_device) {
-				_device->Release();
-				_device = nullptr;
-			}
-
-			if (_context) {
-				_context->Release();
-				_device = nullptr;
-			}
-
-			if (_factory) {
-				_factory->Release();
-				_factory = nullptr;
-			}
-		}	
-
-	private:
-		void InitializeAndApplyStates(PGraphicsDevice const& device) {
-			_blendState->Bind(device);
-			_blendState->Initialize();
-			_blendState->Apply();
-
-			_rasterizerState->Bind(device);
-			_rasterizerState->Initialize();
-			_rasterizerState->Apply();
-
-			_depthStencilState->Bind(device);
-			_depthStencilState->Initialize();
-			_depthStencilState->Apply();
-		}
+		}				
 
 	public:
-		ID3D11Device* _device = nullptr;
-		ID3D11DeviceContext* _context = nullptr;
-		IDXGIFactory1* _factory = nullptr;
+		comptr<ID3D11Device> _device = nullptr;
+		comptr<ID3D11DeviceContext> _context = nullptr;
+		comptr<IDXGIFactory1> _factory = nullptr;
 		
 		PBlendState _blendState = nullptr;
 		PRasterizerState _rasterizerState = nullptr;
@@ -1005,116 +891,15 @@ namespace xna {
 	};
 
 	struct SoundEffect::PlatformImplementation {
-		~PlatformImplementation() {
-		}
-
 		uptr<DirectX::SoundEffect> _dxSoundEffect = nullptr;
 	};
 
 	struct Effect::PlatformImplementation {
-		~PlatformImplementation() {
-			if (dxEffect) {
-				dxEffect->Release();
-				dxEffect = nullptr;
-			}
-		}
-
-		ID3DX11Effect* dxEffect = nullptr;
+		sptr<DirectX::IEffect> dxEffect = nullptr;
 	};
 
-	struct EffectAnnotation::PlatformImplementation {
-		~PlatformImplementation() {
-			if (dxVariable) {
-				dxVariable->Release();
-				dxVariable = nullptr;
-			}
-		}
-
-		ID3DX11EffectVariable* dxVariable = nullptr;
+	struct BasicEffect::PlatformImplementation {
+		sptr<DirectX::BasicEffect> dxBasicEffect = nullptr;
 	};
-
-	struct EffectPass::PlatformImplementation {
-		~PlatformImplementation() {
-			if (dxPass) {
-				dxPass->Release();
-				dxPass = nullptr;
-			}
-			
-			if (dxContext) {
-				dxContext->Release();
-				dxContext = nullptr;
-			}
-		}
-
-		ID3DX11EffectPass* dxPass = nullptr;
-		ID3D11DeviceContext* dxContext = nullptr;
-	};
-
-	struct EffectTechnique::PlatformImplementation {
-		~PlatformImplementation() {
-			if (dxTechnique) {
-				dxTechnique->Release();
-				dxTechnique = nullptr;
-			}
-
-			if (dxContext) {
-				dxContext->Release();
-				dxContext = nullptr;
-			}
-		}
-
-		ID3DX11EffectTechnique* dxTechnique = nullptr;
-		ID3D11DeviceContext* dxContext = nullptr;
-	};
-
-	struct EffectParameter::PlatformImplementation {
-		PlatformImplementation(){}
-
-		PlatformImplementation(ID3DX11EffectVariable* value) {
-			dxVariable = value;
-			dxVariable->AddRef();
-		}
-
-		~PlatformImplementation() {
-			if (dxVariable) {
-				dxVariable->Release();
-				dxVariable = nullptr;
-			}
-		}
-
-		ID3DX11EffectVariable* dxVariable = nullptr;
-	};
-
-	template <typename T>
-	inline bool IndexBuffer::Initialize(std::vector<T> const& data) {
-		if (!impl || !m_device || !m_device->impl->_device || data.empty()) {
-			Exception::Throw(ExMessage::InitializeComponent);
-		}
-
-		const auto hr = DirectX::CreateStaticBuffer(m_device->impl->_device, data.data(), data.size(), sizeof(T), D3D11_BIND_INDEX_BUFFER, &impl->dxBuffer);
-
-		if (FAILED(hr)) {
-			Exception::Throw(ExMessage::CreateComponent);
-		}
-
-		return true;
-	}
-
-	template <typename T>
-	inline bool VertexBuffer::Initialize(std::vector<T> const& data) {
-		if (!impl || !m_device || !m_device->impl->_device || data.empty()) {
-			Exception::Throw(ExMessage::InitializeComponent);
-		}
-
-		const auto hr = DirectX::CreateStaticBuffer(m_device->impl->_device, data.data(), data.size(), sizeof(T), D3D11_BIND_VERTEX_BUFFER, &impl->dxBuffer);
-
-		if (FAILED(hr)) {
-			Exception::Throw(ExMessage::CreateComponent);
-		}
-
-		impl->size = sizeof(T);
-
-		return true;
-	}
 }
 #endif

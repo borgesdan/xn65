@@ -4,296 +4,235 @@
 #include "../common/numerics.hpp"
 #include "../default.hpp"
 #include "gresource.hpp"
+#include "../graphics/texture.hpp"
 
 namespace xna {
-	//Represents an annotation to an EffectParameter. 
-	class EffectAnnotation {
-	public:
-		Int ColumCount() const;
-		String Name() const;
-		EffectParameterClass ParameterClass() const;
-		Int RowCount() const;
-		String Semantic() const;
-		bool GetValueBoolean() const;
-		Int GetValueInt32() const;
-		Matrix GetValueMatrix() const;
-		float GetValueSingle() const;
-		String GetValueString() const;
-		Vector2 GetValueVector2() const;
-		Vector3 GetValueVector3() const;
-		Vector4 GetValueVector4() const;
-
-	public:
-		struct PlatformImplementation;
-		uptr<PlatformImplementation> impl;
-
-	public:
-		EffectAnnotation();
-	};
-	using PEffectAnnotation = sptr<EffectAnnotation>;
-
-	class EffectAnnotationCollection {
-	public:
-		EffectAnnotationCollection() {}
-
-		EffectAnnotationCollection(std::vector<PEffectAnnotation> const& data) : data(data)
-		{
-		}
-
-		constexpr size_t Count() const {
-			return data.size();
-		}
-
-		PEffectAnnotation operator[](size_t index) {
-			if (index >= data.size())
-				return nullptr;
-
-			return data[index];
-		}
-
-		PEffectAnnotation operator[](String const& name) {
-			for (size_t i = 0; i < data.size(); ++i) {
-				const auto& p = data[i];
-
-				if (p->Name() == name)
-					return p;
-			}
-
-			return nullptr;
-		}
-
-	public:
-		std::vector<PEffectAnnotation> data;
-	};
-	using PEffectAnnotationCollection = sptr<EffectAnnotationCollection>;
-
-	class EffectPass {
-	public:
-		//Gets the name of this pass. 
-		String Name() const;
-		//The EffectAnnotationCollection containing EffectAnnotation objects for this EffectPass.
-		PEffectAnnotationCollection Annotations() const;
-
-		//Begins this pass.
-		void Apply();
-	public:
-		struct PlatformImplementation;
-		uptr<PlatformImplementation> impl;
-
-	public:
-		EffectPass();
-	};
-	using PEffectPass = sptr<EffectPass>;
-
-	class EffectPassCollection {
-	public:
-		EffectPassCollection() {}
-
-		EffectPassCollection(std::vector<PEffectPass> const& data) : data(data)
-		{
-		}
-
-		constexpr size_t Count() const {
-			return data.size();
-		}
-
-		PEffectPass operator[](size_t index) {
-			if (index >= data.size())
-				return nullptr;
-
-			return data[index];
-		}
-
-		PEffectPass operator[](String const& name) {
-			for (size_t i = 0; i < data.size(); ++i) {
-				const auto& p = data[i];
-
-				if (p->Name() == name)
-					return p;
-			}
-
-			return nullptr;
-		}
-
-	public:
-		std::vector<PEffectPass> data;
-	};
-	using PEffectPassCollection = sptr<EffectPassCollection>;
-
-	class EffectTechnique {
-	public:
-		PEffectAnnotationCollection Annotations() const;
-		String Name() const;
-		PEffectPassCollection Passes() const;
-
-	public:
-		struct PlatformImplementation;
-		uptr<PlatformImplementation> impl;
-
-	public:
-		EffectTechnique();
-	};
-	using PEffectTechnique = sptr<EffectTechnique>;
-
-	class EffectParameterCollection;
-
-	class EffectParameter {
-	public:
-		//Gets the collection of EffectAnnotation objects for this parameter.
-		PEffectAnnotationCollection Annotations() const;
-		//Gets the number of columns in the parameter description.
-		Int ColumnCount() const;
-		//Gets the number of rows in the parameter description.
-		Int RowCount() const;
-		//Gets the semantic meaning, or usage, of the parameter.
-		String Semantic() const;
-		//Gets the type of the parameter.
-		EffectParameterType ParameterType() const;
-		//Gets the class of the parameter.
-		EffectParameterClass ParameterClass() const;
-		//Gets the name of the parameter.
-		String Name() const;
-		//Gets the collection of effect parameters.
-		sptr<EffectParameterCollection> Elements() const;
-		//Gets the collection of structure members.
-		sptr<EffectParameterCollection> StructureMembers() const;
-
-		bool GetValueBoolean() const;
-		std::vector<bool> GetValueBooleanArray(size_t count) const;
-		Int GetValueInt32() const;
-		std::vector <Int> GetValueInt32Array(size_t count) const;
-		Matrix GetValueMatrix() const;
-		std::vector <Matrix> GetValueMatrixArray(size_t count) const;
-		Matrix GetValueMatrixTranspose() const;
-		std::vector <Matrix> GetValueMatrixTransposeArray(size_t count) const;
-		Quaternion GetValueQuaternion() const;
-		std::vector <Quaternion> GetValueQuaternionArray() const;
-		float GetValueSingle() const;
-		std::vector<float> GetValueSingleArray() const;
-		String GetValueString() const;
-		sptr<Texture2D> GetValueTexture2D() const;
-		sptr<Texture3D> GetValueTexture3D() const;
-		sptr<TextureCube> GetValueTextureCube() const;
-		Vector2 GetValueVector2() const;
-		std::vector <Vector2> GetValueVector2Array() const;
-		Vector3 GetValueVector3() const;
-		std::vector <Vector3> GetValueVector3Array() const;
-		Vector4 GetValueVector4() const;
-		std::vector <Vector4> GetValueVector4Array() const;
-
-		void SetValue(bool value);
-		void SetValue(std::vector<bool> const& value);
-		void SetValue(Int value);
-		void SetValue(std::vector<Int> const& value);
-		void SetValue(float value);
-		void SetValue(std::vector<float> const& value);
-		void SetValue(Matrix const& value);
-		void SetValue(std::vector<Matrix> const& value);
-		void SetValue(Quaternion const& value);
-		void SetValue(std::vector<Quaternion> const& value);
-		void SetValue(Vector2 const& value);
-		void SetValue(std::vector<Vector2> const& value);
-		void SetValue(Vector3 const& value);
-		void SetValue(std::vector<Vector3> const& value);
-		void SetValue(Vector4 const& value);
-		void SetValue(std::vector<Vector4> const& value);
-		void SetValue(String const& value);
-		void SetValue(sptr<Texture> const& value);
-
-		void SetValueTranspose(Matrix const& value);
-		void SetValueTranspose(std::vector<Matrix> const& value);
-
-	public:
-		struct PlatformImplementation;
-		uptr<PlatformImplementation> impl;
-
-	public:
-		EffectParameter();
-	};
-	using PEffectParameter = sptr<EffectParameter>;
-
-	class EffectParameterCollection {
-	public:
-		EffectParameterCollection() {}
-
-		EffectParameterCollection(std::vector<PEffectParameter> const& data) : data(data)
-		{
-		}
-
-		constexpr size_t Count() const {
-			return data.size();
-		}
-
-		PEffectParameter operator[](size_t index) {
-			if (index >= data.size())
-				return nullptr;
-
-			return data[index];
-		}
-
-		PEffectParameter operator[](String const& name) {
-			for (size_t i = 0; i < data.size(); ++i) {
-				const auto& p = data[i];
-
-				if (p->Name() == name)
-					return p;
-			}
-
-			return nullptr;
-		}
-
-	public:
-		std::vector<PEffectParameter> data;
-	};
-	using PEffectPassCollection = sptr<EffectPassCollection>;
-
-	class Effect : public GraphicsResource {
-		Effect(sptr<GraphicsDevice> const& device, std::vector<Byte> const& effectCode);
-
-		PEffectTechnique CurrentTechnique() const;
-
-	public:
-		struct PlatformImplementation;
-		uptr<PlatformImplementation> impl;
-	};
-
+	//Gets or sets transformation matrix parameters for the current effect. 
 	class IEffectMatrices {
+		//Gets or sets the projection matrix in the current effect.
 		virtual Matrix World() const = 0;
+		//Gets or sets the view matrix in the current effect.
 		virtual Matrix View() const = 0;
+		//Gets or sets the world matrix in the current effect.
 		virtual Matrix Projection() const = 0;
 
+		//Gets or sets the projection matrix in the current effect.
 		virtual void World(Matrix const& value) = 0;
+		//Gets or sets the view matrix in the current effect.
 		virtual void View(Matrix const& value) = 0;
+		//Gets or sets the world matrix in the current effect.
 		virtual void Projection(Matrix const& value) = 0;
 	};
 
-	class DirectionalLight;
-
-	class IEffectLights {
-		virtual DirectionalLight DirectionalLight0() const = 0;
-		virtual DirectionalLight DirectionalLight1() const = 0;
-		virtual DirectionalLight DirectionalLight2() const = 0;
-
-		virtual Vector3 AmbientLightColor() const = 0;
-		virtual void AmbientLightColor(Vector3 const& value) = 0;
-
-		virtual bool LightingEnabled() const = 0;
-		virtual void LightingEnabled(bool value) = 0;
-
-		virtual void EnableDefaultLighting() = 0;
+	//Creates a DirectionalLight object. 
+	struct DirectionalLight {
+		//Gets or sets the diffuse color of the light.
+		Vector3 DiffuseColor{ Vector3::Zero() };
+		//Gets or sets the light direction. This value must be a unit vector.
+		Vector3 Direction{ Vector3::Zero() };
+		//Gets or sets the specular color of the light.
+		Vector3 SpecularColor{ Vector3::Zero() };
+		//Gets or sets light enable flag.
+		bool Enabled{ false };
 	};
 
+	//Gets or sets lighting parameters for the current effect. 
+	class IEffectLights {
+		//Gets the first directional light for the current effect.
+		virtual DirectionalLight DirectionalLight0() const = 0;
+		//Gets the second directional light for the current effect.
+		virtual DirectionalLight DirectionalLight1() const = 0;
+		//Gets the third directional light for the current effect.
+		virtual DirectionalLight DirectionalLight2() const = 0;
+
+		//Gets or sets a value indicating that per-pixel lighting should be used if it is available for the current adapter.
+		virtual bool PreferPerPixelLighting() const = 0;
+		//Gets or sets a value indicating that per-pixel lighting should be used if it is available for the current adapter.
+		virtual void PreferPerPixelLighting(bool value) = 0;
+
+		//Gets or sets the ambient light color for the current effect.
+		virtual Vector3 AmbientLightColor() const = 0;
+		//Gets or sets the ambient light color for the current effect.
+		virtual void AmbientLightColor(Vector3 const& value) = 0;
+
+		//Enables or disables lighting in an IEffectLights.
+		virtual bool LightingEnabled() const = 0;
+		//Enables or disables lighting in an IEffectLights.
+		virtual void LightingEnabled(bool value) = 0;
+	};
+
+	//Gets or sets fog parameters for the current effect. 
 	class IEffectFog
 	{
+		//Enables or disables fog.
 		virtual bool FogEnabled() const = 0;
+		//Gets or sets the fog ending distance.
 		virtual float FogStart() const = 0;
+		//Gets or sets the fog ending distance.
 		virtual float FogEnd() const = 0;
+		//Gets or sets the fog color.
 		virtual Vector3 FogColor() const = 0;
 
-		virtual void FogEnabled(bool value) const = 0;
-		virtual void FogStart(float value) const = 0;
-		virtual void FogEnd(float value) const = 0;
-		virtual void FogColor(Vector3 const& value) const = 0;
+		//Enables or disables fog.
+		virtual void FogEnabled(bool value) = 0;
+		//Gets or sets the fog ending distance.
+		virtual void FogStart(float value) = 0;
+		//Gets or sets the fog ending distance.
+		virtual void FogEnd(float value) = 0;
+		//Gets or sets the fog color.
+		virtual void FogColor(Vector3 const& value) = 0;
+	};
+
+	class Effect : public GraphicsResource {
+	public:
+		Effect(sptr<GraphicsDevice> const& device);
+
+		virtual ~Effect() {}
+
+	public:
+		struct PlatformImplementation;
+		uptr<PlatformImplementation> impl;
+	};
+
+	//Contains a basic rendering effect. 
+	class BasicEffect : public Effect, public IEffectMatrices, public IEffectLights, public IEffectFog {
+	public:
+		BasicEffect(sptr<GraphicsDevice> const& device);
+		
+		//
+		// IEffectMatrices
+		//
+
+		//Gets or sets the world matrix.
+		virtual Matrix World() const override { return world; }
+		//Gets or sets the world matrix.
+		virtual void World(Matrix const& value) override;
+		//Gets or sets the view matrix.
+		virtual constexpr Matrix View() const override { return view; }
+		//Gets or sets the view matrix.
+		virtual void View(Matrix const& value) override;		
+		//Gets or sets the projection matrix. Use this matrix to change how a 3D image is converted to a 2D image that is rendered to the computer screen.
+		virtual constexpr Matrix Projection() const override { return projection; }
+		//Gets or sets the projection matrix. Use this matrix to change how a 3D image is converted to a 2D image that is rendered to the computer screen.
+		virtual void Projection(Matrix const& value) override;
+
+		//
+		// IEffectLights
+		//
+		
+		//Gets the first directional light for this effect. 
+		virtual DirectionalLight DirectionalLight0() const override { return directionalLight0; }
+		//Gets the second directional light for this effect.
+		virtual DirectionalLight DirectionalLight1() const override { return directionalLight1; }
+		//Gets the second directional light for this effect.
+		virtual DirectionalLight DirectionalLight2() const override { return directionalLight2; }
+
+		//Gets or sets a value indicating that per-pixel lighting should be used if it is available for the current adapter.
+		virtual constexpr bool PreferPerPixelLighting() const override { return preferPerPixelLighting; }
+		//Gets or sets a value indicating that per-pixel lighting should be used if it is available for the current adapter.
+		virtual void PreferPerPixelLighting(bool value) override;
+
+		//Gets or sets the ambient color for a light, the range of color values is from 0 to 1. 
+		virtual constexpr Vector3 AmbientLightColor() const override { return ambientLightColor; }
+		//Gets or sets the ambient color for a light, the range of color values is from 0 to 1. 
+		virtual void AmbientLightColor(Vector3 const& value) override;
+
+		//Enables lighting for this effect. 
+		virtual constexpr bool LightingEnabled() const override { return lightingEnabled; }
+		//Enables lighting for this effect. 
+		virtual void LightingEnabled(bool value) override;
+
+		//
+		// IEffectFog
+		//
+				
+		//Gets or sets the minimum z value for fog, which ranges from 0 to 1.
+		virtual constexpr float FogStart() const override { return fogStart; }
+		//Gets or sets the minimum z value for fog, which ranges from 0 to 1.
+		virtual void FogStart(float value) override;
+
+		//Gets or sets the maximum z value for fog, which ranges from 0 to 1.
+		virtual constexpr float FogEnd() const override { return fogEnd; }
+		//Gets or sets the maximum z value for fog, which ranges from 0 to 1.
+		virtual void FogEnd(float value) override;
+
+		//Enables fog.
+		virtual constexpr bool FogEnabled() const override { return fogEnabled; }
+		//Enables fog.
+		virtual void FogEnabled(bool value) override;
+
+		//Gets or sets the fog color, the range of color values is from 0 to 1.
+		virtual constexpr Vector3 FogColor() const override { return fogColor; }
+		//Gets or sets the fog color, the range of color values is from 0 to 1.
+		virtual void FogColor(Vector3 const& value) override;
+
+		//
+		// BasicEffect
+		//
+
+		//Gets or sets the material alpha which determines its transparency. 
+		//Range is between 1 (fully opaque) and 0 (fully transparent). 
+		constexpr float Alpha() const {	return alpha; }
+		////Gets or sets the material alpha which determines its transparency. 
+		//Range is between 1 (fully opaque) and 0 (fully transparent). 
+		void Alpha(float value);		
+		//Gets or sets the diffuse color for a material, the range of color values is from 0 to 1. 
+		constexpr Vector3 DiffuseColor() const { return diffuseColor; }
+		//Gets or sets the diffuse color for a material, the range of color values is from 0 to 1. 
+		void DiffuseColor(Vector3 const& value);		
+		//Gets or sets the emissive color for a material, the range of color values is from 0 to 1. 
+		constexpr Vector3 EmissiveColor() const { return emissiveColor; }
+		//Gets or sets the emissive color for a material, the range of color values is from 0 to 1. 
+		void EmissiveColor(Vector3 const& value);
+		//Gets or sets the emissive color for a material, the range of color values is from 0 to 1. 
+		constexpr Vector3 SpecularColor() const { return specularColor; }
+		//Gets or sets the emissive color for a material, the range of color values is from 0 to 1. 
+		void SpecularColor(Vector3 const& value);
+		//Gets or sets the specular power of this effect material.
+		constexpr float SpecularPower() const { return specularPower; }
+		//Gets or sets the specular power of this effect material.
+		void SpecularPower(float value);
+		//Gets or sets a texture to be applied by this effect.
+		sptr<xna::Texture2D> Texture() const { return texture; }
+		//Gets or sets a texture to be applied by this effect.
+		void Texture(sptr<xna::Texture2D> const& value);
+		//Enables textures for this effect. 
+		constexpr bool TextureEnabled() const { return textureEnabled; }
+		//Enables textures for this effect. 
+		void TextureEnabled(bool value);		
+		//Enables textures for this effect. 
+		constexpr bool VertexColorEnabled() const { return vertexColorEnabled; }
+		//Enables textures for this effect. 
+		void VertexColorEnabled(bool value);
+
+		void SetDirectionalLight(Int index, DirectionalLight const& direction);
+
+	private:
+		bool fogEnabled{ false };
+		bool lightingEnabled{ false };
+		bool preferPerPixelLighting{ false };
+		bool textureEnabled{ false };
+		bool vertexColorEnabled{ false };
+		float alpha{0};
+		float fogStart{0};
+		float fogEnd{0};
+		float specularPower{ 16.0f};
+		Vector3 ambientLightColor{ Vector3::Zero() };
+		Vector3 diffuseColor{ Vector3::One() };
+		Vector3 emissiveColor{ Vector3::Zero() };
+		Vector3 specularColor{ Vector3::One() };
+		Vector3 fogColor{};
+		Matrix projection{ Matrix::Identity() };
+		Matrix view{ Matrix::Identity() };
+		Matrix world{ Matrix::Identity() };
+		DirectionalLight directionalLight0{};
+		DirectionalLight directionalLight1{};
+		DirectionalLight directionalLight2{};
+		sptr<Texture2D> texture{ nullptr };
+
+	public:
+		struct PlatformImplementation;
+		uptr<PlatformImplementation> impl;
 	};
 }
 

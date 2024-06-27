@@ -16,13 +16,12 @@ namespace xna {
         impl = nullptr;
     }
 
-    static bool internalInit(GraphicsDevice& device, HWND windowHandle, IDXGISwapChain1*& swapChain, DXGI_SWAP_CHAIN_DESC1 const& desc, DXGI_SWAP_CHAIN_FULLSCREEN_DESC const& fdesc) {
+    static bool internalInit(GraphicsDevice& device, HWND windowHandle, comptr<IDXGISwapChain1>& swapChain, DXGI_SWAP_CHAIN_DESC1 const& desc, DXGI_SWAP_CHAIN_FULLSCREEN_DESC const& fdesc) {
         if (!device.impl->_device || !windowHandle)
             return false;
         
         if (swapChain) {
-            swapChain->Release();
-            swapChain = nullptr;
+            swapChain.ReleaseAndGetAddressOf();
         }
 
         auto adapter = device.Adapter();
@@ -39,12 +38,12 @@ namespace xna {
         if (FAILED(hr)) return false;
 
         dxFactory2->CreateSwapChainForHwnd(
-            device.impl->_device,
+            device.impl->_device.Get(),
             windowHandle,
             &desc,
             &fdesc,
             nullptr,
-            &swapChain);
+            swapChain.GetAddressOf());
 
 
         return true;

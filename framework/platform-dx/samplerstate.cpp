@@ -16,13 +16,12 @@ namespace xna {
 		}
 
 		if (impl->_samplerState) {
-			impl->_samplerState->Release();
 			impl->_samplerState = nullptr;
 		}
 
 		const auto hr = m_device->impl->_device->CreateSamplerState(
 			&impl->_description,
-			&impl->_samplerState);
+			impl->_samplerState.GetAddressOf());
 
 		if (FAILED(hr)) {
 			Exception::Throw(ExMessage::CreateComponent);
@@ -41,10 +40,39 @@ namespace xna {
 			Exception::Throw(ExMessage::UnintializedComponent);
 		}
 
-		m_device->impl->_context->PSSetSamplers(0, 1, &impl->_samplerState);
+		m_device->impl->_context->PSSetSamplers(0, 1, impl->_samplerState.GetAddressOf());
 
 		return true;
 	}
+
+	void SamplerStateCollection::Apply(GraphicsDevice const& device) {
+		if (samplers.empty())
+			return;
+
+		if (!device.impl || !device.impl->_device || !device.impl->_context) {
+			Exception::Throw(ExMessage::InvalidOperation);
+		}
+
+		std::vector<ID3D11SamplerState*> states(samplers.size());
+
+		for (size_t i = 0; i < samplers.size(); ++i) {
+			const auto& current = samplers[0];
+
+			if (!current || !current->impl || !current->impl->_samplerState)
+				Exception::Throw(ExMessage::InvalidOperation);
+
+			states[i] = current->impl->_samplerState.Get();
+			states[i]->AddRef();
+		}
+
+		device.impl->_context->PSSetSamplers(0, states.size(), states.data());
+
+		for (size_t i = 0; i < samplers.size(); ++i) {			
+			states[i]->Release();
+			states[i] = nullptr;
+		}
+	}
+
 	uptr<SamplerState> SamplerState::PoinWrap() {
 		auto state = unew<SamplerState>();
 		state->impl->_description.Filter = D3D11_FILTER_MIN_MAG_MIP_POINT;
@@ -135,15 +163,15 @@ namespace xna {
 	}
 
 	void SamplerState::AddressU(TextureAddressMode value) {
-		DxHelpers::ConvertAddressMode(value, impl->_description.AddressU);
+		impl->_description.AddressU = DxHelpers::TextureAddresModeToDx(value);
 	}
 
 	void SamplerState::AddressV(TextureAddressMode value) {
-		DxHelpers::ConvertAddressMode(value, impl->_description.AddressV);
+		impl->_description.AddressV = DxHelpers::TextureAddresModeToDx(value);
 	}
 
 	void SamplerState::AddressW(TextureAddressMode value) {
-		DxHelpers::ConvertAddressMode(value, impl->_description.AddressW);
+		impl->_description.AddressW = DxHelpers::TextureAddresModeToDx(value);
 	}
 
 	void SamplerState::Comparison(ComparisonFunction value) {
@@ -193,21 +221,15 @@ namespace xna {
 	}
 
 	TextureAddressMode SamplerState::AddressU() const {
-		TextureAddressMode mode;
-		DxHelpers::ConvertAddressMode(impl->_description.AddressU, mode);
-		return mode;
+		return DxHelpers::TextureAddresModeToXna(impl->_description.AddressU);
 	}
 
-	TextureAddressMode SamplerState::AddressV() const {
-		TextureAddressMode mode;
-		DxHelpers::ConvertAddressMode(impl->_description.AddressV, mode);
-		return mode;
+	TextureAddressMode SamplerState::AddressV() const {		
+		return DxHelpers::TextureAddresModeToXna(impl->_description.AddressV);
 	}
 
-	TextureAddressMode SamplerState::AddressW() const {
-		TextureAddressMode mode;
-		DxHelpers::ConvertAddressMode(impl->_description.AddressW, mode);
-		return mode;
+	TextureAddressMode SamplerState::AddressW() const {		
+		return DxHelpers::TextureAddresModeToXna(impl->_description.AddressW);
 	}
 
 	ComparisonFunction SamplerState::Comparison() const {

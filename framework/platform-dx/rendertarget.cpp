@@ -16,19 +16,14 @@ namespace xna {
 	bool RenderTarget2D::Initialize() {
 		if (!impl || !m_device || !m_device->impl->_device) {
 			Exception::Throw(ExMessage::InitializeComponent);
-		}
-
-		if (impl->dxTexture2D) {
-			impl->dxTexture2D->Release();
-			impl->dxTexture2D = nullptr;
-		}
+		}		
 
 		if (!m_device->impl->_swapChain->impl->GetBackBuffer(impl->dxTexture2D))
 			return false;
 
 		auto& dxdevice = m_device->impl->_device;
 		
-		const auto hr = dxdevice->CreateRenderTargetView(impl->dxTexture2D, NULL, &render_impl->_renderTargetView);
+		const auto hr = dxdevice->CreateRenderTargetView(impl->dxTexture2D.Get(), NULL, render_impl->_renderTargetView.ReleaseAndGetAddressOf());
 
 		if (FAILED(hr)) {
 			Exception::Throw(ExMessage::CreateComponent);
@@ -46,7 +41,7 @@ namespace xna {
 			Exception::Throw(ExMessage::UnintializedComponent);
 
 		auto& context = m_device->impl->_context;
-		context->OMSetRenderTargets(1, &render_impl->_renderTargetView, nullptr);
+		context->OMSetRenderTargets(1, render_impl->_renderTargetView.GetAddressOf(), nullptr);
 		return true;
 	}
 }

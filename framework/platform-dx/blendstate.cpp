@@ -10,61 +10,61 @@ namespace xna {
 		impl->dxDescription.AlphaToCoverageEnable = false;
 		impl->dxDescription.IndependentBlendEnable = false;
 		impl->dxDescription.RenderTarget[0].BlendEnable = true;
-		impl->dxDescription.RenderTarget[0].SrcBlend = DxHelpers::ConvertBlend(Blend::One);
-		impl->dxDescription.RenderTarget[0].DestBlend = DxHelpers::ConvertBlend(Blend::One);
-		impl->dxDescription.RenderTarget[0].BlendOp = DxHelpers::ConvertOperation(BlendFunction::Add);
-		impl->dxDescription.RenderTarget[0].SrcBlendAlpha = DxHelpers::ConvertBlend(Blend::One);
-		impl->dxDescription.RenderTarget[0].DestBlendAlpha = DxHelpers::ConvertBlend(Blend::One);
-		impl->dxDescription.RenderTarget[0].BlendOpAlpha = DxHelpers::ConvertOperation(BlendFunction::Add);
-		impl->dxDescription.RenderTarget[0].RenderTargetWriteMask = DxHelpers::ConvertColorWrite(ColorWriteChannels::All);
+		impl->dxDescription.RenderTarget[0].SrcBlend = DxHelpers::BlendToDx(Blend::One);
+		impl->dxDescription.RenderTarget[0].DestBlend = DxHelpers::BlendToDx(Blend::One);
+		impl->dxDescription.RenderTarget[0].BlendOp = DxHelpers::BlendOperationToDx(BlendFunction::Add);
+		impl->dxDescription.RenderTarget[0].SrcBlendAlpha = DxHelpers::BlendToDx(Blend::One);
+		impl->dxDescription.RenderTarget[0].DestBlendAlpha = DxHelpers::BlendToDx(Blend::One);
+		impl->dxDescription.RenderTarget[0].BlendOpAlpha = DxHelpers::BlendOperationToDx(BlendFunction::Add);
+		impl->dxDescription.RenderTarget[0].RenderTargetWriteMask = DxHelpers::ColorWriteChannelsToDx(ColorWriteChannels::All);
 	}
 
 	BlendFunction BlendState::AlphaBlendFunction() const {
-		return DxHelpers::ConvertOperationDx(impl->dxDescription.RenderTarget[0].BlendOpAlpha);
+		return DxHelpers::BlendOperationToXna(impl->dxDescription.RenderTarget[0].BlendOpAlpha);
 	}
 
 	void BlendState::AlphaBlendFunction(BlendFunction value) {
-		impl->dxDescription.RenderTarget[0].BlendOpAlpha = DxHelpers::ConvertOperation(value);
+		impl->dxDescription.RenderTarget[0].BlendOpAlpha = DxHelpers::BlendOperationToDx(value);
 	}
 
 	Blend BlendState::AlphaDestinationBlend() const {
-		return DxHelpers::ConvertBlendDx(impl->dxDescription.RenderTarget[0].DestBlendAlpha);
+		return DxHelpers::BlendToXna(impl->dxDescription.RenderTarget[0].DestBlendAlpha);
 	}
 
 	void BlendState::AlphaDestinationBlend(Blend value) {
-		impl->dxDescription.RenderTarget[0].DestBlendAlpha = DxHelpers::ConvertBlend(value);
+		impl->dxDescription.RenderTarget[0].DestBlendAlpha = DxHelpers::BlendToDx(value);
 	}
 
 	Blend BlendState::AlphaSourceBlend() const {
-		return DxHelpers::ConvertBlendDx(impl->dxDescription.RenderTarget[0].SrcBlendAlpha);
+		return DxHelpers::BlendToXna(impl->dxDescription.RenderTarget[0].SrcBlendAlpha);
 	}
 
 	void BlendState::AlphaSourceBlend(Blend value) {
-		impl->dxDescription.RenderTarget[0].SrcBlendAlpha = DxHelpers::ConvertBlend(value);
+		impl->dxDescription.RenderTarget[0].SrcBlendAlpha = DxHelpers::BlendToDx(value);
 	}
 
 	BlendFunction BlendState::ColorBlendFunction() const {
-		return DxHelpers::ConvertOperationDx(impl->dxDescription.RenderTarget[0].BlendOp);
+		return DxHelpers::BlendOperationToXna(impl->dxDescription.RenderTarget[0].BlendOp);
 	}
 
 	void BlendState::ColorBlendFunction(BlendFunction value) {
-		impl->dxDescription.RenderTarget[0].BlendOp = DxHelpers::ConvertOperation(value);
+		impl->dxDescription.RenderTarget[0].BlendOp = DxHelpers::BlendOperationToDx(value);
 	}
 
 	Blend BlendState::ColorDestinationBlend() const {
-		return DxHelpers::ConvertBlendDx(impl->dxDescription.RenderTarget[0].DestBlend);
+		return DxHelpers::BlendToXna(impl->dxDescription.RenderTarget[0].DestBlend);
 	}
 
 	void BlendState::ColorDestinationBlend(Blend value) {
-		impl->dxDescription.RenderTarget[0].DestBlend = DxHelpers::ConvertBlend(value);
+		impl->dxDescription.RenderTarget[0].DestBlend = DxHelpers::BlendToDx(value);
 	}
 
 	Blend BlendState::ColorSourceBlend() const {
-		return DxHelpers::ConvertBlendDx(impl->dxDescription.RenderTarget[0].SrcBlend);
+		return DxHelpers::BlendToXna(impl->dxDescription.RenderTarget[0].SrcBlend);
 	}
 
 	void BlendState::ColorSourceBlend(Blend value) {
-		impl->dxDescription.RenderTarget[0].SrcBlend = DxHelpers::ConvertBlend(value);
+		impl->dxDescription.RenderTarget[0].SrcBlend = DxHelpers::BlendToDx(value);
 	}
 	
 	Color BlendState::BlendFactor() const {
@@ -102,13 +102,12 @@ namespace xna {
 		}
 
 		if (impl->dxBlendState) {
-			impl->dxBlendState->Release();
 			impl->dxBlendState = nullptr;
 		}
 
 		const auto hr = m_device->impl->_device->CreateBlendState(
 			&impl->dxDescription,
-			&impl->dxBlendState);
+			impl->dxBlendState.GetAddressOf());
 
 		if (FAILED(hr)) {
 			Exception::Throw(ExMessage::CreateComponent);
@@ -127,7 +126,7 @@ namespace xna {
 		}
 
 		m_device->impl->_context->OMSetBlendState(
-			impl->dxBlendState,
+			impl->dxBlendState.Get(),
 			impl->blendFactor,
 			impl->sampleMask);
 
@@ -145,13 +144,13 @@ namespace xna {
 	void BlendState::RenderTargets(std::vector<BlendRenderTarget> const& value) {
 		for (size_t i = 0; i < value.size() && i < 8; ++i) {
 			impl->dxDescription.RenderTarget[i].BlendEnable = value[i].Enabled;
-			impl->dxDescription.RenderTarget[i].SrcBlend = DxHelpers::ConvertBlend(value[i].Source);
-			impl->dxDescription.RenderTarget[i].DestBlend = DxHelpers::ConvertBlend(value[i].Destination);
-			impl->dxDescription.RenderTarget[i].BlendOp = DxHelpers::ConvertOperation(value[i].Operation);
-			impl->dxDescription.RenderTarget[i].SrcBlendAlpha = DxHelpers::ConvertBlend(value[i].SourceAlpha);
-			impl->dxDescription.RenderTarget[i].DestBlendAlpha = DxHelpers::ConvertBlend(value[i].DestinationAlpha);
-			impl->dxDescription.RenderTarget[i].BlendOpAlpha = DxHelpers::ConvertOperation(value[i].OperationAlpha);
-			impl->dxDescription.RenderTarget[i].RenderTargetWriteMask = DxHelpers::ConvertColorWrite(value[i].WriteMask);
+			impl->dxDescription.RenderTarget[i].SrcBlend = DxHelpers::BlendToDx(value[i].Source);
+			impl->dxDescription.RenderTarget[i].DestBlend = DxHelpers::BlendToDx(value[i].Destination);
+			impl->dxDescription.RenderTarget[i].BlendOp = DxHelpers::BlendOperationToDx(value[i].Operation);
+			impl->dxDescription.RenderTarget[i].SrcBlendAlpha = DxHelpers::BlendToDx(value[i].SourceAlpha);
+			impl->dxDescription.RenderTarget[i].DestBlendAlpha = DxHelpers::BlendToDx(value[i].DestinationAlpha);
+			impl->dxDescription.RenderTarget[i].BlendOpAlpha = DxHelpers::BlendOperationToDx(value[i].OperationAlpha);
+			impl->dxDescription.RenderTarget[i].RenderTargetWriteMask = DxHelpers::ColorWriteChannelsToDx(value[i].WriteMask);
 		}
 	}
 

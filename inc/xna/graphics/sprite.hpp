@@ -20,7 +20,7 @@ namespace xna {
 			SamplerState* samplerState = nullptr,
 			DepthStencilState* depthStencil = nullptr,
 			RasterizerState* rasterizerState = nullptr,
-			//Effect
+			Effect* effect = nullptr,
 			Matrix const& transformMatrix = Matrix::Identity()
 		);
 
@@ -87,7 +87,7 @@ namespace xna {
 
 	public:
 		struct PlatformImplementation;
-		uptr<PlatformImplementation> implementation = nullptr;
+		uptr<PlatformImplementation> impl = nullptr;		
 	};
 
 	//Represents a font texture.

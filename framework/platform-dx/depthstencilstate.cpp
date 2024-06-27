@@ -42,13 +42,12 @@ namespace xna {
 		}
 
 		if (impl->dxDepthStencil) {
-			impl->dxDepthStencil->Release();
 			impl->dxDepthStencil = nullptr;
 		}
 
 		const auto hr = m_device->impl->_device->CreateDepthStencilState(
 			&impl->dxDescription,
-			&impl->dxDepthStencil);
+			impl->dxDepthStencil.GetAddressOf());
 
 		if (FAILED(hr)) {
 			Exception::Throw(ExMessage::CreateComponent);
@@ -67,7 +66,7 @@ namespace xna {
 			Exception::Throw(ExMessage::UnintializedComponent);
 		}
 
-		m_device->impl->_context->OMSetDepthStencilState(impl->dxDepthStencil, 0);
+		m_device->impl->_context->OMSetDepthStencilState(impl->dxDepthStencil.Get(), 0);
 
 		return true;
 	}
