@@ -17,7 +17,7 @@ namespace xna {
 		inline static const std::string MakeWindowAssociation = "Failed to create association with window";
 		inline static const std::string BuildObject = "Unable to build object";
 		inline static const std::string NotImplemented = "Not Implemented";
-		inline static const std::string ArgumentIsNull = "The argument or any of its internal values ​​are null";
+		inline static const std::string ArgumentIsNull = "The argument is null or one of its values.";
 	};
 
 	//Structure for throwing exceptions with a message and information from the source file
