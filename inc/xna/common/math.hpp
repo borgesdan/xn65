@@ -21,7 +21,7 @@ namespace xna {
 			value = value > max ? max : value;
 			value = value < min ? min : value;
 			return value;
-		}
+		}		
 
 		static constexpr float Lerp(float value1, float value2, float amount) {
 			return value1 + (value2 - value1) * amount;

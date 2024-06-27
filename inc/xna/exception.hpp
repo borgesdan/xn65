@@ -1,4 +1,4 @@
-#ifndef XNA_EXCEPTION_HPP
+﻿#ifndef XNA_EXCEPTION_HPP
 #define XNA_EXCEPTION_HPP
 
 #include <stdexcept>
@@ -17,6 +17,7 @@ namespace xna {
 		inline static const std::string MakeWindowAssociation = "Failed to create association with window";
 		inline static const std::string BuildObject = "Unable to build object";
 		inline static const std::string NotImplemented = "Not Implemented";
+		inline static const std::string ArgumentIsNull = "The argument or any of its internal values ​​are null";
 	};
 
 	//Structure for throwing exceptions with a message and information from the source file

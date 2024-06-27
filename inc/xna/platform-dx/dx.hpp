@@ -99,6 +99,71 @@ namespace xna {
 	//==============================================//
 
 	struct DxHelpers {
+		static constexpr DirectX::XMVECTOR VectorToDx(Vector2 const& value) {
+			DirectX::XMVECTOR v;
+
+			v.m128_f32[0] = value.X;
+			v.m128_f32[1] = value.Y;
+
+			return v;
+		}
+
+
+		static constexpr DirectX::XMVECTOR VectorToDx(Vector3 const& value) {
+			DirectX::XMVECTOR v;
+
+			v.m128_f32[0] = value.X;
+			v.m128_f32[1] = value.Y;
+			v.m128_f32[2] = value.Z;
+
+			return v;
+		}
+
+		static constexpr DirectX::XMFLOAT3 Vector3ToDx(Vector3 const& value) {
+			DirectX::XMFLOAT3 v;
+
+			v.x = value.X;
+			v.y = value.Y;
+			v.z = value.Z;
+
+			return v;
+		}
+
+		static constexpr DirectX::XMVECTOR VectorToDx(Vector4 const& value) {
+			DirectX::XMVECTOR v;
+
+			v.m128_f32[0] = value.X;
+			v.m128_f32[1] = value.Y;
+			v.m128_f32[2] = value.Z;
+			v.m128_f32[3] = value.W;
+
+			return v;
+		}
+
+		static constexpr DirectX::XMMATRIX MatrixToDx(Matrix const& value) {
+			auto m = DirectX::XMMATRIX(
+				value.M11,
+				value.M12,
+				value.M13,
+				value.M14,
+				value.M21,
+				value.M22,
+				value.M23,
+				value.M24,
+				value.M31,
+				value.M32,
+				value.M33,
+				value.M34,
+				value.M41,
+				value.M42,
+				value.M43,
+				value.M44
+			);
+
+			return m;
+		}
+
+
 		static constexpr DirectX::SpriteSortMode SpriteSortToDx(SpriteSortMode value) {
 			return static_cast<DirectX::SpriteSortMode>(static_cast<int>(value));
 		}
@@ -829,25 +894,11 @@ namespace xna {
 	};
 
 	struct Effect::PlatformImplementation {
-		comptr<ID3DX11Effect> dxEffect = nullptr;
+		sptr<DirectX::IEffect> dxEffect = nullptr;
 	};
 
-	struct EffectAnnotation::PlatformImplementation {
-		comptr<ID3DX11EffectVariable> dxVariable = nullptr;
+	struct BasicEffect::PlatformImplementation {
+		sptr<DirectX::BasicEffect> dxBasicEffect = nullptr;
 	};
-
-	struct EffectPass::PlatformImplementation {
-		comptr<ID3DX11EffectPass> dxPass = nullptr;
-		comptr<ID3D11DeviceContext> dxContext = nullptr;
-	};
-
-	struct EffectTechnique::PlatformImplementation {
-		comptr<ID3DX11EffectTechnique> dxTechnique = nullptr;
-		comptr<ID3D11DeviceContext> dxContext = nullptr;
-	};
-
-	struct EffectParameter::PlatformImplementation {
-		comptr<ID3DX11EffectVariable> dxVariable = nullptr;
-	};	
 }
 #endif

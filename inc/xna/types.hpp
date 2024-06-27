@@ -67,6 +67,10 @@ namespace xna {
 	template <typename T>
 	using sptr		= std::shared_ptr<T>;
 
+	//Same as std::weak_ptr
+	template <typename T>
+	using wptr = std::weak_ptr<T>;
+
 	//Same as std::unique_ptr
 	template <typename T>
 	using uptr = std::unique_ptr<T>;		
