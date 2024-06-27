@@ -1,6 +1,8 @@
 ﻿# XN65
 
-> XN65 is an implementation of Microsoft XNA 4.0 in C++ with DirectX 11 and the DirectXTK library.
+<img src="images/xn65-logo-285x110.png" alt="Exemplo imagem">
+
+> XN65 is an implementation of Microsoft XNA 4.0 in modern C++, with DirectX 11 and the DirectXTK library.
 
 ### Adjustments and improvements
 
@@ -8,9 +10,7 @@ The project is still under development and the next updates will focus on the fo
 - [x] Finish basic classes
 - [ ] Code refactoring and cleaning
 - [ ] 3D support
-- [ ] Implementation of missing classes and functions
 - [ ] Content Pipeline
-- [ ] Multiplatform support
 
 ## 💻 Requirements
 - `DirectX 11`: Currently X65 only supports DirectX 11
