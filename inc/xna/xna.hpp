@@ -4,7 +4,6 @@
 #include "common/collision.hpp"
 #include "common/color.hpp"
 #include "common/curve.hpp"
-#include "common/gjk.hpp"
 #include "common/math.hpp"
 #include "common/numerics.hpp"
 #include "common/packedvalue.hpp"

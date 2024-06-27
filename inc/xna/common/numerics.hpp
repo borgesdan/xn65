@@ -90,42 +90,44 @@ namespace xna {
 		}
 
 		constexpr static Rectangle Intersect(Rectangle const& value1, Rectangle const& value2) {
-			const auto left1 = value1.Left();
-			const auto left2 = value2.Left();
-			const auto bottom1 = value1.Bottom();
-			const auto bottom2 = value2.Bottom();
-			const auto maxX = value1.X > value2.X ? value1.X : value2.X;
-			const auto maxY = value1.Y > value2.Y ? value1.Y : value2.Y;
-			const auto maxl = left1 < left2 ? left1 : left2;
-			const auto maxb = bottom1 < bottom2 ? bottom1 : bottom2;
+			const auto num1 = value1.X + value1.Width;
+			const auto num2 = value2.X + value2.Width;
+			const auto num3 = value1.Y + value1.Height;
+			const auto num4 = value2.Y + value2.Height;
+			const auto num5 = value1.X > value2.X ? value1.X : value2.X;
+			const auto num6 = value1.Y > value2.Y ? value1.Y : value2.Y;
+			const auto num7 = num1 < num2 ? num1 : num2;
+			const auto num8 = num3 < num4 ? num3 : num4;
 
 			Rectangle rectangle{};
 
-			if (maxl > maxX && maxb > maxY) {
-				rectangle.X = maxX;
-				rectangle.Y = maxY;
-				rectangle.Width = maxl - maxX;
-				rectangle.Height = maxb - maxY;
+			if (num7 > num5 && num8 > num6)
+			{
+				rectangle.X = num5;
+				rectangle.Y = num6;
+				rectangle.Width = num7 - num5;
+				rectangle.Height = num8 - num6;
 			}
-
+			
 			return rectangle;
 		}
 
 		constexpr static Rectangle Union(Rectangle const& value1, Rectangle const& value2) {
-			const auto left1 = value1.Left();
-			const auto left2 = value2.Left();
-			const auto bottom1 = value1.Bottom();
-			const auto bottom2 = value2.Bottom();
-			const auto minX = value1.X < value2.X ? value1.X : value2.X;
-			const auto miny = value1.Y < value2.Y ? value1.Y : value2.Y;
-			const auto maxl = left1 > left2 ? left1 : left2;
-			const auto maxb = bottom1 > bottom2 ? bottom1 : bottom2;
+			const auto num1 = value1.X + value1.Width;
+			const auto num2 = value2.X + value2.Width;
+			const auto num3 = value1.Y + value1.Height;
+			const auto num4 = value2.Y + value2.Height;
+			const auto num5 = value1.X < value2.X ? value1.X : value2.X;
+			const auto num6 = value1.Y < value2.Y ? value1.Y : value2.Y;
+			const auto num7 = num1 > num2 ? num1 : num2;
+			const auto num8 = num3 > num4 ? num3 : num4;
 
 			Rectangle rectangle;
-			rectangle.X = minX;
-			rectangle.Y = miny;
-			rectangle.Width = maxl - minX;
-			rectangle.Height = maxb - miny;
+			rectangle.X = num5;
+			rectangle.Y = num6;
+			rectangle.Width = num7 - num5;
+			rectangle.Height = num8 - num6;
+			
 			return rectangle;
 		}
 	};

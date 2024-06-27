@@ -1,15 +1,83 @@
-#ifndef XNA_COMMON_SHAPES_HPP
-#define XNA_COMMON_SHAPES_HPP
+#ifndef XNA_COMMON_COLLISION_HPP
+#define XNA_COMMON_COLLISION_HPP
 
 #include "../default.hpp"
-#include "numerics.hpp"
-#include "gjk.hpp"
-#include <optional>
 #include "math.hpp"
+#include "numerics.hpp"
+#include <optional>
 
 namespace xna {
+	class Gjk {
+	public:
+		constexpr Gjk() {}
+
+		constexpr bool FullSimplex() const { return simplexBits == 15; }
+		constexpr float MaxLengthSquared() const { return maxLengthSq; }
+		constexpr Vector3 ClosestPoint() const { return closestPoint; }
+
+		constexpr void Reset() {
+			simplexBits = 0;
+			maxLengthSq = 0.0f;
+		}
+
+		bool AddSupportPoint(Vector3 const& newPoint);
+
+	private:
+		using listv3 = std::vector<Vector3>;
+		using listv3v3 = std::vector<std::vector<Vector3>>;
+		using listf = std::vector<float>;
+		using listff = std::vector<std::vector<float>>;
+
+		void UpdateDeterminant(Int xmIdx);
+		bool UpdateSimplex(Int newIndex);
+		Vector3 ComputeClosestPoint();
+
+		constexpr bool IsSatisfiesRule(Int xBits, Int yBits) const {
+			bool flag = true;
+			for (auto bitsToIndex = Gjk::BitsToIndices[yBits]; bitsToIndex != 0; bitsToIndex >>= 3)
+			{
+				auto index = (bitsToIndex & 7) - 1;
+				auto num = 1 << index;
+
+				if ((num & xBits) != 0) {
+					if (static_cast<float>(det[xBits][index]) <= 0.0F) {
+						flag = false;
+						break;
+					}
+				}
+				else if (static_cast<float>(det[xBits | num][index]) > 0.0F) {
+					flag = false;
+					break;
+				}
+			}
+			return flag;
+		}
+
+	private:
+		inline static auto BitsToIndices = std::vector<Int>{
+			0, 1, 2, 17, 3, 25, 26, 209, 4, 33, 34, 273, 35, 281, 282, 2257
+		};
+
+		using listv3 = std::vector<Vector3>;
+		using listv3v3 = std::vector<std::vector<Vector3>>;
+		using listf = std::vector<float>;
+		using listff = std::vector<std::vector<float>>;
+
+		Vector3 closestPoint{};
+		Int simplexBits{ 0 };
+		float maxLengthSq{ 0 };
+		listv3 y = listv3(4);
+		listf yLengthSq = listf(4);
+		listv3v3 edges = listv3v3(4, listv3(4));
+		listff edgeLengthSq = listff(4, listf(4));
+		listff det = listff(16, listf(4));
+	};
+
+	//Defines a plane. 
 	struct Plane {
+		//The normal vector of the Plane.
 		Vector3 Normal{ 0 };
+		//The distance of the Plane along its normal from the origin. 
 		float D{ 0 };
 
 		constexpr Plane() = default;
@@ -26,22 +94,34 @@ namespace xna {
 			return Normal == other.Normal && D == other.D;
 		}
 
+		//Changes the coefficients of the Normal vector of a Plane to make it of unit length. 
 		void Normalize();
+		//Changes the coefficients of the Normal vector of a Plane to make it of unit length. 
 		static Plane Normalize(Plane const& value);
 
+		//Transforms a normalized Plane by a Matrix or Quaternion.
 		static constexpr Plane Transform(Plane const& plane, Matrix const& matrix);
+		//Transforms a normalized Plane by a Matrix or Quaternion.
 		static constexpr Plane Transform(Plane const& plane, Quaternion const& rotation);
 
+		//Calculates the dot product of a specified Vector4 and this Plane.
 		constexpr float Dot(Vector4 const& value) const;
+		//Returns the dot product of a specified Vector3 and the Normal vector of this Plane plus the D constant value of the Plane.
 		constexpr float DotCoordinate(Vector3 const& value) const;
+		//Returns the dot product of a specified Vector3 and the Normal vector of this Plane. 
 		constexpr float DotNormal(Vector3 const& value) const;
 
+		//Checks whether a Plane intersects a bounding volume.
 		constexpr PlaneIntersectionType Intersects(BoundingBox const& box) const;
+		//Checks whether a Plane intersects a bounding volume.
 		constexpr PlaneIntersectionType Intersects(BoundingFrustum const& frustum) const;
+		//Checks whether a Plane intersects a bounding volume.
 		constexpr PlaneIntersectionType Intersects(BoundingSphere const& sphere) const;
+		//Checks whether a Plane intersects a bounding volume.
 		std::optional<float> Intersects(Ray const& ray) const;
 	};
 
+	//Defines a frustum and helps determine whether forms intersect with it. 
 	struct BoundingFrustum {
 		inline static constexpr int CornerCount = 8;
 		inline static constexpr int PlaneCount = 6;
@@ -51,11 +131,17 @@ namespace xna {
 			SetMatrix(matrix);
 		}
 
+		//Gets the near plane of the BoundingFrustum.
 		Plane Near() { return planes[0]; }
+		//Gets the far plane of the BoundingFrustum.
 		Plane Far() { return planes[1]; }
+		//Gets the left plane of the BoundingFrustum.
 		Plane Left() { return planes[2]; }
+		//Gets the right plane of the BoundingFrustum.
 		Plane Right() { return planes[3]; }
+		//Gets the top plane of the BoundingFrustum.
 		Plane Top() { return planes[4]; }
+		//Gets the bottom plane of the BoundingFrustum.
 		Plane Bottom() { return planes[5]; }
 
 		constexpr bool operator==(BoundingFrustum const& other) const {
@@ -69,20 +155,32 @@ namespace xna {
 			return corners[index];
 		}
 
+		//Gets an array of points that make up the corners of the BoundingFrustum.
 		constexpr void GetCorners(std::vector<Vector3>& destination) const;
+		//Gets or sets the Matrix that describes this bounding frustum.
 		constexpr Matrix GetMatrix() const { return matrix; }
+		//Gets or sets the Matrix that describes this bounding frustum.
 		constexpr void SetMatrix(Matrix const& value);
+		//Gets or sets the Matrix that describes this bounding frustum.
 		bool Intersects(BoundingBox const& box);
+		//Gets or sets the Matrix that describes this bounding frustum.
 		bool Intersects(BoundingSphere const& box);
+		//Gets or sets the Matrix that describes this bounding frustum.
 		constexpr PlaneIntersectionType Intersects(Plane const& plane) const;
+		//Gets or sets the Matrix that describes this bounding frustum.
 		bool Intersects(BoundingFrustum const& frustum);
+		//Gets or sets the Matrix that describes this bounding frustum.
 		std::optional<float> Intersects(Ray const& ray) const;
+		//Checks whether the current BoundingFrustum contains a specified bounding volume. 
 		constexpr ContainmentType Contains(BoundingBox const& box) const;
+		//Checks whether the current BoundingFrustum contains a specified bounding volume. 
 		ContainmentType Contains(BoundingFrustum const& box);
+		//Checks whether the current BoundingFrustum contains a specified bounding volume. 
 		constexpr ContainmentType Contains(Vector3 const& point) const;
+		//Checks whether the current BoundingFrustum contains a specified bounding volume. 
 		constexpr ContainmentType Contains(BoundingSphere const& box) const;
-		constexpr void SupportMapping(Vector3 const& v, Vector3& result) const;	
 
+		constexpr void SupportMapping(Vector3 const& v, Vector3& result) const;	
 	public:
 		std::vector<Vector3> corners{ 8 };
 
@@ -96,10 +194,14 @@ namespace xna {
 		static constexpr Vector3 ComputeIntersection(Plane const& plane, Ray const& ray);
 	};
 
+	//Defines an axis-aligned box-shaped 3D volume. 
 	struct BoundingBox {
+		//Specifies the total number of corners (8) in the BoundingBox.
 		inline static constexpr int CornerCount = 8;
 
+		//The maximum point the BoundingBox contains.
 		Vector3 Min{};
+		//The minimum point the BoundingBox contains. 
 		Vector3 Max{};
 
 		constexpr BoundingBox() = default;
@@ -110,28 +212,44 @@ namespace xna {
 			return Min == other.Min && Max == other.Max;
 		}
 
+		//Gets an array of points that make up the corners of the BoundingBox.
 		constexpr void GetCorners(std::vector<Vector3>& corners) const;
 
+		//Creates the smallest BoundingBox that contains the two specified BoundingBox instances. 
 		static constexpr BoundingBox CreateMerged(BoundingBox const& original, BoundingBox const& additional);
+		//Creates the smallest BoundingBox that will contain the specified BoundingSphere. 
 		static constexpr BoundingBox CreateFromSphere(BoundingSphere const& sphere);
+		//Creates the smallest BoundingBox that will contain a group of points.
 		static constexpr BoundingBox CreateFromPoints(std::vector<Vector3> const& points);		
 
+		//Checks whether the current BoundingBox intersects with another bounding volume.
 		constexpr bool Intersects(BoundingBox const& box) const;
+		//Checks whether the current BoundingBox intersects with another bounding volume.
 		bool Intersects(BoundingFrustum& frustum) const;
+		//Checks whether the current BoundingBox intersects with another bounding volume.
 		constexpr PlaneIntersectionType Intersects(Plane const& plane) const;
+		//Checks whether the current BoundingBox intersects with another bounding volume.
 		std::optional<float> Intersects(Ray const& ray) const;
+		//Checks whether the current BoundingBox intersects with another bounding volume.
 		constexpr bool Intersects(BoundingSphere const& sphere) const;
 		
+		//Tests whether the BoundingBox overlaps another bounding volume.
 		constexpr ContainmentType Contains(BoundingBox const& box) const;
+		//Tests whether the BoundingBox overlaps another bounding volume.
 		ContainmentType Contains(BoundingFrustum& frustum) const;
+		//Tests whether the BoundingBox overlaps another bounding volume.
 		constexpr ContainmentType Contains(Vector3 const& point) const;
+		//Tests whether the BoundingBox overlaps another bounding volume.
 		constexpr ContainmentType Contains(BoundingSphere const& sphere) const;
 
 		constexpr void SupportMapping(Vector3 const& v, Vector3& result) const;
 	};
 
+	//Defines a sphere. 
 	struct BoundingSphere {
+		//The center point of the sphere.
 		Vector3 Center{};
+		//The radius of the sphere.
 		float Radius{ 0 };
 
 		constexpr BoundingSphere() = default;
@@ -142,28 +260,46 @@ namespace xna {
 			return Center == other.Center && Radius == other.Radius;
 		}
 
+		//Creates a BoundingSphere that contains the two specified BoundingSphere instances. 
 		static BoundingSphere CreateMerged(BoundingSphere const& original, BoundingSphere const& additional);
+		//Creates the smallest BoundingSphere that can contain a specified BoundingBox. 
 		static BoundingSphere CreateFromBoundingBox(BoundingBox const& box);
+		//Creates a BoundingSphere that can contain a specified list of points.
 		static BoundingSphere CreateFromPoints(std::vector<Vector3> const& points);
+		//Creates the smallest BoundingSphere that can contain a specified BoundingFrustum. 
 		static BoundingSphere CreateFromFrustum(BoundingFrustum const& points);
 
+		//Checks whether the current BoundingSphere intersects another bounding volume.
 		constexpr bool Intersects(BoundingBox const& box) const;
+		//Checks whether the current BoundingSphere intersects another bounding volume.
 		bool Intersects(BoundingFrustum& frustum) const;
+		//Checks whether the current BoundingSphere intersects another bounding volume.
 		constexpr PlaneIntersectionType Intersects(Plane const& plane) const;
+		//Checks whether the current BoundingSphere intersects another bounding volume.
 		std::optional<float> Intersects(Ray const& ray) const;
+		//Checks whether the current BoundingSphere intersects another bounding volume.
 		constexpr bool Intersects(BoundingSphere const& sphere) const;
 
+		//Checks whether the current BoundingSphere contains a specified bounding volume.
 		ContainmentType Contains(BoundingBox const& box) const;
+		//Checks whether the current BoundingSphere contains a specified bounding volume.
 		ContainmentType Contains(BoundingFrustum& frustum) const;
+		//Checks whether the current BoundingSphere contains a specified bounding volume.
 		ContainmentType Contains(Vector3 const& point) const;
+		//Checks whether the current BoundingSphere contains a specified bounding volume.
 		ContainmentType Contains(BoundingSphere const& sphere) const;
+
+		//Translates and scales the BoundingSphere using a given Matrix.
 		BoundingSphere Transform(Matrix const& matrix) const;
 
 		void SupportMapping(Vector3 const& v, Vector3& result) const;
 	};
 
+	//Defines a ray.
 	struct Ray {
+		//Specifies the starting point of the Ray.
 		Vector3 Position{};
+		//Unit vector specifying the direction the Ray is pointing.
 		Vector3 Direction{};
 
 		constexpr Ray() = default;
@@ -174,19 +310,23 @@ namespace xna {
 			return Position == other.Position && Direction == other.Direction;
 		}
 
-		std::optional<float> Intersects(BoundingBox const& box) const {
+		//Checks whether the Ray intersects a specified plane or bounding volume. 
+		inline std::optional<float> Intersects(BoundingBox const& box) const {
 			return box.Intersects(*this);
 		}
 
-		std::optional<float> Intersects(BoundingFrustum const& frustum) const {
+		//Checks whether the Ray intersects a specified plane or bounding volume. 
+		inline std::optional<float> Intersects(BoundingFrustum const& frustum) const {
 			return frustum.Intersects(*this);
 		}
 
-		std::optional<float> Intersects(Plane const& plane) const {
+		//Checks whether the Ray intersects a specified plane or bounding volume. 
+		inline std::optional<float> Intersects(Plane const& plane) const {
 			return plane.Intersects(*this);
 		}
 
-		std::optional<float> Sphere(BoundingSphere const& sphere) const {
+		//Checks whether the Ray intersects a specified plane or bounding volume. 
+		inline std::optional<float> Intersects(BoundingSphere const& sphere) const {
 			return sphere.Intersects(*this);
 		}
 	};

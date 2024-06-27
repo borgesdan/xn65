@@ -1,4 +1,4 @@
-#include "xna/common/gjk.hpp"
+#include "xna/common/collision.hpp"
 
 namespace xna {
 	Vector3 Gjk::ComputeClosestPoint() {
