@@ -18,6 +18,8 @@ namespace xna {
 		inline static const std::string BuildObject = "Unable to build object";
 		inline static const std::string NotImplemented = "Not Implemented";
 		inline static const std::string ArgumentIsNull = "The argument is null or one of its values.";
+		inline static const std::string ArgumentIsNullOrEmpty = "The argument is null, or empty, or one of its values.";
+		inline static const std::string ArgumentFormat = "The argument format is not correct";
 	};
 
 	//Structure for throwing exceptions with a message and information from the source file

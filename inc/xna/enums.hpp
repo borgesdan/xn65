@@ -559,6 +559,11 @@ namespace xna {
         FlipDiscard
     };
 
+    //Identifiers for the target platform.
+    enum class TargetPlatform {
+        Windows,
+    };
+
 	enum class TextureAddressMode {
 		Wrap,
 		Mirror,

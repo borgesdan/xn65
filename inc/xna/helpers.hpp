@@ -15,6 +15,13 @@ namespace xna {
 
 		template<typename T> struct is_shared_ptr : std::false_type {};
 		template<typename T> struct is_shared_ptr<std::shared_ptr<T>> : std::true_type {};
+		template<typename T> struct is_unique_ptr : std::false_type {};
+		template<typename T> struct is_unique_ptr<std::unique_ptr<T>> : std::true_type {};
+
+		template <typename T>
+		static constexpr bool IsSmartPointer() {
+			return is_shared_ptr<T>::value || is_unique_ptr<T>::value;
+		}
 
 		//Convert a string to wstring
 		static inline std::wstring ToWString(const std::string& str)
@@ -47,7 +54,7 @@ namespace xna {
 		//Throws an exception if the object cannot be created
 		template<typename T>
 		static inline auto ReturnDefaultOrNull(const std::source_location location = std::source_location::current()) {
-			if constexpr (is_shared_ptr<T>::value)
+			if constexpr (IsSmartPointer<T>())
 				return (T)nullptr;
 			else if (std::is_default_constructible<T>::value)
 				return T();
