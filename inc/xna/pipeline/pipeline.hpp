@@ -14,6 +14,11 @@
 //for use by more specialized object models, such as the Graphics DOM.
 
 namespace xna {
+	template <class T>
+	class TypeHandlerFactory {
+
+	};
+
 	//Provides a collection of child objects for a content item.
 	template <class TParent, class TChild>
 	class ChildCollection {
@@ -295,13 +300,40 @@ namespace xna {
 	//When the file containing the external reference is serialized to disk, file names are relative to the file.
 	//This allows movement of the content tree to a different location without breaking internal links.
 	template <typename T>
-	class ExternalReference {};
+	class ExternalReference : public ContentItem {
+	public:
+		constexpr ExternalReference() = default;
+
+		constexpr ExternalReference(String const& fileName)  {
+			//TODO
+			//this.filename = PathUtils.GetFullPath(filename);
+		}
+
+		ExternalReference(String const& fileName, ContentIdentity& relativeToContent) {
+			if(!fileName.empty())
+				Exception::Throw(ExMessage::ArgumentIsNullOrEmpty);
+
+			//TODO
+			//this.filename = PathUtils.GetFullPath(Path.Combine(Path.GetDirectoryName(relativeToContent.SourceFilename), filename));
+		}
+
+		constexpr String Filename() const {
+			return filename;
+		}
+
+		void Filename(String const& value) {
+			//TODO
+			//PathUtils.ThrowIfPathNotAbsolute(value);
+			filename = value;
+		}
+
+	private:
+		String filename;
+	};
 
 	//Provides properties that define logging behavior for the importer. 
 	class ContentImporterContext {
 	public:
-		virtual ~ContentImporterContext() {}
-
 		//Gets the logger for an importer.
 		virtual uptr<ContentBuilderLogger> Logger() const = 0;
 		//Adds a dependency to the specified file.

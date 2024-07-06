@@ -50,6 +50,13 @@ namespace xna {
 
 	template <class T>
 	inline sptr<Type> typeof() {
+		if (std::is_pointer<T>::value || XnaHelper::IsSmartPointer<T>()) {
+			auto pointerType = snew<Type>();
+			pointerType->fullName = typeid(T).name();
+			pointerType->isPointer = true;
+			return pointerType;
+		}
+
 		if (std::is_arithmetic<T>::value) {
 			auto primitiveType = snew<Type>();			
 			primitiveType->fullName = typeid(T).name();
@@ -64,14 +71,7 @@ namespace xna {
 			enumType->isValueType = true;
 			enumType->isEnum = true;
 			return enumType;
-		}
-
-		if (std::is_pointer<T>::value) {
-			auto pointerType = snew<Type>();
-			pointerType->fullName = typeid(T).name();
-			pointerType->isPointer = true;
-			return pointerType;
-		}
+		}		
 
 		if (std::is_class<T>::value) {
 			auto classType = snew<Type>();
@@ -79,7 +79,7 @@ namespace xna {
 			classType->isClass = true;
 			
 			return classType;
-		}
+		}		
 		
 		return nullptr;
 	}	

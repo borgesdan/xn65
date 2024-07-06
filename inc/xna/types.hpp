@@ -9,6 +9,7 @@
 #include <utility>
 #include <cassert>
 #include <optional>
+#include <any>
 
 namespace xna {
 
@@ -25,6 +26,7 @@ namespace xna {
 	using Long		= int64_t;
 	using Ulong		= uint64_t;
 	using Char		= char16_t;
+	using object	= std::any;
 
 	//
 	// C# Min and Max Value

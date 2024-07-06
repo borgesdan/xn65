@@ -1,4 +1,5 @@
 #include "xna/pipeline/pipeline.hpp"
+#include "xna/csharp/activator.hpp"
 
 namespace xna {
 	String ContentBuilderLogger::GetCurrentFilename(sptr<ContentIdentity> const& contentIdentity) {

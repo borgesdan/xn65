@@ -47,7 +47,7 @@ add_library (Xn65 STATIC
 "platform-dx/impl.cpp" 
 
 "pipeline/pipeline.cpp"
- )
+    "pipeline/compiler.cpp")
 
 if (CMAKE_VERSION VERSION_GREATER 3.12)
   set_property(TARGET Xn65 PROPERTY CXX_STANDARD 20)
