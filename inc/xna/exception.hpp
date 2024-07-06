@@ -6,25 +6,10 @@
 #include <source_location>
 
 namespace xna {
-	
-	//A list of standard exceptions
-	struct ExMessage {
-		inline static const std::string InvalidOperation = "An invalid operation occurred.";
-		inline static const std::string InitializeComponent = "Unable to initialize component";
-		inline static const std::string CreateComponent = "Failed to create component";
-		inline static const std::string ApplyComponent = "Failed to apply component";
-		inline static const std::string UnintializedComponent = "Component is not initialized";
-		inline static const std::string MakeWindowAssociation = "Failed to create association with window";
-		inline static const std::string BuildObject = "Unable to build object";
-		inline static const std::string NotImplemented = "Not Implemented";
-		inline static const std::string ArgumentIsNull = "The argument is null or one of its values.";
-	};
-
 	//Structure for throwing exceptions with a message and information from the source file
 	struct Exception {
-
 		//Raises an exception with a message. Source file information is automatically captured.
-		static void Throw(std::string const& message, const std::source_location location = std::source_location::current()) {
+		static void Throw(std::string const& message = "", const std::source_location location = std::source_location::current()) {
 			std::string error;
 
 			error.append("Exception in: ");
@@ -44,6 +29,15 @@ namespace xna {
 
 			throw std::runtime_error(error);
 		}
+
+		inline static const std::string FAILED_TO_CREATE = "Failed to create component.";
+		inline static const std::string FAILED_TO_APPLY = "Failed to apply component.";		
+		inline static const std::string FAILED_TO_MAKE_WINDOW_ASSOCIATION = "Failed to create association with window.";
+		inline static const std::string UNABLE_TO_INITIALIZE = "Unable to initialize component.";
+		inline static const std::string UNABLE_TO_BUILD_OBJECT = "Unable to build object.";
+		inline static const std::string NOT_IMPLEMENTED = "Not Implemented.";
+		inline static const std::string ARGUMENT_IS_NULL = "The argument is null or one of its values.";
+		inline static const std::string INVALID_OPERATION = "An invalid operation occurred.";
 	};
 }
 

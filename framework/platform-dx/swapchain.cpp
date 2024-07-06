@@ -51,7 +51,7 @@ namespace xna {
 
     bool SwapChain::Initialize() {
         if (!impl || !m_device || !m_device->impl->_device) {
-            Exception::Throw(ExMessage::InitializeComponent);
+            Exception::Throw(Exception::UNABLE_TO_INITIALIZE);
         }
         
         const auto parameters = m_device->impl->_presentationParameters;

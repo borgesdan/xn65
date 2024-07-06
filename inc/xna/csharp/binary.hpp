@@ -92,6 +92,11 @@ namespace xna {
 			_buffer = std::vector<Byte>(16);
 		}
 
+		virtual ~BinaryWriter() = default;
+
+	protected:
+		BinaryWriter() = default;
+
 		//Sets the position within the current stream.
 		Long Seek(Int offset, SeekOrigin origin);
 
@@ -99,24 +104,24 @@ namespace xna {
 		// Writes a value to the current stream.
 		//
 
-		void Write(bool value);
-		void Write(Byte value);
-		void Write(Sbyte value);
-		void Write(Byte const* buffer, Int bufferLength);
-		void Write(std::vector<Byte> const& buffer);
-		void Write(Byte const* buffer, Int bufferLength, Int index, Int count);
-		void Write(std::vector<Byte> const& buffer, Int index, Int count);
-		void Write(Char ch);
-		void Write(double value);
-		void Write(Short value);
-		void Write(Ushort value);
-		void Write(Int value);
-		void Write(Uint value);
-		void Write(Long value);
-		void Write(Ulong value);
-		void Write(float value);
-		void Write(std::string const& value);
-		void Write(const char* _string, size_t stringLength);
+		virtual void Write(bool value);
+		virtual void Write(Byte value);
+		virtual void Write(Sbyte value);
+		virtual void Write(Byte const* buffer, Int bufferLength);
+		virtual void Write(std::vector<Byte> const& buffer);
+		virtual void Write(Byte const* buffer, Int bufferLength, Int index, Int count);
+		virtual void Write(std::vector<Byte> const& buffer, Int index, Int count);
+		virtual void Write(Char ch);
+		virtual void Write(double value);
+		virtual void Write(Short value);
+		virtual void Write(Ushort value);
+		virtual void Write(Int value);
+		virtual void Write(Uint value);
+		virtual void Write(Long value);
+		virtual void Write(Ulong value);
+		virtual void Write(float value);
+		virtual void Write(std::string const& value);
+		virtual void Write(const char* _string, size_t stringLength);
 
 		//Writes a 32-bit integer in a compressed format.
 		void Write7BitEncodedInt(Int value);

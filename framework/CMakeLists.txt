@@ -41,7 +41,10 @@ add_library (Xn65 STATIC
 "platform-dx/displaymode.cpp"
 "platform-dx/init.cpp"
 
-"platform-dx/audioengine.cpp"  "graphics/gresource.cpp" "platform-dx/effect.cpp" "platform-dx/impl.cpp")
+"platform-dx/audioengine.cpp"
+"graphics/gresource.cpp"
+"platform-dx/effect.cpp"
+"platform-dx/impl.cpp")
 
 if (CMAKE_VERSION VERSION_GREATER 3.12)
   set_property(TARGET Xn65 PROPERTY CXX_STANDARD 20)
@@ -53,6 +56,6 @@ find_package(directxtk CONFIG REQUIRED)
 
 target_link_libraries(
 	Xn65 D3d11.lib dxgi.lib dxguid.lib d3dcompiler.lib Microsoft::DirectXTK dxguid.lib 
-	"${PROJECT_INCLUDES_DIR}/libmspack/mspack.lib"
-	"${PROJECT_INCLUDES_DIR}/effects11/Effects11.lib"
+	#"${PROJECT_INCLUDES_DIR}/libmspack/mspack.lib"
+	#"${PROJECT_INCLUDES_DIR}/effects11/Effects11.lib"
 )

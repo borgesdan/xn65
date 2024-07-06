@@ -52,7 +52,7 @@ namespace xna {
 			else if (std::is_default_constructible<T>::value)
 				return T();
 			else
-				Exception::Throw(ExMessage::BuildObject, location);
+				Exception::Throw(Exception::UNABLE_TO_BUILD_OBJECT, location);
 		}
 	};		
 }
