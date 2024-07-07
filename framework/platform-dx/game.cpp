@@ -4,7 +4,7 @@
 #include "xna/game/gdevicemanager.hpp"
 #include "xna/game/servicecontainer.hpp"
 #include "xna/game/time.hpp"
-#include "xna/platform-dx/dx.hpp"
+#include "xna/platform/dx.hpp"
 
 namespace xna {
 	Game::Game() {

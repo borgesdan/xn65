@@ -15,7 +15,6 @@ namespace xna {
 	class Stream;
 	class FileStream;
 	class MemoryStream;
-	class Object;
 	class Type;
 
 	//Content

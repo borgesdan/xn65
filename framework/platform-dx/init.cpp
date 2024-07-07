@@ -1,10 +1,10 @@
-#include "xna/platform-dx/init.hpp"
+#include "xna/platform/init.hpp"
 #include "xna/csharp/type.hpp"
 #include "xna/content/readers/graphics.hpp"
 #include "xna/content/readers/audio.hpp"
 #include "xna/content/typereadermanager.hpp"
 #include "xna/content/readers/default.hpp"
-#include "xna/platform-dx/dx.hpp"
+#include "xna/platform/dx.hpp"
 
 namespace xna {
 	void Platform::Init() {		

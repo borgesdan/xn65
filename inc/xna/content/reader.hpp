@@ -126,6 +126,9 @@ namespace xna {
 			objB = contentTypeReader->Read(*this, existingInstance1);
 			return objB;
 		}
+		else {
+			Exception::Throw(Exception::NOT_IMPLEMENTED);
+		}
 
 		return XnaHelper::ReturnDefaultOrNull<T>();
 	}

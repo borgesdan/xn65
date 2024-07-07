@@ -1,7 +1,7 @@
 #include "xna/graphics/adapter.hpp"
 #include "xna/graphics/displaymode.hpp"
 #include "xna/game/gdevicemanager.hpp"
-#include "xna/platform-dx/dx.hpp"
+#include "xna/platform/dx.hpp"
 
 namespace xna {
 	static size_t getDisplayModesCount(IDXGIAdapter* adapter);

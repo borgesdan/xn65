@@ -1,6 +1,6 @@
 #include "xna/graphics/adapter.hpp"
 #include "xna/graphics/swapchain.hpp"
-#include "xna/platform-dx/dx.hpp"
+#include "xna/platform/dx.hpp"
 #include "xna/graphics/device.hpp"
 
 namespace xna {

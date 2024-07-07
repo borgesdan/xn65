@@ -16,7 +16,6 @@
 #include "content/typereadermanager.hpp"
 #include "csharp/binary.hpp"
 #include "csharp/buffer.hpp"
-#include "csharp/object.hpp"
 #include "csharp/service.hpp"
 #include "csharp/stream.hpp"
 #include "csharp/timespan.hpp"
@@ -51,4 +50,4 @@
 #include "input/mouse.hpp"
 #include "platforminit.hpp"
 #include "types.hpp"
-#include "xna/platform-dx/dx.hpp"
+#include "platform/dx.hpp"

@@ -9,6 +9,7 @@
 #include <utility>
 #include <cassert>
 #include <optional>
+#include <any>
 
 namespace xna {
 
@@ -54,26 +55,28 @@ namespace xna {
 	constexpr double    DoubleMinValue	= (std::numeric_limits<double>::min)();
 
 	//
+	// C# Object
+	//
+	using Object = std::any;
+
+	//
 	// About strings: https://stackoverflow.com/questions/402283/stdwstring-vs-stdstring
 	//
 
 	//Same as std::string
 	using String	= std::string;
-
 	//Same as std::wstring
 	using WString	= std::wstring;	
 	
 	//Same as std::shared_ptr
 	template <typename T>
 	using sptr		= std::shared_ptr<T>;
-
 	//Same as std::weak_ptr
 	template <typename T>
-	using wptr = std::weak_ptr<T>;
-
+	using wptr		= std::weak_ptr<T>;
 	//Same as std::unique_ptr
 	template <typename T>
-	using uptr = std::unique_ptr<T>;		
+	using uptr		= std::unique_ptr<T>;		
 		
 	//Same as std::make_shared
 	template <class _Ty, class... _Types>
@@ -86,9 +89,6 @@ namespace xna {
 	inline std::unique_ptr<_Ty> unew(_Types&&... _Args) {
 		return std::make_unique<_Ty>(std::forward<_Types>(_Args)...);
 	}
-
-//See ref: https://en.cppreference.com/w/cpp/error/assert
-#define assertm(exp, msg) assert(((void)msg, exp))
 }
 
 #endif

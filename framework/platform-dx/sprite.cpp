@@ -6,7 +6,7 @@
 #include "xna/graphics/viewport.hpp"
 #include "xna/graphics/blendstate.hpp"
 #include "xna/graphics/depthstencilstate.hpp"
-#include "xna/platform-dx/dx.hpp"
+#include "xna/platform/dx.hpp"
 #include <functional>
 
 using DxSpriteBatch = DirectX::SpriteBatch;

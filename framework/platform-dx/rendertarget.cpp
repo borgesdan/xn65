@@ -1,4 +1,4 @@
-#include "xna/platform-dx/dx.hpp"
+#include "xna/platform/dx.hpp"
 
 namespace xna {
 	RenderTarget2D::RenderTarget2D() : Texture2D() {

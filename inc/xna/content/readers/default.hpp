@@ -8,11 +8,13 @@
 #include "../reader.hpp"
 
 namespace xna {
-	class ObjectReader : public ContentTypeReaderT<Object> {
+	class ObjectReader : public ContentTypeReader {
 	public:
-		ObjectReader() : ContentTypeReaderT(typeof<Object>()) {}
+		ObjectReader() : ContentTypeReader(typeof<Object>()) {}
 
 		virtual Object Read(ContentReader& input, Object& existingInstance) override {
+			Exception::Throw(Exception::NOT_IMPLEMENTED);
+
 			return Object();
 		}
 	};

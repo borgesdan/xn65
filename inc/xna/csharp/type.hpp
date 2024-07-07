@@ -2,13 +2,12 @@
 #define XNA_CSHARP_TYPE_HPP
 
 #include "../default.hpp"
-#include "object.hpp"
 #include <type_traits>
 #include <typeinfo>
 #include <map>
 
 namespace xna {
-	class Type : public Object {
+	class Type {
 	public:
 		constexpr String FullName() const { return fullName; }
 		constexpr bool IsClass() const { return isClass; }
@@ -17,7 +16,7 @@ namespace xna {
 		constexpr bool IsPrimitive() const { return isPrimitive; }
 		constexpr bool IsPointer() const { return isPointer; }
 
-		virtual size_t GetHashCode() const;
+		size_t GetHashCode() const;
 
 		constexpr bool operator==(const Type& other) const {
 			return

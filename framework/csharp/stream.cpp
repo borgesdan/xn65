@@ -32,8 +32,6 @@ namespace xna {
 			return -1;
 		}
 
-		assertm(_position >= 0, "position >= 0");
-
 		_position = static_cast<Int>(p);
 		return _position;
 	}
