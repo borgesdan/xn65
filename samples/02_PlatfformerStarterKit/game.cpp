@@ -2,6 +2,7 @@
 //
 
 #include "xna/xna.hpp"
+#include "xna/platform/dx.hpp"
 #include "player.hpp"
 #include "enemy.hpp"
 #include "level.hpp"

@@ -1,4 +1,3 @@
-#include "xna/platform/init.hpp"
 #include "xna/csharp/type.hpp"
 #include "xna/content/readers/graphics.hpp"
 #include "xna/content/readers/audio.hpp"

@@ -219,15 +219,15 @@ namespace xna {
 	public:		
         //Returns the current keyboard or Chatpad state. 
 		static KeyboardState GetState();
-        static bool IsConnected();
-
-        Keyboard() = delete;
-        Keyboard(Keyboard&) = delete;
-        Keyboard(Keyboard&&) = delete;
+        static bool IsConnected();        
 
     private:
         friend class Game;
         static void Initialize();
+
+        Keyboard() = default;
+        Keyboard(Keyboard&) = default;
+        Keyboard(Keyboard&&) = default;
 
     public:
         struct PlatformImplementation;

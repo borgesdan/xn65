@@ -1,4 +1,3 @@
-#include "xna/input/mouse.hpp"
 #include "xna/platform/dx.hpp"
 
 namespace xna {

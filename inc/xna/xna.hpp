@@ -1,3 +1,6 @@
+#ifndef XNA_XNA_HPP
+#define XNA_XNA_HPP
+
 #define NOMINMAX 
 #include "audio/audioengine.hpp"
 #include "audio/soundeffect.hpp"
@@ -44,10 +47,20 @@
 #include "graphics/texture.hpp"
 #include "graphics/vertexposition.hpp"
 #include "graphics/viewport.hpp"
+#include "graphics/effect.hpp"
 #include "helpers.hpp"
 #include "input/gamepad.hpp"
 #include "input/keyboard.hpp"
 #include "input/mouse.hpp"
-#include "platforminit.hpp"
 #include "types.hpp"
-#include "platform/dx.hpp"
+
+namespace xna {
+	//Exposes functions that must be implemented by the platform
+	struct Platform {
+		//Initialization function, which must be implemented by the platform,
+		//and be called before the game is executed
+		static void Init();
+	};
+}
+
+#endif

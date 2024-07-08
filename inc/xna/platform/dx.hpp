@@ -1,9 +1,7 @@
 #ifndef XNA_PLATFORMDX_DX_HPP
 #define XNA_PLATFORMDX_DX_HPP
 
-//--------------------------------//
-// DX INCLUDES
-//--------------------------------//
+//---------------- DX INCLUDES ----------------//
 
 //DirectX
 #if defined(_XBOX_ONE) && defined(_TITLE)
@@ -48,55 +46,19 @@
 #include <wrl\wrappers\corewrappers.h>
 #include <wrl\client.h>
 
-//--------------------------------//
-// USINGS
-//--------------------------------//
+//---------------- USINGS ----------------//
 
 template <typename T>
 using comptr = Microsoft::WRL::ComPtr<T>;
 
-//--------------------------------//
-// OTHERS INCLUDES
-//--------------------------------//
+//---------------- INCLUDES ----------------//
 
-#include "../default.hpp"
-#include "../exception.hpp"
-#include "../graphics/blendstate.hpp"
-#include "../graphics/adapter.hpp"
-#include "../graphics/device.hpp"
-#include "../graphics/adapter.hpp"
-#include "../graphics/blendstate.hpp"
-#include "../graphics/depthstencilstate.hpp"
-#include "../graphics/displaymode.hpp"
-#include "../graphics/sprite.hpp"
-#include "../graphics/effect.hpp"
-#include "../graphics/samplerstate.hpp"
-#include "../input/gamepad.hpp"
-#include "../input/keyboard.hpp"
-#include "../input/mouse.hpp"
-#include "../graphics/rasterizerstate.hpp"
-#include "../graphics/presentparams.hpp"
-#include "../graphics/swapchain.hpp"
-#include "../graphics/texture.hpp"
-#include "../graphics/rendertarget.hpp"
-#include "../game/window.hpp"
-#include "../audio/audioengine.hpp"
-#include "../audio/soundeffect.hpp"
-#include "../graphics/viewport.hpp"
-#include "../common/color.hpp"
-#include "../game/game.hpp"
-#include <cmath>
-#include <cstdint>
-#include <exception>
+#include "../xna.hpp"
 
-//--------------------------------//
-// CLASSES
-//--------------------------------//
+//---------------- CLASSES ----------------//
 
 namespace xna {	
-	//==============================================//
-	//================	DXHELPERS	================//
-	//==============================================//
+	//---------------- HELPERS ----------------//
 
 	struct DxHelpers {
 		static constexpr DirectX::XMVECTOR VectorToDx(Vector2 const& value) {
@@ -378,12 +340,43 @@ namespace xna {
 		static constexpr TextureAddressMode TextureAddresModeToXna(D3D11_TEXTURE_ADDRESS_MODE value) {
 			return static_cast<TextureAddressMode>(value - 1);
 		}
+	};	
+
+	struct PlatformInit {
+		static void Init() {
+			InitRegisteredTypes();
+			InitActivadors();
+		}
+
+		static void InitRegisteredTypes();
+		static void InitActivadors();
+
+	private:
+		template <typename T>
+		static void insertRegisteredReader(String const& readerName) {
+			const auto reader = typeof<T>();
+			//Type::NameOfRegisteredTypes.insert({ "xna::" + readerName, reader });
+			Type::NameOfRegisteredTypes.insert({ reader->FullName(), reader });
+			Type::NameOfRegisteredTypes.insert({ "Microsoft.Xna.Framework.Content." + readerName, reader });
+		}
+
+		template <typename T>
+		static void insertRegisteredReader(String const& readerName, String const& microsoftNameFullName) {
+			const auto reader = typeof<T>();
+			//Type::NameOfRegisteredTypes.insert({ "xna::" + readerName, reader });
+			Type::NameOfRegisteredTypes.insert({ reader->FullName(), reader });
+			Type::NameOfRegisteredTypes.insert({ microsoftNameFullName, reader });
+		}
+
+		template <typename T>
+		static void insertActivadorReader() {
+			ContentTypeReaderActivador::SetActivador(typeof<T>(), []() -> sptr<ContentTypeReader> {
+				auto obj = snew<T>();
+				return reinterpret_pointer_cast<ContentTypeReader>(obj);
+				});
+		}
 	};
-
-	//==============================================//
-	//================	STEPTIMER	================//
-	//==============================================//
-
+	
 	// Helper class for animation and simulation timing.
 	class StepTimer
 	{
@@ -561,10 +554,7 @@ namespace xna {
 		uint64_t m_targetElapsedTicks;
 	};
 
-
-	//==============================================//
-	//================		IMPL	================//
-	//==============================================//
+	//---------------- IMPL ----------------//
 
 	struct SpriteFont::PlatformImplementation {
 		uptr<DirectX::SpriteFont> _dxSpriteFont{ nullptr };
