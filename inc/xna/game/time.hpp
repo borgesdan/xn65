@@ -1,8 +1,7 @@
 #ifndef XNA_GAME_TIME_HPP
 #define XNA_GAME_TIME_HPP
 
-#include "../forward.hpp"
-#include "../types.hpp"
+#include "../default.hpp"
 #include "../csharp/timespan.hpp"
 
 namespace xna {

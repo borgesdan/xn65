@@ -1,9 +1,7 @@
 #ifndef XNA_HELPERS_HPP
 #define XNA_HELPERS_HPP
 
-#include <string>
-#include <utility>
-#include "exception.hpp"
+#include "default.hpp"
 
 namespace xna {
 	//Class for helper functions

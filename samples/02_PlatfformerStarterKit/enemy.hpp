@@ -1,7 +1,7 @@
 #ifndef PLATFORMSTARTERKIT_ENEMY_HPP
 #define PLATFORMSTARTERKIT_ENEMY_HPP
 
-#include "xna/xna.hpp"
+#include "headers.hpp"
 #include "animation.hpp"
 
 namespace PlatformerStarterKit {

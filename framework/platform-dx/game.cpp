@@ -1,9 +1,3 @@
-#include "xna/content/manager.hpp"
-#include "xna/csharp/type.hpp"
-#include "xna/game/component.hpp"
-#include "xna/game/gdevicemanager.hpp"
-#include "xna/game/servicecontainer.hpp"
-#include "xna/game/time.hpp"
 #include "xna/platform/dx.hpp"
 
 namespace xna {
@@ -12,7 +6,7 @@ namespace xna {
 		services = snew<GameServiceContainer>();
 		auto iservice = reinterpret_pointer_cast<IServiceProvider>(services);
 		_contentManager = snew<ContentManager>(services, "");
-		_contentManager->_gameServices = iservice;
+		_contentManager->mainGameService = iservice;
 
 		_gameWindow = snew<GameWindow>();
 		_gameWindow->impl->Color(146, 150, 154);

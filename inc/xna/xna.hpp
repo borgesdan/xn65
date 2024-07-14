@@ -23,7 +23,6 @@
 #include "csharp/stream.hpp"
 #include "csharp/timespan.hpp"
 #include "csharp/type.hpp"
-#include "enums.hpp"
 #include "exception.hpp"
 #include "game/component.hpp"
 #include "game/game.hpp"
@@ -37,6 +36,7 @@
 #include "graphics/depthstencilstate.hpp"
 #include "graphics/device.hpp"
 #include "graphics/displaymode.hpp"
+#include "graphics/effect.hpp"
 #include "graphics/gresource.hpp"
 #include "graphics/presentparams.hpp"
 #include "graphics/rasterizerstate.hpp"
@@ -47,12 +47,10 @@
 #include "graphics/texture.hpp"
 #include "graphics/vertexposition.hpp"
 #include "graphics/viewport.hpp"
-#include "graphics/effect.hpp"
 #include "helpers.hpp"
 #include "input/gamepad.hpp"
 #include "input/keyboard.hpp"
 #include "input/mouse.hpp"
-#include "types.hpp"
 
 namespace xna {
 	//Exposes functions that must be implemented by the platform

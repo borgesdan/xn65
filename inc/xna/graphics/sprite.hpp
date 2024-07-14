@@ -5,7 +5,6 @@
 #include "../common/numerics.hpp"
 #include "../default.hpp"
 #include "../graphics/gresource.hpp"
-#include <optional>
 
 namespace xna {
 	//Enables a group of sprites to be drawn using the same settings. 

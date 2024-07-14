@@ -1,6 +1,8 @@
 #ifndef PLATFORMSTARTERKIT_TILE_HPP
 #define PLATFORMSTARTERKIT_TILE_HPP
 
+#include "headers.hpp"
+
 namespace PlatformerStarterKit {
 	// Controls the collision detection and response behavior of a tile.
 	enum class TileCollision {

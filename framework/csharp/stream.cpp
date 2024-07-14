@@ -168,14 +168,13 @@ namespace xna {
 		_fstream.open(path.c_str(), flags);
 
 		if (!_fstream.good())
-			_closed = true;
+			Exception::Throw("Failed to open file: " + path);
 	}
 
 	FileStream::FileStream(String const& path) {
 		int flags = std::fstream::in
 			| std::fstream::out
 			| std::fstream::binary;
-		//| std::fstream::ate;
 
 		const auto exists = std::filesystem::exists(path);
 
@@ -185,7 +184,7 @@ namespace xna {
 		_fstream.open(path.c_str(), flags);
 
 		if (!_fstream.good())
-			_closed = true;
+			Exception::Throw("Failed to open file: " + path);
 	}
 
 	Int FileStream::Length() {

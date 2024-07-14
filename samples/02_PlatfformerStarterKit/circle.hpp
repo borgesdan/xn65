@@ -1,7 +1,7 @@
 #ifndef PLATFORMSTARTERKIT_CIRCLE_HPP
 #define PLATFORMSTARTERKIT_CIRCLE_HPP
 
-#include "xna/xna.hpp"
+#include "headers.hpp"
 
 namespace PlatformerStarterKit {
 	//Represents a 2D circle.

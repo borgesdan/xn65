@@ -1,8 +1,7 @@
 ﻿// xna.cpp : Defines the entry point for the application.
 //
 
-#include "xna/xna.hpp"
-#include "xna/platform/dx.hpp"
+#include "headers.hpp"
 #include "player.hpp"
 #include "enemy.hpp"
 #include "level.hpp"

@@ -1,5 +1,5 @@
-#ifndef XNA_ENUMS_HPP
-#define XNA_ENUMS_HPP
+#ifndef XNA_ENUMERATIONS_HPP
+#define XNA_ENUMERATIONS_HPP
 
 namespace xna {
     enum class AudioChannels
@@ -43,35 +43,35 @@ namespace xna {
         Max
     };
 
-	enum class Blend {
-		Zero,
-		One,
-		SourceColor,
-		InverseSourceColor,
-		SourceAlpha,
-		InverseSourceAlpha,
-		DestinationAlpha,
-		InverseDestinationAlpha,
-		DestinationColor,
-		InverseDestinationColor,
-		SourceAlphaSaturation,
-		BlendFactor,
-		InverseBlendFactor,
-		Source1Color,
-		InverseSource1Color,
-		Source1Alpha,
-		InverseSource1Alpha
-	};	
+    enum class Blend {
+        Zero,
+        One,
+        SourceColor,
+        InverseSourceColor,
+        SourceAlpha,
+        InverseSourceAlpha,
+        DestinationAlpha,
+        InverseDestinationAlpha,
+        DestinationColor,
+        InverseDestinationColor,
+        SourceAlphaSaturation,
+        BlendFactor,
+        InverseBlendFactor,
+        Source1Color,
+        InverseSource1Color,
+        Source1Alpha,
+        InverseSource1Alpha
+    };
 
-	enum class BlendFunction {
-		Add = 0,
-		Subtract = 1,
-		ReverseSubtract = 2,
-		Min = 3,
-		Max = 4,
-	};
+    enum class BlendFunction {
+        Add = 0,
+        Subtract = 1,
+        ReverseSubtract = 2,
+        Min = 3,
+        Max = 4,
+    };
 
-	using BlendOperation = BlendFunction;
+    using BlendOperation = BlendFunction;
 
     enum class BufferUsage {
         Default,
@@ -120,14 +120,14 @@ namespace xna {
         Target,
     };
 
-	enum class ColorWriteChannels {
-		Red,
-		Green,
-		Blue,
-		Alpha,
-		All,
+    enum class ColorWriteChannels {
+        Red,
+        Green,
+        Blue,
+        Alpha,
+        All,
         None
-	};    
+    };
 
     enum class ContainmentType {
         Disjoint,
@@ -135,19 +135,19 @@ namespace xna {
         Intersects,
     };
 
-	enum class ComparisonFunction {
-		Never,
-		Less,
-		Equal,
-		LessEquals,
-		Greater,
-		NotEqual,
-		GreaterEqual,
-		Always
-	};
+    enum class ComparisonFunction {
+        Never,
+        Less,
+        Equal,
+        LessEquals,
+        Greater,
+        NotEqual,
+        GreaterEqual,
+        Always
+    };
 
     using CompareFunction = ComparisonFunction;
-    
+
     enum class CurveContinuity {
         Smooth,
         Step,
@@ -168,30 +168,30 @@ namespace xna {
         Linear,
     };
 
-	enum class CullMode {
-		None,
-		CullClockwiseFace,
-		CullCounterClockwiseFace,
-	};
+    enum class CullMode {
+        None,
+        CullClockwiseFace,
+        CullCounterClockwiseFace,
+    };
 
-	enum class DepthFormat {
-		None,
-		Depth16,
-		Depth24,
-		Depth24Stencil8
-	};
+    enum class DepthFormat {
+        None,
+        Depth16,
+        Depth24,
+        Depth24Stencil8
+    };
 
-	enum class DepthWriteMask {
-		Zero,
-		All
-	};
+    enum class DepthWriteMask {
+        Zero,
+        All
+    };
 
-	enum class DisplayOrientation {
-		Default = 0,
-		LandscapeLeft = 1,
-		LandscapeRight = 2,
-		Portrait = 4,
-	};
+    enum class DisplayOrientation {
+        Default = 0,
+        LandscapeLeft = 1,
+        LandscapeRight = 2,
+        Portrait = 4,
+    };
 
     enum class DisplayModeScanlineOrder {
         Unspecified = 0,
@@ -236,11 +236,11 @@ namespace xna {
         Truncate
     };
 
-	enum class FillMode
-	{		
-		WireFrame,
+    enum class FillMode
+    {
+        WireFrame,
         Solid,
-	};
+    };
 
     enum class GameComponentType {
         Updatable,
@@ -268,12 +268,12 @@ namespace xna {
         None,
     };
 
-	enum class GraphicsProfile {
-		Reach,
-		HiDef
-	};
+    enum class GraphicsProfile {
+        Reach,
+        HiDef
+    };
 
-    enum class Keys : unsigned char{
+    enum class Keys : unsigned char {
         None = 0,
 
         Back = 0x8,
@@ -473,12 +473,12 @@ namespace xna {
         Four,
     };
 
-	enum class PresentInterval {
-		Default,
-		One,
-		Two,
-		Immediate
-	};
+    enum class PresentInterval {
+        Default,
+        One,
+        Two,
+        Immediate
+    };
 
     enum class PrimitiveType
     {
@@ -488,69 +488,65 @@ namespace xna {
         LineStrip,
     };
 
-	enum RenderTargetUsage {
-		DiscardContents,
-		PreserveContents,
-		PlatformContents
-	};
+    enum RenderTargetUsage {
+        DiscardContents,
+        PreserveContents,
+        PlatformContents
+    };
 
-	enum class SeekOrigin {
-		Begin,
-		Current,
-		End,
-	};
+    
 
-	enum class SpriteEffects {
-		None = 0,
-		FlipHorizontally = 1,
-		FlipVertically = 2,
-		Both = FlipHorizontally | FlipVertically
-	};
+    enum class SpriteEffects {
+        None = 0,
+        FlipHorizontally = 1,
+        FlipVertically = 2,
+        Both = FlipHorizontally | FlipVertically
+    };
 
-	enum class SpriteSortMode
-	{
-		Deferred,
-		Immediate,
-		Texture,
-		BackToFront,
-		FrontToBack,
-	};
+    enum class SpriteSortMode
+    {
+        Deferred,
+        Immediate,
+        Texture,
+        BackToFront,
+        FrontToBack,
+    };
 
-	enum class StencilOperation
-	{
-		Keep,
-		Zero,
-		Replace,
-		IncrementSaturation,
-		DecrementSaturation,
-		Invert,
-		Increment,
-		Decrement,
-	};
+    enum class StencilOperation
+    {
+        Keep,
+        Zero,
+        Replace,
+        IncrementSaturation,
+        DecrementSaturation,
+        Invert,
+        Increment,
+        Decrement,
+    };
 
-	enum class SurfaceFormat {
-		Color = 0,
-		Bgr565 = 1,
-		Bgra5551 = 2,
-		Bgra4444 = 3,
-		Dxt1 = 4,
-		Dxt3 = 5,
-		Dxt5 = 6,
-		NormalizedByte2 = 7,
-		NormalizedByte4 = 8,
-		Rgba1010102 = 9,
-		Rg32 = 10,
-		Rgba64 = 11,
-		Alpha8 = 12,
-		Single = 13,
-		Vector2 = 14,
-		Vector4 = 15,
-		HalfSingle = 16,
-		HalfVector2 = 17,
-		HalfVector4 = 18,
-		HdrBlendable = 19,
+    enum class SurfaceFormat {
+        Color = 0,
+        Bgr565 = 1,
+        Bgra5551 = 2,
+        Bgra4444 = 3,
+        Dxt1 = 4,
+        Dxt3 = 5,
+        Dxt5 = 6,
+        NormalizedByte2 = 7,
+        NormalizedByte4 = 8,
+        Rgba1010102 = 9,
+        Rg32 = 10,
+        Rgba64 = 11,
+        Alpha8 = 12,
+        Single = 13,
+        Vector2 = 14,
+        Vector4 = 15,
+        HalfSingle = 16,
+        HalfVector2 = 17,
+        HalfVector4 = 18,
+        HdrBlendable = 19,
         Unknown,
-	};
+    };
 
     enum class SwapEffect {
         Discard,
@@ -559,29 +555,27 @@ namespace xna {
         FlipDiscard
     };
 
-	enum class TextureAddressMode {
-		Wrap,
-		Mirror,
-		Clamp,
-		Border,
-		MirrorOnce
-	};
+    enum class TextureAddressMode {
+        Wrap,
+        Mirror,
+        Clamp,
+        Border,
+        MirrorOnce
+    };
 
-	enum class TextureFilter {
-		Linear,
-		Point,
-		Anisotropic,
-		LinearMipPoint,
-		PointMipLinear,
-		MinLinearMagPointMipLinear,
-		MinLinearMagPointMipPoint,
-		MinPointMagLinearMipLinear,
-		MinPointMagLinearMipPoint,
-	};
+    enum class TextureFilter {
+        Linear,
+        Point,
+        Anisotropic,
+        LinearMipPoint,
+        PointMipLinear,
+        MinLinearMagPointMipLinear,
+        MinLinearMagPointMipPoint,
+        MinPointMagLinearMipLinear,
+        MinPointMagLinearMipPoint,
+    };
 
-
-
-	constexpr int SURFACE_FORMAT_COUNT = 19;
+    constexpr int SURFACE_FORMAT_COUNT = 19;
 }
 
 #endif
