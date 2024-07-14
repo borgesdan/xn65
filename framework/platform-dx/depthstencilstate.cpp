@@ -18,8 +18,8 @@ namespace xna {
 		_description.BackFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
 		_description.BackFace.StencilDepthFailOp = D3D11_STENCIL_OP_KEEP;
 
-		_description.StencilReadMask = IntMaxValue;
-		_description.StencilWriteMask = IntMaxValue;
+		_description.StencilReadMask = static_cast<UINT8>(IntMaxValue);
+		_description.StencilWriteMask = static_cast<UINT8>(IntMaxValue);
 		_description.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
 
 		return _description;
