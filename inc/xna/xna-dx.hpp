@@ -1,5 +1,7 @@
-#ifndef XNA_PLATFORMDX_DX_HPP
-#define XNA_PLATFORMDX_DX_HPP
+#ifndef XNA_XNA_DX_HPP
+#define XNA_XNA_DX_HPP
+
+#define NOMINMAX
 
 //---------------- DX INCLUDES ----------------//
 
@@ -12,10 +14,12 @@
 #include "d3d11.h"
 #include <d3d11_1.h>
 #include <d3d11_2.h>
-//HSLS AND EFFECTS
-#include <d3dcompiler.h>
+#include <d3d11_3.h>
+#include <d3d11_4.h>
 #include <d3d11shader.h>
-#include "effects11/d3dx11effect.h"
+#include <d3d11shadertracing.h>
+#include <d3dcommon.h>
+#include <d3dcsx.h>
 //DirectXTK
 #include <DirectXMath.h>
 #include <Audio.h>
@@ -39,7 +43,6 @@
 #include <VertexTypes.h>
 #include <WICTextureLoader.h>
 //Windows
-#define NOMINMAX
 #include <Windows.h>
 #include <windowsx.h>
 #include <Windows.Foundation.h>
@@ -62,7 +65,7 @@ namespace xna {
 
 	struct DxHelpers {
 		static constexpr DirectX::XMVECTOR VectorToDx(Vector2 const& value) {
-			DirectX::XMVECTOR v;
+			DirectX::XMVECTOR v{};
 
 			v.m128_f32[0] = value.X;
 			v.m128_f32[1] = value.Y;
@@ -72,7 +75,7 @@ namespace xna {
 
 
 		static constexpr DirectX::XMVECTOR VectorToDx(Vector3 const& value) {
-			DirectX::XMVECTOR v;
+			DirectX::XMVECTOR v{};
 
 			v.m128_f32[0] = value.X;
 			v.m128_f32[1] = value.Y;
@@ -82,7 +85,7 @@ namespace xna {
 		}
 
 		static constexpr DirectX::XMFLOAT3 Vector3ToDx(Vector3 const& value) {
-			DirectX::XMFLOAT3 v;
+			DirectX::XMFLOAT3 v{};
 
 			v.x = value.X;
 			v.y = value.Y;
@@ -92,7 +95,7 @@ namespace xna {
 		}
 
 		static constexpr DirectX::XMVECTOR VectorToDx(Vector4 const& value) {
-			DirectX::XMVECTOR v;
+			DirectX::XMVECTOR v{};
 
 			v.m128_f32[0] = value.X;
 			v.m128_f32[1] = value.Y;
@@ -554,7 +557,7 @@ namespace xna {
 		uint64_t m_targetElapsedTicks;
 	};
 
-	//---------------- IMPL ----------------//
+	//---------------- IMPLEMENTATIONS ----------------//
 
 	struct SpriteFont::PlatformImplementation {
 		uptr<DirectX::SpriteFont> _dxSpriteFont{ nullptr };
@@ -563,6 +566,7 @@ namespace xna {
 	struct SpriteBatch::PlatformImplementation {
 		sptr<DirectX::SpriteBatch> _dxspriteBatch = nullptr;
 		comptr<ID3D11InputLayout> dxInputLayout = nullptr;
+		sptr<DirectX::DX11::IEffect> effectBuffer = nullptr;
 	};
 
 	struct GraphicsAdapter::PlatformImplementation {
@@ -683,7 +687,7 @@ namespace xna {
 		DXGI_SWAP_CHAIN_DESC1 dxDescription{};
 		DXGI_SWAP_CHAIN_FULLSCREEN_DESC dxFullScreenDescription{};
 
-		bool GetBackBuffer(comptr<ID3D11Texture2D>& texture2D) {
+		bool GetBackBuffer(comptr<ID3D11Texture2D>& texture2D) const {
 			if (!dxSwapChain)
 				return false;
 
@@ -769,7 +773,7 @@ namespace xna {
 			ShowCursor(visible);
 		}
 
-		inline void Close() {
+		inline void Close() const {
 			PostMessage(_windowHandle, WM_DESTROY, 0, 0);
 		}
 

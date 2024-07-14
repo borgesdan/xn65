@@ -150,27 +150,38 @@ namespace xna {
 			t.M21, t.M22, t.M23, t.M24,
 			t.M31, t.M32, t.M33, t.M34,
 			t.M41, t.M42, t.M43, t.M44);		
+		
+		std::function<void __cdecl()> effectFunc = nullptr;
 
-		if (effect && !impl->dxInputLayout) {
-			void const* shaderByteCode;
-			size_t byteCodeLength;	
+		//if Effect is not null set effectBuffer and inputLayout
+		if (effect && effect->impl) {
+			bool effectBufferChanged = false;
 
-			effect->impl->dxEffect->GetVertexShaderBytecode(&shaderByteCode, &byteCodeLength);
+			if (!impl->effectBuffer || impl->effectBuffer != effect->impl->dxEffect) {
+				impl->effectBuffer = effect->impl->dxEffect;			
+				effectBufferChanged = true;
+			}
 
-			m_device->impl->_device->CreateInputLayout(
-				DirectX::VertexPositionColorTexture::InputElements,
-				DirectX::VertexPositionColorTexture::InputElementCount,
-				shaderByteCode, byteCodeLength,
-				impl->dxInputLayout.GetAddressOf());
-		}		
+			if (effectBufferChanged) {
+				void const* shaderByteCode;
+				size_t byteCodeLength;
 
-		auto& context = m_device->impl->_context;
+				effect->impl->dxEffect->GetVertexShaderBytecode(&shaderByteCode, &byteCodeLength);
 
-		std::function funcEffect = [=] {
-			effect->impl->dxEffect->Apply(context.Get());
-			context->IASetInputLayout(impl->dxInputLayout.Get());
-			};
-		std::function funcVoid = [=] {};
+				m_device->impl->_device->CreateInputLayout(
+					DirectX::VertexPositionColorTexture::InputElements,
+					DirectX::VertexPositionColorTexture::InputElementCount,
+					shaderByteCode, byteCodeLength,
+					impl->dxInputLayout.GetAddressOf());
+			}
+
+			auto& context = m_device->impl->_context;
+
+			effectFunc = [=] {
+				impl->effectBuffer->Apply(context.Get());
+				context->IASetInputLayout(impl->dxInputLayout.Get());
+				};
+		}
 
 		impl->_dxspriteBatch->Begin(
 			sort,
@@ -178,7 +189,7 @@ namespace xna {
 			samplerState ? samplerState->impl->_samplerState.Get() : nullptr,
 			depthStencil ? depthStencil->impl->dxDepthStencil.Get() : nullptr,
 			rasterizerState ? rasterizerState->impl->dxRasterizerState.Get() : nullptr,
-			effect ? funcEffect : funcVoid,
+			effectFunc,
 			matrix
 		);
 	}
