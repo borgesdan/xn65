@@ -24,15 +24,15 @@ namespace xna {
 		static bool IsConnected();
 		static bool IsVisible();
 		static void IsVisible(bool value);
-		static void ResetScrollWheel();
-
-		Mouse() = delete;
-		Mouse(Mouse&) = delete;
-		Mouse(Mouse&&) = delete;
+		static void ResetScrollWheel();		
 
 	private:
 		friend class Game;
 		static void Initialize();
+
+		Mouse() = default;
+		Mouse(Mouse&) = default;
+		Mouse(Mouse&&) = default;
 
 	public:
 		struct PlatformImplementation;

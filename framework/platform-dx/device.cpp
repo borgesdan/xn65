@@ -1,4 +1,4 @@
-#include "xna/platform-dx/dx.hpp"
+#include "xna/xna-dx.hpp"
 #include "xna/game/gdevicemanager.hpp"
 
 namespace xna {
@@ -53,7 +53,7 @@ namespace xna {
 				impl._context.GetAddressOf());
 
 			if FAILED(hr)
-				Exception::Throw(ExMessage::CreateComponent);
+				Exception::Throw(Exception::FAILED_TO_CREATE);
 		}
 	}
 
@@ -107,7 +107,7 @@ namespace xna {
 		auto hr = CreateDXGIFactory1(__uuidof(IDXGIFactory1), (void**)&impl->_factory);
 		
 		if FAILED(hr)
-			Exception::Throw(ExMessage::CreateComponent);
+			Exception::Throw(Exception::FAILED_TO_CREATE);
 
 		const auto bounds = impl->_gameWindow->ClientBounds();
 
@@ -128,7 +128,7 @@ namespace xna {
 		hr = impl->_factory->MakeWindowAssociation(impl->_gameWindow->impl->WindowHandle(), DXGI_MWA_NO_ALT_ENTER);
 		
 		if (FAILED(hr)) 
-			Exception::Throw(ExMessage::MakeWindowAssociation);
+			Exception::Throw(Exception::FAILED_TO_MAKE_WINDOW_ASSOCIATION);
 
 		impl->_renderTarget2D = snew<RenderTarget2D>(_this);
 		
@@ -185,10 +185,10 @@ namespace xna {
 		switch (options)
 		{
 		case xna::ClearOptions::DepthBuffer:
-			Exception::Throw(ExMessage::NotImplemented);
+			Exception::Throw(Exception::NOT_IMPLEMENTED);
 			break;
 		case xna::ClearOptions::Stencil:
-			Exception::Throw(ExMessage::NotImplemented);
+			Exception::Throw(Exception::NOT_IMPLEMENTED);
 			break;
 		case xna::ClearOptions::Target:
 			Clear(color);

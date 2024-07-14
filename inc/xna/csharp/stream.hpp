@@ -1,12 +1,15 @@
 #ifndef XNA_CSHARP_STREAM_HPP
 #define XNA_CSHARP_STREAM_HPP
 
-#include "../types.hpp"
-#include "../enums.hpp"
-#include <fstream>
-#include <filesystem>
+#include "../default.hpp"
 
 namespace xna {
+	enum class SeekOrigin {
+		Begin,
+		Current,
+		End,
+	};
+
 	//A simplified port of the System.IO.Stream.
 	//Provides a generic view of a sequence of bytes. This is an abstract class.
 	class Stream {
@@ -18,23 +21,20 @@ namespace xna {
 		virtual Long Position() = 0;
 		//Closes the current stream and releases any resources
 		virtual void Close() = 0;
-		virtual bool IsClosed() = 0;
 		//Sets the position within the current stream.
 		virtual Long Seek(Long offset, SeekOrigin const& origin) = 0;
 		
-		//
 		//Reads a sequence of bytes from the current stream and advances the position within the stream by the number of bytes read.
-		//		
 		virtual Int Read(Byte* buffer, Int bufferLength, Int offset, Int count) = 0;
+		//Reads a sequence of bytes from the current stream and advances the position within the stream by the number of bytes read.
 		virtual Int Read(std::vector<Byte>& buffer, Int offset, Int count) = 0;
 		
 		//Reads a byte from the stream and advances the position within the stream by one byte, or returns -1 if at the end of the stream.
 		virtual Int ReadByte() = 0;
 		
-		//
-		//When overridden in a derived class, writes a sequence of bytes to the current stream and advances the current position within this stream by the number of bytes written.
-		//
+		//Writes a sequence of bytes to the current stream and advances the current position within this stream by the number of bytes written.
 		virtual void Write(Byte const* buffer, Int bufferLength, Int offset, Int count) = 0;
+		//Writes a sequence of bytes to the current stream and advances the current position within this stream by the number of bytes written.
 		virtual void Write(std::vector<Byte> const& buffer, Int offset, Int count) = 0;
 		
 		//Writes a byte to the current position in the stream and advances the position within the stream by one byte.
@@ -48,6 +48,10 @@ namespace xna {
 	public:
 		constexpr MemoryStream(std::vector<Byte> const& bytes):
 			_buffer(bytes), _length(bytes.size()){}
+
+		~MemoryStream() override {
+			Close();
+		}
 
 		constexpr MemoryStream(Int capacity) :
 			_buffer(static_cast<size_t>(capacity)),
@@ -70,11 +74,7 @@ namespace xna {
 		virtual constexpr void Close() override {
 			_closed = true;
 			_buffer = std::vector<Byte>();
-		}
-
-		virtual constexpr bool IsClosed() override {
-			return _closed;
-		}
+		}		
 
 		virtual Long Seek(Long offset, SeekOrigin const& origin) override;
 		virtual Int Read(Byte* buffer, Int bufferLength, Int offset, Int count) override;
@@ -90,6 +90,7 @@ namespace xna {
 
 	public:
 		std::vector<Byte> _buffer;
+
 	private:
 		Int _position{ 0 };
 		Int _origin{ 0 };
@@ -103,7 +104,7 @@ namespace xna {
 		FileStream(String const& path, FileMode fileMode);
 		FileStream(String const& path);
 
-		~FileStream() {
+		~FileStream() override {
 			Close();
 		}		
 
@@ -115,11 +116,7 @@ namespace xna {
 
 			if(_fstream.is_open())
 				_fstream.close();
-		}
-
-		inline virtual constexpr bool IsClosed() override {
-			return _closed;
-		}
+		}		
 
 		virtual Long Seek(Long offset, SeekOrigin const& origin) override;
 		virtual Int Read(Byte* buffer, Int bufferLength, Int offset, Int count) override;

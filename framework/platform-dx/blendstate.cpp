@@ -1,6 +1,6 @@
 #include "xna/graphics/blendstate.hpp"
 #include "xna/graphics/gresource.hpp"
-#include "xna/platform-dx/dx.hpp"
+#include "xna/xna-dx.hpp"
 
 namespace xna {
 	BlendState::BlendState() : BlendState(nullptr) {}
@@ -98,7 +98,7 @@ namespace xna {
 	bool BlendState::Initialize()
 	{
 		if (!m_device || !m_device->impl->_device) {
-			Exception::Throw(ExMessage::InitializeComponent);
+			Exception::Throw(Exception::UNABLE_TO_INITIALIZE);
 		}
 
 		if (impl->dxBlendState) {
@@ -110,7 +110,7 @@ namespace xna {
 			impl->dxBlendState.GetAddressOf());
 
 		if (FAILED(hr)) {
-			Exception::Throw(ExMessage::CreateComponent);
+			Exception::Throw(Exception::FAILED_TO_CREATE);
 		}
 
 		return true;
@@ -118,11 +118,11 @@ namespace xna {
 
 	bool BlendState::Apply() {
 		if (!m_device || !m_device->impl->_context) {
-			Exception::Throw(ExMessage::ApplyComponent);
+			Exception::Throw(Exception::FAILED_TO_APPLY);
 		}
 
 		if (!impl->dxBlendState) {
-			Exception::Throw(ExMessage::UnintializedComponent);
+			Exception::Throw(Exception::INVALID_OPERATION);
 		}
 
 		m_device->impl->_context->OMSetBlendState(

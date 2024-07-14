@@ -1,7 +1,7 @@
 #include "xna/graphics/adapter.hpp"
 #include "xna/graphics/displaymode.hpp"
 #include "xna/game/gdevicemanager.hpp"
-#include "xna/platform-dx/dx.hpp"
+#include "xna/xna-dx.hpp"
 
 namespace xna {
 	static size_t getDisplayModesCount(IDXGIAdapter* adapter);
@@ -15,7 +15,7 @@ namespace xna {
 		comptr<IDXGIFactory1> pFactory = nullptr;
 
 		if FAILED(CreateDXGIFactory1(__uuidof(IDXGIFactory1), (void**)pFactory.GetAddressOf()))
-			Exception::Throw(ExMessage::CreateComponent);
+			Exception::Throw(Exception::FAILED_TO_CREATE);
 
 		comptr<IDXGIAdapter1> pAdapter = nullptr;
 		
@@ -35,7 +35,7 @@ namespace xna {
 		comptr<IDXGIFactory1> pFactory = nullptr;
 
 		if FAILED(CreateDXGIFactory1(__uuidof(IDXGIFactory1), (void**)pFactory.GetAddressOf()))
-			Exception::Throw(ExMessage::CreateComponent);
+			Exception::Throw(Exception::FAILED_TO_CREATE);
 
 		comptr<IDXGIAdapter1> pAdapter = nullptr;
 		UINT count = 0;

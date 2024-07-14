@@ -2,6 +2,7 @@
 //
 
 #include "xna/xna.hpp"
+#include "xna/xna-dx.hpp"
 
 using namespace std;
 using namespace xna;
@@ -26,7 +27,6 @@ namespace xna {
 
 		void LoadContent() override {
 			spriteBatch = snew<SpriteBatch>(graphicsDevice);
-			auto texture = Content()->Load<PTexture2D>("Idle");
 			Game::LoadContent();
 		}
 

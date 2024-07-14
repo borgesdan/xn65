@@ -1,5 +1,5 @@
 #include "xna/graphics/effect.hpp"
-#include "xna/platform-dx/dx.hpp"
+#include "xna/xna-dx.hpp"
 #include "xna/common/math.hpp"
 
 using DxBasicEffect = DirectX::BasicEffect;
@@ -100,7 +100,7 @@ namespace xna {
 
 	void BasicEffect::Texture(sptr<xna::Texture2D> const& value) {
 		if (!value || !value->impl || !value->impl->dxShaderResource)
-			Exception::Throw(ExMessage::ArgumentIsNull);
+			Exception::Throw(Exception::ARGUMENT_IS_NULL);
 
 		impl->dxBasicEffect->SetTexture(value->impl->dxShaderResource.Get());
 	}

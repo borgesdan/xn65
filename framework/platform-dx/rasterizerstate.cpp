@@ -1,5 +1,5 @@
 #include "xna/graphics/rasterizerstate.hpp"
-#include "xna/platform-dx/dx.hpp"
+#include "xna/xna-dx.hpp"
 
 namespace xna {
 
@@ -18,7 +18,7 @@ namespace xna {
 	bool RasterizerState::Initialize()
 	{
 		if (!impl || !m_device || !m_device->impl->_device) {
-			Exception::Throw(ExMessage::InitializeComponent);
+			Exception::Throw(Exception::UNABLE_TO_INITIALIZE);
 		}
 
 		if (impl->dxRasterizerState) {
@@ -30,7 +30,7 @@ namespace xna {
 			impl->dxRasterizerState.GetAddressOf());
 
 		if (FAILED(hr)) {
-			Exception::Throw(ExMessage::CreateComponent);
+			Exception::Throw(Exception::FAILED_TO_CREATE);
 		}
 
 		return true;
@@ -39,11 +39,11 @@ namespace xna {
 	bool RasterizerState::Apply()
 	{
 		if (!impl || !m_device || !m_device->impl->_context) {
-			Exception::Throw(ExMessage::InitializeComponent);
+			Exception::Throw(Exception::UNABLE_TO_INITIALIZE);
 		}
 
 		if (!impl->dxRasterizerState) {
-			Exception::Throw(ExMessage::UnintializedComponent);
+			Exception::Throw(Exception::INVALID_OPERATION);
 		}
 
 		m_device->impl->_context->RSSetState(impl->dxRasterizerState.Get());

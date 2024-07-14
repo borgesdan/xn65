@@ -5,16 +5,14 @@
 # Add source to this project's executable.
 add_library (Xn65 STATIC 
 "csharp/stream.cpp"
+"csharp/binary.cpp"
+"csharp/type.cpp"
 "game/component.cpp"
+"game/servicecontainer.cpp"
 "content/manager.cpp"
 "content/reader.cpp"
-"csharp/binary.cpp"
 "content/lzx/decoder.cpp"
-
 "content/typereadermanager.cpp"
-"csharp/object.cpp"
-"csharp/type.cpp"
-"game/servicecontainer.cpp"
 "common/color.cpp"
 "common/collision.cpp" 
 "common/gjk.cpp"
@@ -29,7 +27,6 @@ add_library (Xn65 STATIC
 "platform-dx/blendstate.cpp"
 "platform-dx/game.cpp"
 "platform-dx/gdevicemanager.cpp"
-
 "platform-dx/rasterizerstate.cpp"
 "platform-dx/samplerstate.cpp"
 "platform-dx/sprite.cpp"
@@ -40,8 +37,10 @@ add_library (Xn65 STATIC
 "platform-dx/soundeffect.cpp"
 "platform-dx/displaymode.cpp"
 "platform-dx/init.cpp"
-
-"platform-dx/audioengine.cpp"  "graphics/gresource.cpp" "platform-dx/effect.cpp" "platform-dx/impl.cpp")
+"platform-dx/audioengine.cpp"
+"graphics/gresource.cpp"
+"platform-dx/effect.cpp"
+ "exception.cpp")
 
 if (CMAKE_VERSION VERSION_GREATER 3.12)
   set_property(TARGET Xn65 PROPERTY CXX_STANDARD 20)
@@ -53,6 +52,6 @@ find_package(directxtk CONFIG REQUIRED)
 
 target_link_libraries(
 	Xn65 D3d11.lib dxgi.lib dxguid.lib d3dcompiler.lib Microsoft::DirectXTK dxguid.lib 
-	"${PROJECT_INCLUDES_DIR}/libmspack/mspack.lib"
-	"${PROJECT_INCLUDES_DIR}/effects11/Effects11.lib"
+	#"${PROJECT_INCLUDES_DIR}/libmspack/mspack.lib"
+	#"${PROJECT_INCLUDES_DIR}/effects11/Effects11.lib"
 )

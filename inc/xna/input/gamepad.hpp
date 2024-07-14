@@ -247,14 +247,14 @@ namespace xna {
 		static GamePadCapabilities GetCapabilities(PlayerIndex index);
 		//Sets the vibration motor speeds on an Xbox 360 Controller.
 		static bool SetVibration(PlayerIndex index, float leftMotor, float rightMotor, float leftTrigger = 0, float rightTrigger = 0);
-		
-		GamePad() = delete;
-		GamePad(GamePad&) = delete;
-		GamePad(GamePad&&) = delete;
 
 	private:
 		friend class Game;
 		static void Initialize();
+
+		GamePad() = default;
+		GamePad(GamePad&) = default;
+		GamePad(GamePad&&) = default;
 
 	public:
 		struct PlatformImplementation;

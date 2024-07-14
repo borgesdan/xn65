@@ -1,6 +1,6 @@
 #include "xna/graphics/samplerstate.hpp"
 #include "xna/graphics/samplerstate.hpp"
-#include "xna/platform-dx/dx.hpp"
+#include "xna/xna-dx.hpp"
 
 namespace xna {
 	SamplerState::SamplerState() : SamplerState(nullptr){}
@@ -12,7 +12,7 @@ namespace xna {
 	bool SamplerState::Initialize()
 	{
 		if (!impl || !m_device || !m_device->impl->_device) {
-			Exception::Throw(ExMessage::InitializeComponent);
+			Exception::Throw(Exception::UNABLE_TO_INITIALIZE);
 		}
 
 		if (impl->_samplerState) {
@@ -24,7 +24,7 @@ namespace xna {
 			impl->_samplerState.GetAddressOf());
 
 		if (FAILED(hr)) {
-			Exception::Throw(ExMessage::CreateComponent);
+			Exception::Throw(Exception::FAILED_TO_CREATE);
 		}
 
 		return true;
@@ -33,11 +33,11 @@ namespace xna {
 	bool SamplerState::Apply()
 	{
 		if (!impl || !m_device || !m_device->impl->_context) {
-			Exception::Throw(ExMessage::InvalidOperation);
+			Exception::Throw(Exception::INVALID_OPERATION);
 		}
 
 		if (!impl->_samplerState) {
-			Exception::Throw(ExMessage::UnintializedComponent);
+			Exception::Throw(Exception::INVALID_OPERATION);
 		}
 
 		m_device->impl->_context->PSSetSamplers(0, 1, impl->_samplerState.GetAddressOf());
@@ -50,7 +50,7 @@ namespace xna {
 			return;
 
 		if (!device.impl || !device.impl->_device || !device.impl->_context) {
-			Exception::Throw(ExMessage::InvalidOperation);
+			Exception::Throw(Exception::INVALID_OPERATION);
 		}
 
 		std::vector<ID3D11SamplerState*> states(samplers.size());
@@ -59,7 +59,7 @@ namespace xna {
 			const auto& current = samplers[0];
 
 			if (!current || !current->impl || !current->impl->_samplerState)
-				Exception::Throw(ExMessage::InvalidOperation);
+				Exception::Throw(Exception::INVALID_OPERATION);
 
 			states[i] = current->impl->_samplerState.Get();
 			states[i]->AddRef();

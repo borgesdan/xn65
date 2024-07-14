@@ -1,3 +1,6 @@
+#ifndef XNA_XNA_HPP
+#define XNA_XNA_HPP
+
 #define NOMINMAX 
 #include "audio/audioengine.hpp"
 #include "audio/soundeffect.hpp"
@@ -16,12 +19,10 @@
 #include "content/typereadermanager.hpp"
 #include "csharp/binary.hpp"
 #include "csharp/buffer.hpp"
-#include "csharp/object.hpp"
 #include "csharp/service.hpp"
 #include "csharp/stream.hpp"
 #include "csharp/timespan.hpp"
 #include "csharp/type.hpp"
-#include "enums.hpp"
 #include "exception.hpp"
 #include "game/component.hpp"
 #include "game/game.hpp"
@@ -35,6 +36,7 @@
 #include "graphics/depthstencilstate.hpp"
 #include "graphics/device.hpp"
 #include "graphics/displaymode.hpp"
+#include "graphics/effect.hpp"
 #include "graphics/gresource.hpp"
 #include "graphics/presentparams.hpp"
 #include "graphics/rasterizerstate.hpp"
@@ -49,6 +51,14 @@
 #include "input/gamepad.hpp"
 #include "input/keyboard.hpp"
 #include "input/mouse.hpp"
-#include "platforminit.hpp"
-#include "types.hpp"
-#include "xna/platform-dx/dx.hpp"
+
+namespace xna {
+	//Exposes functions that must be implemented by the platform
+	struct Platform {
+		//Initialization function, which must be implemented by the platform,
+		//and be called before the game is executed
+		static void Init();
+	};
+}
+
+#endif

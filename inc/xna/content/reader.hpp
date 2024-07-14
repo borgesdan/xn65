@@ -21,7 +21,7 @@ namespace xna {
 
 		// Reads a single object from the current stream.
 		template <typename T>
-		auto ReadObject(T existingInstance);
+		auto ReadObject(T& existingInstance);
 
 		// Reads a single object from the current stream.
 		template <typename T>
@@ -29,7 +29,7 @@ namespace xna {
 
 		// Reads a single object from the current stream.
 		template <typename T>
-		auto ReadObject(ContentTypeReader& typeReader, T existingInstance);
+		auto ReadObject(ContentTypeReader& typeReader, T& existingInstance);
 
 		//Reads a Vector2 value from the current stream. 
 		Vector2 ReadVector2();
@@ -44,9 +44,9 @@ namespace xna {
 		//Reads a Color value from the currently open stream.
 		Color ReadColor();
 		//Reads a float value from the currently open stream.
-		float ReadSingle();
+		float ReadSingle() override;
 		//Reads a double value from the currently open stream.
-		double ReadDouble();
+		double ReadDouble() override;
 
 		//Gets the name of the asset currently being read by this ContentReader.
 		constexpr String AssetName() const {
@@ -77,10 +77,10 @@ namespace xna {
 		auto ReadObjectInternal(std::any& existingInstance);
 		
 		template <typename T>
-		auto ReadObjectInternal(ContentTypeReader& typeReader, std::any& existingInstance);
+		auto ReadObjectInternal(ContentTypeReader& typeReader, Object& existingInstance);
 
 		template <typename T>
-		auto InvokeReader(ContentTypeReader& reader, std::any& existingInstance);
+		auto InvokeReader(ContentTypeReader& reader, Object& existingInstance);
 
 	private:
 		sptr<xna::ContentManager> _contentManager = nullptr;
@@ -93,10 +93,13 @@ namespace xna {
 		static constexpr Ushort XnbCompressedVersion = 32773;
 		static constexpr Ushort XnbVersion = 5;
 		static constexpr Int XnbVersionProfileShift = 8;
+		static constexpr Char PlatformLabel = 'w';
+		static constexpr Int XnbPrologueSize = 10;
+		static constexpr Int XnbCompressedPrologueSize = 14;
 	};
 
 	template<typename T>
-	inline auto ContentReader::ReadObjectInternal(std::any& existingInstance)
+	inline auto ContentReader::ReadObjectInternal(Object& existingInstance)
 	{
 		const auto num = Read7BitEncodedInt();
 
@@ -107,16 +110,16 @@ namespace xna {
 		const auto index = num - 1;
 
 		if (index >= typeReaders.size()) {
-			throw std::runtime_error("ContentReader::ReadObjectInternal: Bad xbn.");
+			Exception::Throw(Exception::BAD_XNB);
 		}		
 		
-		auto reader = typeReaders[index];		
+		auto& reader = typeReaders[index];		
 		
 		return InvokeReader<T>(*reader, existingInstance);
 	}
 
 	template<typename T>
-	inline auto ContentReader::InvokeReader(ContentTypeReader& reader, std::any& existingInstance)
+	inline auto ContentReader::InvokeReader(ContentTypeReader& reader, Object& existingInstance)
 	{
 		auto contentTypeReader = reinterpret_cast<ContentTypeReaderT<T>*>(&reader);
 		T objB;
@@ -125,6 +128,9 @@ namespace xna {
 			auto existingInstance1 = existingInstance.has_value() ? std::any_cast<T>(existingInstance) : T();
 			objB = contentTypeReader->Read(*this, existingInstance1);
 			return objB;
+		}
+		else {
+			Exception::Throw(Exception::NOT_IMPLEMENTED);
 		}
 
 		return XnaHelper::ReturnDefaultOrNull<T>();
@@ -146,9 +152,9 @@ namespace xna {
 	}
 
 	template<typename T>
-	inline auto ContentReader::ReadObject(T existingInstance)
+	inline auto ContentReader::ReadObject(T& existingInstance)
 	{
-		return ReadObjectInternal<T>(std::any(existingInstance));
+		return ReadObjectInternal<T>(Object(existingInstance));
 	}
 
 	template<typename T>
@@ -159,17 +165,18 @@ namespace xna {
 	}
 
 	template<typename T>
-	inline auto ContentReader::ReadObject(ContentTypeReader& typeReader, T existingInstance)
+	inline auto ContentReader::ReadObject(ContentTypeReader& typeReader, T& existingInstance)
 	{
 		return ReadObjectInternal<T>(typeReader, std::any(existingInstance));
 	}
 
 	template<typename T>
-	inline auto ContentReader::ReadObjectInternal(ContentTypeReader& typeReader, std::any& existingInstance)
+	inline auto ContentReader::ReadObjectInternal(ContentTypeReader& typeReader, Object& existingInstance)
 	{
-		return typeReader.TargetIsValueType
-			? InvokeReader<T>(typeReader, existingInstance)
-			: ReadObjectInternal<T>(existingInstance);
+		if (typeReader.TargetIsValueType)
+			return InvokeReader<T>(typeReader, existingInstance);
+
+		ReadObjectInternal<T>(existingInstance);
 	}	
 }
 

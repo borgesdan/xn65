@@ -2,11 +2,8 @@
 
 namespace xna {
 	sptr<Stream> ContentManager::OpenStream(String const& assetName) const {
-		const String filePath = _rootDirectory + "\\" + assetName + contentExtension;
-		const auto stream = snew<FileStream>(filePath, FileMode::Open);
-
-		if (stream->IsClosed())
-			return nullptr;
+		const String filePath = rootDirectory + "\\" + assetName + contentExtension;
+		const auto stream = snew<FileStream>(filePath, FileMode::Open);		
 
 		return reinterpret_pointer_cast<Stream>(stream);
 	}

@@ -1,5 +1,5 @@
 #include "xna/graphics/depthstencilstate.hpp"
-#include "xna/platform-dx/dx.hpp"
+#include "xna/xna-dx.hpp"
 
 namespace xna {
 	static D3D11_DEPTH_STENCIL_DESC defaultDesc() {
@@ -38,7 +38,7 @@ namespace xna {
 	bool DepthStencilState::Initialize()
 	{
 		if (!m_device || !m_device->impl->_device) {
-			Exception::Throw(ExMessage::InitializeComponent);
+			Exception::Throw(Exception::UNABLE_TO_INITIALIZE);
 		}
 
 		if (impl->dxDepthStencil) {
@@ -50,7 +50,7 @@ namespace xna {
 			impl->dxDepthStencil.GetAddressOf());
 
 		if (FAILED(hr)) {
-			Exception::Throw(ExMessage::CreateComponent);
+			Exception::Throw(Exception::FAILED_TO_CREATE);
 		}
 
 		return true;
@@ -59,11 +59,11 @@ namespace xna {
 	bool DepthStencilState::Apply()
 	{
 		if (!m_device || !m_device->impl->_context) {
-			Exception::Throw(ExMessage::InvalidOperation);
+			Exception::Throw(Exception::INVALID_OPERATION);
 		}
 
 		if (!impl->dxDepthStencil) {
-			Exception::Throw(ExMessage::UnintializedComponent);
+			Exception::Throw(Exception::INVALID_OPERATION);
 		}
 
 		m_device->impl->_context->OMSetDepthStencilState(impl->dxDepthStencil.Get(), 0);

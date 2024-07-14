@@ -1,10 +1,9 @@
 #ifndef XNA_GRAPHICS_SPRITE_HPP
 #define XNA_GRAPHICS_SPRITE_HPP
 
-#include "../default.hpp"
-#include "../common/numerics.hpp"
 #include "../common/color.hpp"
-#include <optional>
+#include "../common/numerics.hpp"
+#include "../default.hpp"
 #include "../graphics/gresource.hpp"
 
 namespace xna {
@@ -13,7 +12,47 @@ namespace xna {
 	public:
 		SpriteBatch(sptr<GraphicsDevice> const& device);
 
-		//Begins a sprite batch operation. 
+		//Begins a sprite batch operation. 		
+		void Begin(
+			std::optional<SpriteSortMode> sortMode,
+			uptr<BlendState> blendState,
+			uptr<SamplerState> samplerState,
+			uptr<DepthStencilState> depthStencil,
+			uptr<RasterizerState> rasterizerState,
+			uptr<Effect> effect,
+			Matrix const& transformMatrix = Matrix::Identity()
+		) {
+			Begin(
+				!sortMode.has_value() ? SpriteSortMode::Deferred : sortMode.value(),
+				blendState.get(),
+				samplerState.get(),
+				depthStencil.get(),
+				rasterizerState.get(),
+				effect.get(),
+				transformMatrix
+			);
+		}
+
+		void Begin(
+			std::optional<SpriteSortMode> sortMode,
+			sptr<BlendState> blendState,
+			sptr<SamplerState> samplerState,
+			sptr<DepthStencilState> depthStencil,
+			sptr<RasterizerState> rasterizerState,
+			sptr<Effect> effect,
+			Matrix const& transformMatrix = Matrix::Identity()
+		) {
+			Begin(
+				!sortMode.has_value() ? SpriteSortMode::Deferred : sortMode.value(),
+				blendState.get(),
+				samplerState.get(),
+				depthStencil.get(),
+				rasterizerState.get(),
+				effect.get(),
+				transformMatrix
+			);
+		}
+
 		void Begin(
 			SpriteSortMode sortMode = SpriteSortMode::Deferred,
 			BlendState* blendState = nullptr,

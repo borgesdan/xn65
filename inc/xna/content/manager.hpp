@@ -5,35 +5,34 @@
 #include "../csharp/stream.hpp"
 #include "../default.hpp"
 #include "reader.hpp"
-#include <map>
 
 namespace xna {
 	//The run-time component which loads managed objects from the binary files produced by the design time content pipeline.
 	class ContentManager : public std::enable_shared_from_this<ContentManager> {
 	public:
 		ContentManager(sptr<IServiceProvider> const& services) :
-			_rootDirectory("") {
-			_services = services;
+			rootDirectory("") {
+			serviceProvider = services;
 		};
 
 		ContentManager(sptr<IServiceProvider> const& services, String const& rootDirectory) :
-			_rootDirectory(rootDirectory){
-			_services = services;
+			rootDirectory(rootDirectory){
+			serviceProvider = services;
 		};		
 
 		//Gets the service provider associated with the ContentManager.
 		sptr<IServiceProvider> ServiceProvider() const {
-			return _services;
+			return serviceProvider;
 		}
 
 		//Gets or sets the root directory associated with this ContentManager.
 		constexpr String RootDirectory() const {
-			return _rootDirectory;
+			return rootDirectory;
 		}
 
 		//Gets or sets the root directory associated with this ContentManager.
 		void RootDirectory(String const& value) {
-			_rootDirectory = value;
+			rootDirectory = value;
 		}
 
 		//Loads an asset that has been processed by the Content Pipeline.
@@ -45,8 +44,8 @@ namespace xna {
 			
 			if constexpr (XnaHelper::is_shared_ptr<T>::value) {				
 
-				if (_loadedAssets.contains(assetName)) {
-					auto& voidAsset = _loadedAssets[assetName];					
+				if (loadedAssets.contains(assetName)) {
+					auto& voidAsset = loadedAssets[assetName];
 					using TYPE = T::element_type;
 					auto asset = reinterpret_pointer_cast<TYPE>(voidAsset);
 					return asset;
@@ -58,7 +57,7 @@ namespace xna {
 			if constexpr (XnaHelper::is_shared_ptr<T>::value) {
 
 				if(obj2)
-					_loadedAssets.emplace( assetName, obj2 );
+					loadedAssets.emplace( assetName, obj2 );
 			}
 
 			return obj2;
@@ -66,12 +65,12 @@ namespace xna {
 
 		//Disposes all data that was loaded by this ContentManager.
 		void Unload() {
-			_loadedAssets.clear();
+			loadedAssets.clear();
 		}
 
 		//Gets the service provider associated with the main Game.
 		static sptr<IServiceProvider> GameServiceProvider() {
-			return _gameServices;
+			return mainGameService;
 		}
 
 	protected:
@@ -95,11 +94,11 @@ namespace xna {
 		friend class ContentReader;
 		friend class Game;
 
-		String _rootDirectory;				
-		sptr<IServiceProvider> _services = nullptr;
-		std::map<String, sptr<void>> _loadedAssets;
+		String rootDirectory;				
+		sptr<IServiceProvider> serviceProvider = nullptr;
+		std::map<String, sptr<void>> loadedAssets;
 		
-		inline static sptr<IServiceProvider> _gameServices = nullptr;		
+		inline static sptr<IServiceProvider> mainGameService = nullptr;		
 		inline const static String contentExtension = ".xnb";
 	};
 }

@@ -1,4 +1,4 @@
-#include "xna/platform-dx/dx.hpp"
+#include "xna/xna-dx.hpp"
 
 namespace xna {
 	RenderTarget2D::RenderTarget2D() : Texture2D() {
@@ -15,7 +15,7 @@ namespace xna {
 
 	bool RenderTarget2D::Initialize() {
 		if (!impl || !m_device || !m_device->impl->_device) {
-			Exception::Throw(ExMessage::InitializeComponent);
+			Exception::Throw(Exception::UNABLE_TO_INITIALIZE);
 		}		
 
 		if (!m_device->impl->_swapChain->impl->GetBackBuffer(impl->dxTexture2D))
@@ -26,7 +26,7 @@ namespace xna {
 		const auto hr = dxdevice->CreateRenderTargetView(impl->dxTexture2D.Get(), NULL, render_impl->_renderTargetView.ReleaseAndGetAddressOf());
 
 		if (FAILED(hr)) {
-			Exception::Throw(ExMessage::CreateComponent);
+			Exception::Throw(Exception::FAILED_TO_CREATE);
 		}
 
 		return true;
@@ -34,11 +34,11 @@ namespace xna {
 
 	bool RenderTarget2D::Apply() {
 		if (!m_device || !m_device->impl->_context) {
-			Exception::Throw(ExMessage::ApplyComponent);
+			Exception::Throw(Exception::FAILED_TO_APPLY);
 		}
 
 		if(!render_impl->_renderTargetView)
-			Exception::Throw(ExMessage::UnintializedComponent);
+			Exception::Throw(Exception::INVALID_OPERATION);
 
 		auto& context = m_device->impl->_context;
 		context->OMSetRenderTargets(1, render_impl->_renderTargetView.GetAddressOf(), nullptr);
