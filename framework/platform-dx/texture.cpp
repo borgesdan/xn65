@@ -1,4 +1,4 @@
-#include "xna/platform/dx.hpp"
+#include "xna/xna-dx.hpp"
 
 namespace xna {	
 	Texture2D::~Texture2D() {

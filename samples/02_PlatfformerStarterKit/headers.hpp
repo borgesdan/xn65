@@ -1,2 +1,2 @@
 #include "xna/xna.hpp"
-#include "xna/platform/dx.hpp"
+#include "xna/xna-dx.hpp"

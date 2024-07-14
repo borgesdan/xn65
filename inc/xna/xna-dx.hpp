@@ -53,7 +53,7 @@ using comptr = Microsoft::WRL::ComPtr<T>;
 
 //---------------- INCLUDES ----------------//
 
-#include "../xna.hpp"
+#include "xna.hpp"
 
 //---------------- CLASSES ----------------//
 
