@@ -25,8 +25,10 @@ namespace xna {
 #if _DEBUG
 		createDeviceFlags = D3D11_CREATE_DEVICE_FLAG::D3D11_CREATE_DEVICE_DEBUG;
 #endif        
+		const auto& currentAdapter = impl._adapter;
+
 		auto hr = D3D11CreateDevice(
-			impl._adapter->impl->dxadapter.Get(),
+			currentAdapter ? currentAdapter->impl->dxAdapter.Get() : NULL,
 			D3D_DRIVER_TYPE_UNKNOWN,
 			NULL,
 			createDeviceFlags,
@@ -57,7 +59,7 @@ namespace xna {
 		}
 	}
 
-	void initAndApplyState(GraphicsDevice::PlatformImplementation& impl, PGraphicsDevice const& device) {
+	static void initAndApplyState(GraphicsDevice::PlatformImplementation& impl, PGraphicsDevice const& device) {
 		impl._blendState->Bind(device);
 		impl._blendState->Initialize();
 		impl._blendState->Apply();

@@ -24,18 +24,13 @@ namespace xna {
             swapChain.ReleaseAndGetAddressOf();
         }
 
-        auto adapter = device.Adapter();
-        auto dxAdapter = adapter->impl->dxadapter;
+        auto adapter = device.Adapter();        
 
-        IDXGIFactory1* dxFactory1 = nullptr;
-        auto hr = dxAdapter->GetParent(IID_IDXGIFactory1, (void**)&dxFactory1);
+        comptr<IDXGIFactory2> dxFactory2 = nullptr;
+        const auto hr = adapter->impl->dxFactory->QueryInterface(IID_IDXGIFactory2, (void**)&dxFactory2);
 
-        if (FAILED(hr)) return false;
-
-        IDXGIFactory2* dxFactory2 = nullptr;
-        hr = dxFactory1->QueryInterface(IID_IDXGIFactory2, (void**)&dxFactory2);
-
-        if (FAILED(hr)) return false;
+        if (FAILED(hr)) 
+            return false;
 
         dxFactory2->CreateSwapChainForHwnd(
             device.impl->_device.Get(),
@@ -44,7 +39,6 @@ namespace xna {
             &fdesc,
             nullptr,
             swapChain.GetAddressOf());
-
 
         return true;
     }

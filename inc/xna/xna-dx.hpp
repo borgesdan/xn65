@@ -1,5 +1,5 @@
-#ifndef XNA_XNA_DX_HPP
-#define XNA_XNA_DX_HPP
+#ifndef XNA_XNADX_HPP
+#define XNA_XNADX_HPP
 
 #define NOMINMAX
 
@@ -95,7 +95,6 @@ namespace xna {
 			return v;
 		}
 
-
 		static constexpr DirectX::XMVECTOR VectorToDx(Vector3 const& value) {
 			DirectX::XMVECTOR v{};
 
@@ -149,7 +148,6 @@ namespace xna {
 
 			return m;
 		}
-
 
 		static constexpr DirectX::SpriteSortMode SpriteSortToDx(SpriteSortMode value) {
 			return static_cast<DirectX::SpriteSortMode>(static_cast<int>(value));
@@ -592,7 +590,8 @@ namespace xna {
 	};
 
 	struct GraphicsAdapter::PlatformImplementation {
-		comptr<IDXGIAdapter1> dxadapter = nullptr;
+		comptr<IDXGIAdapter1> dxAdapter = nullptr;
+		comptr<IDXGIFactory1> dxFactory = nullptr;
 
 	private:
 		friend class GraphicsAdapter;
@@ -600,7 +599,7 @@ namespace xna {
 		sptr<DisplayMode> _currentDisplayMode = nullptr;
 
 	public:
-		bool GetOutput(UINT slot, IDXGIOutput*& output);
+		bool GetOutput(UINT slot, IDXGIOutput*& output) const;
 	};
 
 	struct BlendRenderTarget {
