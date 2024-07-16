@@ -176,7 +176,7 @@ namespace xna {
 		if (typeReader.TargetIsValueType)
 			return InvokeReader<T>(typeReader, existingInstance);
 
-		ReadObjectInternal<T>(existingInstance);
+		return ReadObjectInternal<T>(existingInstance);
 	}	
 }
 

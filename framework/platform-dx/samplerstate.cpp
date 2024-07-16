@@ -65,7 +65,10 @@ namespace xna {
 			states[i]->AddRef();
 		}
 
-		device.impl->_context->PSSetSamplers(0, states.size(), states.data());
+		device.impl->_context->PSSetSamplers(
+			0, 
+			static_cast<UINT>(states.size()),
+			states.data());
 
 		for (size_t i = 0; i < samplers.size(); ++i) {			
 			states[i]->Release();
