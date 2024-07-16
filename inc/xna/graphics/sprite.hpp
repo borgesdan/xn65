@@ -154,7 +154,7 @@ namespace xna {
 		//Gets or sets the vertical distance (in pixels) between the base lines of two consecutive lines of text
 		Int LineSpacing() const;
 		//Gets or sets the vertical distance (in pixels) between the base lines of two consecutive lines of text
-		void LineSpacing(Int value);			
+		void LineSpacing(float value);			
 
 	public:
 		struct PlatformImplementation;

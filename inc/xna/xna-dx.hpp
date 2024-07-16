@@ -64,6 +64,28 @@ namespace xna {
 	//---------------- HELPERS ----------------//
 
 	struct DxHelpers {
+		static constexpr RECT RectangleToDx(Rectangle const& value) {
+			RECT rect{};
+			rect.top = value.Top();
+			rect.left = value.Left();
+			rect.right = value.Right();
+			rect.bottom = value.Bottom();
+
+			return rect;
+		}
+
+		static constexpr D3D11_VIEWPORT ViewportToDx(Viewport const& value) {
+			D3D11_VIEWPORT _view{};
+			_view.TopLeftX = value.X;
+			_view.TopLeftY = value.Y;
+			_view.Width = value.Width;
+			_view.Height = value.Height;
+			_view.MinDepth = value.MinDetph;
+			_view.MaxDepth = value.MaxDepth;
+
+			return _view;
+		}
+
 		static constexpr DirectX::XMVECTOR VectorToDx(Vector2 const& value) {
 			DirectX::XMVECTOR v{};
 
@@ -560,13 +582,13 @@ namespace xna {
 	//---------------- IMPLEMENTATIONS ----------------//
 
 	struct SpriteFont::PlatformImplementation {
-		uptr<DirectX::SpriteFont> _dxSpriteFont{ nullptr };
+		uptr<DirectX::SpriteFont> dxSpriteFont{ nullptr };
 	};
 
 	struct SpriteBatch::PlatformImplementation {
-		sptr<DirectX::SpriteBatch> _dxspriteBatch = nullptr;
+		sptr<DirectX::SpriteBatch> dxSpriteBatch = nullptr;
 		comptr<ID3D11InputLayout> dxInputLayout = nullptr;
-		sptr<DirectX::DX11::IEffect> effectBuffer = nullptr;
+		sptr<DirectX::DX11::IEffect> dxEffectBuffer = nullptr;
 	};
 
 	struct GraphicsAdapter::PlatformImplementation {

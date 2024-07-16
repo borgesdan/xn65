@@ -116,7 +116,7 @@ namespace xna {
 	void BasicEffect::SetDirectionalLight(Int index, DirectionalLight const& direction) {
 		DxVec vec3 = DxHelpers::VectorToDx(direction.Direction);
 
-		const auto value = (int)MathHelper::Clamp(index, 0, impl->dxBasicEffect->MaxDirectionalLights);
+		const auto value = static_cast<Int>(MathHelper::Clamp(static_cast<float>(index), 0, impl->dxBasicEffect->MaxDirectionalLights));
 
 		impl->dxBasicEffect->SetLightDirection(value, vec3);
 	}
