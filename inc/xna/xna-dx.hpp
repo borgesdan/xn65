@@ -622,40 +622,6 @@ namespace xna {
 		D3D11_DEPTH_STENCIL_DESC dxDescription{};
 	};
 
-	struct DisplayModeRefreshRate {
-		constexpr DisplayModeRefreshRate() = default;
-
-		constexpr DisplayModeRefreshRate(DXGI_RATIONAL const& dxrational) {
-			Numerator = dxrational.Numerator;
-			Denominator = dxrational.Denominator;
-		}
-		constexpr DisplayModeRefreshRate(Uint numerator, Uint denominator)
-			: Numerator(numerator), Denominator(denominator) {}
-
-		Uint Numerator{ 0 };
-		Uint Denominator{ 0 };
-
-		constexpr bool operator==(const DisplayModeRefreshRate& other) const
-		{
-			return Numerator == other.Numerator && Denominator == other.Denominator;
-		}
-	};
-
-	struct DisplayModeDescription {
-		DisplayModeScanlineOrder _scanlineOrdering{ DisplayModeScanlineOrder::Unspecified };
-		DisplayModeScaling _scaling{ DisplayModeScaling::Unspecified };
-		DisplayModeRefreshRate _refreshRate{};
-
-		constexpr bool operator==(const DisplayModeDescription& other) const
-		{
-			return _scanlineOrdering == other._scanlineOrdering && _scaling == other._scaling && _refreshRate == other._refreshRate;
-		}
-	};
-
-	struct DisplayMode::PlatformImplementation {
-		std::vector<DisplayModeDescription> Descriptions;
-	};
-
 	struct GamePad::PlatformImplementation {
 		uptr<DirectX::GamePad> _dxGamePad = unew<DirectX::GamePad>();
 

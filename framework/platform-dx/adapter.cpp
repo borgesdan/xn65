@@ -167,7 +167,7 @@ namespace xna {
 		for (size_t i = 0; i < modes->DisplayModes.size(); ++i) {
 			auto& m = modes->DisplayModes[i];
 
-			if (m->Format == surfaceFormat && m->Width == width && m->Height == height) {
+			if (m->Format() == surfaceFormat && m->Width() == width && m->Height() == height) {
 				currentDisplayMode = m;
 			}
 			else if (i + 1 == modes->DisplayModes.size()) {
@@ -197,27 +197,29 @@ namespace xna {
 
 	uptr<DisplayModeCollection> createDisplayModeCollection(std::vector<DXGI_MODE_DESC> const& source) {
 		auto collection = unew<DisplayModeCollection>();
-		DisplayMode currentDisplayMode;
+		
 		std::vector<sptr<DisplayMode>> displayList;
 		sptr<DisplayMode> pDisplay = nullptr;
 
 		for (size_t i = 0; i < source.size(); ++i) {
 			auto& modedesc = source[i];
 
-			DisplayModeDescription description;
-			description._refreshRate = modedesc.RefreshRate;
-			description._scaling = static_cast<DisplayModeScaling>(modedesc.Scaling);
-			description._scanlineOrdering = static_cast<DisplayModeScanlineOrder>(modedesc.ScanlineOrdering);
+			DisplayModeRate rate;
+			rate.RefreshRate.Denominator = modedesc.RefreshRate.Denominator;
+			rate.RefreshRate.Numerator = modedesc.RefreshRate.Numerator;
+			rate.Scaling = static_cast<DisplayModeScaling>(modedesc.Scaling);
+			rate.ScanlineOrdering = static_cast<DisplayModeScanlineOrder>(modedesc.ScanlineOrdering);
 
-			if (pDisplay && pDisplay->Width == modedesc.Width && pDisplay->Height == modedesc.Height && pDisplay->Format == DxHelpers::SurfaceFormatToXna(modedesc.Format)) {
-				pDisplay->impl->Descriptions.push_back(description);
+			if (pDisplay && pDisplay->Width() == modedesc.Width && pDisplay->Height() == modedesc.Height && pDisplay->Format() == DxHelpers::SurfaceFormatToXna(modedesc.Format)) {
+				pDisplay->Rates.push_back(rate);
 			}
 			else {
-				pDisplay = snew<DisplayMode>();
-				pDisplay->Width = modedesc.Width;
-				pDisplay->Height = modedesc.Height;
-				pDisplay->Format = DxHelpers::SurfaceFormatToXna(modedesc.Format);
-				pDisplay->impl->Descriptions.push_back(description);
+				pDisplay = snew<DisplayMode>(
+					modedesc.Width,
+					modedesc.Height, 
+					DxHelpers::SurfaceFormatToXna(modedesc.Format));
+				
+				pDisplay->Rates.push_back(rate);
 				displayList.push_back(pDisplay);
 			}
 		}

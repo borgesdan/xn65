@@ -6,6 +6,23 @@
 #include <optional>
 
 namespace xna {
+	//Represents a rational number.
+	struct RationalNumber {
+		constexpr RationalNumber() = default;
+
+		constexpr RationalNumber(Uint numerator, Uint denominator)
+			: Numerator(numerator), Denominator(denominator) {}
+
+		constexpr bool operator==(const RationalNumber& other) const {
+			return Numerator == other.Numerator && Denominator == other.Denominator;
+		}
+
+		//An unsigned integer value representing the top of the rational number.
+		Uint Numerator{ 0 };
+		//An unsigned integer value representing the bottom of the rational number.
+		Uint Denominator{ 0 };
+	};
+
 	struct Point {
 		Int X{ 0 };
 		Int Y{ 0 };
