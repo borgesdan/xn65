@@ -591,10 +591,7 @@ namespace xna {
 
 	struct GraphicsAdapter::PlatformImplementation {
 		comptr<IDXGIAdapter1> dxAdapter = nullptr;
-		comptr<IDXGIFactory1> dxFactory = nullptr;	
-
-	public:
-		bool GetOutput(UINT slot, IDXGIOutput*& output) const;		
+		comptr<IDXGIFactory1> dxFactory = nullptr;		
 	};
 
 	struct BlendRenderTarget {

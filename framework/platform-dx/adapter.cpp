@@ -143,16 +143,7 @@ namespace xna {
 		}
 
 		return unew<DisplayModeCollection>();
-	}
-
-	bool GraphicsAdapter::PlatformImplementation::GetOutput(UINT slot, IDXGIOutput*& output) const {
-		if (!dxAdapter) return false;
-
-		if (dxAdapter->EnumOutputs(slot, &output) != DXGI_ERROR_NOT_FOUND)
-			return true;
-
-		return false;
-	}
+	}	
 
 	//INTERNAL FUNCTIONS
 
