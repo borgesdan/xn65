@@ -4,8 +4,17 @@
 #include "xna/xna-dx.hpp"
 
 namespace xna {
+	static String getDescription(comptr<IDXGIAdapter1> const& adapter);
+	static Uint getDeviceId(comptr<IDXGIAdapter1> const& adapter);
+	static String getDeviceName(comptr<IDXGIAdapter1> const& adapter);
+	static intptr_t getMonitorHandle(comptr<IDXGIAdapter1> const& adapter);
+	static Uint getRevision(comptr<IDXGIAdapter1> const& adapter);
+	static Uint getRevision(comptr<IDXGIAdapter1> const& adapter);
+	static Uint getSubSystemId(comptr<IDXGIAdapter1> const& adapter);
+	static Uint getVendorId(comptr<IDXGIAdapter1> const& adapter);
 	static size_t getDisplayModesCount(IDXGIAdapter* adapter);
-	static uptr<DisplayModeCollection> createDisplayModeCollection(std::vector<DXGI_MODE_DESC> const& source);
+	static uptr<DisplayModeCollection> createDisplayModeCollection(std::vector<DXGI_MODE_DESC> const& source);	
+	static void setCurrentDisplayMode(GraphicsAdapter& adapter, SurfaceFormat surfaceFormat, Uint width, Uint height, sptr<DisplayMode>& currentDisplayMode);
 
 	GraphicsAdapter::GraphicsAdapter() {
 		impl = unew<PlatformImplementation>();
@@ -21,10 +30,18 @@ namespace xna {
 		
 		if (pFactory->EnumAdapters1(0, pAdapter.GetAddressOf()) != DXGI_ERROR_NOT_FOUND) {
 			auto adp = unew<GraphicsAdapter>();
-
-			adp->impl->_index = 0;
+			
 			adp->impl->dxAdapter = pAdapter;
-			adp->impl->dxFactory = pFactory;
+			adp->impl->dxFactory = pFactory;			
+			
+			adp->description = getDescription(pAdapter);
+			adp->deviceId = getDeviceId(pAdapter);
+			adp->deviceName = getDeviceName(pAdapter);
+			adp->isDefault = true;
+			adp->monitorHandle = getMonitorHandle(pAdapter);
+			adp->revision = getRevision(pAdapter);
+			adp->subSystemId = getSubSystemId(pAdapter);
+			adp->vendorId = getVendorId(pAdapter);			
 
 			return adp;
 		}
@@ -43,90 +60,21 @@ namespace xna {
 		for (UINT count = 0; pFactory->EnumAdapters1(count, pAdapter.GetAddressOf()) != DXGI_ERROR_NOT_FOUND; ++count) {
 			auto adp = unew<GraphicsAdapter>();
 
-			adp->impl->_index = count;
 			adp->impl->dxAdapter = pAdapter;
 			adp->impl->dxFactory = pFactory;
 
+			adp->description = getDescription(pAdapter);
+			adp->deviceId = getDeviceId(pAdapter);
+			adp->deviceName = getDeviceName(pAdapter);
+			adp->isDefault = count == 0;
+			adp->monitorHandle = getMonitorHandle(pAdapter);
+			adp->revision = getRevision(pAdapter);
+			adp->subSystemId = getSubSystemId(pAdapter);
+			adp->vendorId = getVendorId(pAdapter);
+
 			adapters.push_back(std::move(adp));
 		}
-	}	
-
-	String GraphicsAdapter::Description() const {
-		if (!impl->dxAdapter) return String();
-
-		DXGI_ADAPTER_DESC1 desc;
-		impl->dxAdapter->GetDesc1(&desc);
-		String description = XnaHelper::ToString(desc.Description);
-		return description;
-	}
-
-	Uint GraphicsAdapter::DeviceId() const {
-		if (!impl->dxAdapter) return 0;
-
-		DXGI_ADAPTER_DESC1 desc;
-		impl->dxAdapter->GetDesc1(&desc);
-
-		return static_cast<Uint>(desc.DeviceId);
-	}
-
-	String GraphicsAdapter::DeviceName() const {
-		if (!impl->dxAdapter) return String();
-
-		comptr<IDXGIOutput> pOutput = nullptr;		
-		
-		if (impl->dxAdapter->EnumOutputs(0, pOutput.GetAddressOf()) != DXGI_ERROR_NOT_FOUND) {
-			DXGI_OUTPUT_DESC outputDesc{};
-			pOutput->GetDesc(&outputDesc);
-
-			String deviceName = XnaHelper::ToString(outputDesc.DeviceName);
-
-			return deviceName;
-		}
-		
-		return String();
-	}
-
-	intptr_t GraphicsAdapter::MonitorHandle() const {
-		if (!impl->dxAdapter) return 0;
-
-		comptr<IDXGIOutput> pOutput = nullptr;		
-
-		if (impl->dxAdapter->EnumOutputs(0, pOutput.GetAddressOf()) != DXGI_ERROR_NOT_FOUND) {
-			DXGI_OUTPUT_DESC outputDesc;
-			pOutput->GetDesc(&outputDesc);						
-
-			return reinterpret_cast<intptr_t>(outputDesc.Monitor);
-		}
-
-		return 0;
-	}
-
-	Uint GraphicsAdapter::Revision() const {
-		if (!impl->dxAdapter) return 0;
-
-		DXGI_ADAPTER_DESC1 desc;
-		impl->dxAdapter->GetDesc1(&desc);
-
-		return static_cast<Uint>(desc.Revision);
-	}
-
-	Uint GraphicsAdapter::SubSystemId() const {
-		if (!impl->dxAdapter) return 0;
-
-		DXGI_ADAPTER_DESC1 desc;
-		impl->dxAdapter->GetDesc1(&desc);
-
-		return static_cast<Uint>(desc.SubSysId);
-	}
-
-	Uint GraphicsAdapter::VendorId() const {
-		if (!impl->dxAdapter) return 0;
-
-		DXGI_ADAPTER_DESC1 desc;
-		impl->dxAdapter->GetDesc1(&desc);
-
-		return static_cast<Uint>(desc.VendorId);
-	}	
+	}			
 
 	uptr<DisplayModeCollection> GraphicsAdapter::SupportedDisplayModes() const {
 		if (!impl->dxAdapter) return nullptr;
@@ -191,27 +139,16 @@ namespace xna {
 	}
 
 	sptr<DisplayMode> GraphicsAdapter::CurrentDisplayMode() {
-		if (!impl->_currentDisplayMode) {
-			CurrentDisplayMode(SurfaceFormat::Color, GraphicsDeviceManager::DefaultBackBufferWidth, GraphicsDeviceManager::DefaultBackBufferHeight);
+		if (!currentDisplayMode) {
+			setCurrentDisplayMode(*this, 
+				SurfaceFormat::Color, 
+				GraphicsDeviceManager::DefaultBackBufferWidth,
+				GraphicsDeviceManager::DefaultBackBufferHeight,
+				currentDisplayMode);
 		}
 
-		return impl->_currentDisplayMode;
-	}
-
-	void GraphicsAdapter::CurrentDisplayMode(SurfaceFormat surfaceFormat, Uint width, Uint height) {
-		const auto modes = SupportedDisplayModes(surfaceFormat);
-
-		for (size_t i = 0; i < modes->DisplayModes.size(); ++i) {
-			auto& m = modes->DisplayModes[i];
-			
-			if (m->Format == surfaceFormat && m->Width == width && m->Height == height) {
-				impl->_currentDisplayMode = m;
-			}
-			else if(i + 1 == modes->DisplayModes.size()) {
-				impl->_currentDisplayMode = m;
-			}
-		}
-	}
+		return currentDisplayMode;
+	}	
 
 	bool GraphicsAdapter::PlatformImplementation::GetOutput(UINT slot, IDXGIOutput*& output) const {
 		if (!dxAdapter) return false;
@@ -224,7 +161,22 @@ namespace xna {
 
 	//INTERNAL FUNCTIONS
 
-	static size_t getDisplayModesCount(IDXGIAdapter* adapter) {
+	void setCurrentDisplayMode(GraphicsAdapter& adapter, SurfaceFormat surfaceFormat, Uint width, Uint height, sptr<DisplayMode>& currentDisplayMode) {
+		const auto modes = adapter.SupportedDisplayModes(surfaceFormat);
+
+		for (size_t i = 0; i < modes->DisplayModes.size(); ++i) {
+			auto& m = modes->DisplayModes[i];
+
+			if (m->Format == surfaceFormat && m->Width == width && m->Height == height) {
+				currentDisplayMode = m;
+			}
+			else if (i + 1 == modes->DisplayModes.size()) {
+				currentDisplayMode = m;
+			}
+		}
+	}
+
+	size_t getDisplayModesCount(IDXGIAdapter* adapter) {
 		comptr<IDXGIOutput> pOutput = nullptr;
 		size_t numModes = 0;
 
@@ -243,7 +195,7 @@ namespace xna {
 		return numModes;
 	}
 
-	static uptr<DisplayModeCollection> createDisplayModeCollection(std::vector<DXGI_MODE_DESC> const& source) {
+	uptr<DisplayModeCollection> createDisplayModeCollection(std::vector<DXGI_MODE_DESC> const& source) {
 		auto collection = unew<DisplayModeCollection>();
 		DisplayMode currentDisplayMode;
 		std::vector<sptr<DisplayMode>> displayList;
@@ -273,5 +225,68 @@ namespace xna {
 		collection->DisplayModes = displayList;
 
 		return collection;
+	}
+
+	String getDescription(comptr<IDXGIAdapter1> const& adapter) {
+		DXGI_ADAPTER_DESC1 desc;
+		adapter->GetDesc1(&desc);
+		const auto description = XnaHelper::ToString(desc.Description);
+		return description;
+	}
+
+	Uint getDeviceId(comptr<IDXGIAdapter1> const& adapter) {
+		DXGI_ADAPTER_DESC1 desc;
+		adapter->GetDesc1(&desc);
+
+		return static_cast<Uint>(desc.DeviceId);
+	}
+
+	String getDeviceName(comptr<IDXGIAdapter1> const& adapter) {
+		comptr<IDXGIOutput> pOutput = nullptr;
+
+		if (adapter->EnumOutputs(0, pOutput.GetAddressOf()) != DXGI_ERROR_NOT_FOUND) {
+			DXGI_OUTPUT_DESC outputDesc{};
+			pOutput->GetDesc(&outputDesc);
+
+			String deviceName = XnaHelper::ToString(outputDesc.DeviceName);
+
+			return deviceName;
+		}
+
+		return String();
+	}
+
+	intptr_t getMonitorHandle(comptr<IDXGIAdapter1> const& adapter) {
+		comptr<IDXGIOutput> pOutput = nullptr;
+
+		if (adapter->EnumOutputs(0, pOutput.GetAddressOf()) != DXGI_ERROR_NOT_FOUND) {
+			DXGI_OUTPUT_DESC outputDesc;
+			pOutput->GetDesc(&outputDesc);
+
+			return reinterpret_cast<intptr_t>(outputDesc.Monitor);
+		}
+
+		return 0;
+	}
+
+	Uint getRevision(comptr<IDXGIAdapter1> const& adapter) {
+		DXGI_ADAPTER_DESC1 desc;
+		adapter->GetDesc1(&desc);
+
+		return static_cast<Uint>(desc.Revision);
+	}
+
+	Uint getSubSystemId(comptr<IDXGIAdapter1> const& adapter) {
+		DXGI_ADAPTER_DESC1 desc;
+		adapter->GetDesc1(&desc);
+
+		return static_cast<Uint>(desc.SubSysId);
+	}
+
+	Uint getVendorId(comptr<IDXGIAdapter1> const& adapter) {
+		DXGI_ADAPTER_DESC1 desc;
+		adapter->GetDesc1(&desc);
+
+		return static_cast<Uint>(desc.VendorId);
 	}
 }

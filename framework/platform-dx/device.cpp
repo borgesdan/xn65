@@ -77,11 +77,7 @@ namespace xna {
 
 	GraphicsDevice::GraphicsDevice() {		
 		impl = unew<PlatformImplementation>();
-		impl->_adapter = GraphicsAdapter::DefaultAdapter();
-		impl->_adapter->CurrentDisplayMode(
-			SurfaceFormat::Color, 
-			GraphicsDeviceManager::DefaultBackBufferWidth, 
-			GraphicsDeviceManager::DefaultBackBufferHeight);
+		impl->_adapter = GraphicsAdapter::DefaultAdapter();		
 	}
 
 	GraphicsDevice::GraphicsDevice(GraphicsDeviceInformation const& info) {
@@ -89,11 +85,7 @@ namespace xna {
 		
 		impl->_adapter = info.Adapter;
 		impl->_gameWindow = info.Window;
-		impl->_presentationParameters = info.Parameters;
-		impl->_adapter->CurrentDisplayMode(
-			impl->_presentationParameters->BackBufferFormat, 
-			impl->_presentationParameters->BackBufferWidth,
-			impl->_presentationParameters->BackBufferHeight);
+		impl->_presentationParameters = info.Parameters;		
 	}	
 
 	bool GraphicsDevice::Initialize() {
