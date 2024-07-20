@@ -8,13 +8,11 @@ namespace xna {
 	//Provides methods to retrieve and manipulate graphics adapters.
 	class GraphicsAdapter {
 	public:
-		GraphicsAdapter();
-
 		//Collection of available adapters on the system.
 		static void Adapters(std::vector<uptr<GraphicsAdapter>>& adapters);
 
 		//Gets the current display mode.
-		sptr<DisplayMode> CurrentDisplayMode();		
+		inline sptr<DisplayMode> CurrentDisplayMode() const { return currentDisplayMode; }
 
 		//Gets the default adapter. 
 		static uptr<GraphicsAdapter> DefaultAdapter();
@@ -32,7 +30,9 @@ namespace xna {
 		constexpr bool IsDefaultAdapter() const { return isDefault; }
 		
 		//Determines if the graphics adapter is in widescreen mode.
-		constexpr bool IsWideScreen() const { return false; }
+		inline bool IsWideScreen() const { 
+			return currentDisplayMode->AspectRatio() > 1.6000000238418579;
+		}
 		
 		//Retrieves the handle of the monitor
 		constexpr intptr_t MonitorHandle() const { return monitorHandle; }
@@ -92,6 +92,8 @@ namespace xna {
 		Uint subSystemId{ 0 };
 		Uint vendorId{ 0 };
 		sptr<DisplayMode> currentDisplayMode{ nullptr };
+
+		GraphicsAdapter();
 
 	public:
 		struct PlatformImplementation;

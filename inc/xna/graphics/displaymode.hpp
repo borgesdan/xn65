@@ -68,6 +68,8 @@ namespace xna {
 		}
 
 	private:		
+		friend class GraphicsAdapter;
+
 		Int width{ 0 };		
 		Int height{ 0 };		 
 		SurfaceFormat format{ SurfaceFormat::Color };		
