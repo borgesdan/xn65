@@ -362,7 +362,7 @@ namespace xna {
 
 		static constexpr TextureAddressMode TextureAddresModeToXna(D3D11_TEXTURE_ADDRESS_MODE value) {
 			return static_cast<TextureAddressMode>(value - 1);
-		}
+		}		
 	};	
 
 	struct PlatformInit {

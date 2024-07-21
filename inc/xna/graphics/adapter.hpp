@@ -44,9 +44,7 @@ namespace xna {
 		constexpr Uint SubSystemId() const { return subSystemId; }
 		
 		//Returns a collection of supported display modes for the current adapter.
-		uptr<DisplayModeCollection> SupportedDisplayModes() const;
-		//Returns a collection of supported display modes for the current adapter.
-		uptr<DisplayModeCollection> SupportedDisplayModes(SurfaceFormat surfaceFormat) const;
+		inline sptr<DisplayModeCollection> SupportedDisplayModes() const { return supportedDisplayModes; }
 
 		//Retrieves a value used to identify the manufacturer.
 		constexpr Uint VendorId() const { return vendorId; }
@@ -92,6 +90,7 @@ namespace xna {
 		Uint subSystemId{ 0 };
 		Uint vendorId{ 0 };
 		sptr<DisplayMode> currentDisplayMode{ nullptr };
+		sptr<DisplayModeCollection> supportedDisplayModes{ nullptr };
 
 		GraphicsAdapter();
 

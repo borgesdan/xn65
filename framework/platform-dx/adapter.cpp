@@ -6,8 +6,9 @@
 namespace xna {	
 	static void setOutputVars(comptr<IDXGIAdapter1> const& adapter, String& deviceName, intptr_t& monitorHandle);
 	static size_t getDisplayModesCount(IDXGIAdapter* adapter);
-	static uptr<DisplayModeCollection> createDisplayModeCollection(std::vector<DXGI_MODE_DESC> const& source);
-	static void setCurrentDisplayMode(GraphicsAdapter& adapter, SurfaceFormat surfaceFormat, Uint width, Uint height, sptr<DisplayMode>& currentDisplayMode);
+	static sptr<DisplayModeCollection> createDisplayModeCollection(std::vector<DXGI_MODE_DESC1> const& source);
+	static void setCurrentDisplayMode(DisplayModeCollection& displayModes, SurfaceFormat surfaceFormat, Uint width, Uint height, sptr<DisplayMode>& currentDisplayMode);
+	static sptr<DisplayModeCollection> getSupportedDisplayModes(comptr<IDXGIAdapter1>& dxAdapter);
 
 	GraphicsAdapter::GraphicsAdapter() {
 		impl = unew<PlatformImplementation>();
@@ -39,7 +40,7 @@ namespace xna {
 
 			setOutputVars(pAdapter, adp->deviceName, adp->monitorHandle);
 
-			setCurrentDisplayMode(*adp, SurfaceFormat::Color,
+			setCurrentDisplayMode(*adp->supportedDisplayModes, SurfaceFormat::Color,
 				GraphicsDeviceManager::DefaultBackBufferWidth,
 				GraphicsDeviceManager::DefaultBackBufferHeight, adp->currentDisplayMode);
 
@@ -75,39 +76,48 @@ namespace xna {
 
 			setOutputVars(pAdapter, adp->deviceName, adp->monitorHandle);
 
-			setCurrentDisplayMode(*adp, SurfaceFormat::Color,
+			setCurrentDisplayMode(*adp->supportedDisplayModes, SurfaceFormat::Color,
 				GraphicsDeviceManager::DefaultBackBufferWidth,
 				GraphicsDeviceManager::DefaultBackBufferHeight, adp->currentDisplayMode);
+
+			adp->supportedDisplayModes = getSupportedDisplayModes(pAdapter);
 
 			adapters.push_back(std::move(adp));
 		}
 	}
 
-	uptr<DisplayModeCollection> GraphicsAdapter::SupportedDisplayModes() const {
-		if (!impl->dxAdapter) return nullptr;
+	//INTERNAL FUNCTIONS
 
-		const auto totalDisplay = getDisplayModesCount(impl->dxAdapter.Get());
+	sptr<DisplayModeCollection> getSupportedDisplayModes(comptr<IDXGIAdapter1>& dxAdapter) {
+		const auto totalDisplay = getDisplayModesCount(dxAdapter.Get());
 
 		if (totalDisplay == 0)
 			return nullptr;
 
 		comptr<IDXGIOutput> pOutput = nullptr;
+		comptr<IDXGIOutput1> pOutput1 = nullptr;
 		UINT bufferOffset = 0;
 
-		std::vector<DXGI_MODE_DESC> buffer(totalDisplay);
+		std::vector<DXGI_MODE_DESC1> buffer(totalDisplay);
 
-		if (impl->dxAdapter->EnumOutputs(0, pOutput.GetAddressOf()) != DXGI_ERROR_NOT_FOUND) {
+		if (dxAdapter->EnumOutputs(0, pOutput.GetAddressOf()) != DXGI_ERROR_NOT_FOUND) {
 			for (size_t f = 0; f < SURFACE_FORMAT_COUNT; ++f) {
 				const auto currentSurface = static_cast<SurfaceFormat>(f);
 				DXGI_FORMAT format = DxHelpers::SurfaceFormatToDx(currentSurface);
 
 				UINT numModes = 0;
-				pOutput->GetDisplayModeList(format, 0, &numModes, nullptr);
+
+				if (!pOutput1) {
+					pOutput->QueryInterface(IID_IDXGIOutput1, (void**)pOutput1.GetAddressOf());
+				}
+
+				//See ref: https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nf-dxgi-idxgioutput-getdisplaymodelist?redirectedfrom=MSDN
+				pOutput1->GetDisplayModeList1(format, 0, &numModes, nullptr);
 
 				if (numModes == 0)
 					continue;
 
-				pOutput->GetDisplayModeList(format, 0, &numModes, buffer.data() + bufferOffset);
+				pOutput1->GetDisplayModeList1(format, 0, &numModes, buffer.data() + bufferOffset);
 
 				bufferOffset += numModes;
 			}
@@ -117,62 +127,42 @@ namespace xna {
 			return nullptr;
 
 		return createDisplayModeCollection(buffer);
-	}
+	}		
 
-	uptr<DisplayModeCollection> GraphicsAdapter::SupportedDisplayModes(SurfaceFormat surfaceFormat) const
-	{
-		if (!impl->dxAdapter) return nullptr;
+	void setCurrentDisplayMode(DisplayModeCollection& displayModes, SurfaceFormat surfaceFormat, Uint width, Uint height, sptr<DisplayMode>& currentDisplayMode) {		
+		auto modes = displayModes.Query(surfaceFormat);
 
-		comptr<IDXGIOutput> pOutput = nullptr;
-		UINT bufferOffset = 0;
-
-		if (impl->dxAdapter->EnumOutputs(0, pOutput.GetAddressOf()) != DXGI_ERROR_NOT_FOUND) {
-			DXGI_FORMAT format = DxHelpers::SurfaceFormatToDx(surfaceFormat);
-
-			UINT numModes = 0;
-
-			pOutput->GetDisplayModeList(format, 0, &numModes, nullptr);
-
-			if (numModes == 0)
-				return unew<DisplayModeCollection>();
-
-			std::vector<DXGI_MODE_DESC> buffer(numModes);
-			pOutput->GetDisplayModeList(format, 0, &numModes, buffer.data());
-
-			return createDisplayModeCollection(buffer);
-		}
-
-		return unew<DisplayModeCollection>();
-	}	
-
-	//INTERNAL FUNCTIONS
-
-	void setCurrentDisplayMode(GraphicsAdapter& adapter, SurfaceFormat surfaceFormat, Uint width, Uint height, sptr<DisplayMode>& currentDisplayMode) {
-		const auto modes = adapter.SupportedDisplayModes(surfaceFormat);
-
-		for (size_t i = 0; i < modes->DisplayModes.size(); ++i) {
-			auto& m = modes->DisplayModes[i];
+		for (size_t i = 0; i < modes.size(); ++i) {
+			auto& m = modes[i];
 
 			if (m->Format() == surfaceFormat && m->Width() == width && m->Height() == height) {
 				currentDisplayMode = m;
 			}
-			else if (i + 1 == modes->DisplayModes.size()) {
+			else if (i + 1 == modes.size()) {
 				currentDisplayMode = m;
 			}
 		}
 	}
 
 	size_t getDisplayModesCount(IDXGIAdapter* adapter) {
-		comptr<IDXGIOutput> pOutput = nullptr;
-		size_t numModes = 0;
+		comptr<IDXGIOutput> pOutput = nullptr;		
+		comptr<IDXGIOutput1> pOutput1 = nullptr;		
+		size_t numModes = 0;		
 
+		
 		if (adapter->EnumOutputs(0, pOutput.GetAddressOf()) != DXGI_ERROR_NOT_FOUND) {
 			for (size_t f = 0; f < SURFACE_FORMAT_COUNT; ++f) {
 				const auto currentSurface = static_cast<SurfaceFormat>(f);
 				DXGI_FORMAT format = DxHelpers::SurfaceFormatToDx(currentSurface);
 
 				UINT num = 0;
-				pOutput->GetDisplayModeList(format, 0, &num, nullptr);
+
+				if (!pOutput1) {					
+					pOutput->QueryInterface(IID_IDXGIOutput1, (void**)pOutput1.GetAddressOf());
+				}
+
+				//See ref: https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nf-dxgi-idxgioutput-getdisplaymodelist?redirectedfrom=MSDN
+				pOutput1->GetDisplayModeList1(format, 0, &num, nullptr);
 
 				numModes += num;
 			}
@@ -181,8 +171,8 @@ namespace xna {
 		return numModes;
 	}
 
-	uptr<DisplayModeCollection> createDisplayModeCollection(std::vector<DXGI_MODE_DESC> const& source) {
-		auto collection = unew<DisplayModeCollection>();
+	sptr<DisplayModeCollection> createDisplayModeCollection(std::vector<DXGI_MODE_DESC1> const& source) {
+		auto collection = snew<DisplayModeCollection>();
 
 		std::vector<sptr<DisplayMode>> displayList;
 		sptr<DisplayMode> pDisplay = nullptr;

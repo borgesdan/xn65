@@ -23,8 +23,8 @@ namespace xna {
 	struct DisplayModeRate {
 		constexpr DisplayModeRate() = default;
 
-		constexpr DisplayModeRate(DisplayModeScanlineOrder scanlineOrdering, DisplayModeScaling scaling, RationalNumber refreshRate) :
-		ScanlineOrdering(scanlineOrdering), Scaling(scaling), RefreshRate(refreshRate){}
+		constexpr DisplayModeRate(DisplayModeScanlineOrder scanlineOrdering, DisplayModeScaling scaling, RationalNumber refreshRate, bool stereo) :
+		ScanlineOrdering(scanlineOrdering), Scaling(scaling), RefreshRate(refreshRate), Stereo(stereo){}
 
 		constexpr bool operator==(const DisplayModeRate& other) const {
 			return ScanlineOrdering == other.ScanlineOrdering && Scaling == other.Scaling && RefreshRate == other.RefreshRate;
@@ -35,7 +35,9 @@ namespace xna {
 		//Gets how an image is stretched to fit a given monitor's resolution
 		DisplayModeScaling Scaling{ DisplayModeScaling::Unspecified };
 		//Describing the refresh rate in hertz.
-		RationalNumber RefreshRate{};		
+		RationalNumber RefreshRate{};
+		//Specifies whether the full-screen display mode is stereo. TRUE if stereo; otherwise, FALSE.
+		bool Stereo{ false };
 	};
 
 	//Describes the display mode. 
