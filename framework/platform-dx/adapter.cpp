@@ -86,6 +86,35 @@ namespace xna {
 		}
 	}
 
+	bool GraphicsAdapter::QueryBackBufferFormat(
+		GraphicsProfile graphicsProfile, SurfaceFormat format,
+		DepthFormat depthFormat, Int multiSampleCount,
+		SurfaceFormat& selectedFormat, DepthFormat& selectedDepthFormat,
+		Int& selectedMultiSampleCount) const 
+	{
+		comptr<IDXGIOutput> pOutput = nullptr;		
+
+		if (impl->dxAdapter->EnumOutputs(0, pOutput.GetAddressOf()) != DXGI_ERROR_NOT_FOUND){
+			comptr<IDXGIOutput1> pOutput1 = nullptr;
+
+			pOutput->QueryInterface(IID_IDXGIOutput1, (void**)pOutput1.GetAddressOf());
+
+			DXGI_MODE_DESC1 modeToMath{};
+			modeToMath.Format = DxHelpers::SurfaceFormatToDx(format);			
+
+			DXGI_MODE_DESC1 closestMath;			
+			pOutput1->FindClosestMatchingMode1(&modeToMath, &closestMath, nullptr);
+
+			selectedFormat = DxHelpers::SurfaceFormatToXna(closestMath.Format);
+			selectedDepthFormat = depthFormat;
+			selectedMultiSampleCount = multiSampleCount;
+
+			return selectedFormat == format;
+		}
+
+		return false;
+	}
+
 	//INTERNAL FUNCTIONS
 
 	sptr<DisplayModeCollection> getSupportedDisplayModes(comptr<IDXGIAdapter1>& dxAdapter) {

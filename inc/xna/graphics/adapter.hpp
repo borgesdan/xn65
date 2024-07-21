@@ -48,11 +48,21 @@ namespace xna {
 
 		//Retrieves a value used to identify the manufacturer.
 		constexpr Uint VendorId() const { return vendorId; }
+		
+		//Gets or sets a NULL device. 
+		static bool UseNullDevice() { return useNullDevice; }
+		//Gets or sets a NULL device. 
+		static void UseNullDevice(bool value) { useNullDevice = value; }
+		
+		//Gets or sets a reference device.
+		constexpr static bool UseReferenceDevice() { return useReferenceDevice; }
+		//Gets or sets a reference device. 
+		constexpr static void UseReferenceDevice(bool value) { useReferenceDevice = value; }
 
 		//Tests to see if the adapter supports the requested profile. 
 		bool IsProfileSupported(GraphicsProfile graphicsProfile) {
-			return false;
-		}
+			return true;
+		}		
 
 		//Queries the adapter for support for the requested back buffer format.
 		bool QueryBackBufferFormat(
@@ -63,9 +73,7 @@ namespace xna {
 			SurfaceFormat& selectedFormat,
 			DepthFormat& selectedDepthFormat,
 			Int& selectedMultiSampleCount
-		) {
-			return false;
-		}
+		) const;
 
 		//Queries the adapter for support for the requested render target format. 
 		bool QueryRenderTargetFormat(
@@ -75,9 +83,10 @@ namespace xna {
 			Int multiSampleCount,
 			SurfaceFormat& selectedFormat,
 			DepthFormat& selectedDepthFormat,
-			int& selectedMultiSampleCount
-		) {
-			return false;
+			Int& selectedMultiSampleCount
+		) const {
+			return QueryBackBufferFormat(graphicsProfile, format, depthFormat, multiSampleCount,
+				selectedFormat, selectedDepthFormat, selectedMultiSampleCount);
 		}
 
 	private:
@@ -91,6 +100,9 @@ namespace xna {
 		Uint vendorId{ 0 };
 		sptr<DisplayMode> currentDisplayMode{ nullptr };
 		sptr<DisplayModeCollection> supportedDisplayModes{ nullptr };
+
+		inline static bool useNullDevice = false;
+		inline static bool useReferenceDevice = false;
 
 		GraphicsAdapter();
 
