@@ -73,21 +73,7 @@ namespace xna {
 			SurfaceFormat& selectedFormat,
 			DepthFormat& selectedDepthFormat,
 			Int& selectedMultiSampleCount
-		) const;
-
-		//Queries the adapter for support for the requested render target format. 
-		bool QueryRenderTargetFormat(
-			GraphicsProfile graphicsProfile,
-			SurfaceFormat format,
-			DepthFormat depthFormat,
-			Int multiSampleCount,
-			SurfaceFormat& selectedFormat,
-			DepthFormat& selectedDepthFormat,
-			Int& selectedMultiSampleCount
-		) const {
-			return QueryBackBufferFormat(graphicsProfile, format, depthFormat, multiSampleCount,
-				selectedFormat, selectedDepthFormat, selectedMultiSampleCount);
-		}
+		) const;		
 
 	private:
 		String description;

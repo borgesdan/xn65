@@ -1,6 +1,3 @@
-#include "xna/graphics/adapter.hpp"
-#include "xna/graphics/displaymode.hpp"
-#include "xna/game/gdevicemanager.hpp"
 #include "xna/xna-dx.hpp"
 
 namespace xna {	
@@ -92,6 +89,10 @@ namespace xna {
 		SurfaceFormat& selectedFormat, DepthFormat& selectedDepthFormat,
 		Int& selectedMultiSampleCount) const 
 	{
+		selectedFormat = format;
+		selectedDepthFormat = depthFormat;
+		selectedMultiSampleCount = multiSampleCount;
+
 		comptr<IDXGIOutput> pOutput = nullptr;		
 
 		if (impl->dxAdapter->EnumOutputs(0, pOutput.GetAddressOf()) != DXGI_ERROR_NOT_FOUND){
@@ -100,14 +101,19 @@ namespace xna {
 			pOutput->QueryInterface(IID_IDXGIOutput1, (void**)pOutput1.GetAddressOf());
 
 			DXGI_MODE_DESC1 modeToMath{};
-			modeToMath.Format = DxHelpers::SurfaceFormatToDx(format);			
+			modeToMath.Format = DxHelpers::SurfaceFormatToDx(format);
+
+			//If pConcernedDevice is NULL, the Format member of DXGI_MODE_DESC1 cannot be DXGI_FORMAT_UNKNOWN.
+			if (modeToMath.Format == DXGI_FORMAT_UNKNOWN)
+				return false;
 
 			DXGI_MODE_DESC1 closestMath;			
-			pOutput1->FindClosestMatchingMode1(&modeToMath, &closestMath, nullptr);
+			const auto hresult = pOutput1->FindClosestMatchingMode1(&modeToMath, &closestMath, nullptr);
+
+			if FAILED(hresult)
+				return false;
 
 			selectedFormat = DxHelpers::SurfaceFormatToXna(closestMath.Format);
-			selectedDepthFormat = depthFormat;
-			selectedMultiSampleCount = multiSampleCount;
 
 			return selectedFormat == format;
 		}
