@@ -37,6 +37,8 @@ namespace xna {
 
 			setOutputVars(pAdapter, adp->deviceName, adp->monitorHandle);
 
+			adp->supportedDisplayModes = getSupportedDisplayModes(pAdapter);
+
 			setCurrentDisplayMode(*adp->supportedDisplayModes, SurfaceFormat::Color,
 				GraphicsDeviceManager::DefaultBackBufferWidth,
 				GraphicsDeviceManager::DefaultBackBufferHeight, adp->currentDisplayMode);

@@ -21,42 +21,58 @@ namespace xna {
 	}
 
 	static void createDevice(GraphicsDevice::PlatformImplementation& impl) {
+		//
+		// See ref
+		//
+		// D3D_DRIVER_TYPE
+		// https://learn.microsoft.com/en-us/windows/win32/api/d3dcommon/ne-d3dcommon-d3d_driver_type
+		//
+		// D3D11CreateDevice function 
+		// https://learn.microsoft.com/en-us/windows/win32/api/d3d11/nf-d3d11-d3d11createdevice
+		//		
+
 		auto createDeviceFlags = 0;
 #if _DEBUG
 		createDeviceFlags = D3D11_CREATE_DEVICE_FLAG::D3D11_CREATE_DEVICE_DEBUG;
 #endif        
+
 		const auto& currentAdapter = impl._adapter;
+		const auto& pAdapter = GraphicsAdapter::UseNullDevice() ? NULL : currentAdapter->impl->dxAdapter.Get();		
+		
+		//
+		// if pAdapter is not NULL driverType must be D3D_DRIVER_TYPE_UNKNOWN
+		//
+		auto driverType = D3D_DRIVER_TYPE_UNKNOWN;
+
+		if (GraphicsAdapter::UseReferenceDevice())
+			driverType = D3D_DRIVER_TYPE_WARP;
+		else if (GraphicsAdapter::UseNullDevice())
+			driverType = D3D_DRIVER_TYPE_HARDWARE;
 
 		auto hr = D3D11CreateDevice(
-			currentAdapter ? currentAdapter->impl->dxAdapter.Get() : NULL,
-			D3D_DRIVER_TYPE_UNKNOWN,
+			//_In_opt_ IDXGIAdapter* pAdapter,
+			pAdapter,
+			//D3D_DRIVER_TYPE DriverType,
+			driverType,
+			//HMODULE Software,
 			NULL,
+			//UINT Flags,
 			createDeviceFlags,
-			NULL,
-			0,
+			//_In_reads_opt_( FeatureLevels ) CONST D3D_FEATURE_LEVEL* pFeatureLevels,
+			impl.featureLevels,
+			//UINT FeatureLevels,
+			7,
+			//UINT SDKVersion,
 			D3D11_SDK_VERSION,
+			//_COM_Outptr_opt_ ID3D11Device** ppDevice
 			impl._device.GetAddressOf(),
-			&impl._featureLevel,
+			//_Out_opt_ D3D_FEATURE_LEVEL* pFeatureLevel,
+			&impl.currentFeatureLevel,
+			//_COM_Outptr_opt_ ID3D11DeviceContext** ppImmediateContext
 			impl._context.GetAddressOf());
 
-		if (FAILED(hr)) {
-			OutputDebugString("---> Usando Adaptador WARP: não há suporte ao D3D11\n");
-
-			hr = D3D11CreateDevice(
-				NULL,
-				D3D_DRIVER_TYPE_WARP,
-				NULL,
-				createDeviceFlags,
-				NULL,
-				0,
-				D3D11_SDK_VERSION,
-				impl._device.GetAddressOf(),
-				&impl._featureLevel,
-				impl._context.GetAddressOf());
-
-			if FAILED(hr)
-				Exception::Throw(Exception::FAILED_TO_CREATE);
-		}
+		if FAILED(hr)
+			Exception::Throw(Exception::FAILED_TO_CREATE);
 	}
 
 	static void initAndApplyState(GraphicsDevice::PlatformImplementation& impl, PGraphicsDevice const& device) {
