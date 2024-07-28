@@ -1,41 +1,44 @@
-#include "xna/game/gdevicemanager.hpp"
-#include "xna/graphics/presentparams.hpp"
-#include "xna/graphics/swapchain.hpp"
 #include "xna/xna-dx.hpp"
 
 namespace xna {
-	GraphicsDeviceManager::GraphicsDeviceManager(sptr<Game> const& game) : _game(game)
+	GraphicsDeviceManager::GraphicsDeviceManager(sptr<Game> const& game) : game(game)
 	{
 		sptr<GraphicsAdapter> adp = GraphicsAdapter::DefaultAdapter();
 		_information.Adapter = adp;
 		_information.Profile = xna::GraphicsProfile::HiDef;
 
 		auto parameters = snew<PresentationParameters>();
-		parameters->BackBufferWidth = _backBufferWidth;
-		parameters->BackBufferHeight = _backBufferHeight;
+		parameters->BackBufferWidth = backBufferWidth;
+		parameters->BackBufferHeight = backBufferHeight;
 		parameters->BackBufferFormat = SurfaceFormat::Color;
 		parameters->Fullscreen = false;
 		_information.Parameters = parameters;
 
-		if (_game)
-			_information.Window = _game->Window();
+		if (game)
+			_information.Window = game->Window();
 	}	
 
 	bool GraphicsDeviceManager::Initialize() {
-		if (!_game)
+		if (!game)
 			return false;
 
-		return CreateDevice();		
+		CreateDevice();
+
+		return true;
 	}
 
 	void GraphicsDeviceManager::ApplyChanges() {
+		if (device && !isDeviceDirty)
+			return;
+
+		ChangeDevice(false);
 	}
 
 	bool GraphicsDeviceManager::ToggleFullScreen() {
-		if (!_game || !_game->graphicsDevice || !_game->graphicsDevice->impl->_swapChain)
+		if (!game || !game->graphicsDevice || !game->graphicsDevice->impl->_swapChain)
 			return false;
 
-		auto& swap = _game->graphicsDevice->impl->_swapChain;
+		auto& swap = game->graphicsDevice->impl->_swapChain;
 
 		BOOL state = false;
 		auto hr = swap->impl->dxSwapChain->GetFullscreenState(&state, nullptr);
@@ -46,20 +49,10 @@ namespace xna {
 
 		if (FAILED(hr)) return false;
 
-		_isFullScreen = !state;
+		isFullScreen = !state;
 
 		return true;
-	}
-
-	void GraphicsDeviceManager::PreferredBackBufferWidth(Int value) {
-		_backBufferWidth = value;
-		_isDeviceDirty = true;
-	}
-
-	void GraphicsDeviceManager::PreferredBackBufferHeight(Int value) {
-		_backBufferHeight = value;
-		_isDeviceDirty = true;
-	}
+	}	
 	
 	bool initWindow(GraphicsDeviceInformation& info, Game& game, int backWidth, int backHeight)
 	{
@@ -98,21 +91,36 @@ namespace xna {
 	}
 
 
-	bool GraphicsDeviceManager::CreateDevice() {
-		if (_isDeviceDirty) {
-			_information.Parameters->BackBufferWidth = _backBufferWidth;
-			_information.Parameters->BackBufferHeight = _backBufferHeight;
+	void GraphicsDeviceManager::CreateDevice() {
+		if (isDeviceDirty) {
+			_information.Parameters->BackBufferWidth = backBufferWidth;
+			_information.Parameters->BackBufferHeight = backBufferHeight;
 		}
 
-		auto result = initWindow(_information, *_game, _backBufferWidth, _backBufferHeight);
+		auto result = initWindow(_information, *game, backBufferWidth, backBufferHeight);
 
-		if (!result) return false; 
+		//if (!result) return false; 
 		
-		return initDevice(_information, *_game, _device);
+		initDevice(_information, *game, device);
 	}
 
 	void GraphicsDeviceManager::ChangeDevice() {
 	}
 
-	
+	void GraphicsDeviceManager::AddDevice(bool anySuitableDevice, std::vector<sptr<GraphicsDeviceInformation>>& foundDevices) {
+		const auto handle = game->Window()->Handle();
+		
+		std::vector<uptr<GraphicsAdapter>> adapters;
+		GraphicsAdapter::Adapters(adapters);
+
+		for (size_t i = 0; adapters.size(); ++i) {
+			auto& adapter = adapters[i];
+
+			if (!anySuitableDevice) {
+				//TODO
+				//if (!this.IsWindowOnAdapter(handle, adapter))
+				//continue;
+			}
+		}
+	}
 }

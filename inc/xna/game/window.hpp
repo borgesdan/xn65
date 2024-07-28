@@ -12,7 +12,7 @@ namespace xna {
 		String Title() const;
 		void Title(String const& title);
 		Rectangle ClientBounds() const;
-		intptr_t Handle() const;
+		intptr_t Handle() const;		
 
 	public:
 		struct PlatformImplementation;
