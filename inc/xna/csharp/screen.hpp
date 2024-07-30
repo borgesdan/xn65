@@ -31,6 +31,10 @@ namespace xna {
 		// Gets the device name associated with a display.
 		constexpr String DeviceName() const { return deviceName; }
 
+		constexpr bool operator==(Screen const& other) const {
+			return hmonitor == other.hmonitor;
+		}
+
 	private:
 		intptr_t hmonitor{ 0 };
 		bool primary{ false };

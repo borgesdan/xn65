@@ -1,6 +1,8 @@
 #include "xna/xna-dx.hpp"
 
 namespace xna {
+	static bool IsWindowOnAdapter(intptr_t windowHandle, GraphicsAdapter const& adapter);
+
 	GraphicsDeviceManager::GraphicsDeviceManager(sptr<Game> const& game) : game(game)
 	{
 		sptr<GraphicsAdapter> adp = GraphicsAdapter::DefaultAdapter();
@@ -116,11 +118,14 @@ namespace xna {
 		for (size_t i = 0; adapters.size(); ++i) {
 			auto& adapter = adapters[i];
 
-			if (!anySuitableDevice) {
-				//TODO
-				//if (!this.IsWindowOnAdapter(handle, adapter))
-				//continue;
+			if (!anySuitableDevice) {				
+				if (!IsWindowOnAdapter(handle, *adapter))
+				continue;
 			}
 		}
+	}
+
+	bool IsWindowOnAdapter(intptr_t windowHandle, GraphicsAdapter const& adapter) {
+		return GameWindow::ScreenFromAdapter(adapter) == GameWindow::ScreenFromHandle(windowHandle);
 	}
 }

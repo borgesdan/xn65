@@ -15,7 +15,8 @@ namespace xna {
 		Rectangle ClientBounds() const;
 		intptr_t Handle() const;
 
-		static uptr<Screen> ScreenFromAdapter(GraphicsAdapter const& adapter);		
+		static uptr<Screen> ScreenFromAdapter(GraphicsAdapter const& adapter);
+		static uptr<Screen> ScreenFromHandle(intptr_t windowHandle);
 
 	public:
 		struct PlatformImplementation;

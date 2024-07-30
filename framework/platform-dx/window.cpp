@@ -204,4 +204,42 @@ namespace xna {
 
 		return nullptr;
 	}
+
+	uptr<Screen> GameWindow::ScreenFromHandle(intptr_t windowHandle) {
+		auto hMonitor = reinterpret_cast<HMONITOR>(windowHandle);
+
+		if (!hMonitor)
+			return nullptr;
+
+		MONITORINFOEX monitorInfo{};
+		monitorInfo.cbSize = sizeof(MONITORINFOEX);
+		GetMonitorInfo(hMonitor, &monitorInfo);
+
+		const auto hmonitor = reinterpret_cast<intptr_t>(hMonitor);
+		const auto primary = monitorInfo.dwFlags == MONITORINFOF_PRIMARY;
+
+		Rectangle bounds;
+		bounds.X = monitorInfo.rcMonitor.left;
+		bounds.Y = monitorInfo.rcMonitor.top;
+		bounds.Width = monitorInfo.rcMonitor.right - monitorInfo.rcMonitor.left;
+		bounds.Height = monitorInfo.rcMonitor.bottom - monitorInfo.rcMonitor.top;
+
+		Rectangle workingArea;
+		workingArea.X = monitorInfo.rcWork.left;
+		workingArea.Y = monitorInfo.rcWork.top;
+		workingArea.Width = monitorInfo.rcWork.right - monitorInfo.rcWork.left;
+		workingArea.Height = monitorInfo.rcWork.bottom - monitorInfo.rcWork.top;
+
+		const auto deviceName = String(monitorInfo.szDevice);
+
+		auto screen = unew<Screen>(
+			hmonitor,
+			primary,
+			bounds,
+			workingArea,
+			deviceName
+		);
+
+		return screen;
+	}
 }
