@@ -154,6 +154,10 @@ namespace xna {
 			RankDevicesPlatform(foundDevices);
 		}
 
+		inline virtual sptr<GraphicsDeviceInformation> FindBestDevice(bool anySuitableDevice) {
+			return FindBestPlatformDevice(anySuitableDevice);
+		}
+
 	private:
 		bool BeginDraw() override { return false; }
 		void EndDraw() override{ }
