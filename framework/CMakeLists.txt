@@ -40,7 +40,7 @@ add_library (Xn65 STATIC
 "platform-dx/audioengine.cpp"
 "graphics/gresource.cpp"
 "platform-dx/effect.cpp"
- "exception.cpp")
+ "exception.cpp"  "platform-dx/screen.cpp")
 
 if (CMAKE_VERSION VERSION_GREATER 3.12)
   set_property(TARGET Xn65 PROPERTY CXX_STANDARD 20)

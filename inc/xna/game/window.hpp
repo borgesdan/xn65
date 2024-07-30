@@ -3,6 +3,7 @@
 
 #include "../default.hpp"
 #include "../common/numerics.hpp"
+#include "../csharp/screen.hpp"
 
 namespace xna {
 	class GameWindow {
@@ -12,7 +13,9 @@ namespace xna {
 		String Title() const;
 		void Title(String const& title);
 		Rectangle ClientBounds() const;
-		intptr_t Handle() const;		
+		intptr_t Handle() const;
+
+		static void ScreenFromAdapter(GraphicsAdapter const& adapter);		
 
 	public:
 		struct PlatformImplementation;

@@ -767,7 +767,7 @@ namespace xna {
 
 		constexpr void Color(BYTE r, BYTE g, BYTE b) {
 			_windowColor = RGB(r, g, b);
-		}
+		}		
 
 		bool Create();
 		bool Update();
@@ -857,7 +857,7 @@ namespace xna {
 			D3D_FEATURE_LEVEL_9_1,
 		};
 
-		D3D_FEATURE_LEVEL currentFeatureLevel;
+		D3D_FEATURE_LEVEL currentFeatureLevel{ D3D_FEATURE_LEVEL_11_1 };
 
 	private:
 		friend class GraphicsDevice;
