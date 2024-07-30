@@ -151,7 +151,7 @@ namespace xna {
 	class GameClock;
 	class GameTime;
 	class GameWindow;
-	class GraphicsDeviceInformation;
+	struct GraphicsDeviceInformation;
 	class GraphicsDeviceManager;
 	class IGameTime;
 	class IGameComponent;

@@ -7,8 +7,8 @@ namespace xna {
 	struct PresentationParameters {
 		constexpr PresentationParameters() = default;
 
-		Uint BackBufferWidth{ 0 };
-		Uint BackBufferHeight{ 0 };
+		Int BackBufferWidth{ 0 };
+		Int BackBufferHeight{ 0 };
 		SurfaceFormat BackBufferFormat{ SurfaceFormat::Color };
 		SwapEffect PresentationSwapEffect{ SwapEffect::FlipDiscard };
 		intptr_t DeviceWindowHandle{ 0 };

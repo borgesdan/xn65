@@ -150,9 +150,17 @@ namespace xna {
 		void CreateDevice();
 		void ChangeDevice();
 
+		inline virtual void RankDevices(std::vector<sptr<GraphicsDeviceInformation>>& foundDevices) {
+			RankDevicesPlatform(foundDevices);
+		}
+
 	private:
 		bool BeginDraw() override { return false; }
 		void EndDraw() override{ }
+
+		sptr<GraphicsDeviceInformation> FindBestPlatformDevice(bool anySuitableDevice);
+
+		void RankDevicesPlatform(std::vector<sptr<GraphicsDeviceInformation>>& foundDevices);
 
 	private:
 		sptr<Game> game = nullptr;

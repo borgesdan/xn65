@@ -185,6 +185,117 @@ namespace xna {
 		foundDevices.push_back(deviceInformation);
 	}
 
+	sptr<GraphicsDeviceInformation> GraphicsDeviceManager::FindBestPlatformDevice(bool anySuitableDevice) {
+		auto foundDevices = std::vector<sptr<GraphicsDeviceInformation>>();
+
+		AddDevices(anySuitableDevice, foundDevices);
+
+		if (foundDevices.size() == 0 && allowMultiSampling) {
+			PreferMultiSampling(false);
+			AddDevices(anySuitableDevice, foundDevices);
+		}
+
+		if (foundDevices.size() == 0) {
+			Exception::Throw("No Suitable Graphics Device");
+		}
+
+		RankDevices(foundDevices);
+
+		if (foundDevices.size() == 0)
+			Exception::Throw("No Suitable Graphics Device");
+			
+		return foundDevices[0];
+	}
+
+	struct GraphicsDeviceInformationComparer
+	{
+		GraphicsDeviceManager* graphics = nullptr;
+
+		bool operator()(GraphicsDeviceInformation const& d1, GraphicsDeviceInformation const& d2) const {
+			return comparator(d1, d2);
+		}
+
+		bool operator()(sptr<GraphicsDeviceInformation> const& a, sptr<GraphicsDeviceInformation> const& b) const {
+			return comparator(*a, *b);
+		}
+
+	private:
+		bool comparator(GraphicsDeviceInformation const& d1, GraphicsDeviceInformation const& d2) const {
+			if (d1.Profile != d2.Profile)
+				return d1.Profile <= d2.Profile;
+
+			auto& presentationParameters1 = d1.PresentParameters;
+			auto& presentationParameters2 = d2.PresentParameters;
+
+			if (presentationParameters1 && presentationParameters2 && presentationParameters1->IsFullscreen != presentationParameters2->IsFullscreen)
+				return graphics->IsFullScreen() != presentationParameters1->IsFullscreen;
+
+			const auto& backFormat1 = presentationParameters1->BackBufferFormat;
+			const auto& backFormat2 = presentationParameters2->BackBufferFormat;
+
+			if (backFormat1 != backFormat2)
+				return static_cast<int>(backFormat1) <= static_cast<int>(backFormat2);
+
+			if (presentationParameters1->MultiSampleCount != presentationParameters2->MultiSampleCount)
+				return presentationParameters1->MultiSampleCount <= presentationParameters2->MultiSampleCount;
+
+			const auto num3 = graphics->PreferredBackBufferWidth() == 0 || graphics->PreferredBackBufferHeight() == 0 
+				? GraphicsDeviceManager::DefaultBackBufferWidth / static_cast<float>(GraphicsDeviceManager::DefaultBackBufferHeight) 
+				: graphics->PreferredBackBufferWidth() / static_cast<float>(graphics->PreferredBackBufferHeight());
+			
+			const auto num4 = presentationParameters1->BackBufferWidth / static_cast<float>(presentationParameters1->BackBufferHeight);
+			const auto num5 = presentationParameters2->BackBufferWidth / static_cast<float>(presentationParameters2->BackBufferHeight);
+			
+			const auto num6 = std::abs(num4 - num3);
+			const auto num7 = std::abs(num5 - num3);
+
+			if (std::abs(num6 - num7) > 0.20000000298023224)
+				return num6 <= num7;
+
+			Int num8;
+			Int num9;
+			
+			if (graphics->IsFullScreen())
+			{
+				if (graphics->PreferredBackBufferWidth() == 0 || graphics->PreferredBackBufferHeight() == 0) {
+					const auto& adapter1 = d1.Adapter;
+					num8 = adapter1->CurrentDisplayMode()->Width() * adapter1->CurrentDisplayMode()->Height();
+					const auto& adapter2 = d2.Adapter;
+					num9 = adapter2->CurrentDisplayMode()->Width() * adapter2->CurrentDisplayMode()->Height();
+				}
+				else
+					num8 = num9 = graphics->PreferredBackBufferWidth() * graphics->PreferredBackBufferHeight();
+			}
+			else
+				num8 = graphics->PreferredBackBufferWidth() == 0 || graphics->PreferredBackBufferHeight() == 0 
+				? (num9 = GraphicsDeviceManager::DefaultBackBufferWidth * GraphicsDeviceManager::DefaultBackBufferHeight) 
+				: (num9 = graphics->PreferredBackBufferWidth() * graphics->PreferredBackBufferHeight());
+
+			const auto num10 = std::abs(presentationParameters1->BackBufferWidth * presentationParameters1->BackBufferHeight - num8);
+			const auto num11 = std::abs(presentationParameters2->BackBufferWidth * presentationParameters2->BackBufferHeight - num9);
+
+			if (num10 != num11)
+				return num10 <= num11;
+
+			if (d1.Adapter != d2.Adapter) {
+				if (d1.Adapter->IsDefaultAdapter())
+					return false;
+
+				if (d2.Adapter->IsDefaultAdapter())
+					return true;
+			}
+
+			return false;
+		}
+	};
+
+	void GraphicsDeviceManager::RankDevicesPlatform(std::vector<sptr<GraphicsDeviceInformation>>& foundDevices) {
+		GraphicsDeviceInformationComparer comparer;
+		comparer.graphics = this;
+		
+		std::sort(foundDevices.begin(), foundDevices.end(), comparer);
+	}
+
 	bool IsWindowOnAdapter(intptr_t windowHandle, GraphicsAdapter const& adapter) {
 		return GameWindow::ScreenFromAdapter(adapter) == GameWindow::ScreenFromHandle(windowHandle);
 	}

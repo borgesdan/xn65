@@ -4,13 +4,16 @@
 #include "../default.hpp"
 
 namespace xna {
-	class GraphicsDeviceInformation {
-	public:
+	struct GraphicsDeviceInformation {
+        GraphicsDeviceInformation() {
+            PresentParameters = snew<PresentationParameters>();
+        }
+
 		sptr<GraphicsAdapter> Adapter = nullptr;
 		xna::GraphicsProfile Profile{ xna::GraphicsProfile::Reach };
 		sptr<xna::PresentationParameters> PresentParameters = nullptr;
 		sptr<GameWindow> Window = nullptr;		
-	};
+	};	
 }
 
 #endif
