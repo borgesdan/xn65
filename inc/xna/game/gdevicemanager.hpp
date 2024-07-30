@@ -154,6 +154,8 @@ namespace xna {
 			return FindBestPlatformDevice(anySuitableDevice);
 		}
 
+		virtual bool CanResetDevice(GraphicsDeviceInformation& newDeviceInfo);
+
 	private:
 		void ChangeDevice(bool forceCreate);
 		void AddDevices(bool anySuitableDevice, std::vector<sptr<GraphicsDeviceInformation>>& foundDevices);
@@ -165,6 +167,8 @@ namespace xna {
 		sptr<GraphicsDeviceInformation> FindBestPlatformDevice(bool anySuitableDevice);
 
 		void RankDevicesPlatform(std::vector<sptr<GraphicsDeviceInformation>>& foundDevices);
+
+		void CreateDevice(GraphicsDeviceInformation& newInfo){}
 
 	private:
 		sptr<Game> game = nullptr;
@@ -185,6 +189,7 @@ namespace xna {
 		Int resizedBackBufferHeight{ 0 };
 		bool allowMultiSampling{ false };
 		bool inDeviceTransition{ false };
+		bool isReallyFullScreen{ false };
 
 		std::vector<sptr<GraphicsDeviceInformation>> foundDevices;
 	};

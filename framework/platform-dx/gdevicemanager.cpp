@@ -119,7 +119,41 @@ namespace xna {
 		int clientHeight = game->Window()->ClientBounds().Height;
 		bool flag1 = false;
 
-		//TODO
+		//this.game.Window.SetSupportedOrientations(Helpers.ChooseOrientation(this.supportedOrientations, this.PreferredBackBufferWidth, this.PreferredBackBufferHeight, true));
+		auto bestDevice = FindBestDevice(forceCreate);
+		//this.game.Window.BeginScreenDeviceChange(bestDevice.PresentationParameters.IsFullScreen);
+		flag1 = true;
+		bool flag2 = true;
+
+		if (!forceCreate && device) {
+			//this.OnPreparingDeviceSettings((object) this, new PreparingDeviceSettingsEventArgs(bestDevice));
+
+			if (CanResetDevice(*bestDevice)) {
+				auto deviceInformation = snew<GraphicsDeviceInformation>(*bestDevice);
+				//MassagePresentParameters(bestDevice.PresentationParameters);
+				//ValidateGraphicsDeviceInformation(bestDevice);
+				//device.Reset(deviceInformation.PresentationParameters, deviceInformation.Adapter);
+				//GraphicsDeviceManager.ConfigureTouchInput(deviceInformation.PresentationParameters);
+				flag2 = false;
+			}
+
+			if (flag2)
+				CreateDevice(*bestDevice);
+
+			auto presentationParameters = device->PresentParameters();
+
+			screenDeviceName = device->Adapter()->DeviceName();
+
+			isReallyFullScreen = presentationParameters.IsFullscreen;
+
+			if (presentationParameters.BackBufferWidth != 0)
+				clientWidth = presentationParameters.BackBufferWidth;
+
+			if (presentationParameters.BackBufferHeight != 0)
+				clientHeight = presentationParameters.BackBufferHeight;
+
+			isDeviceDirty = false;
+		}
 	}
 
 	void GraphicsDeviceManager::AddDevices(bool anySuitableDevice, std::vector<sptr<GraphicsDeviceInformation>>& foundDevices) {
@@ -307,6 +341,10 @@ namespace xna {
 		comparer.graphics = this;
 		
 		std::sort(foundDevices.begin(), foundDevices.end(), comparer);
+	}
+
+	bool GraphicsDeviceManager::CanResetDevice(GraphicsDeviceInformation& newDeviceInfo) {
+		return device->Profile() == newDeviceInfo.Profile;
 	}
 
 	bool IsWindowOnAdapter(intptr_t windowHandle, GraphicsAdapter const& adapter) {
