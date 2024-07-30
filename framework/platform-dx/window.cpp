@@ -2,20 +2,17 @@
 
 namespace xna {
 	GameWindow::GameWindow() {
-		impl = unew<PlatformImplementation>();
+		impl = unew<PlatformImplementation>(this);
 
 		impl->_hInstance = GetModuleHandle(NULL);
 		impl->_windowIcon = LoadIcon(NULL, IDI_APPLICATION);
 		impl->_windowCursor = LoadCursor(NULL, IDC_ARROW);
 		impl->_windowStyle = static_cast<int>(GameWindowMode::Windowed);		
 		impl->_windowCenterX = impl->_windowWidth / 2.0F;
-		impl->_windowCenterY = impl->_windowHeight / 2.0F;	
-
-	}
-
-	GameWindow::~GameWindow() {
-		impl = nullptr;
-	}
+		impl->_windowCenterY = impl->_windowHeight / 2.0F;
+		impl->_windowWidth = GameWindow::DefaultClientWidth;
+		impl->_windowHeight = GameWindow::DefaultClientHeight;
+	}	
 
 	void GameWindow::PlatformImplementation::Position(int width, int height, bool update) {
 		_windowPosX = width;
@@ -34,9 +31,8 @@ namespace xna {
 		if(update) Update();
 	}
 
-	void GameWindow::Title(String const& title) {
-		if (!impl) return;
-
+	void GameWindow::Title(String const& value) {
+		title = value;
 		impl->_windowTitle = title;
 	}	
 
@@ -92,6 +88,29 @@ namespace xna {
 			return _windowHandle ? true : false;
 		}	
 
+		
+		//
+		// GameWindow
+		//
+
+		gameWindow->handle = reinterpret_cast<intptr_t>(_windowHandle);
+		gameWindow->title = _windowTitle;
+		gameWindow->clientBounds = { _windowPosX, _windowPosY, _windowWidth, _windowHeight };
+		gameWindow->currentOrientation = DisplayOrientation::Default;
+		
+		auto screens = Screen::AllScreens();
+		
+		if (screens.size() == 1)
+			gameWindow->screenDeviceName = screens[0]->DeviceName();
+		else {
+			for (size_t i = 0; i < screens.size(); ++i) {
+				const auto& screen = screens[i];
+
+				if (screen->Primary())
+					gameWindow->screenDeviceName = screen->DeviceName();
+			}
+		}
+
 		return true;
 	}
 
@@ -118,30 +137,13 @@ namespace xna {
 			return _windowHandle ? true : false;
 		}
 
+		gameWindow->clientBounds = { _windowPosX, _windowPosY, _windowWidth, _windowHeight };
+
 		return true;
-	}
+	}	
 
-	String GameWindow::Title() const {
-		if (!impl) return String();
-
-		return impl->_windowTitle;
-	}
-
-	Rectangle GameWindow::ClientBounds() const {
-		if (!impl) return {};
-
-		return Rectangle(
-			impl->_windowPosX,
-			impl->_windowPosY,
-			impl->_windowWidth,
-			impl->_windowHeight
-		);
-	}
-
-	intptr_t GameWindow::Handle() const {
-		if (!impl) return 0;
-
-		return reinterpret_cast<intptr_t>(impl->_windowHandle);
+	bool GameWindow::IsWindowMinimized() const {
+		return IsIconic(impl->_windowHandle);
 	}
 
 	LRESULT GameWindow::PlatformImplementation::WinProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
@@ -241,5 +243,10 @@ namespace xna {
 		);
 
 		return screen;
+	}
+
+	String GameWindow::ScreenDeviceName() const {
+		//TODO
+		return std::string();
 	}
 }

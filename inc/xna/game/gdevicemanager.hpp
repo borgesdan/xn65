@@ -139,12 +139,8 @@ namespace xna {
 		//Applies any changes to device-related properties, changing the graphics device as necessary. 
 		void ApplyChanges();
 		bool Initialize();
-		bool ToggleFullScreen();
-
-	private:
-		void ChangeDevice(bool forceCreate){}
-		void AddDevices(bool anySuitableDevice, std::vector<sptr<GraphicsDeviceInformation>>& foundDevices);
-		void AddDevices(GraphicsAdapter const& adapter, DisplayMode const& mode, sptr<GraphicsDeviceInformation>& baseDeviceInfo, std::vector<sptr<GraphicsDeviceInformation>>& foundDevices) const;
+		bool ToggleFullScreen();	
+		
 
 	protected:
 		void CreateDevice();
@@ -159,6 +155,10 @@ namespace xna {
 		}
 
 	private:
+		void ChangeDevice(bool forceCreate);
+		void AddDevices(bool anySuitableDevice, std::vector<sptr<GraphicsDeviceInformation>>& foundDevices);
+		void AddDevices(GraphicsAdapter const& adapter, DisplayMode const& mode, sptr<GraphicsDeviceInformation>& baseDeviceInfo, std::vector<sptr<GraphicsDeviceInformation>>& foundDevices) const;
+
 		bool BeginDraw() override { return false; }
 		void EndDraw() override{ }
 
@@ -184,6 +184,7 @@ namespace xna {
 		Int resizedBackBufferWidth{ 0 };
 		Int resizedBackBufferHeight{ 0 };
 		bool allowMultiSampling{ false };
+		bool inDeviceTransition{ false };
 
 		std::vector<sptr<GraphicsDeviceInformation>> foundDevices;
 	};

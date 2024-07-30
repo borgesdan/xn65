@@ -109,6 +109,19 @@ namespace xna {
 	void GraphicsDeviceManager::ChangeDevice() {
 	}
 
+	void GraphicsDeviceManager::ChangeDevice(bool forceCreate) {
+		if (!game)
+			Exception::Throw(Exception::INVALID_OPERATION);
+
+		inDeviceTransition = true;
+		auto screenDeviceName = game->Window()->ScreenDeviceName();
+		int clientWidth = game->Window()->ClientBounds().Width;
+		int clientHeight = game->Window()->ClientBounds().Height;
+		bool flag1 = false;
+
+		//TODO
+	}
+
 	void GraphicsDeviceManager::AddDevices(bool anySuitableDevice, std::vector<sptr<GraphicsDeviceInformation>>& foundDevices) {
 		const auto handle = game->Window()->Handle();
 		

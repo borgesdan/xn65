@@ -168,7 +168,6 @@ namespace xna {
 	class Effect;
 	class GraphicsAdapter;
 	class GraphicsDevice;
-	class GraphicsDeviceInformation;
 	struct PresentationParameters;
 	class RenderTarget2D;
 	class SwapChain;

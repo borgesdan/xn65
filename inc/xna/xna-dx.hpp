@@ -698,6 +698,8 @@ namespace xna {
 
 	struct GameWindow::PlatformImplementation {
 	public:
+		PlatformImplementation(GameWindow* gameWindow): gameWindow(gameWindow){}
+
 		constexpr void Mode(GameWindowMode mode) {
 			_windowStyle = static_cast<int>(mode);
 		}
@@ -776,6 +778,7 @@ namespace xna {
 
 	private:
 		friend class GameWindow;
+		GameWindow*& gameWindow;
 
 		HINSTANCE		_hInstance{ nullptr };
 		HWND			_windowHandle{ nullptr };
