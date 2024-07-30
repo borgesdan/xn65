@@ -137,13 +137,22 @@ namespace xna {
 				AddDevices(*baseDeviceInfo->Adapter, *currentDisplayMode, baseDeviceInfo, foundDevices);
 
 				if (isFullScreen) {
-					//TODO
+					const auto& supportedDisplayModes = adapter->SupportedDisplayModes();
+					const auto count = supportedDisplayModes->Count();
+					
+					for (size_t i = 0; i < count; ++i) {
+						auto& supportedDisplayMode = supportedDisplayModes->DisplayModes[i];
+
+						if (supportedDisplayMode->Width() >= 640 && supportedDisplayMode->Height() >= 480) {
+							AddDevices(*baseDeviceInfo->Adapter, *supportedDisplayMode, baseDeviceInfo, foundDevices);
+						}
+					}
 				}
 			}
 		}
 	}
 
-	void GraphicsDeviceManager::AddDevices(GraphicsAdapter const& adapter, DisplayMode const& mode, sptr<GraphicsDeviceInformation>& baseDeviceInfo, std::vector<sptr<GraphicsDeviceInformation>>& foundDevices) {
+	void GraphicsDeviceManager::AddDevices(GraphicsAdapter const& adapter, DisplayMode const& mode, sptr<GraphicsDeviceInformation>& baseDeviceInfo, std::vector<sptr<GraphicsDeviceInformation>>& foundDevices) const {
 		auto deviceInformation = snew<GraphicsDeviceInformation>(*baseDeviceInfo);
 
 		if (isFullScreen)

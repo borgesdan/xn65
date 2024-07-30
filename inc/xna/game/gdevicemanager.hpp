@@ -144,7 +144,7 @@ namespace xna {
 	private:
 		void ChangeDevice(bool forceCreate){}
 		void AddDevices(bool anySuitableDevice, std::vector<sptr<GraphicsDeviceInformation>>& foundDevices);
-		void AddDevices(GraphicsAdapter const& adapter, DisplayMode const& mode, sptr<GraphicsDeviceInformation>& baseDeviceInfo, std::vector<sptr<GraphicsDeviceInformation>>& foundDevices);
+		void AddDevices(GraphicsAdapter const& adapter, DisplayMode const& mode, sptr<GraphicsDeviceInformation>& baseDeviceInfo, std::vector<sptr<GraphicsDeviceInformation>>& foundDevices) const;
 
 	protected:
 		void CreateDevice();

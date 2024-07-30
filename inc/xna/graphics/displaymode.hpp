@@ -95,6 +95,10 @@ namespace xna {
 		std::vector<sptr<DisplayMode>> Query(SurfaceFormat format) const;
 		sptr<DisplayMode> Query(SurfaceFormat format, Uint width, Uint height) const;
 
+		constexpr size_t Count() const {
+			return DisplayModes.size();
+		}
+
 	public:
 		std::vector<sptr<DisplayMode>> DisplayModes;
 	};
