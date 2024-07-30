@@ -3,21 +3,23 @@
 namespace xna {
     
     //See ref
+    // 
     //https://learn.microsoft.com/pt-br/windows/win32/api/winuser/nf-winuser-getmonitorinfoa
     //https://learn.microsoft.com/pt-br/windows/win32/api/winuser/ns-winuser-monitorinfoexa
     //https://stackoverflow.com/questions/7767036/how-do-i-get-the-number-of-displays-in-windows
+    //
 
     static BOOL CALLBACK MonitorEnumProc(HMONITOR hMonitor, HDC hdcMonitor, LPRECT lprcMonitor, LPARAM dwData)
     {
         auto screens = (std::vector<uptr<Screen>>*)dwData;
 
-        MONITORINFOEX monitorInfo;
+        MONITORINFOEX monitorInfo{};
         monitorInfo.cbSize = sizeof(MONITORINFOEX);
         GetMonitorInfo(hMonitor, &monitorInfo);
         
         const auto hmonitor = reinterpret_cast<intptr_t>(hMonitor);
 
-        const auto primary = screens->size() == 0;
+        const auto primary = monitorInfo.dwFlags == MONITORINFOF_PRIMARY;
 
         Rectangle bounds;
         bounds.X = monitorInfo.rcMonitor.left;
