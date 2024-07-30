@@ -189,4 +189,19 @@ namespace xna {
 		}
 		return DefWindowProc(hWnd, msg, wParam, lParam);
 	}
+
+	uptr<Screen> GameWindow::ScreenFromAdapter(GraphicsAdapter const& adapter) {
+		auto screens = Screen::AllScreens();
+
+		for (size_t i = 0; i < screens.size(); ++i) {
+			auto& screen = screens[i];
+			
+			if (screen->DeviceName() == adapter.DeviceName())
+				return std::move(screen);
+		}
+
+		Exception::Throw("Invalid screen adapter.");
+
+		return nullptr;
+	}
 }
