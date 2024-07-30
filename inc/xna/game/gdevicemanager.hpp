@@ -104,6 +104,15 @@ namespace xna {
 			isDeviceDirty = true;
 		}
 
+		constexpr bool PreferMultiSampling() const {
+			return allowMultiSampling;
+		}
+
+		constexpr void PreferMultiSampling(bool value) {
+			allowMultiSampling = value;
+			isDeviceDirty = true;
+		}
+
 		//Gets or sets the display orientations that are available if automatic rotation and scaling is enabled.
 		constexpr DisplayOrientation SupportedOrientations() const {
 			return supportedOrientations;
@@ -134,7 +143,8 @@ namespace xna {
 
 	private:
 		void ChangeDevice(bool forceCreate){}
-		void AddDevice(bool anySuitableDevice, std::vector<sptr<GraphicsDeviceInformation>>& foundDevices);
+		void AddDevices(bool anySuitableDevice, std::vector<sptr<GraphicsDeviceInformation>>& foundDevices);
+		void AddDevices(GraphicsAdapter const& adapter, DisplayMode const& mode, sptr<GraphicsDeviceInformation>& baseDeviceInfo, std::vector<sptr<GraphicsDeviceInformation>>& foundDevices);
 
 	protected:
 		void CreateDevice();
@@ -153,11 +163,17 @@ namespace xna {
 		bool isFullScreen{ false };
 		Int backBufferWidth{ DefaultBackBufferWidth };
 		Int backBufferHeight{ DefaultBackBufferHeight };
-		GraphicsProfile graphicsProfile;
+		GraphicsProfile graphicsProfile{GraphicsProfile::HiDef};
 		DepthFormat depthStencilFormat{ DepthFormat::Depth24 };
-		SurfaceFormat backBufferFormat;
-		DisplayOrientation supportedOrientations;
+		SurfaceFormat backBufferFormat{SurfaceFormat::Color};
+		DisplayOrientation supportedOrientations{DisplayOrientation::Default};
 		bool synchronizeWithVerticalRetrace{ true };
+		bool useResizedBackBuffer{ false };
+		Int resizedBackBufferWidth{ 0 };
+		Int resizedBackBufferHeight{ 0 };
+		bool allowMultiSampling{ false };
+
+		std::vector<sptr<GraphicsDeviceInformation>> foundDevices;
 	};
 }
 

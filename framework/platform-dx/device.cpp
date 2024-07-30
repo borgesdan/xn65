@@ -101,7 +101,7 @@ namespace xna {
 		
 		impl->_adapter = info.Adapter;
 		impl->_gameWindow = info.Window;
-		impl->_presentationParameters = info.Parameters;		
+		impl->_presentationParameters = info.PresentParameters;		
 	}	
 
 	bool GraphicsDevice::Initialize() {

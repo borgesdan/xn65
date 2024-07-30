@@ -64,7 +64,7 @@ namespace xna {
         impl->dxFullScreenDescription.RefreshRate.Denominator = 1;        
         impl->dxFullScreenDescription.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
         impl->dxFullScreenDescription.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
-        impl->dxFullScreenDescription.Windowed = !parameters->Fullscreen;
+        impl->dxFullScreenDescription.Windowed = !parameters->IsFullscreen;
 
         HWND hwnd = reinterpret_cast<HWND>(parameters->DeviceWindowHandle);
         return internalInit(*m_device, hwnd, impl->dxSwapChain, impl->dxDescription, impl->dxFullScreenDescription);

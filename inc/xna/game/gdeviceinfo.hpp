@@ -8,8 +8,8 @@ namespace xna {
 	public:
 		sptr<GraphicsAdapter> Adapter = nullptr;
 		xna::GraphicsProfile Profile{ xna::GraphicsProfile::Reach };
-		sptr<xna::PresentationParameters> Parameters = nullptr;
-		sptr<GameWindow> Window = nullptr;
+		sptr<xna::PresentationParameters> PresentParameters = nullptr;
+		sptr<GameWindow> Window = nullptr;		
 	};
 }
 

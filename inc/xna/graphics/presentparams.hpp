@@ -12,7 +12,10 @@ namespace xna {
 		SurfaceFormat BackBufferFormat{ SurfaceFormat::Color };
 		SwapEffect PresentationSwapEffect{ SwapEffect::FlipDiscard };
 		intptr_t DeviceWindowHandle{ 0 };
-		bool Fullscreen{ false };
+		bool IsFullscreen{ false };
+		Int MultiSampleCount{ 0 };
+		PresentInterval PresentationInterval{ PresentInterval::Default };
+		DepthFormat DepthStencilFormat{ DepthFormat::None };
 	};
 }
 

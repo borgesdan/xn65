@@ -13,8 +13,8 @@ namespace xna {
 		parameters->BackBufferWidth = backBufferWidth;
 		parameters->BackBufferHeight = backBufferHeight;
 		parameters->BackBufferFormat = SurfaceFormat::Color;
-		parameters->Fullscreen = false;
-		_information.Parameters = parameters;
+		parameters->IsFullscreen = false;
+		_information.PresentParameters = parameters;
 
 		if (game)
 			_information.Window = game->Window();
@@ -72,7 +72,7 @@ namespace xna {
 			return false;
 		}
 
-		info.Parameters->DeviceWindowHandle = reinterpret_cast<intptr_t>(window->impl->WindowHandle());
+		info.PresentParameters->DeviceWindowHandle = reinterpret_cast<intptr_t>(window->impl->WindowHandle());
 
 		return true;
 	}
@@ -95,8 +95,8 @@ namespace xna {
 
 	void GraphicsDeviceManager::CreateDevice() {
 		if (isDeviceDirty) {
-			_information.Parameters->BackBufferWidth = backBufferWidth;
-			_information.Parameters->BackBufferHeight = backBufferHeight;
+			_information.PresentParameters->BackBufferWidth = backBufferWidth;
+			_information.PresentParameters->BackBufferHeight = backBufferHeight;
 		}
 
 		auto result = initWindow(_information, *game, backBufferWidth, backBufferHeight);
@@ -109,7 +109,7 @@ namespace xna {
 	void GraphicsDeviceManager::ChangeDevice() {
 	}
 
-	void GraphicsDeviceManager::AddDevice(bool anySuitableDevice, std::vector<sptr<GraphicsDeviceInformation>>& foundDevices) {
+	void GraphicsDeviceManager::AddDevices(bool anySuitableDevice, std::vector<sptr<GraphicsDeviceInformation>>& foundDevices) {
 		const auto handle = game->Window()->Handle();
 		
 		std::vector<uptr<GraphicsAdapter>> adapters;
@@ -122,7 +122,58 @@ namespace xna {
 				if (!IsWindowOnAdapter(handle, *adapter))
 				continue;
 			}
+
+			if (adapter->IsProfileSupported(graphicsProfile)) {
+				auto baseDeviceInfo = snew<GraphicsDeviceInformation>();
+				baseDeviceInfo->Adapter = std::move(adapter);
+				baseDeviceInfo->Profile = graphicsProfile;
+				baseDeviceInfo->PresentParameters = snew<PresentationParameters>();
+				baseDeviceInfo->PresentParameters->DeviceWindowHandle = handle;
+				baseDeviceInfo->PresentParameters->MultiSampleCount = 0;
+				baseDeviceInfo->PresentParameters->IsFullscreen = isFullScreen;
+				baseDeviceInfo->PresentParameters->PresentationInterval = synchronizeWithVerticalRetrace ? PresentInterval::One : PresentInterval::Immediate;
+
+				const auto& currentDisplayMode = baseDeviceInfo->Adapter->CurrentDisplayMode();
+				AddDevices(*baseDeviceInfo->Adapter, *currentDisplayMode, baseDeviceInfo, foundDevices);
+
+				if (isFullScreen) {
+					//TODO
+				}
+			}
 		}
+	}
+
+	void GraphicsDeviceManager::AddDevices(GraphicsAdapter const& adapter, DisplayMode const& mode, sptr<GraphicsDeviceInformation>& baseDeviceInfo, std::vector<sptr<GraphicsDeviceInformation>>& foundDevices) {
+		auto deviceInformation = snew<GraphicsDeviceInformation>(*baseDeviceInfo);
+
+		if (isFullScreen)
+		{
+			deviceInformation->PresentParameters->BackBufferWidth = mode.Width();
+			deviceInformation->PresentParameters->BackBufferHeight = mode.Height();
+		} 
+		else if (useResizedBackBuffer) {
+			deviceInformation->PresentParameters->BackBufferWidth = resizedBackBufferWidth;
+			deviceInformation->PresentParameters->BackBufferHeight = resizedBackBufferHeight;
+		}
+		else {
+			deviceInformation->PresentParameters->BackBufferWidth = backBufferWidth;
+			deviceInformation->PresentParameters->BackBufferHeight = backBufferHeight;
+		}
+
+		SurfaceFormat selectedFormat;
+		DepthFormat selectedDepthFormat;
+		int selectedMultiSampleCount;
+
+		adapter.QueryBackBufferFormat(deviceInformation->Profile, mode.Format(), depthStencilFormat, allowMultiSampling ? 16 : 0, selectedFormat, selectedDepthFormat, selectedMultiSampleCount);
+
+		deviceInformation->PresentParameters->BackBufferFormat = selectedFormat;
+		deviceInformation->PresentParameters->DepthStencilFormat = selectedDepthFormat;
+		deviceInformation->PresentParameters->MultiSampleCount = selectedMultiSampleCount;
+
+		if (std::find(foundDevices.begin(), foundDevices.end(), deviceInformation) != foundDevices.end())
+			return;
+
+		foundDevices.push_back(deviceInformation);
 	}
 
 	bool IsWindowOnAdapter(intptr_t windowHandle, GraphicsAdapter const& adapter) {
