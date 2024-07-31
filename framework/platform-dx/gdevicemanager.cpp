@@ -6,16 +6,16 @@ namespace xna {
 	GraphicsDeviceManager::GraphicsDeviceManager(sptr<Game> const& game) : game(game)
 	{
 		sptr<GraphicsAdapter> adp = GraphicsAdapter::DefaultAdapter();
-		_information.Adapter = adp;
-		_information.Profile = xna::GraphicsProfile::HiDef;
+		information.Adapter = adp;
+		information.Profile = xna::GraphicsProfile::HiDef;
 
 		auto parameters = snew<PresentationParameters>();
 		parameters->BackBufferWidth = backBufferWidth;
 		parameters->BackBufferHeight = backBufferHeight;
 		parameters->BackBufferFormat = SurfaceFormat::Color;
 		parameters->IsFullscreen = false;
-		_information.PresentParameters = parameters;		
-		_information.Window = game->Window();
+		information.PresentParameters = parameters;		
+		information.Window = game->Window();
 	}		
 
 	void GraphicsDeviceManager::ApplyChanges() {

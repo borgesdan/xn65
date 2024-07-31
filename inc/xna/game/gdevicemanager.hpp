@@ -9,16 +9,16 @@ namespace xna {
 	struct IGraphicsDeviceService {
 		virtual sptr<GraphicsDevice> GetGraphicsDevice() = 0;
 
-		EventHandler<EventArgs> DeviceDisposing;
-		EventHandler<EventArgs> DeviceReset;
-		EventHandler<EventArgs> DeviceResetting;
-		EventHandler<EventArgs> DeviceCreated;
+		//EventHandler<EventArgs> DeviceDisposing;
+		//EventHandler<EventArgs> DeviceReset;
+		//EventHandler<EventArgs> DeviceResetting;
+		//EventHandler<EventArgs> DeviceCreated;
 	};
 
 	class IGraphicsDeviceManager {
 		virtual void CreateDevice() = 0;
-		virtual bool BeginDraw() = 0;
-		virtual void EndDraw() = 0;
+		//virtual bool BeginDraw() = 0;
+		//virtual void EndDraw() = 0;
 	};
 
 	class GraphicsDeviceManager : public IGraphicsDeviceService, public IGraphicsDeviceManager {
@@ -104,10 +104,12 @@ namespace xna {
 			isDeviceDirty = true;
 		}
 
+		//Gets or sets a value that indicates whether to enable a multisampled back buffer.
 		constexpr bool PreferMultiSampling() const {
 			return allowMultiSampling;
 		}
 
+		//Gets or sets a value that indicates whether to enable a multisampled back buffer.
 		constexpr void PreferMultiSampling(bool value) {
 			allowMultiSampling = value;
 			isDeviceDirty = true;
@@ -138,36 +140,22 @@ namespace xna {
 	public:
 		//Applies any changes to device-related properties, changing the graphics device as necessary. 
 		void ApplyChanges();
-		bool Initialize();
+		//Toggles between full screen and windowed mode.
 		bool ToggleFullScreen();	
-		
-		inline void CreateDevice() { ChangeDevice(true); }
 
 	protected:	
-		inline virtual void RankDevices(std::vector<sptr<GraphicsDeviceInformation>>& foundDevices) {
-			RankDevicesPlatform(foundDevices);
-		}
-
-		inline virtual sptr<GraphicsDeviceInformation> FindBestDevice(bool anySuitableDevice) {
-			return FindBestPlatformDevice(anySuitableDevice);
-		}
-
+		inline virtual void RankDevices(std::vector<sptr<GraphicsDeviceInformation>>& foundDevices) { RankDevicesPlatform(foundDevices);	}
+		inline virtual sptr<GraphicsDeviceInformation> FindBestDevice(bool anySuitableDevice) { return FindBestPlatformDevice(anySuitableDevice); }
 		virtual bool CanResetDevice(GraphicsDeviceInformation& newDeviceInfo);
 
 	private:
+		inline void CreateDevice() { ChangeDevice(true); }
 		void ChangeDevice(bool forceCreate);
 		void AddDevices(bool anySuitableDevice, std::vector<sptr<GraphicsDeviceInformation>>& foundDevices);
-		void AddDevices(GraphicsAdapter const& adapter, DisplayMode const& mode, sptr<GraphicsDeviceInformation>& baseDeviceInfo, std::vector<sptr<GraphicsDeviceInformation>>& foundDevices) const;
-
-		bool BeginDraw() override { return false; }
-		void EndDraw() override{ }
-
+		void AddDevices(GraphicsAdapter const& adapter, DisplayMode const& mode, sptr<GraphicsDeviceInformation>& baseDeviceInfo, std::vector<sptr<GraphicsDeviceInformation>>& foundDevices) const;		
 		sptr<GraphicsDeviceInformation> FindBestPlatformDevice(bool anySuitableDevice);
-
 		void RankDevicesPlatform(std::vector<sptr<GraphicsDeviceInformation>>& foundDevices);
-
-		void CreateDevice(GraphicsDeviceInformation& newInfo);
-		
+		void CreateDevice(GraphicsDeviceInformation& newInfo);		
 		void MassagePresentParameters(PresentationParameters& pp);
 		void ValidateGraphicsDeviceInformation(GraphicsDeviceInformation& devInfo);
 
@@ -175,8 +163,7 @@ namespace xna {
 		sptr<Game> game = nullptr;
 		bool isDeviceDirty{ false };
 		sptr<GraphicsDevice> device = nullptr;
-		GraphicsDeviceInformation _information{};
-
+		GraphicsDeviceInformation information{};
 		bool isFullScreen{ false };
 		Int backBufferWidth{ DefaultBackBufferWidth };
 		Int backBufferHeight{ DefaultBackBufferHeight };
@@ -192,7 +179,6 @@ namespace xna {
 		bool inDeviceTransition{ false };
 		bool isReallyFullScreen{ false };
 		DisplayOrientation currentWindowOrientation{ DisplayOrientation::Default };
-
 		std::vector<sptr<GraphicsDeviceInformation>> foundDevices;
 	};
 }
