@@ -1,5 +1,5 @@
-#ifndef XNA_XNA_DX_HPP
-#define XNA_XNA_DX_HPP
+#ifndef XNA_XNADX_HPP
+#define XNA_XNADX_HPP
 
 #define NOMINMAX
 
@@ -64,6 +64,28 @@ namespace xna {
 	//---------------- HELPERS ----------------//
 
 	struct DxHelpers {
+		static constexpr RECT RectangleToDx(Rectangle const& value) {
+			RECT rect{};
+			rect.top = value.Top();
+			rect.left = value.Left();
+			rect.right = value.Right();
+			rect.bottom = value.Bottom();
+
+			return rect;
+		}
+
+		static constexpr D3D11_VIEWPORT ViewportToDx(Viewport const& value) {
+			D3D11_VIEWPORT _view{};
+			_view.TopLeftX = value.X;
+			_view.TopLeftY = value.Y;
+			_view.Width = value.Width;
+			_view.Height = value.Height;
+			_view.MinDepth = value.MinDetph;
+			_view.MaxDepth = value.MaxDepth;
+
+			return _view;
+		}
+
 		static constexpr DirectX::XMVECTOR VectorToDx(Vector2 const& value) {
 			DirectX::XMVECTOR v{};
 
@@ -72,7 +94,6 @@ namespace xna {
 
 			return v;
 		}
-
 
 		static constexpr DirectX::XMVECTOR VectorToDx(Vector3 const& value) {
 			DirectX::XMVECTOR v{};
@@ -127,7 +148,6 @@ namespace xna {
 
 			return m;
 		}
-
 
 		static constexpr DirectX::SpriteSortMode SpriteSortToDx(SpriteSortMode value) {
 			return static_cast<DirectX::SpriteSortMode>(static_cast<int>(value));
@@ -342,7 +362,8 @@ namespace xna {
 
 		static constexpr TextureAddressMode TextureAddresModeToXna(D3D11_TEXTURE_ADDRESS_MODE value) {
 			return static_cast<TextureAddressMode>(value - 1);
-		}
+		}	
+
 	};	
 
 	struct PlatformInit {
@@ -560,25 +581,18 @@ namespace xna {
 	//---------------- IMPLEMENTATIONS ----------------//
 
 	struct SpriteFont::PlatformImplementation {
-		uptr<DirectX::SpriteFont> _dxSpriteFont{ nullptr };
+		uptr<DirectX::SpriteFont> dxSpriteFont{ nullptr };
 	};
 
 	struct SpriteBatch::PlatformImplementation {
-		sptr<DirectX::SpriteBatch> _dxspriteBatch = nullptr;
+		sptr<DirectX::SpriteBatch> dxSpriteBatch = nullptr;
 		comptr<ID3D11InputLayout> dxInputLayout = nullptr;
-		sptr<DirectX::DX11::IEffect> effectBuffer = nullptr;
+		sptr<DirectX::DX11::IEffect> dxEffectBuffer = nullptr;
 	};
 
 	struct GraphicsAdapter::PlatformImplementation {
-		comptr<IDXGIAdapter1> dxadapter = nullptr;
-
-	private:
-		friend class GraphicsAdapter;
-		Uint _index{ 0 };
-		sptr<DisplayMode> _currentDisplayMode = nullptr;
-
-	public:
-		bool GetOutput(UINT slot, IDXGIOutput*& output);
+		comptr<IDXGIAdapter1> dxAdapter = nullptr;
+		comptr<IDXGIFactory1> dxFactory = nullptr;		
 	};
 
 	struct BlendRenderTarget {
@@ -604,40 +618,6 @@ namespace xna {
 	struct DepthStencilState::PlatformImplementation {
 		comptr<ID3D11DepthStencilState> dxDepthStencil = nullptr;
 		D3D11_DEPTH_STENCIL_DESC dxDescription{};
-	};
-
-	struct DisplayModeRefreshRate {
-		constexpr DisplayModeRefreshRate() = default;
-
-		constexpr DisplayModeRefreshRate(DXGI_RATIONAL const& dxrational) {
-			Numerator = dxrational.Numerator;
-			Denominator = dxrational.Denominator;
-		}
-		constexpr DisplayModeRefreshRate(Uint numerator, Uint denominator)
-			: Numerator(numerator), Denominator(denominator) {}
-
-		Uint Numerator{ 0 };
-		Uint Denominator{ 0 };
-
-		constexpr bool operator==(const DisplayModeRefreshRate& other) const
-		{
-			return Numerator == other.Numerator && Denominator == other.Denominator;
-		}
-	};
-
-	struct DisplayModeDescription {
-		DisplayModeScanlineOrder _scanlineOrdering{ DisplayModeScanlineOrder::Unspecified };
-		DisplayModeScaling _scaling{ DisplayModeScaling::Unspecified };
-		DisplayModeRefreshRate _refreshRate{};
-
-		constexpr bool operator==(const DisplayModeDescription& other) const
-		{
-			return _scanlineOrdering == other._scanlineOrdering && _scaling == other._scaling && _refreshRate == other._refreshRate;
-		}
-	};
-
-	struct DisplayMode::PlatformImplementation {
-		std::vector<DisplayModeDescription> Descriptions;
 	};
 
 	struct GamePad::PlatformImplementation {
@@ -718,6 +698,8 @@ namespace xna {
 
 	struct GameWindow::PlatformImplementation {
 	public:
+		PlatformImplementation(GameWindow* gameWindow): gameWindow(gameWindow){}
+
 		constexpr void Mode(GameWindowMode mode) {
 			_windowStyle = static_cast<int>(mode);
 		}
@@ -787,7 +769,7 @@ namespace xna {
 
 		constexpr void Color(BYTE r, BYTE g, BYTE b) {
 			_windowColor = RGB(r, g, b);
-		}
+		}		
 
 		bool Create();
 		bool Update();
@@ -796,6 +778,7 @@ namespace xna {
 
 	private:
 		friend class GameWindow;
+		GameWindow* gameWindow = nullptr;
 
 		HINSTANCE		_hInstance{ nullptr };
 		HWND			_windowHandle{ nullptr };
@@ -862,10 +845,22 @@ namespace xna {
 		sptr<SwapChain> _swapChain = nullptr;
 		sptr<GraphicsAdapter> _adapter = nullptr;
 		sptr<RenderTarget2D> _renderTarget2D = nullptr;
-		sptr<GameWindow> _gameWindow = nullptr;
+		intptr_t windowHandle{ 0 };
 		xna::Viewport _viewport{};
 		sptr<xna::PresentationParameters> _presentationParameters;
-		D3D_FEATURE_LEVEL _featureLevel{ D3D_FEATURE_LEVEL::D3D_FEATURE_LEVEL_11_0 };
+		
+		D3D_FEATURE_LEVEL featureLevels[7] = 
+		{
+			D3D_FEATURE_LEVEL_11_1,
+			D3D_FEATURE_LEVEL_11_0,
+			D3D_FEATURE_LEVEL_10_1,
+			D3D_FEATURE_LEVEL_10_0,
+			D3D_FEATURE_LEVEL_9_3,
+			D3D_FEATURE_LEVEL_9_2,
+			D3D_FEATURE_LEVEL_9_1,
+		};
+
+		D3D_FEATURE_LEVEL currentFeatureLevel{ D3D_FEATURE_LEVEL_11_1 };
 
 	private:
 		friend class GraphicsDevice;

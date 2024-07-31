@@ -2,16 +2,12 @@
 #include "xna/graphics/displaymode.hpp"
 
 namespace xna {
-	DisplayMode::DisplayMode() {
-		impl = unew<PlatformImplementation>();
-	}	
-
 	size_t DisplayModeCollection::SurfaceCount(SurfaceFormat format) const
 	{
 		size_t counter = 0;
 
 		for (size_t i = 0; i < DisplayModes.size(); ++i) {
-			if (DisplayModes[i]->Format == format) {
+			if (DisplayModes[i]->Format() == format) {
 				++counter;
 			}
 		}
@@ -27,7 +23,7 @@ namespace xna {
 		std::vector<sptr<DisplayMode>> modes(count);
 
 		for (size_t i = 0; i < DisplayModes.size(); ++i) {
-			if (DisplayModes[i]->Format == format) {
+			if (DisplayModes[i]->Format() == format) {
 				modes[index] = DisplayModes[i];
 				++index;
 			}
@@ -46,10 +42,10 @@ namespace xna {
 		for (size_t i = 0; i < DisplayModes.size(); ++i) {
 			const auto& mode = DisplayModes[i];
 
-			if (mode->Format == format && mode->Width == width && mode->Height == height) {
+			if (mode->Format() == format && mode->Width() == width && mode->Height() == height) {
 				return DisplayModes[i];
 			}
-			else if(mode->Format == format && mode->Width == width) {
+			else if(mode->Format() == format && mode->Width() == width) {
 				matched = mode;
 			}
 		}

@@ -193,19 +193,6 @@ namespace xna {
         Portrait = 4,
     };
 
-    enum class DisplayModeScanlineOrder {
-        Unspecified = 0,
-        Progressive = 1,
-        UpperFieldFirst = 2,
-        LowerFieldFirst = 3
-    };
-
-    enum class DisplayModeScaling {
-        Unspecified = 0,
-        Centered = 1,
-        Stretched = 2
-    };
-
     enum class EffectParameterClass {
         Matrix,
         Object,
@@ -268,8 +255,12 @@ namespace xna {
         None,
     };
 
+    //Identifies the set of supported devices for the game based on device capabilities. 
     enum class GraphicsProfile {
+        //Use a limited set of graphic features and capabilities, allowing the game to support the widest variety of devices, including all Windows-based computers.        
         Reach,
+        //Use the largest available set of graphic features and capabilities to target devices,
+        //such as an Xbox 360 console and a Windows-based computer, that have more enhanced graphic capabilities. 
         HiDef
     };
 

@@ -21,43 +21,61 @@ namespace xna {
 	}
 
 	static void createDevice(GraphicsDevice::PlatformImplementation& impl) {
+		//
+		// See ref
+		//
+		// D3D_DRIVER_TYPE
+		// https://learn.microsoft.com/en-us/windows/win32/api/d3dcommon/ne-d3dcommon-d3d_driver_type
+		//
+		// D3D11CreateDevice function 
+		// https://learn.microsoft.com/en-us/windows/win32/api/d3d11/nf-d3d11-d3d11createdevice
+		//		
+
 		auto createDeviceFlags = 0;
 #if _DEBUG
 		createDeviceFlags = D3D11_CREATE_DEVICE_FLAG::D3D11_CREATE_DEVICE_DEBUG;
 #endif        
+
+		const auto& currentAdapter = impl._adapter;
+		const auto& pAdapter = GraphicsAdapter::UseNullDevice() ? NULL : currentAdapter->impl->dxAdapter.Get();		
+		
+		//
+		// if pAdapter is not NULL driverType must be D3D_DRIVER_TYPE_UNKNOWN
+		//
+		auto driverType = D3D_DRIVER_TYPE_UNKNOWN;
+
+		if (GraphicsAdapter::UseReferenceDevice())
+			driverType = D3D_DRIVER_TYPE_WARP;
+		else if (GraphicsAdapter::UseNullDevice())
+			driverType = D3D_DRIVER_TYPE_HARDWARE;
+
 		auto hr = D3D11CreateDevice(
-			impl._adapter->impl->dxadapter.Get(),
-			D3D_DRIVER_TYPE_UNKNOWN,
+			//_In_opt_ IDXGIAdapter* pAdapter,
+			pAdapter,
+			//D3D_DRIVER_TYPE DriverType,
+			driverType,
+			//HMODULE Software,
 			NULL,
+			//UINT Flags,
 			createDeviceFlags,
-			NULL,
-			0,
+			//_In_reads_opt_( FeatureLevels ) CONST D3D_FEATURE_LEVEL* pFeatureLevels,
+			impl.featureLevels,
+			//UINT FeatureLevels,
+			7,
+			//UINT SDKVersion,
 			D3D11_SDK_VERSION,
+			//_COM_Outptr_opt_ ID3D11Device** ppDevice
 			impl._device.GetAddressOf(),
-			&impl._featureLevel,
+			//_Out_opt_ D3D_FEATURE_LEVEL* pFeatureLevel,
+			&impl.currentFeatureLevel,
+			//_COM_Outptr_opt_ ID3D11DeviceContext** ppImmediateContext
 			impl._context.GetAddressOf());
 
-		if (FAILED(hr)) {
-			OutputDebugString("---> Usando Adaptador WARP: não há suporte ao D3D11\n");
-
-			hr = D3D11CreateDevice(
-				NULL,
-				D3D_DRIVER_TYPE_WARP,
-				NULL,
-				createDeviceFlags,
-				NULL,
-				0,
-				D3D11_SDK_VERSION,
-				impl._device.GetAddressOf(),
-				&impl._featureLevel,
-				impl._context.GetAddressOf());
-
-			if FAILED(hr)
-				Exception::Throw(Exception::FAILED_TO_CREATE);
-		}
+		if FAILED(hr)
+			Exception::Throw(Exception::FAILED_TO_CREATE);
 	}
 
-	void initAndApplyState(GraphicsDevice::PlatformImplementation& impl, PGraphicsDevice const& device) {
+	static void initAndApplyState(GraphicsDevice::PlatformImplementation& impl, PGraphicsDevice const& device) {
 		impl._blendState->Bind(device);
 		impl._blendState->Initialize();
 		impl._blendState->Apply();
@@ -75,24 +93,21 @@ namespace xna {
 
 	GraphicsDevice::GraphicsDevice() {		
 		impl = unew<PlatformImplementation>();
-		impl->_adapter = GraphicsAdapter::DefaultAdapter();
-		impl->_adapter->CurrentDisplayMode(
-			SurfaceFormat::Color, 
-			GraphicsDeviceManager::DefaultBackBufferWidth, 
-			GraphicsDeviceManager::DefaultBackBufferHeight);
+		impl->_adapter = GraphicsAdapter::DefaultAdapter();		
 	}
 
 	GraphicsDevice::GraphicsDevice(GraphicsDeviceInformation const& info) {
 		impl = unew<PlatformImplementation>();
 		
 		impl->_adapter = info.Adapter;
-		impl->_gameWindow = info.Window;
-		impl->_presentationParameters = info.Parameters;
-		impl->_adapter->CurrentDisplayMode(
-			impl->_presentationParameters->BackBufferFormat, 
-			impl->_presentationParameters->BackBufferWidth,
-			impl->_presentationParameters->BackBufferHeight);
+		impl->_presentationParameters = info.PresentParameters;		
 	}	
+
+	GraphicsDevice::GraphicsDevice(sptr<GraphicsAdapter> const& adapter, GraphicsProfile const& graphicsProfile, sptr<PresentationParameters> const& presentationParameters) {
+		impl = unew<PlatformImplementation>();
+		impl->_adapter = adapter;			
+		impl->_presentationParameters = presentationParameters;		
+	}
 
 	bool GraphicsDevice::Initialize() {
 		auto _this = shared_from_this();
@@ -109,23 +124,27 @@ namespace xna {
 		if FAILED(hr)
 			Exception::Throw(Exception::FAILED_TO_CREATE);
 
-		const auto bounds = impl->_gameWindow->ClientBounds();
+		//const auto bounds = impl->_gameWindow->ClientBounds();
 
 		impl->_viewport = xna::Viewport(0.0F, 0.0F,
-			static_cast<float>(bounds.Width),
-			static_cast<float>(bounds.Height),
+			impl->_presentationParameters->BackBufferWidth,
+			impl->_presentationParameters->BackBufferHeight,
 			0.0F, 1.F);
 
-		COLORREF color = impl->_gameWindow->impl->Color();
-		impl->_backgroundColor[0] = GetRValue(color) / 255.0f;
-		impl->_backgroundColor[1] = GetGValue(color) / 255.0f;
-		impl->_backgroundColor[2] = GetBValue(color) / 255.0f;
+		//COLORREF color = impl->_gameWindow->impl->Color();
+		const auto backColor = Colors::CornflowerBlue;
+		const auto backColorV3 = backColor.ToVector3();
+
+		impl->_backgroundColor[0] = backColorV3.X;
+		impl->_backgroundColor[1] = backColorV3.Y;
+		impl->_backgroundColor[2] = backColorV3.Z;
 		impl->_backgroundColor[3] = 1.0f;
 
 		impl->_swapChain = snew<xna::SwapChain>(_this);
 		impl->_swapChain->Initialize();
 
-		hr = impl->_factory->MakeWindowAssociation(impl->_gameWindow->impl->WindowHandle(), DXGI_MWA_NO_ALT_ENTER);
+		auto hwnd = reinterpret_cast<HWND>(impl->_presentationParameters->DeviceWindowHandle);
+		hr = impl->_factory->MakeWindowAssociation(hwnd, DXGI_MWA_NO_ALT_ENTER);
 		
 		if (FAILED(hr)) 
 			Exception::Throw(Exception::FAILED_TO_MAKE_WINDOW_ASSOCIATION);
@@ -263,5 +282,13 @@ namespace xna {
 
 	void GraphicsDevice::MultiSampleMask(Int value) {
 		impl->_multiSampleMask = value;
+	}
+
+	void GraphicsDevice::Reset(sptr<PresentationParameters> const& presentationParameters, sptr<GraphicsAdapter> const& graphicsAdapter){
+		impl = unew<PlatformImplementation>();
+		impl->_adapter = graphicsAdapter;
+		impl->_presentationParameters = presentationParameters;
+		
+		Initialize();
 	}
 }

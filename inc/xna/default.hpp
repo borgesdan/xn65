@@ -151,7 +151,7 @@ namespace xna {
 	class GameClock;
 	class GameTime;
 	class GameWindow;
-	class GraphicsDeviceInformation;
+	struct GraphicsDeviceInformation;
 	class GraphicsDeviceManager;
 	class IGameTime;
 	class IGameComponent;
@@ -168,7 +168,6 @@ namespace xna {
 	class Effect;
 	class GraphicsAdapter;
 	class GraphicsDevice;
-	class GraphicsDeviceInformation;
 	struct PresentationParameters;
 	class RenderTarget2D;
 	class SwapChain;

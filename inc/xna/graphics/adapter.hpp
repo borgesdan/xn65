@@ -2,45 +2,95 @@
 #define XNA_GRAPHICS_ADAPTER_HPP
 
 #include "../default.hpp"
+#include "displaymode.hpp"
 
 namespace xna {
 	//Provides methods to retrieve and manipulate graphics adapters.
 	class GraphicsAdapter {
 	public:
-		GraphicsAdapter();
+		//Collection of available adapters on the system.
+		static void Adapters(std::vector<uptr<GraphicsAdapter>>& adapters);
 
-		//Retrieves a string used for presentation to the user.
-		String Description() const;
-		//Retrieves a value that is used to help identify a particular chip set. 
-		Uint DeviceId() const;
-		//Retrieves a string that contains the device name.
-		String DeviceName() const;
-		//Determines if this instance of GraphicsAdapter is the default adapter.
-		bool IsDefaultAdapter() const;
-		//Retrieves the handle of the monitor
-		intptr_t MonitorHandle() const;
-		//Retrieves a value used to help identify the revision level of a particular chip set.
-		Uint Revision() const;
-		//Retrieves a value used to identify the subsystem.
-		Uint SubSystemId() const;
-		//Retrieves a value used to identify the manufacturer.
-		Uint VendorId() const;
-
-		//Returns a collection of supported display modes for the current adapter.
-		uptr<DisplayModeCollection> SupportedDisplayModes() const;
-		//Returns a collection of supported display modes for the current adapter.
-		uptr<DisplayModeCollection> SupportedDisplayModes(SurfaceFormat surfaceFormat) const;
-		
 		//Gets the current display mode.
-		sptr<DisplayMode> CurrentDisplayMode();
-		//Gets the current display mode.
-		void CurrentDisplayMode(SurfaceFormat surfaceFormat, Uint width, Uint height);
+		inline sptr<DisplayMode> CurrentDisplayMode() const { return currentDisplayMode; }
 
 		//Gets the default adapter. 
 		static uptr<GraphicsAdapter> DefaultAdapter();
+
+		//Retrieves a string used for presentation to the user.
+		constexpr String Description() const { return description; }
+
+		//Retrieves a value that is used to help identify a particular chip set. 
+		constexpr Uint DeviceId() const { return deviceId; }
 		
-		//Collection of available adapters on the system.
-		static void Adapters(std::vector<uptr<GraphicsAdapter>>& adapters);
+		//Retrieves a string that contains the device name.
+		constexpr String DeviceName() const { return deviceName; }
+		
+		//Determines if this instance of GraphicsAdapter is the default adapter.
+		constexpr bool IsDefaultAdapter() const { return isDefault; }
+		
+		//Determines if the graphics adapter is in widescreen mode.
+		inline bool IsWideScreen() const { 
+			return currentDisplayMode->AspectRatio() > 1.6000000238418579;
+		}
+		
+		//Retrieves the handle of the monitor
+		constexpr intptr_t MonitorHandle() const { return monitorHandle; }
+
+		//Retrieves a value used to help identify the revision level of a particular chip set.
+		constexpr Uint Revision() const { return revision; }
+		
+		//Retrieves a value used to identify the subsystem.
+		constexpr Uint SubSystemId() const { return subSystemId; }
+		
+		//Returns a collection of supported display modes for the current adapter.
+		inline sptr<DisplayModeCollection> SupportedDisplayModes() const { return supportedDisplayModes; }
+
+		//Retrieves a value used to identify the manufacturer.
+		constexpr Uint VendorId() const { return vendorId; }
+		
+		//Gets or sets a NULL device. 
+		static bool UseNullDevice() { return useNullDevice; }
+		//Gets or sets a NULL device. 
+		static void UseNullDevice(bool value) { useNullDevice = value; }
+		
+		//Gets or sets a reference device.
+		constexpr static bool UseReferenceDevice() { return useReferenceDevice; }
+		//Gets or sets a reference device. 
+		constexpr static void UseReferenceDevice(bool value) { useReferenceDevice = value; }
+
+		//Tests to see if the adapter supports the requested profile. 
+		bool IsProfileSupported(GraphicsProfile graphicsProfile) {
+			return true;
+		}		
+
+		//Queries the adapter for support for the requested back buffer format.
+		bool QueryBackBufferFormat(
+			GraphicsProfile graphicsProfile,
+			SurfaceFormat format,
+			DepthFormat depthFormat,
+			Int multiSampleCount,
+			SurfaceFormat& selectedFormat,
+			DepthFormat& selectedDepthFormat,
+			Int& selectedMultiSampleCount
+		) const;		
+
+	private:
+		String description;
+		Uint deviceId{0};
+		String deviceName;
+		bool isDefault{ false };
+		intptr_t monitorHandle{ 0 };
+		Uint revision{ 0 };
+		Uint subSystemId{ 0 };
+		Uint vendorId{ 0 };
+		sptr<DisplayMode> currentDisplayMode{ nullptr };
+		sptr<DisplayModeCollection> supportedDisplayModes{ nullptr };
+
+		inline static bool useNullDevice = false;
+		inline static bool useReferenceDevice = false;
+
+		GraphicsAdapter();
 
 	public:
 		struct PlatformImplementation;

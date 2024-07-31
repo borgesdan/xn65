@@ -2,6 +2,7 @@
 #define XNA_GRAPHICS_DEVICE_HPP
 
 #include "../default.hpp"
+#include "presentparams.hpp"
 
 namespace xna {
 	//Performs primitive-based rendering, creates resources, handles system-level variables, adjusts gamma ramp levels, and creates shaders. 
@@ -9,6 +10,7 @@ namespace xna {
 	public:
 		GraphicsDevice();
 		GraphicsDevice(GraphicsDeviceInformation const& info);
+		GraphicsDevice(sptr<GraphicsAdapter> const& adapter, GraphicsProfile const& graphicsProfile, sptr<PresentationParameters> const& presentationParameters);
 
 		//Gets the graphics adapter.
 		sptr<GraphicsAdapter> Adapter() const;
@@ -32,12 +34,22 @@ namespace xna {
 		Int MultiSampleMask() const;
 		//Gets or sets a bitmask controlling modification of the samples in a multisample render target. The default value is -1 (0xffffffff). 
 		void MultiSampleMask(Int value);
+
+		constexpr GraphicsProfile Profile() const {
+			return GraphicsProfile::HiDef;
+		}
 		
+		constexpr PresentationParameters PresentParameters() const {
+			return PresentationParameters();
+		}
+
 		void Clear(Color const& color);
 		void Clear(ClearOptions options, Color const& color, float depth, Int stencil);
 		void Clear(ClearOptions options, Vector4 const& color, float depth, Int stencil);
 		bool Initialize();
 		bool Present();
+
+		void Reset(sptr<PresentationParameters> const& presentationParameters, sptr<GraphicsAdapter> const& graphicsAdapter);
 
 		xna::Viewport Viewport() const;
 		void Viewport(xna::Viewport const& viewport);

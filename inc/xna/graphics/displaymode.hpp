@@ -2,40 +2,82 @@
 #define XNA_GRAPHICS_DISPLAYMODE_HPP
 
 #include "../default.hpp"
+#include "../common/numerics.hpp"
 
 namespace xna {
-	struct DisplayModeDescription;
+	//Flags indicating the method the raster uses to create an image on a surface
+	enum class DisplayModeScanlineOrder {
+		Unspecified = 0,
+		Progressive = 1,
+		UpperFieldFirst = 2,
+		LowerFieldFirst = 3
+	};
+
+	//Flags indicating how an image is stretched to fit a given monitor's resolution
+	enum class DisplayModeScaling {
+		Unspecified = 0,
+		Centered = 1,
+		Stretched = 2
+	};
+
+	struct DisplayModeRate {
+		constexpr DisplayModeRate() = default;
+
+		constexpr DisplayModeRate(DisplayModeScanlineOrder scanlineOrdering, DisplayModeScaling scaling, RationalNumber refreshRate, bool stereo) :
+		ScanlineOrdering(scanlineOrdering), Scaling(scaling), RefreshRate(refreshRate), Stereo(stereo){}
+
+		constexpr bool operator==(const DisplayModeRate& other) const {
+			return ScanlineOrdering == other.ScanlineOrdering && Scaling == other.Scaling && RefreshRate == other.RefreshRate;
+		}
+
+		//Gets the method the raster uses to create an image on a surface
+		DisplayModeScanlineOrder ScanlineOrdering{ DisplayModeScanlineOrder::Unspecified };
+		//Gets how an image is stretched to fit a given monitor's resolution
+		DisplayModeScaling Scaling{ DisplayModeScaling::Unspecified };
+		//Describing the refresh rate in hertz.
+		RationalNumber RefreshRate{};
+		//Specifies whether the full-screen display mode is stereo. TRUE if stereo; otherwise, FALSE.
+		bool Stereo{ false };
+	};
 
 	//Describes the display mode. 
 	class DisplayMode {
 	public:
-		DisplayMode();	
+		constexpr DisplayMode();	
+
+		constexpr DisplayMode(Int width, Int height, SurfaceFormat format):
+			width(width), height(height), format(format){}
 
 		//Gets the aspect ratio used by the graphics device.
 		constexpr float AspectRatio() const {
-			if (Height == 0 || Width == 0)
+			if (height == 0 || width == 0)
 				return 0;
 
-			return static_cast<float>(Width) / static_cast<float>(Height);
+			return static_cast<float>(width) / static_cast<float>(height);
 		}		
 
+		//Gets a value indicating the screen width, in pixels. 
+		constexpr Int Width() const { return width; }
+		//Gets a value indicating the screen height, in pixels. 
+		constexpr Int Height() const { return height; }
+		//Gets a value indicating the surface format of the display mode.
+		constexpr SurfaceFormat Format() const { return format; }
+
 		constexpr bool operator==(const DisplayMode& other) const {
-			return Width == other.Width
-				&& Height == other.Height
-				&& Format == other.Format;
+			return width == other.width
+				&& height == other.height
+				&& format == other.format;
 		}
 
-	public:
-		//Gets a value indicating the screen width, in pixels. 
-		Int Width{ 0 };
-		//Gets a value indicating the screen height, in pixels. 
-		Int Height{ 0 };
-		//Gets a value indicating the surface format of the display mode. 
-		SurfaceFormat Format{ SurfaceFormat::Color };		
+	private:		
+		friend class GraphicsAdapter;
 
+		Int width{ 0 };		
+		Int height{ 0 };		 
+		SurfaceFormat format{ SurfaceFormat::Color };		
+		
 	public:
-		struct PlatformImplementation;
-		uptr<PlatformImplementation> impl;
+		std::vector<DisplayModeRate> Rates;
 	};
 
 	//Manipulates a collection of DisplayMode structures. 
@@ -52,6 +94,10 @@ namespace xna {
 
 		std::vector<sptr<DisplayMode>> Query(SurfaceFormat format) const;
 		sptr<DisplayMode> Query(SurfaceFormat format, Uint width, Uint height) const;
+
+		constexpr size_t Count() const {
+			return DisplayModes.size();
+		}
 
 	public:
 		std::vector<sptr<DisplayMode>> DisplayModes;

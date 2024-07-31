@@ -47,7 +47,8 @@ namespace xna {
 	class MemoryStream : public Stream {
 	public:
 		constexpr MemoryStream(std::vector<Byte> const& bytes):
-			_buffer(bytes), _length(bytes.size()){}
+			_buffer(bytes), 
+			_length(static_cast<Int>(bytes.size())){}
 
 		~MemoryStream() override {
 			Close();

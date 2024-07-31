@@ -14,8 +14,9 @@ namespace PlatformerStarterKit {
 			Center(position), Radius(radius){}
 
 		constexpr bool Intersects(xna::Rectangle const& rectangle) const {
-			const auto v = xna::Vector2(xna::MathHelper::Clamp(Center.X, rectangle.Left(), rectangle.Right()),
-				xna::MathHelper::Clamp(Center.Y, rectangle.Top(), rectangle.Bottom()));
+			const auto v = 
+				xna::Vector2(xna::MathHelper::Clamp(Center.X, static_cast<float>(rectangle.Left()), static_cast<float>(rectangle.Right())),
+				xna::MathHelper::Clamp(Center.Y, static_cast<float>(rectangle.Top()), static_cast<float>(rectangle.Bottom())));
 
 			const auto direction = Center - v;
 			auto distanceSquared = direction.LengthSquared();

@@ -68,11 +68,11 @@ namespace xna {
 	}
 
 	float RasterizerState::DepthBias() const {
-		return impl->dxDescription.DepthBias;
+		return static_cast<float>(impl->dxDescription.DepthBias);
 	}
 
 	void RasterizerState::DepthBias(float value) {
-		impl->dxDescription.DepthBias = value;
+		impl->dxDescription.DepthBias = static_cast<INT>(value);
 	}
 
 	float RasterizerState::SlopeScaleDepthBias() const {

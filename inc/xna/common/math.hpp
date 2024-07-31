@@ -17,11 +17,12 @@ namespace xna {
 		static constexpr float Min(float value1, float value2) { return (std::min)(value1, value2); }
 		static constexpr float Max(float value1, float value2) { return (std::max)(value1, value2); }
 
-		static constexpr float Clamp(float value, float min, float max) {
+		template <typename T>
+		static constexpr T Clamp(T value, T min, T max) {
 			value = value > max ? max : value;
 			value = value < min ? min : value;
 			return value;
-		}		
+		}
 
 		static constexpr float Lerp(float value1, float value2, float amount) {
 			return value1 + (value2 - value1) * amount;

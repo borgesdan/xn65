@@ -30,7 +30,7 @@ namespace xna {
 	}
 
 	void BasicEffect::Alpha(float value) {
-		const auto a = MathHelper::Clamp(value, 0.0f, 1.0);
+		const auto a = MathHelper::Clamp(value, 0.0F, 1.0F);
 		impl->dxBasicEffect->SetAlpha(a);
 	}
 
@@ -116,7 +116,7 @@ namespace xna {
 	void BasicEffect::SetDirectionalLight(Int index, DirectionalLight const& direction) {
 		DxVec vec3 = DxHelpers::VectorToDx(direction.Direction);
 
-		const auto value = (int)MathHelper::Clamp(index, 0, impl->dxBasicEffect->MaxDirectionalLights);
+		const auto value = MathHelper::Clamp(index, 0, impl->dxBasicEffect->MaxDirectionalLights);
 
 		impl->dxBasicEffect->SetLightDirection(value, vec3);
 	}

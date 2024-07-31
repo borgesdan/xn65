@@ -23,6 +23,6 @@ project ("xna")
 include_directories(${PROJECT_INCLUDES_DIR})
 add_subdirectory ("framework")
 
-#add_subdirectory ("samples")
+add_subdirectory ("samples")
 
 
