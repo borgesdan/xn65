@@ -168,7 +168,7 @@ namespace xna {
 
 		void RankDevicesPlatform(std::vector<sptr<GraphicsDeviceInformation>>& foundDevices);
 
-		void CreateDevice(GraphicsDeviceInformation& newInfo){}
+		void CreateDevice(GraphicsDeviceInformation& newInfo);
 		
 		void MassagePresentParameters(PresentationParameters& pp);
 		void ValidateGraphicsDeviceInformation(GraphicsDeviceInformation& devInfo);

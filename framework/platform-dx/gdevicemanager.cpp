@@ -161,6 +161,26 @@ namespace xna {
 		inDeviceTransition = false;
 	}
 
+	void GraphicsDeviceManager::CreateDevice(GraphicsDeviceInformation& newInfo) {
+		if (device)	{			
+			device = nullptr;
+		}
+		
+		//this.OnPreparingDeviceSettings((object)this, new PreparingDeviceSettingsEventArgs(newInfo));
+		MassagePresentParameters(*newInfo.PresentParameters);
+		ValidateGraphicsDeviceInformation(newInfo);
+
+		device = snew<GraphicsDevice>(newInfo.Adapter, newInfo.Profile, newInfo.PresentParameters);
+
+		//device.DeviceResetting += new EventHandler<EventArgs>(this.HandleDeviceResetting);
+		//device.DeviceReset += new EventHandler<EventArgs>(this.HandleDeviceReset);
+		//device.DeviceLost += new EventHandler<EventArgs>(this.HandleDeviceLost);
+		//device.Disposing += new EventHandler<EventArgs>(this.HandleDisposing);
+
+		//GraphicsDeviceManager.ConfigureTouchInput(newInfo.PresentationParameters);
+		//this.OnDeviceCreated((object)this, EventArgs.Empty);*/
+	}
+
 	void GraphicsDeviceManager::AddDevices(bool anySuitableDevice, std::vector<sptr<GraphicsDeviceInformation>>& foundDevices) {
 		const auto handle = game->Window()->Handle();
 		

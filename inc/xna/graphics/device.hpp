@@ -10,6 +10,7 @@ namespace xna {
 	public:
 		GraphicsDevice();
 		GraphicsDevice(GraphicsDeviceInformation const& info);
+		GraphicsDevice(sptr<GraphicsAdapter> const& adapter, GraphicsProfile const& graphicsProfile, sptr<PresentationParameters> const& presentationParameters);
 
 		//Gets the graphics adapter.
 		sptr<GraphicsAdapter> Adapter() const;

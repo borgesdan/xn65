@@ -100,9 +100,14 @@ namespace xna {
 		impl = unew<PlatformImplementation>();
 		
 		impl->_adapter = info.Adapter;
-		impl->_gameWindow = info.Window;
 		impl->_presentationParameters = info.PresentParameters;		
 	}	
+
+	GraphicsDevice::GraphicsDevice(sptr<GraphicsAdapter> const& adapter, GraphicsProfile const& graphicsProfile, sptr<PresentationParameters> const& presentationParameters) {
+		impl = unew<PlatformImplementation>();
+		impl->_adapter = adapter;			
+		impl->_presentationParameters = presentationParameters;
+	}
 
 	bool GraphicsDevice::Initialize() {
 		auto _this = shared_from_this();
@@ -119,23 +124,27 @@ namespace xna {
 		if FAILED(hr)
 			Exception::Throw(Exception::FAILED_TO_CREATE);
 
-		const auto bounds = impl->_gameWindow->ClientBounds();
+		//const auto bounds = impl->_gameWindow->ClientBounds();
 
 		impl->_viewport = xna::Viewport(0.0F, 0.0F,
-			static_cast<float>(bounds.Width),
-			static_cast<float>(bounds.Height),
+			impl->_presentationParameters->BackBufferWidth,
+			impl->_presentationParameters->BackBufferHeight,
 			0.0F, 1.F);
 
-		COLORREF color = impl->_gameWindow->impl->Color();
-		impl->_backgroundColor[0] = GetRValue(color) / 255.0f;
-		impl->_backgroundColor[1] = GetGValue(color) / 255.0f;
-		impl->_backgroundColor[2] = GetBValue(color) / 255.0f;
+		//COLORREF color = impl->_gameWindow->impl->Color();
+		const auto backColor = Colors::CornflowerBlue;
+		const auto backColorV3 = backColor.ToVector3();
+
+		impl->_backgroundColor[0] = backColorV3.X;
+		impl->_backgroundColor[1] = backColorV3.Y;
+		impl->_backgroundColor[2] = backColorV3.Z;
 		impl->_backgroundColor[3] = 1.0f;
 
 		impl->_swapChain = snew<xna::SwapChain>(_this);
 		impl->_swapChain->Initialize();
 
-		hr = impl->_factory->MakeWindowAssociation(impl->_gameWindow->impl->WindowHandle(), DXGI_MWA_NO_ALT_ENTER);
+		auto hwnd = reinterpret_cast<HWND>(impl->_presentationParameters->DeviceWindowHandle);
+		hr = impl->_factory->MakeWindowAssociation(hwnd, DXGI_MWA_NO_ALT_ENTER);
 		
 		if (FAILED(hr)) 
 			Exception::Throw(Exception::FAILED_TO_MAKE_WINDOW_ASSOCIATION);

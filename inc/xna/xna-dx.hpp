@@ -845,7 +845,7 @@ namespace xna {
 		sptr<SwapChain> _swapChain = nullptr;
 		sptr<GraphicsAdapter> _adapter = nullptr;
 		sptr<RenderTarget2D> _renderTarget2D = nullptr;
-		sptr<GameWindow> _gameWindow = nullptr;
+		intptr_t windowHandle{ 0 };
 		xna::Viewport _viewport{};
 		sptr<xna::PresentationParameters> _presentationParameters;
 		
