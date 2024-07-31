@@ -155,7 +155,7 @@ namespace xna {
 		//if (flag1)	game->Window()->EndScreenDeviceChange(screenDeviceName, clientWidth, clientHeight);
 
 		currentWindowOrientation = game->Window()->CurrentOrientation();
-		game->graphicsDevice = this->device;
+		
 		inDeviceTransition = false;
 	}
 
@@ -168,8 +168,19 @@ namespace xna {
 		MassagePresentParameters(*newInfo.PresentParameters);
 		ValidateGraphicsDeviceInformation(newInfo);
 
+		const auto windowBounds = game->Window()->ClientBounds();
+
+		if (windowBounds.Width != newInfo.PresentParameters->BackBufferWidth || windowBounds.Height != newInfo.PresentParameters->BackBufferHeight) {
+			game->Window()->impl->Size(
+				newInfo.PresentParameters->BackBufferWidth,
+				newInfo.PresentParameters->BackBufferHeight);
+			game->Window()->impl->Update();
+		}
+
 		device = snew<GraphicsDevice>(newInfo.Adapter, newInfo.Profile, newInfo.PresentParameters);
 		device->Initialize();
+
+		game->graphicsDevice = this->device;						
 
 		//device.DeviceResetting += new EventHandler<EventArgs>(this.HandleDeviceResetting);
 		//device.DeviceReset += new EventHandler<EventArgs>(this.HandleDeviceReset);
