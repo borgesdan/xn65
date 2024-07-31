@@ -39,9 +39,11 @@ namespace xna {
 
 			adp->supportedDisplayModes = getSupportedDisplayModes(pAdapter);
 
-			setCurrentDisplayMode(*adp->supportedDisplayModes, SurfaceFormat::Color,
-				GraphicsDeviceManager::DefaultBackBufferWidth,
-				GraphicsDeviceManager::DefaultBackBufferHeight, adp->currentDisplayMode);
+			if (adp->supportedDisplayModes && adp->supportedDisplayModes->Count() > 0) {
+				setCurrentDisplayMode(*adp->supportedDisplayModes, SurfaceFormat::Color,
+					GraphicsDeviceManager::DefaultBackBufferWidth,
+					GraphicsDeviceManager::DefaultBackBufferHeight, adp->currentDisplayMode);
+			}
 
 			return adp;
 		}
@@ -75,11 +77,13 @@ namespace xna {
 
 			setOutputVars(pAdapter, adp->deviceName, adp->monitorHandle);
 
-			setCurrentDisplayMode(*adp->supportedDisplayModes, SurfaceFormat::Color,
-				GraphicsDeviceManager::DefaultBackBufferWidth,
-				GraphicsDeviceManager::DefaultBackBufferHeight, adp->currentDisplayMode);
-
 			adp->supportedDisplayModes = getSupportedDisplayModes(pAdapter);
+
+			if (adp->supportedDisplayModes && adp->supportedDisplayModes->Count() > 0) {
+				setCurrentDisplayMode(*adp->supportedDisplayModes, SurfaceFormat::Color,
+					GraphicsDeviceManager::DefaultBackBufferWidth,
+					GraphicsDeviceManager::DefaultBackBufferHeight, adp->currentDisplayMode);
+			}						
 
 			adapters.push_back(std::move(adp));
 		}

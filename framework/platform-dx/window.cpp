@@ -85,7 +85,8 @@ namespace xna {
 				winRect.bottom - winRect.top,
 				TRUE);
 
-			return _windowHandle ? true : false;
+			if (!_windowHandle)
+				return false;
 		}	
 
 		
@@ -93,7 +94,9 @@ namespace xna {
 		// GameWindow
 		//
 
-		gameWindow->handle = reinterpret_cast<intptr_t>(_windowHandle);
+		const auto handle = reinterpret_cast<intptr_t>(_windowHandle);
+
+		gameWindow->handle = handle;
 		gameWindow->title = _windowTitle;
 		gameWindow->clientBounds = { _windowPosX, _windowPosY, _windowWidth, _windowHeight };
 		gameWindow->currentOrientation = DisplayOrientation::Default;
@@ -200,15 +203,14 @@ namespace xna {
 			
 			if (screen->DeviceName() == adapter.DeviceName())
 				return std::move(screen);
-		}
-
-		Exception::Throw("Invalid screen adapter.");
+		}		
 
 		return nullptr;
 	}
 
 	uptr<Screen> GameWindow::ScreenFromHandle(intptr_t windowHandle) {
-		auto hMonitor = reinterpret_cast<HMONITOR>(windowHandle);
+		const auto handle = reinterpret_cast<HWND>(windowHandle);
+		auto hMonitor = MonitorFromWindow(handle, MONITOR_DEFAULTTOPRIMARY);
 
 		if (!hMonitor)
 			return nullptr;

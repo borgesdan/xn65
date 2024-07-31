@@ -106,7 +106,7 @@ namespace xna {
 	GraphicsDevice::GraphicsDevice(sptr<GraphicsAdapter> const& adapter, GraphicsProfile const& graphicsProfile, sptr<PresentationParameters> const& presentationParameters) {
 		impl = unew<PlatformImplementation>();
 		impl->_adapter = adapter;			
-		impl->_presentationParameters = presentationParameters;
+		impl->_presentationParameters = presentationParameters;		
 	}
 
 	bool GraphicsDevice::Initialize() {

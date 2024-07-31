@@ -778,7 +778,7 @@ namespace xna {
 
 	private:
 		friend class GameWindow;
-		GameWindow*& gameWindow;
+		GameWindow* gameWindow = nullptr;
 
 		HINSTANCE		_hInstance{ nullptr };
 		HWND			_windowHandle{ nullptr };

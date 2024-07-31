@@ -41,7 +41,7 @@ namespace xna {
 		bool IsWindowMinimized() const;
 
 		inline static constexpr Int DefaultClientWidth = 800;
-		inline static constexpr Int DefaultClientHeight = 600;
+		inline static constexpr Int DefaultClientHeight = 480;
 
 	private:
 		String title;
@@ -53,6 +53,7 @@ namespace xna {
 
 	public:
 		struct PlatformImplementation;
+		friend struct PlatformImplementation;
 		uptr<PlatformImplementation> impl = nullptr;
 	};
 }

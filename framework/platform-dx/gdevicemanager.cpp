@@ -14,10 +14,8 @@ namespace xna {
 		parameters->BackBufferHeight = backBufferHeight;
 		parameters->BackBufferFormat = SurfaceFormat::Color;
 		parameters->IsFullscreen = false;
-		_information.PresentParameters = parameters;
-
-		if (game)
-			_information.Window = game->Window();
+		_information.PresentParameters = parameters;		
+		_information.Window = game->Window();
 	}	
 
 	bool GraphicsDeviceManager::Initialize() {
@@ -92,14 +90,13 @@ namespace xna {
 		return true;
 	}
 
-
 	void GraphicsDeviceManager::CreateDevice() {
 		if (isDeviceDirty) {
 			_information.PresentParameters->BackBufferWidth = backBufferWidth;
 			_information.PresentParameters->BackBufferHeight = backBufferHeight;
 		}
 
-		auto result = initWindow(_information, *game, backBufferWidth, backBufferHeight);
+		//auto result = initWindow(_information, *game, backBufferWidth, backBufferHeight);
 
 		//if (!result) return false; 
 		
@@ -135,29 +132,30 @@ namespace xna {
 				device->Reset(deviceInformation->PresentParameters, deviceInformation->Adapter);
 				//GraphicsDeviceManager.ConfigureTouchInput(deviceInformation.PresentationParameters);
 				flag2 = false;
-			}
-
-			if (flag2)
-				CreateDevice(*bestDevice);
-
-			auto presentationParameters = device->PresentParameters();
-
-			screenDeviceName = device->Adapter()->DeviceName();
-
-			isReallyFullScreen = presentationParameters.IsFullscreen;
-
-			if (presentationParameters.BackBufferWidth != 0)
-				clientWidth = presentationParameters.BackBufferWidth;
-
-			if (presentationParameters.BackBufferHeight != 0)
-				clientHeight = presentationParameters.BackBufferHeight;
-
-			isDeviceDirty = false;
+			}			
 		}
+
+		if (flag2)
+			CreateDevice(*bestDevice);
+
+		auto presentationParameters = device->PresentParameters();
+
+		screenDeviceName = device->Adapter()->DeviceName();
+
+		isReallyFullScreen = presentationParameters.IsFullscreen;
+
+		if (presentationParameters.BackBufferWidth != 0)
+			clientWidth = presentationParameters.BackBufferWidth;
+
+		if (presentationParameters.BackBufferHeight != 0)
+			clientHeight = presentationParameters.BackBufferHeight;
+
+		isDeviceDirty = false;
 
 		//if (flag1)	game->Window()->EndScreenDeviceChange(screenDeviceName, clientWidth, clientHeight);
 
 		currentWindowOrientation = game->Window()->CurrentOrientation();
+		game->graphicsDevice = this->device;
 		inDeviceTransition = false;
 	}
 
@@ -171,6 +169,7 @@ namespace xna {
 		ValidateGraphicsDeviceInformation(newInfo);
 
 		device = snew<GraphicsDevice>(newInfo.Adapter, newInfo.Profile, newInfo.PresentParameters);
+		device->Initialize();
 
 		//device.DeviceResetting += new EventHandler<EventArgs>(this.HandleDeviceResetting);
 		//device.DeviceReset += new EventHandler<EventArgs>(this.HandleDeviceReset);
@@ -187,7 +186,7 @@ namespace xna {
 		std::vector<uptr<GraphicsAdapter>> adapters;
 		GraphicsAdapter::Adapters(adapters);
 
-		for (size_t i = 0; adapters.size(); ++i) {
+		for (size_t i = 0; i < adapters.size(); ++i) {
 			auto& adapter = adapters[i];
 
 			if (!anySuitableDevice) {				
@@ -433,6 +432,9 @@ namespace xna {
 	}
 
 	bool IsWindowOnAdapter(intptr_t windowHandle, GraphicsAdapter const& adapter) {
-		return GameWindow::ScreenFromAdapter(adapter) == GameWindow::ScreenFromHandle(windowHandle);
+		const auto fromAdapter = GameWindow::ScreenFromAdapter(adapter);
+		const auto fromHandle = GameWindow::ScreenFromHandle(windowHandle);
+
+		return (fromAdapter && fromHandle) && (*fromAdapter == *fromHandle);
 	}
 }

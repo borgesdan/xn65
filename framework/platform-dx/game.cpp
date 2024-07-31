@@ -64,7 +64,12 @@ namespace xna {
 
 	int Game::Run() {
 		try {
-			Initialize();
+			if (!_gameWindow->impl->Create()) {
+				Exception::Throw(Exception::FAILED_TO_CREATE);				
+				return false;
+			}
+
+			Initialize();			
 
 			if (graphicsDevice == nullptr) {
 				MessageBox(nullptr, "O dispositivo gráfico não foi inicializado corretamente", "XN65", MB_OK);
