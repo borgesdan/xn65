@@ -169,6 +169,9 @@ namespace xna {
 		void RankDevicesPlatform(std::vector<sptr<GraphicsDeviceInformation>>& foundDevices);
 
 		void CreateDevice(GraphicsDeviceInformation& newInfo){}
+		
+		void MassagePresentParameters(PresentationParameters& pp);
+		void ValidateGraphicsDeviceInformation(GraphicsDeviceInformation& devInfo);
 
 	private:
 		sptr<Game> game = nullptr;
@@ -190,6 +193,7 @@ namespace xna {
 		bool allowMultiSampling{ false };
 		bool inDeviceTransition{ false };
 		bool isReallyFullScreen{ false };
+		DisplayOrientation currentWindowOrientation{ DisplayOrientation::Default };
 
 		std::vector<sptr<GraphicsDeviceInformation>> foundDevices;
 	};

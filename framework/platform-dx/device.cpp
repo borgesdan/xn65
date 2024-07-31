@@ -274,4 +274,12 @@ namespace xna {
 	void GraphicsDevice::MultiSampleMask(Int value) {
 		impl->_multiSampleMask = value;
 	}
+
+	void GraphicsDevice::Reset(sptr<PresentationParameters> const& presentationParameters, sptr<GraphicsAdapter> const& graphicsAdapter){
+		impl = unew<PlatformImplementation>();
+		impl->_adapter = graphicsAdapter;
+		impl->_presentationParameters = presentationParameters;
+		
+		Initialize();
+	}
 }

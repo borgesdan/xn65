@@ -130,9 +130,9 @@ namespace xna {
 
 			if (CanResetDevice(*bestDevice)) {
 				auto deviceInformation = snew<GraphicsDeviceInformation>(*bestDevice);
-				//MassagePresentParameters(bestDevice.PresentationParameters);
-				//ValidateGraphicsDeviceInformation(bestDevice);
-				//device.Reset(deviceInformation.PresentationParameters, deviceInformation.Adapter);
+				MassagePresentParameters(*bestDevice->PresentParameters);
+				ValidateGraphicsDeviceInformation(*bestDevice);
+				device->Reset(deviceInformation->PresentParameters, deviceInformation->Adapter);
 				//GraphicsDeviceManager.ConfigureTouchInput(deviceInformation.PresentationParameters);
 				flag2 = false;
 			}
@@ -154,6 +154,11 @@ namespace xna {
 
 			isDeviceDirty = false;
 		}
+
+		//if (flag1)	game->Window()->EndScreenDeviceChange(screenDeviceName, clientWidth, clientHeight);
+
+		currentWindowOrientation = game->Window()->CurrentOrientation();
+		inDeviceTransition = false;
 	}
 
 	void GraphicsDeviceManager::AddDevices(bool anySuitableDevice, std::vector<sptr<GraphicsDeviceInformation>>& foundDevices) {
@@ -345,6 +350,66 @@ namespace xna {
 
 	bool GraphicsDeviceManager::CanResetDevice(GraphicsDeviceInformation& newDeviceInfo) {
 		return device->Profile() == newDeviceInfo.Profile;
+	}
+
+	void GraphicsDeviceManager::MassagePresentParameters(PresentationParameters& pp) {
+		const auto flag1 = pp.BackBufferWidth == 0;
+		const auto flag2 = pp.BackBufferHeight == 0;
+		
+		if (pp.IsFullscreen)
+			return;
+
+		auto hWnd = pp.DeviceWindowHandle;
+
+		if (hWnd == 0) {
+			if (!game)
+				Exception::Throw(Exception::INVALID_OPERATION);
+
+			hWnd = game->Window()->Handle();
+		}
+
+		/*NativeMethods.RECT rect;
+		NativeMethods.GetClientRect(hWnd, out rect);
+		if (flag1 && rect.Right == 0)
+			pp.BackBufferWidth = 1;
+		if (!flag2 || rect.Bottom != 0)
+			return;
+		pp.BackBufferHeight = 1;*/
+	}
+
+	void GraphicsDeviceManager::ValidateGraphicsDeviceInformation(GraphicsDeviceInformation& devInfo) {
+		const auto& adapter = devInfo.Adapter;
+		auto& presentationParameters = devInfo.PresentParameters;
+
+		if (!presentationParameters->IsFullscreen)
+			return;
+
+		if (presentationParameters->BackBufferWidth == 0 || presentationParameters->BackBufferHeight == 0)
+			Exception::Throw(Exception::INVALID_OPERATION);
+
+		bool flag = true;
+
+		const auto& currentDisplayMode = adapter->CurrentDisplayMode();
+
+		if (currentDisplayMode->Format() != presentationParameters->BackBufferFormat && currentDisplayMode->Width() != presentationParameters->BackBufferWidth 
+			&& currentDisplayMode->Height() != presentationParameters->BackBufferHeight)
+		{
+			flag = false;
+
+			const auto& supportedDisplayModes = adapter->SupportedDisplayModes();
+			const size_t count = supportedDisplayModes->Count();
+
+			for (size_t i = 0; i < count; ++i) {
+				const auto& displayMode = supportedDisplayModes->DisplayModes[i];
+
+				if (displayMode->Width() == presentationParameters->BackBufferWidth && displayMode->Height() == presentationParameters->BackBufferHeight) {
+					flag = true;
+					break;
+				}
+			}
+		}
+		if (!flag)
+			Exception::Throw(Exception::INVALID_OPERATION);
 	}
 
 	bool IsWindowOnAdapter(intptr_t windowHandle, GraphicsAdapter const& adapter) {

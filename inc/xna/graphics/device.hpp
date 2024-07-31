@@ -48,6 +48,8 @@ namespace xna {
 		bool Initialize();
 		bool Present();
 
+		void Reset(sptr<PresentationParameters> const& presentationParameters, sptr<GraphicsAdapter> const& graphicsAdapter);
+
 		xna::Viewport Viewport() const;
 		void Viewport(xna::Viewport const& viewport);
 		void UseVSync(bool use);
