@@ -16,16 +16,7 @@ namespace xna {
 		parameters->IsFullscreen = false;
 		_information.PresentParameters = parameters;		
 		_information.Window = game->Window();
-	}	
-
-	bool GraphicsDeviceManager::Initialize() {
-		if (!game)
-			return false;
-
-		CreateDevice();
-
-		return true;
-	}
+	}		
 
 	void GraphicsDeviceManager::ApplyChanges() {
 		if (device && !isDeviceDirty)
@@ -53,58 +44,6 @@ namespace xna {
 
 		return true;
 	}	
-	
-	bool initWindow(GraphicsDeviceInformation& info, Game& game, int backWidth, int backHeight)
-	{
-		auto window = info.Window;
-
-		if (!window) {
-			window = game.Window();
-			info.Window = window;
-		}
-
-		window->impl->Size(backWidth, backHeight);
-
-		if (!window->impl->Create()) {
-			MessageBox(nullptr, "Falha na criação da janela", "XN65", MB_OK);
-			return false;
-		}
-
-		info.PresentParameters->DeviceWindowHandle = reinterpret_cast<intptr_t>(window->impl->WindowHandle());
-
-		return true;
-	}
-
-	bool initDevice(GraphicsDeviceInformation& info, Game& game, sptr<GraphicsDevice>& device)
-	{		
-		device = snew<GraphicsDevice>(info);
-
-		if (!device->Initialize()) {
-			MessageBox(info.Window->impl->WindowHandle(), "Falha na inicialização do dispositivo gráfico", "XN65", MB_OK);
-			device = nullptr;
-			return false;
-		}
-
-		game.graphicsDevice = device;
-
-		return true;
-	}
-
-	void GraphicsDeviceManager::CreateDevice() {
-		if (isDeviceDirty) {
-			_information.PresentParameters->BackBufferWidth = backBufferWidth;
-			_information.PresentParameters->BackBufferHeight = backBufferHeight;
-		}
-
-		//auto result = initWindow(_information, *game, backBufferWidth, backBufferHeight);
-
-		//if (!result) return false; 
-		
-		initDevice(_information, *game, device);
-	}
-
-	void GraphicsDeviceManager::ChangeDevice() {
-	}
 
 	void GraphicsDeviceManager::ChangeDevice(bool forceCreate) {
 		if (!game)

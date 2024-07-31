@@ -141,11 +141,9 @@ namespace xna {
 		bool Initialize();
 		bool ToggleFullScreen();	
 		
+		inline void CreateDevice() { ChangeDevice(true); }
 
-	protected:
-		void CreateDevice();
-		void ChangeDevice();
-
+	protected:	
 		inline virtual void RankDevices(std::vector<sptr<GraphicsDeviceInformation>>& foundDevices) {
 			RankDevicesPlatform(foundDevices);
 		}

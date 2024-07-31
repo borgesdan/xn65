@@ -248,7 +248,7 @@ namespace xna {
 	}
 
 	String GameWindow::ScreenDeviceName() const {
-		//TODO
-		return std::string();
+		const auto screen = ScreenFromHandle(handle);
+		return screen->DeviceName();
 	}
 }
