@@ -22,7 +22,7 @@ namespace PlatformerStarterKit {
 		void Initialize() override {
 			auto game = reinterpret_cast<Game*>(this);
 			graphics = snew<GraphicsDeviceManager>(game->shared_from_this());			
-			graphics->Initialize();
+			graphics->ApplyChanges();
 
 			std::any device = graphicsDevice;
 			services->AddService(*typeof<GraphicsDevice>(), device);
