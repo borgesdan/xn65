@@ -28,8 +28,7 @@ namespace xna {
 		
 		impl->_dxMouse->SetWindow(hwnd);
 	}
-
-	//Sets the position of the mouse cursor relative to the upper - left corner of the window.
+	
 	void Mouse::SetPosition(Int x, Int y) {
 		SetCursorPos(x, y);
 	}

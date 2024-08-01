@@ -40,6 +40,7 @@ namespace xna {
 		//Mouse coordinates returned by GetState are relative to the upper-left corner of this window. 
 		static void WindowHandle(intptr_t value);	
 
+		//Sets the position of the mouse cursor relative to the upper-left corner of the window.
 		static void SetPosition(Int x, Int y);
 
 	private:
