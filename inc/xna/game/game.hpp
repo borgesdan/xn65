@@ -76,14 +76,14 @@ namespace xna {
 	private:
 		friend class GraphicsDeviceManager;
 
-		sptr<GameComponentCollection> _gameComponents = nullptr;
-		sptr<GameWindow> _gameWindow{ nullptr };
-		sptr<AudioEngine> _audioEngine = nullptr;
+		sptr<GameComponentCollection> gameComponents = nullptr;
+		sptr<GameWindow> gameWindow{ nullptr };
+		sptr<AudioEngine> audioEngine = nullptr;
 		sptr<ContentManager> contentManager;
-		std::vector<sptr<IGameComponent>> _drawableGameComponents;
-		size_t _drawableGameComponentsCount{ 0 };
-		bool _enabledGameComponents{ false };
-		GameTime _currentGameTime{};
+		std::vector<sptr<IGameComponent>> drawableGameComponents;	
+		size_t drawableGameComponentsCount{ 0 };
+		bool enabledGameComponents{ false };
+		GameTime currentGameTime{};
 		bool isFixedTimeStep{ true };
 		TimeSpan targetElapsedTime{ TimeSpan::FromTicks(166667L) };
 		bool isRunning{ false };

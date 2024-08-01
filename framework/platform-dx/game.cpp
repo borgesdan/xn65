@@ -8,21 +8,21 @@ namespace xna {
 		contentManager = snew<ContentManager>(services, "");
 		contentManager->mainGameService = iservice;
 
-		_gameWindow = snew<GameWindow>();
-		_gameWindow->impl->Color(146, 150, 154);
-		_gameWindow->Title("XN65");
-		_gameWindow->impl->Size(
+		gameWindow = snew<GameWindow>();
+		gameWindow->impl->Color(146, 150, 154);
+		gameWindow->Title("XN65");
+		gameWindow->impl->Size(
 			GraphicsDeviceManager::DefaultBackBufferWidth,
 			GraphicsDeviceManager::DefaultBackBufferHeight, false);
 
-		_gameComponents = snew<GameComponentCollection>();
+		gameComponents = snew<GameComponentCollection>();
 
 		IsFixedTimeStep(isFixedTimeStep);
 		TargetElapsedTime(targetElapsedTime);
 	}
 
 	void Game::Exit() {
-		_gameWindow->impl->Close();
+		gameWindow->impl->Close();
 	}
 
 	int Game::StartGameLoop() {
@@ -54,13 +54,13 @@ namespace xna {
 				const auto total = impl->_stepTimer.GetTotalSeconds();
 				const auto elapsedTimeSpan = TimeSpan::FromSeconds(elapsed);
 				const auto totalTimeSpan = TimeSpan::FromSeconds(total);
-				_currentGameTime.ElapsedGameTime = elapsedTimeSpan;
-				_currentGameTime.TotalGameTime = totalTimeSpan;
-				Update(_currentGameTime);
+				currentGameTime.ElapsedGameTime = elapsedTimeSpan;
+				currentGameTime.TotalGameTime = totalTimeSpan;
+				Update(currentGameTime);
 			});
 
 		BeginDraw();
-		Draw(_currentGameTime);
+		Draw(currentGameTime);
 		EndDraw();
 	}
 
@@ -69,7 +69,7 @@ namespace xna {
 			return EXIT_FAILURE;
 
 		try {
-			if (!_gameWindow->impl->Create()) {
+			if (!gameWindow->impl->Create()) {
 				Exception::Throw(Exception::FAILED_TO_CREATE);				
 				return false;
 			}
@@ -93,7 +93,7 @@ namespace xna {
 
 	void Game::Initialize() {	
 		Keyboard::Initialize();		
-		Mouse::Initialize(_gameWindow->Handle());
+		Mouse::Initialize(gameWindow->Handle());
 		GamePad::Initialize();
 		AudioEngine::Initialize();		
 
@@ -101,16 +101,16 @@ namespace xna {
 	}
 
 	void Game::Draw(GameTime const& gameTime) {
-		if (_enabledGameComponents && !_drawableGameComponents.empty()) {
-			const auto count = _drawableGameComponents.size();
+		if (enabledGameComponents && !drawableGameComponents.empty()) {
+			const auto count = drawableGameComponents.size();
 			
-			if (count != _drawableGameComponentsCount && _gameComponents->AutoSort) {
-				GameComponentCollection::DrawSort(_drawableGameComponents);
-				_drawableGameComponentsCount = count;
+			if (count != drawableGameComponentsCount && gameComponents->AutoSort) {
+				GameComponentCollection::DrawSort(drawableGameComponents);
+				drawableGameComponentsCount = count;
 			}			
 
 			for (size_t i = 0; i < count; ++i) {
-				auto& component = _drawableGameComponents[i];
+				auto& component = drawableGameComponents[i];
 
 				if (!component) continue;
 
@@ -120,24 +120,24 @@ namespace xna {
 					drawable->Draw(gameTime);
 			}
 
-			_drawableGameComponents.clear();
+			drawableGameComponents.clear();
 		}
 
 		graphicsDevice->Present();
 	}
 
 	void Game::Update(GameTime const& gameTime) {
-		_audioEngine->Update();
+		audioEngine->Update();
 
-		if (_enabledGameComponents && _gameComponents->Count() > 0) {
-			const auto count = _gameComponents->Count();
+		if (enabledGameComponents && gameComponents->Count() > 0) {
+			const auto count = gameComponents->Count();
 			for (size_t i = 0; i < count; ++i) {
-				auto component = _gameComponents->At(i);
+				auto component = gameComponents->At(i);
 
 				if (!component) continue;
 
 				if (component->Type() == GameComponentType::Drawable) {
-					_drawableGameComponents.push_back(component);					
+					drawableGameComponents.push_back(component);					
 				}
 
 				auto updatable = reinterpret_pointer_cast<IUpdateable>(component);
@@ -148,25 +148,25 @@ namespace xna {
 		}
 	}
 
-	sptr<GameWindow> Game::Window() { return _gameWindow; }
+	sptr<GameWindow> Game::Window() { return gameWindow; }
 	sptr<GraphicsDevice> Game::Device() const { return graphicsDevice; }
-	sptr<GameComponentCollection> Game::Components() const { return _gameComponents; }
+	sptr<GameComponentCollection> Game::Components() const { return gameComponents; }
 	sptr<GameServiceContainer> Game::Services() { return services; }
 	sptr<ContentManager> Game::Content() const { return contentManager; }
-	void Game::EnableGameComponents(bool value) { _enabledGameComponents = value; }
+	void Game::EnableGameComponents(bool value) { enabledGameComponents = value; }
 
 	void Game::AttachGraphicsDevice(sptr<GraphicsDevice> const& device) {
 		graphicsDevice = device;
 	}
 
 	void Game::ResizeWindow(int width, int heigth) {
-		const auto windowBounds = _gameWindow->ClientBounds();
+		const auto windowBounds = gameWindow->ClientBounds();
 
 		if (windowBounds.Width != width || windowBounds.Height != heigth) {
-			_gameWindow->impl->Size(
+			gameWindow->impl->Size(
 				width,
 				heigth);
-			_gameWindow->impl->Update();
+			gameWindow->impl->Update();
 		}
 	}
 
