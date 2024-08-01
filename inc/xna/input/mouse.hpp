@@ -2,6 +2,7 @@
 #define XNA_INPUT_MOUSE_HPP
 
 #include "../default.hpp"
+#include "input-enums.hpp"
 
 namespace xna {
 	//Represents the state of a mouse input device, including mouse cursor position and buttons pressed.

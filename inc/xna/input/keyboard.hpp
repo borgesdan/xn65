@@ -2,6 +2,7 @@
 #define XNA_INPUT_KEYBOARD_HPP
 
 #include "../default.hpp"
+#include "input-enums.hpp"
 
 namespace xna {
     //Represents a state of keystrokes recorded by a keyboard input device. 
