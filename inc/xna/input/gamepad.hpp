@@ -2,6 +2,7 @@
 #define XNA_INPUT_GAMEPAD_HPP
 
 #include "../default.hpp"
+#include "input-enums.hpp"
 #include "../common/numerics.hpp"
 
 namespace xna {
@@ -9,14 +10,17 @@ namespace xna {
 	struct GamePadTriggers {
 		constexpr GamePadTriggers() = default;
 
-		constexpr GamePadTriggers(float left, float right) : _left(left), _right(right) {
+		constexpr GamePadTriggers(float left, float right) 
+			: _left(left), _right(right) {
 			clamp();
 		}		
 
+		//Identifies the position of the left trigger on the Xbox Controller.
 		constexpr float Left() const {
 			return _left;
 		}
 
+		//Identifies the position of the right trigger on the Xbox Controller.
 		constexpr float Right() const {
 			return _right;
 		}
@@ -25,7 +29,7 @@ namespace xna {
 			return _left == other._left && _right == other._right;
 		}
 
-	public:
+	private:
 		float _left{ 0 };
 		float _right{ 0 };
 
@@ -46,10 +50,12 @@ namespace xna {
 			clamp();
 		}		
 
+		//Returns the position of the left Xbox Controller stick (thumbstick) as a 2D vector.
 		constexpr Vector2 Left() const {
 			return _left;
 		}
 
+		//Returns the position of the right Xbox Controller stick (thumbstick) as a 2D vector.
 		constexpr Vector2 Right() const {
 			return _right;
 		}
@@ -76,14 +82,22 @@ namespace xna {
 		constexpr GamePadDPad() = default;
 
 		constexpr GamePadDPad(const ButtonState& up, const ButtonState& down,
-			const ButtonState& left, const ButtonState& right)
-			: Up(up), Right(right), Down(down), Left(left) {
-		}				
-	
-		ButtonState Up{};
-		ButtonState Right{};
-		ButtonState Down{};
-		ButtonState Left{};
+			const ButtonState& left, const ButtonState& right) : up(up), down(down), left(left), right(right) {}
+
+		//Identifies whether the Up direction on the Xbox Controller directional pad is pressed.
+		constexpr ButtonState Up() const { return up; }
+		//Identifies whether the Right direction on the Xbox Controller directional pad is pressed.
+		constexpr ButtonState Right() const { return right; }
+		//Identifies whether the Down direction on the Xbox Controller directional pad is pressed.
+		constexpr ButtonState Down() const { return down; }
+		//Identifies whether the Left direction on the Xbox Controller directional pad is pressed.
+		constexpr ButtonState Left() const { return left; }
+
+	private:
+		ButtonState up{};
+		ButtonState right{};
+		ButtonState down{};
+		ButtonState left{};
 	};	
 
 	//Identifies whether buttons on an Xbox Controller are pressed or released. 
@@ -102,137 +116,178 @@ namespace xna {
 			ButtonState back,
 			ButtonState start,
 			ButtonState bigButton) {
-			A = a;
-			B = b;
-			X = x;
-			Y = y;
-			LeftStick = leftStick;
-			RightStick = rightStick;
-			LeftShoulder = leftShoulder;
-			RightShoulder = rightShoulder;
-			Back = back;
-			Start = start;
-			BigButton = bigButton;
+			this->a = a;
+			this->b = b;
+			this->x = x;
+			this->y = y;
+			this->leftStick = leftStick;
+			this->rightStick = rightStick;
+			this->leftShoulder = leftShoulder;
+			this->rightShoulder = rightShoulder;
+			this->back = back;
+			this->start = start;
+			this->bigButton = bigButton;
 		}
 
 		constexpr GamePadButtons(Buttons buttons) {
-			A = static_cast<Buttons>((static_cast<int>(buttons) & static_cast<int>(Buttons::A))) == Buttons::A ? ButtonState::Pressed : ButtonState::Released;
-			B = static_cast<Buttons>((static_cast<int>(buttons) & static_cast<int>(Buttons::B))) == Buttons::B ? ButtonState::Pressed : ButtonState::Released;
-			X = static_cast<Buttons>((static_cast<int>(buttons) & static_cast<int>(Buttons::X))) == Buttons::X ? ButtonState::Pressed : ButtonState::Released;
-			Y = static_cast<Buttons>((static_cast<int>(buttons) & static_cast<int>(Buttons::Y))) == Buttons::Y ? ButtonState::Pressed : ButtonState::Released;
-			Start = static_cast<Buttons>((static_cast<int>(buttons) & static_cast<int>(Buttons::Start))) == Buttons::Start ? ButtonState::Pressed : ButtonState::Released;
-			Back = static_cast<Buttons>((static_cast<int>(buttons) & static_cast<int>(Buttons::Back))) == Buttons::Back ? ButtonState::Pressed : ButtonState::Released;
-			LeftStick = static_cast<Buttons>((static_cast<int>(buttons) & static_cast<int>(Buttons::LeftStick))) == Buttons::LeftStick ? ButtonState::Pressed : ButtonState::Released;
-			RightStick = static_cast<Buttons>((static_cast<int>(buttons) & static_cast<int>(Buttons::RightStick))) == Buttons::RightStick ? ButtonState::Pressed : ButtonState::Released;
-			LeftShoulder = static_cast<Buttons>((static_cast<int>(buttons) & static_cast<int>(Buttons::LeftShoulder))) == Buttons::LeftShoulder ? ButtonState::Pressed : ButtonState::Released;
-			RightShoulder = static_cast<Buttons>((static_cast<int>(buttons) & static_cast<int>(Buttons::RightShoulder))) == Buttons::RightShoulder ? ButtonState::Pressed : ButtonState::Released;
-			BigButton = static_cast<Buttons>((static_cast<int>(buttons) & static_cast<int>(Buttons::BigButton))) == Buttons::BigButton ? ButtonState::Pressed : ButtonState::Released;
+			a = static_cast<Buttons>((static_cast<int>(buttons) & static_cast<int>(Buttons::A))) == Buttons::A ? ButtonState::Pressed : ButtonState::Released;
+			b = static_cast<Buttons>((static_cast<int>(buttons) & static_cast<int>(Buttons::B))) == Buttons::B ? ButtonState::Pressed : ButtonState::Released;
+			x = static_cast<Buttons>((static_cast<int>(buttons) & static_cast<int>(Buttons::X))) == Buttons::X ? ButtonState::Pressed : ButtonState::Released;
+			y = static_cast<Buttons>((static_cast<int>(buttons) & static_cast<int>(Buttons::Y))) == Buttons::Y ? ButtonState::Pressed : ButtonState::Released;
+			start = static_cast<Buttons>((static_cast<int>(buttons) & static_cast<int>(Buttons::Start))) == Buttons::Start ? ButtonState::Pressed : ButtonState::Released;
+			back = static_cast<Buttons>((static_cast<int>(buttons) & static_cast<int>(Buttons::Back))) == Buttons::Back ? ButtonState::Pressed : ButtonState::Released;
+			leftStick = static_cast<Buttons>((static_cast<int>(buttons) & static_cast<int>(Buttons::LeftStick))) == Buttons::LeftStick ? ButtonState::Pressed : ButtonState::Released;
+			rightStick = static_cast<Buttons>((static_cast<int>(buttons) & static_cast<int>(Buttons::RightStick))) == Buttons::RightStick ? ButtonState::Pressed : ButtonState::Released;
+			leftShoulder = static_cast<Buttons>((static_cast<int>(buttons) & static_cast<int>(Buttons::LeftShoulder))) == Buttons::LeftShoulder ? ButtonState::Pressed : ButtonState::Released;
+			rightShoulder = static_cast<Buttons>((static_cast<int>(buttons) & static_cast<int>(Buttons::RightShoulder))) == Buttons::RightShoulder ? ButtonState::Pressed : ButtonState::Released;
+			bigButton = static_cast<Buttons>((static_cast<int>(buttons) & static_cast<int>(Buttons::BigButton))) == Buttons::BigButton ? ButtonState::Pressed : ButtonState::Released;
 		}			
 
-		ButtonState A{};
-		ButtonState B{};
-		ButtonState X{};
-		ButtonState Y{};
-		ButtonState LeftStick{};
-		ButtonState RightStick{};
-		ButtonState LeftShoulder{};
-		ButtonState RightShoulder{};
-		ButtonState Back{};
-		ButtonState Start{};
-		ButtonState BigButton{};
-	};
+		//Identifies if the A button on the Xbox Controller is pressed. 
+		constexpr ButtonState A() const { return a; }
+		//Identifies if the B button on the Xbox Controller is pressed.
+		constexpr ButtonState B() const { return b; }
+		//Identifies if the X button on the Xbox Controller is pressed. 
+		constexpr ButtonState X() const { return x; }
+		//Identifies if the Y button on the Xbox Controller is pressed. 
+		constexpr ButtonState Y() const { return y; }
+		//Identifies if the left stick button on the Xbox Controller is pressed (the stick is "clicked" in
+		constexpr ButtonState LeftStick() const { return leftStick; }
+		//Identifies if the right stick button on the Xbox Controller is pressed (the stick is "clicked" in).
+		constexpr ButtonState RightStick() const { return rightStick; }
+		//Identifies if the left shoulder (bumper) button on the Xbox Controller is pressed.
+		constexpr ButtonState LeftShoulder() const { return leftShoulder; }
+		//Identifies if the right shoulder (bumper) button on the Xbox Controller is pressed.
+		constexpr ButtonState RightShoulder() const { return rightShoulder; }
+		//Identifies if the BACK button on the Xbox Controller is pressed. 
+		constexpr ButtonState Back() const { return back; }
+		//Identifies if the START button on the Xbox Controller is pressed. 
+		constexpr ButtonState Start() const { return start; }
+		//Identifies if the BigButton button is pressed. 
+		constexpr ButtonState BigButton() const { return bigButton; }
 
-#ifdef USING_GAMEINPUT
-	using GamePadId = APP_LOCAL_DEVICE_ID;
-#elif defined(USING_WINDOWS_GAMING_INPUT)
-	using GamePadId = std::wstring;
-#else
-	using GamePadId = uint64_t;
-#endif
+	private:
+		ButtonState a{};
+		ButtonState b{};
+		ButtonState x{};
+		ButtonState y{};
+		ButtonState leftStick{};
+		ButtonState rightStick{};
+		ButtonState leftShoulder{};
+		ButtonState rightShoulder{};
+		ButtonState back{};
+		ButtonState start{};
+		ButtonState bigButton{};
+	};
 
 	//Describes the capabilities of an Xbox Controller, including controller type, and identifies if the controller supports voice. 
 	struct GamePadCapabilities {
-		constexpr GamePadCapabilities() = default;		
+		constexpr GamePadCapabilities() = default;	
+
+		constexpr GamePadCapabilities(bool isConnected, GamePadCapabilitiesType type) : isConnected(isConnected), type(type){}
 	
-		GamePadCapabilitiesType Type{};
-		bool Connected{ false };
-		Ushort Vid{ 0 };
-		Ushort Pid{ 0 };
-		GamePadId Id{};
+		//Indicates whether the Xbox Controller is connected.
+		constexpr bool IsConnected() const { return isConnected; }
+		//Gets the type of controller.
+		constexpr GamePadCapabilitiesType GamePadType() const { return type; }		
+
+	private:
+		GamePadCapabilitiesType type{};
+		bool isConnected{ false };
 	};
 
 	//Represents specific information about the state of an Xbox Controller, including the current state of buttons and sticks.
 	struct GamePadState {
-		constexpr GamePadState() = default;			
+		constexpr GamePadState() = default;	
 
+		constexpr GamePadState(
+			GamePadThumbSticks sticks,
+			GamePadTriggers triggers,
+			GamePadButtons buttons,
+			GamePadDPad dpad, bool isConnected
+		) : buttons(buttons), dpad(dpad), triggers(triggers), thumbSticks(sticks), isConnected(isConnected){}
+
+		//Determines whether specified input device buttons are pressed in this GamePadState.
 		constexpr bool IsButtonDown(xna::Buttons button) const {
 			switch (button)
 			{
 			case xna::Buttons::A:
-				return this->Buttons.A == ButtonState::Pressed;
+				return this->Buttons().A() == ButtonState::Pressed;
 			case xna::Buttons::B:
-				return this->Buttons.B == ButtonState::Pressed;
+				return this->Buttons().B() == ButtonState::Pressed;
 			case xna::Buttons::X:
-				return this->Buttons.X == ButtonState::Pressed;
+				return this->Buttons().X() == ButtonState::Pressed;
 			case xna::Buttons::Y:
-				return this->Buttons.Y == ButtonState::Pressed;
+				return this->Buttons().Y() == ButtonState::Pressed;
 			case xna::Buttons::Back:
-				return this->Buttons.Back == ButtonState::Pressed;
+				return this->Buttons().Back() == ButtonState::Pressed;
 			case xna::Buttons::Start:
-				return this->Buttons.Start == ButtonState::Pressed;
+				return this->Buttons().Start() == ButtonState::Pressed;
 			case xna::Buttons::DPadUp:
-				return this->Dpad.Up == ButtonState::Pressed;
+				return this->Dpad().Up() == ButtonState::Pressed;
 			case xna::Buttons::DPadDown:
-				return this->Dpad.Down == ButtonState::Pressed;
+				return this->Dpad().Down() == ButtonState::Pressed;
 			case xna::Buttons::DPadLeft:
-				return this->Dpad.Left == ButtonState::Pressed;
+				return this->Dpad().Left() == ButtonState::Pressed;
 			case xna::Buttons::DPadRight:
-				return this->Dpad.Right == ButtonState::Pressed;
+				return this->Dpad().Right() == ButtonState::Pressed;
 			case xna::Buttons::LeftShoulder:
-				return this->Buttons.LeftShoulder == ButtonState::Pressed;
+				return this->Buttons().LeftShoulder() == ButtonState::Pressed;
 			case xna::Buttons::RightShoulder:
-				return this->Buttons.RightShoulder == ButtonState::Pressed;
+				return this->Buttons().RightShoulder() == ButtonState::Pressed;
 			case xna::Buttons::LeftStick:
-				return this->Buttons.LeftStick == ButtonState::Pressed;
+				return this->Buttons().LeftStick() == ButtonState::Pressed;
 			case xna::Buttons::RightStick:
-				return this->Buttons.RightStick == ButtonState::Pressed;
+				return this->Buttons().RightStick() == ButtonState::Pressed;
 			case xna::Buttons::BigButton:
-				return this->Buttons.BigButton == ButtonState::Pressed;
+				return this->Buttons().BigButton() == ButtonState::Pressed;
 			case xna::Buttons::LeftThumbstickLeft:
-				return this->ThumbSticks.Left().X < 0.5F;
+				return this->ThumbSticks().Left().X < 0.5F;
 			case xna::Buttons::LeftThumbstickRight:
-				return this->ThumbSticks.Left().X > 0.5F;
+				return this->ThumbSticks().Left().X > 0.5F;
 			case xna::Buttons::LeftThumbstickDown:
-				return this->ThumbSticks.Left().Y > 0.5F;
+				return this->ThumbSticks().Left().Y > 0.5F;
 			case xna::Buttons::LeftThumbstickUp:
-				return this->ThumbSticks.Left().Y < 0.5F;
+				return this->ThumbSticks().Left().Y < 0.5F;
 			case xna::Buttons::RightThumbstickLeft:
-				return this->ThumbSticks.Right().X < 0.5F;
+				return this->ThumbSticks().Right().X < 0.5F;
 			case xna::Buttons::RightThumbstickRight:
-				return this->ThumbSticks.Right().X > 0.5F;
+				return this->ThumbSticks().Right().X > 0.5F;
 			case xna::Buttons::RightThumbstickDown:
-				return this->ThumbSticks.Right().Y > 0.5F;
+				return this->ThumbSticks().Right().Y > 0.5F;
 			case xna::Buttons::RightThumbstickUp:
-				return this->ThumbSticks.Right().Y < 0.5F;
+				return this->ThumbSticks().Right().Y < 0.5F;
 			case xna::Buttons::LeftTrigger:
-				return this->Triggers.Left() > 0.5F;
+				return this->Triggers().Left() > 0.5F;
 			case xna::Buttons::RightTrigger:
-				return this->Triggers.Right() > 0.5F;
+				return this->Triggers().Right() > 0.5F;
 			default:
 				return false;
 			}
 		}
-
+		
+		//Determines whether specified input device buttons are up (not pressed) in this GamePadState.
 		constexpr bool IsButtonUp(xna::Buttons button) const {
 			return !IsButtonDown(button);
 		}
 
-		GamePadButtons Buttons{};
-		GamePadDPad Dpad{};
-		bool IsConnected{false};
-		Ulong PackedNumber{0};
-		GamePadThumbSticks ThumbSticks{};
-		GamePadTriggers Triggers{};
+		//Returns a structure that identifies what buttons on the Xbox controller are pressed.
+		constexpr GamePadButtons Buttons() const { return buttons; }
+		//Returns a structure that identifies what directions of the directional pad on the Xbox Controller are pressed.
+		constexpr GamePadDPad Dpad() const { return dpad; }
+		//Indicates whether the Xbox Controller is connected.
+		constexpr bool IsConnected() const { return isConnected; }
+		//Returns a structure that indicates the position of the Xbox Controller sticks (thumbsticks).
+		constexpr GamePadThumbSticks ThumbSticks() const { return thumbSticks; }
+		//Returns a structure that identifies the position of triggers on the Xbox controller.
+		constexpr GamePadTriggers Triggers() const { return triggers; }
+
+	private:
+		GamePadButtons buttons{};
+		GamePadDPad dpad{};
+		bool isConnected{ false };
+		GamePadThumbSticks thumbSticks{};
+		GamePadTriggers triggers{};
 	};
 
 	//Allows retrieval of user interaction with an Xbox Controller and setting of controller vibration motors.
@@ -243,9 +298,9 @@ namespace xna {
 		//Gets the current state of a game pad controller. As an option, it specifies a dead zone processing method for the analog sticks.
 		static GamePadState GetState(PlayerIndex index, GamePadDeadZone deadZone);
 
-		//Retrieves the capabilities of an Xbox 360 Controller.
+		//Retrieves the capabilities of an Xbox Controller.
 		static GamePadCapabilities GetCapabilities(PlayerIndex index);
-		//Sets the vibration motor speeds on an Xbox 360 Controller.
+		//Sets the vibration motor speeds on an Xbox Controller.
 		static bool SetVibration(PlayerIndex index, float leftMotor, float rightMotor, float leftTrigger = 0, float rightTrigger = 0);
 
 	private:

@@ -2,6 +2,7 @@
 #define XNA_INPUT_KEYBOARD_HPP
 
 #include "../default.hpp"
+#include "input-enums.hpp"
 
 namespace xna {
     //Represents a state of keystrokes recorded by a keyboard input device. 
@@ -10,6 +11,8 @@ namespace xna {
         //same implementation of the DirectX::Keyboard::State structure
         //
 	public:
+
+        //Returns whether a specified key is currently being pressed.
         constexpr bool IsKeyDown(Keys key) const {
             const auto k = static_cast<unsigned char>(key);
 
@@ -22,8 +25,17 @@ namespace xna {
             return false;
         }
 
+        //Returns whether a specified key is currently not pressed.
         constexpr bool IsKeyUp(Keys key) const {
             return !IsKeyDown(key);
+        }
+
+        //Returns the state of a particular key. 
+        KeyState operator[](Keys key) {
+            const auto isDown = IsKeyDown(key);
+            const auto state = static_cast<KeyState>(static_cast<int>(isDown));
+
+            return state;
         }
 
     private:
@@ -217,9 +229,8 @@ namespace xna {
     //Allows retrieval of keystrokes from a keyboard input device. 
 	class Keyboard {
 	public:		
-        //Returns the current keyboard or Chatpad state. 
-		static KeyboardState GetState();
-        static bool IsConnected();        
+        //Returns the current keyboard. 
+		static KeyboardState GetState();              
 
     private:
         friend class Game;

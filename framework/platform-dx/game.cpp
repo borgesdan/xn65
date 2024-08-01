@@ -18,10 +18,6 @@ namespace xna {
 		_gameComponents = snew<GameComponentCollection>();
 	}
 
-	Game::~Game() {
-		impl = nullptr;
-	}
-
 	void Game::Exit() {
 		_gameWindow->impl->Close();
 	}
@@ -85,8 +81,8 @@ namespace xna {
 	}	
 
 	void Game::Initialize() {	
-		Keyboard::Initialize();
-		Mouse::Initialize();
+		Keyboard::Initialize();		
+		Mouse::Initialize(_gameWindow->Handle());
 		GamePad::Initialize();
 		AudioEngine::Initialize();		
 
@@ -147,4 +143,19 @@ namespace xna {
 	sptr<GameServiceContainer> Game::Services() { return services; }
 	sptr<ContentManager> Game::Content() { return _contentManager; }
 	void Game::EnableGameComponents(bool value) { _enabledGameComponents = value; }
+
+	void Game::AttachGraphicsDevice(sptr<GraphicsDevice> const& device) {
+		graphicsDevice = device;
+	}
+
+	void Game::ResizeWindow(int width, int heigth) {
+		const auto windowBounds = _gameWindow->ClientBounds();
+
+		if (windowBounds.Width != width || windowBounds.Height != heigth) {
+			_gameWindow->impl->Size(
+				width,
+				heigth);
+			_gameWindow->impl->Update();
+		}
+	}
 }

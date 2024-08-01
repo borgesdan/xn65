@@ -635,21 +635,29 @@ namespace xna {
 	};
 
 	struct Keyboard::PlatformImplementation {
-		uptr<DirectX::Keyboard> _dxKeyboard = unew<DirectX::Keyboard>();
+		PlatformImplementation() {
+			_dxKeyboard = unew<DirectX::Keyboard>();
+		}
 
-		void ProcessMessage(UINT message, WPARAM wParam, LPARAM lParam) const {
+		uptr<DirectX::Keyboard> _dxKeyboard = nullptr;
+
+		inline void ProcessMessage(UINT message, WPARAM wParam, LPARAM lParam) const {
 			if (_dxKeyboard)
 				_dxKeyboard->ProcessMessage(message, wParam, lParam);
 		}
 	};
 
 	struct Mouse::PlatformImplementation {
-		uptr<DirectX::Mouse> _dxMouse = unew<DirectX::Mouse>();
+		PlatformImplementation() {
+			_dxMouse = unew<DirectX::Mouse>();			
+		}		
 
-		void ProcessMessage(UINT message, WPARAM wParam, LPARAM lParam) const {
+		inline void ProcessMessage(UINT message, WPARAM wParam, LPARAM lParam) const {
 			if (_dxMouse)
 				_dxMouse->ProcessMessage(message, wParam, lParam);
-		}
+		}		
+
+		uptr<DirectX::Mouse> _dxMouse = nullptr;
 	};
 
 	struct RasterizerState::PlatformImplementation {
