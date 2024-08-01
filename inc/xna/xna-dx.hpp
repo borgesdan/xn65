@@ -644,12 +644,21 @@ namespace xna {
 	};
 
 	struct Mouse::PlatformImplementation {
-		uptr<DirectX::Mouse> _dxMouse = unew<DirectX::Mouse>();
+		PlatformImplementation() {
+			_dxMouse = unew<DirectX::Mouse>();
+		}		
 
 		void ProcessMessage(UINT message, WPARAM wParam, LPARAM lParam) const {
 			if (_dxMouse)
 				_dxMouse->ProcessMessage(message, wParam, lParam);
 		}
+
+		bool IsConnected() const;
+		bool IsVisible() const;
+		void IsVisible(bool value) const;
+		void ResetScrollWheel() const;
+
+		uptr<DirectX::Mouse> _dxMouse = nullptr;
 	};
 
 	struct RasterizerState::PlatformImplementation {

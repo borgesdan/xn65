@@ -16,20 +16,20 @@ namespace xna {
 		return mstate;
 	}
 
-	bool Mouse::IsConnected() {		
-		return impl->_dxMouse->IsConnected();
+	bool Mouse::PlatformImplementation::IsConnected() const {
+		return _dxMouse->IsConnected();
 	}
 
-	bool Mouse::IsVisible() {
-		return impl->_dxMouse->IsVisible();
+	bool Mouse::PlatformImplementation::IsVisible() const {
+		return _dxMouse->IsVisible();
 	}
 
-	void Mouse::IsVisible(bool value) {
-		impl->_dxMouse->SetVisible(value);
+	void Mouse::PlatformImplementation::IsVisible(bool value) const {
+		_dxMouse->SetVisible(value);
 	}
 
-	void Mouse::ResetScrollWheel() {
-		impl->_dxMouse->ResetScrollWheelValue();
+	void Mouse::PlatformImplementation::ResetScrollWheel() const {
+		_dxMouse->ResetScrollWheelValue();
 	}
 
 	void Mouse::Initialize(intptr_t handle) {
