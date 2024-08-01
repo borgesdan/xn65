@@ -645,18 +645,13 @@ namespace xna {
 
 	struct Mouse::PlatformImplementation {
 		PlatformImplementation() {
-			_dxMouse = unew<DirectX::Mouse>();
+			_dxMouse = unew<DirectX::Mouse>();			
 		}		
 
-		void ProcessMessage(UINT message, WPARAM wParam, LPARAM lParam) const {
+		inline void ProcessMessage(UINT message, WPARAM wParam, LPARAM lParam) const {
 			if (_dxMouse)
 				_dxMouse->ProcessMessage(message, wParam, lParam);
-		}
-
-		bool IsConnected() const;
-		bool IsVisible() const;
-		void IsVisible(bool value) const;
-		void ResetScrollWheel() const;
+		}		
 
 		uptr<DirectX::Mouse> _dxMouse = nullptr;
 	};

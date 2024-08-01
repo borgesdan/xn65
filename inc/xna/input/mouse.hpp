@@ -38,7 +38,9 @@ namespace xna {
 
 		//Gets or sets the window used for mouse processing. 
 		//Mouse coordinates returned by GetState are relative to the upper-left corner of this window. 
-		static void WindowHandle(intptr_t value);		
+		static void WindowHandle(intptr_t value);	
+
+		static void SetPosition(Int x, Int y);
 
 	private:
 		friend class Game;

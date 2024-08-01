@@ -14,23 +14,7 @@ namespace xna {
 		mstate.ScroolWheelValue = state.scrollWheelValue;
 
 		return mstate;
-	}
-
-	bool Mouse::PlatformImplementation::IsConnected() const {
-		return _dxMouse->IsConnected();
-	}
-
-	bool Mouse::PlatformImplementation::IsVisible() const {
-		return _dxMouse->IsVisible();
-	}
-
-	void Mouse::PlatformImplementation::IsVisible(bool value) const {
-		_dxMouse->SetVisible(value);
-	}
-
-	void Mouse::PlatformImplementation::ResetScrollWheel() const {
-		_dxMouse->ResetScrollWheelValue();
-	}
+	}	
 
 	void Mouse::Initialize(intptr_t handle) {
 		impl = unew<PlatformImplementation>();
@@ -43,5 +27,10 @@ namespace xna {
 		if (!hwnd) return;
 		
 		impl->_dxMouse->SetWindow(hwnd);
+	}
+
+	//Sets the position of the mouse cursor relative to the upper - left corner of the window.
+	void Mouse::SetPosition(Int x, Int y) {
+		SetCursorPos(x, y);
 	}
 }
