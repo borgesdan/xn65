@@ -28,7 +28,7 @@ namespace xna {
 	int Game::StartGameLoop() {
 		MSG msg{};		
 
-		impl->_stepTimer = xna::StepTimer();
+		impl->_stepTimer = xna::StepTimer();		
 
 		do {
 			if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
@@ -42,6 +42,7 @@ namespace xna {
 
 		} while (msg.message != WM_QUIT);
 
+		EndRun();
 		return static_cast<int>(msg.wParam);
 	}
 
@@ -58,7 +59,9 @@ namespace xna {
 				Update(_currentGameTime);
 			});
 
+		BeginDraw();
 		Draw(_currentGameTime);
+		EndDraw();
 	}
 
 	int Game::Run() {
@@ -79,6 +82,7 @@ namespace xna {
 			}
 
 			isRunning = true;
+			BeginRun();
 			return StartGameLoop();
 		}
 		catch (std::exception& e) {

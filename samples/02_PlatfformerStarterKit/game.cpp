@@ -24,14 +24,14 @@ namespace PlatformerStarterKit {
 			graphics = snew<GraphicsDeviceManager>(game->shared_from_this());			
 			graphics->ApplyChanges();
 
-			std::any device = graphicsDevice;
-			services->AddService(*typeof<GraphicsDevice>(), device);
+			std::any device = Device();
+			Services()->AddService(*typeof<GraphicsDevice>(), device);
 
 			Game::Initialize();
 		}
 
 		void LoadContent() override {
-			spriteBatch = snew<SpriteBatch>(graphicsDevice);					
+			spriteBatch = snew<SpriteBatch>(Device());					
 
 			// Load fonts
 			hudFont = Content()->Load<PSpriteFont>("Fonts/Hud");
@@ -55,7 +55,7 @@ namespace PlatformerStarterKit {
 		}
 
 		void Draw(GameTime const& gameTime) override {
-			graphicsDevice->Clear(Colors::CornflowerBlue);
+			Device()->Clear(Colors::CornflowerBlue);
 
 			spriteBatch->Begin();
 
@@ -111,7 +111,7 @@ namespace PlatformerStarterKit {
 				levelIndex = -1;
 			}			
 			
-			level = snew<Level>(services, levelPath);
+			level = snew<Level>(Services(), levelPath);
 			level->Initialize();
 		}
 
@@ -122,7 +122,7 @@ namespace PlatformerStarterKit {
 
 		void DrawHud()
 		{
-			auto titleSafeArea = graphicsDevice->Viewport().Bounds();
+			auto titleSafeArea = Device()->Viewport().Bounds();
 			auto hudLocation = Vector2(titleSafeArea.X, titleSafeArea.Y);
 			auto center = Vector2(titleSafeArea.X + titleSafeArea.Width / 2.0f,
 				titleSafeArea.Y + titleSafeArea.Height / 2.0f);

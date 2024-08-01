@@ -53,19 +53,29 @@ namespace xna {
 		void ResizeWindow(int width, int heigth);
 
 	protected:
+		//Starts the drawing of a frame. This method is followed by calls to Draw and EndDraw. 
+		virtual void BeginDraw(){}
+		//Called after all components are initialized but before the first update in the game loop. 
+		virtual void BeginRun() {};
+		//Called when the game determines it is time to draw a frame.
 		virtual void Draw(GameTime const& gameTime);
+		//Ends the drawing of a frame. This method is preceeded by calls to Draw and BeginDraw.
+		virtual void EndDraw() {}
+		//Called after the game loop has stopped running before exiting.
+		virtual void EndRun() {};
+		//Called after the Game and GraphicsDevice are created, but before LoadContent. 
 		virtual void Initialize();
+		//Called when graphics resources need to be loaded.
 		virtual void LoadContent(){}
-		virtual void Update(GameTime const& gameTime);
-		int StartGameLoop();		
-
-	public:
-		sptr<GraphicsDevice> graphicsDevice = nullptr;
-
-	protected:
-		sptr<GameServiceContainer> services = nullptr;
+		//Called when the game has determined that game logic needs to be processed.
+		virtual void Update(GameTime const& gameTime);		
 
 	private:
+		int StartGameLoop();
+
+	private:
+		friend class GraphicsDeviceManager;
+
 		sptr<GameComponentCollection> _gameComponents = nullptr;
 		sptr<GameWindow> _gameWindow{ nullptr };
 		sptr<AudioEngine> _audioEngine = nullptr;
@@ -77,6 +87,8 @@ namespace xna {
 		bool isFixedTimeStep{ true };
 		TimeSpan targetElapsedTime{ TimeSpan::FromTicks(166667L) };
 		bool isRunning{ false };
+		sptr<GameServiceContainer> services = nullptr;
+		sptr<GraphicsDevice> graphicsDevice = nullptr;
 
 	public:
 		struct PlatformImplementation;
