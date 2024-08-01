@@ -81,8 +81,8 @@ namespace xna {
 	}	
 
 	void Game::Initialize() {	
-		Keyboard::Initialize();
-		Mouse::Initialize();
+		Keyboard::Initialize();		
+		Mouse::Initialize(_gameWindow->Handle());
 		GamePad::Initialize();
 		AudioEngine::Initialize();		
 

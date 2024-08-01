@@ -2,9 +2,6 @@
 
 namespace xna {
 	MouseState Mouse::GetState() {
-		if (!impl || !impl->_dxMouse)
-			return MouseState();
-
 		const auto state = impl->_dxMouse->GetState();
 		MouseState mstate;
 		mstate.LeftButton = static_cast<ButtonState>(state.leftButton);
@@ -19,35 +16,32 @@ namespace xna {
 		return mstate;
 	}
 
-	bool Mouse::IsConnected() {
-		if (!impl || !impl->_dxMouse)
-			return false;
-
+	bool Mouse::IsConnected() {		
 		return impl->_dxMouse->IsConnected();
 	}
 
 	bool Mouse::IsVisible() {
-		if (!impl || !impl->_dxMouse)
-			return false;
-
 		return impl->_dxMouse->IsVisible();
 	}
 
 	void Mouse::IsVisible(bool value) {
-		if (!impl || !impl->_dxMouse)
-			return;
-
 		impl->_dxMouse->SetVisible(value);
 	}
 
 	void Mouse::ResetScrollWheel() {
-		if (!impl || !impl->_dxMouse)
-			return;
-		
 		impl->_dxMouse->ResetScrollWheelValue();
 	}
 
-	void Mouse::Initialize() {
+	void Mouse::Initialize(intptr_t handle) {
 		impl = unew<PlatformImplementation>();
+		windowHandle = handle;
+	}
+
+	void Mouse::WindowHandle(intptr_t value) {
+		auto hwnd = reinterpret_cast<HWND>(value);
+
+		if (!hwnd) return;
+		
+		impl->_dxMouse->SetWindow(hwnd);
 	}
 }
