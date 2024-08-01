@@ -73,7 +73,7 @@ namespace PlatformerStarterKit {
 			auto keyboardState = Keyboard::GetState();
 			auto gamepadState = GamePad::GetState(PlayerIndex::One);
 			
-			if (gamepadState.Buttons.Back == ButtonState::Pressed)
+			if (gamepadState.Buttons().Back() == ButtonState::Pressed)
 				Exit();
 
 			bool continuePressed =

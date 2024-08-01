@@ -5,8 +5,8 @@ namespace xna {
 		impl = unew<PlatformImplementation>();
 		services = snew<GameServiceContainer>();
 		auto iservice = reinterpret_pointer_cast<IServiceProvider>(services);
-		_contentManager = snew<ContentManager>(services, "");
-		_contentManager->mainGameService = iservice;
+		contentManager = snew<ContentManager>(services, "");
+		contentManager->mainGameService = iservice;
 
 		_gameWindow = snew<GameWindow>();
 		_gameWindow->impl->Color(146, 150, 154);
@@ -16,6 +16,9 @@ namespace xna {
 			GraphicsDeviceManager::DefaultBackBufferHeight, false);
 
 		_gameComponents = snew<GameComponentCollection>();
+
+		IsFixedTimeStep(isFixedTimeStep);
+		TargetElapsedTime(targetElapsedTime);
 	}
 
 	void Game::Exit() {
@@ -34,7 +37,7 @@ namespace xna {
 				DispatchMessage(&msg);
 			}
 			else {
-				Step();
+				Tick();
 			}
 
 		} while (msg.message != WM_QUIT);
@@ -42,7 +45,7 @@ namespace xna {
 		return static_cast<int>(msg.wParam);
 	}
 
-	void Game::Step()
+	void Game::Tick()
 	{
 		impl->_stepTimer.Tick([&]()
 			{
@@ -59,6 +62,9 @@ namespace xna {
 	}
 
 	int Game::Run() {
+		if (isRunning)
+			return EXIT_FAILURE;
+
 		try {
 			if (!_gameWindow->impl->Create()) {
 				Exception::Throw(Exception::FAILED_TO_CREATE);				
@@ -72,6 +78,7 @@ namespace xna {
 				return EXIT_FAILURE;
 			}
 
+			isRunning = true;
 			return StartGameLoop();
 		}
 		catch (std::exception& e) {
@@ -138,10 +145,10 @@ namespace xna {
 	}
 
 	sptr<GameWindow> Game::Window() { return _gameWindow; }
-	sptr<GraphicsDevice> Game::GetGraphicsDevice() { return graphicsDevice; }
-	sptr<GameComponentCollection> Game::Components() { return _gameComponents; }
+	sptr<GraphicsDevice> Game::Device() const { return graphicsDevice; }
+	sptr<GameComponentCollection> Game::Components() const { return _gameComponents; }
 	sptr<GameServiceContainer> Game::Services() { return services; }
-	sptr<ContentManager> Game::Content() { return _contentManager; }
+	sptr<ContentManager> Game::Content() const { return contentManager; }
 	void Game::EnableGameComponents(bool value) { _enabledGameComponents = value; }
 
 	void Game::AttachGraphicsDevice(sptr<GraphicsDevice> const& device) {
@@ -157,5 +164,45 @@ namespace xna {
 				heigth);
 			_gameWindow->impl->Update();
 		}
+	}
+
+	void Game::Content(sptr<ContentManager> const& value) {
+		contentManager = value;
+		auto iservice = reinterpret_pointer_cast<IServiceProvider>(services);
+		contentManager->mainGameService = iservice;
+	}
+
+	void Game::IsFixedTimeStep(bool value) {
+		isFixedTimeStep = value;
+		impl->_stepTimer.SetFixedTimeStep(value);		
+	}
+
+	bool Game::IsMouseVisible() const {
+		if (!Mouse::impl)
+			return false;
+
+		return Mouse::impl->_dxMouse->IsVisible();
+	}
+
+	void Game::IsMouseVisible(bool value) {
+		if (!Mouse::impl)
+			return;
+
+		Mouse::impl->_dxMouse->SetVisible(value);
+	}
+	void Game::TargetElapsedTime(TimeSpan const& value) {
+		if (!isFixedTimeStep)
+			return;
+
+		const auto ticks = targetElapsedTime.Ticks();
+		impl->_stepTimer.SetTargetElapsedTicks(ticks);
+	}
+
+	void Game::ResetElapsedTime() const {
+		impl->_stepTimer.ResetElapsedTime();
+	}
+	
+	void Game::RunOneFrame() {
+		Tick();
 	}
 }
