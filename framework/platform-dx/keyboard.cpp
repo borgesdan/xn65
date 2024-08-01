@@ -1,4 +1,3 @@
-#include "xna/input/keyboard.hpp"
 #include "xna/xna-dx.hpp"
 
 namespace xna {
@@ -15,12 +14,5 @@ namespace xna {
 
 	void Keyboard::Initialize() {
 		impl = unew<PlatformImplementation>();
-	}
-
-	bool Keyboard::IsConnected() {
-		if (!impl || !impl->_dxKeyboard)
-			return false;
-
-		return impl->_dxKeyboard->IsConnected();
-	}
+	}	
 }

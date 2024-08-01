@@ -635,9 +635,13 @@ namespace xna {
 	};
 
 	struct Keyboard::PlatformImplementation {
-		uptr<DirectX::Keyboard> _dxKeyboard = unew<DirectX::Keyboard>();
+		PlatformImplementation() {
+			_dxKeyboard = unew<DirectX::Keyboard>();
+		}
 
-		void ProcessMessage(UINT message, WPARAM wParam, LPARAM lParam) const {
+		uptr<DirectX::Keyboard> _dxKeyboard = nullptr;
+
+		inline void ProcessMessage(UINT message, WPARAM wParam, LPARAM lParam) const {
 			if (_dxKeyboard)
 				_dxKeyboard->ProcessMessage(message, wParam, lParam);
 		}
