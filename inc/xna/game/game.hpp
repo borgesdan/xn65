@@ -8,7 +8,6 @@ namespace xna {
 	class Game : public std::enable_shared_from_this<Game> {
 	public:
 		Game();
-		~Game();
 		void Exit();
 		int Run();
 		sptr<GameWindow> Window();
@@ -17,6 +16,9 @@ namespace xna {
 		sptr<GameServiceContainer> Services();
 		sptr<ContentManager> Content();
 		void EnableGameComponents(bool value);
+
+		void AttachGraphicsDevice(sptr<GraphicsDevice> const& graphicsDevice);
+		void ResizeWindow(int width, int heigth);
 
 	protected:
 		virtual void Draw(GameTime const& gameTime);

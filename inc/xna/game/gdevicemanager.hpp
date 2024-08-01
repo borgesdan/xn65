@@ -1,9 +1,9 @@
 #ifndef XNA_GAME_GRAPHICSDEVICEMANAGER_HPP
 #define XNA_GAME_GRAPHICSDEVICEMANAGER_HPP
 
+#include "../csharp/eventhandler.hpp"
 #include "../default.hpp"
 #include "gdeviceinfo.hpp"
-#include "../csharp/eventhandler.hpp"
 
 namespace xna {
 	struct IGraphicsDeviceService {
@@ -21,6 +21,7 @@ namespace xna {
 		//virtual void EndDraw() = 0;
 	};
 
+	//Handles the configuration and management of the graphics device. 
 	class GraphicsDeviceManager : public IGraphicsDeviceService, public IGraphicsDeviceManager {
 	public:
 		//Creates a new GraphicsDeviceManager and registers it to handle the configuration and management of the graphics device for the specified Game.
