@@ -14,8 +14,7 @@ namespace xna {
 		parameters->BackBufferHeight = backBufferHeight;
 		parameters->BackBufferFormat = SurfaceFormat::Color;
 		parameters->IsFullscreen = false;
-		information.PresentParameters = parameters;		
-		information.Window = game->Window();
+		information.PresentParameters = parameters;	
 	}		
 
 	void GraphicsDeviceManager::ApplyChanges() {
