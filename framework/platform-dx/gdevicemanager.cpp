@@ -74,19 +74,18 @@ namespace xna {
 		}
 
 		if (flag2)
-			CreateDevice(*bestDevice);
-
-		auto presentationParameters = device->PresentParameters();
+			CreateDevice(*bestDevice);		
 
 		screenDeviceName = device->Adapter()->DeviceName();
+		const auto presentationParameters = device->PresentParameters();
 
-		isReallyFullScreen = presentationParameters.IsFullscreen;
+		isReallyFullScreen = presentationParameters->IsFullscreen;
 
-		if (presentationParameters.BackBufferWidth != 0)
-			clientWidth = presentationParameters.BackBufferWidth;
+		if (presentationParameters->BackBufferWidth != 0)
+			clientWidth = presentationParameters->BackBufferWidth;
 
-		if (presentationParameters.BackBufferHeight != 0)
-			clientHeight = presentationParameters.BackBufferHeight;
+		if (presentationParameters->BackBufferHeight != 0)
+			clientHeight = presentationParameters->BackBufferHeight;
 
 		isDeviceDirty = false;
 

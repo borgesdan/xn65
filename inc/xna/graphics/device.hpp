@@ -3,59 +3,60 @@
 
 #include "../default.hpp"
 #include "presentparams.hpp"
+#include "viewport.hpp"
 
 namespace xna {
 	//Performs primitive-based rendering, creates resources, handles system-level variables, adjusts gamma ramp levels, and creates shaders. 
 	class GraphicsDevice : public std::enable_shared_from_this<GraphicsDevice> {
 	public:
 		GraphicsDevice();
-		GraphicsDevice(GraphicsDeviceInformation const& info);
-		GraphicsDevice(sptr<GraphicsAdapter> const& adapter, GraphicsProfile const& graphicsProfile, sptr<PresentationParameters> const& presentationParameters);
+		
+		GraphicsDevice(P_GraphicsAdapter const& adapter, GraphicsProfile const& graphicsProfile, P_PresentationParameters const& presentationParameters);
 
 		//Gets the graphics adapter.
-		sptr<GraphicsAdapter> Adapter() const;
-
+		inline P_GraphicsAdapter Adapter() const { return adapter; }
 		//Gets or sets a system-defined instance of a blend state object initialized for alpha blending. The default value is BlendState.Opaque. 
-		sptr<xna::BlendState> BlendState() const;
+		inline P_BlendState BlendState() const { return blendState; }
 		//Gets or sets a system-defined instance of a blend state object initialized for alpha blending. The default value is BlendState.Opaque. 
-		void BlendState(sptr<xna::BlendState> const& value);
+		void BlendState(P_BlendState const& value);
 		//Gets or sets a system-defined instance of a depth-stencil state object. The default value is DepthStencilState.Default.
-		sptr<xna::DepthStencilState> DepthStencilState() const;
+		inline P_DepthStencilState DepthStencilState() const { return depthStencilState; }
 		//Gets or sets a system-defined instance of a depth-stencil state object. The default value is DepthStencilState.Default.
-		void DepthStencilState(sptr<xna::DepthStencilState> const& value);
+		void DepthStencilState(P_DepthStencilState const& value);
 		//Gets or sets rasterizer state. The default value is RasterizerState.CullCounterClockwise.
-		sptr<xna::RasterizerState> RasterizerState() const;
+		inline P_RasterizerState RasterizerState() const { return rasterizerState; }
 		//Gets or sets rasterizer state. The default value is RasterizerState.CullCounterClockwise.
-		void RasterizerState(sptr<xna::RasterizerState> const& value);	
+		void RasterizerState(P_RasterizerState const& value);
 		//Retrieves a collection of SamplerState objects for the current GraphicsDevice. 
-		sptr<SamplerStateCollection> SamplerStates() const;
-
-		//Gets or sets a bitmask controlling modification of the samples in a multisample render target. The default value is -1 (0xffffffff). 
-		Int MultiSampleMask() const;
-		//Gets or sets a bitmask controlling modification of the samples in a multisample render target. The default value is -1 (0xffffffff). 
-		void MultiSampleMask(Int value);
-
-		constexpr GraphicsProfile Profile() const {
-			return GraphicsProfile::HiDef;
-		}
-		
-		constexpr PresentationParameters PresentParameters() const {
-			return PresentationParameters();
-		}
-
+		inline P_SamplerStateCollection SamplerStates() const { return samplerStateCollection; }
+		//Gets the graphics profile.
+		constexpr GraphicsProfile Profile() const { return graphicsProfile; }
+		//Gets the presentation parameters associated with this graphics device.
+		P_PresentationParameters PresentParameters() const { return presentationParameters; }
+		//Clears resource buffers. 
 		void Clear(Color const& color) const;
-		void Clear(ClearOptions options, Color const& color, float depth, Int stencil);
-		void Clear(ClearOptions options, Vector4 const& color, float depth, Int stencil);
-		bool Initialize();
-		bool Present() const;
-
-		void Reset(sptr<PresentationParameters> const& presentationParameters, sptr<GraphicsAdapter> const& graphicsAdapter);
-
-		xna::Viewport Viewport() const;
+		//Clears resource buffers. 
+		void Clear(ClearOptions options, Color const& color, float depth, Int stencil) const;		
+		//Presents the display with the contents of the next buffer in the sequence of back buffers owned by the GraphicsDevice.
+		bool Present() const;		
+		//Resets the presentation parameters for the current GraphicsDevice.
+		void Reset(P_PresentationParameters const& presentationParameters, P_GraphicsAdapter const& graphicsAdapter);
+		//Gets or sets a viewport identifying the portion of the render target to receive draw calls. 
+		constexpr xna::Viewport Viewport() const { return viewport; }
+		//Gets or sets a viewport identifying the portion of the render target to receive draw calls. 
 		void Viewport(xna::Viewport const& viewport);
-		void UseVSync(bool use);
+		
+		void Initialize();
 
-		//void DrawPrimitives(PrimitiveType primitiveType, Int startVertex, Int primitiveCount);
+	private:
+		P_GraphicsAdapter adapter{ nullptr };
+		P_BlendState blendState{ nullptr };
+		P_DepthStencilState depthStencilState{ nullptr };
+		P_RasterizerState rasterizerState{ nullptr };
+		P_SamplerStateCollection samplerStateCollection{ nullptr };
+		P_PresentationParameters presentationParameters{ nullptr };
+		GraphicsProfile graphicsProfile{ GraphicsProfile::HiDef };
+		xna::Viewport viewport{};
 
 	public:
 		struct PlatformImplementation;

@@ -1,8 +1,167 @@
 #include "xna/xna-dx.hpp"
-#include "xna/game/gdevicemanager.hpp"
 
 namespace xna {
-	static void reset(GraphicsDevice::PlatformImplementation& impl)
+	static void reset(GraphicsDevice::PlatformImplementation& impl);
+	static void createDevice(GraphicsDevice::PlatformImplementation& impl, GraphicsAdapter& currentAdapter);
+	static void initAndApplyState(P_BlendState& blendState, P_RasterizerState& rasterizerState,
+		P_DepthStencilState& depthStencilState, P_SamplerStateCollection& samplerStates, P_GraphicsDevice const& device);
+
+	GraphicsDevice::GraphicsDevice() {		
+		impl = unew<PlatformImplementation>();
+		adapter = GraphicsAdapter::DefaultAdapter();		
+	}
+	
+	GraphicsDevice::GraphicsDevice(sptr<GraphicsAdapter> const& adapter, GraphicsProfile const& graphicsProfile, sptr<PresentationParameters> const& presentationParameters) 
+		: adapter(adapter), graphicsProfile(graphicsProfile), presentationParameters(presentationParameters) {
+		impl = unew<PlatformImplementation>();
+		
+		blendState = xna::BlendState::Opaque();
+		depthStencilState = xna::DepthStencilState::Default();
+		rasterizerState = xna::RasterizerState::CullCounterClockwise();
+		samplerStateCollection = snew<SamplerStateCollection>();
+	}
+
+	void GraphicsDevice::Initialize() {
+		auto _this = shared_from_this();		
+
+		reset(*impl);		
+		createDevice(*impl, *adapter);
+
+		auto hr = CreateDXGIFactory1(__uuidof(IDXGIFactory1), (void**)&impl->_factory);
+		
+		if FAILED(hr)
+			Exception::Throw(Exception::FAILED_TO_CREATE);		
+
+		viewport = xna::Viewport(0.0F, 0.0F,
+			presentationParameters->BackBufferWidth,
+			presentationParameters->BackBufferHeight,
+			0.0F, 1.F);
+		
+		const auto backColor = Colors::CornflowerBlue;
+		const auto backColorV3 = backColor.ToVector3();
+
+		impl->_backgroundColor[0] = backColorV3.X;
+		impl->_backgroundColor[1] = backColorV3.Y;
+		impl->_backgroundColor[2] = backColorV3.Z;
+		impl->_backgroundColor[3] = 1.0f;
+
+		impl->_swapChain = snew<xna::SwapChain>(_this);
+		impl->_swapChain->Initialize();
+
+		auto hwnd = reinterpret_cast<HWND>(presentationParameters->DeviceWindowHandle);
+		hr = impl->_factory->MakeWindowAssociation(hwnd, DXGI_MWA_NO_ALT_ENTER);
+		
+		if (FAILED(hr)) 
+			Exception::Throw(Exception::FAILED_TO_MAKE_WINDOW_ASSOCIATION);		
+		
+		impl->_renderTarget2D = snew<RenderTarget2D>(_this);
+		impl->_renderTarget2D->Initialize();
+		impl->_renderTarget2D->Apply();
+
+		D3D11_VIEWPORT view = DxHelpers::ViewportToDx(viewport);
+		impl->_context->RSSetViewports(1, &view);
+
+		initAndApplyState(blendState, rasterizerState, depthStencilState, samplerStateCollection, _this);
+
+		const auto currentPresenInterval = presentationParameters->PresentationInterval;		
+
+		switch (currentPresenInterval)
+		{
+		case PresentInterval::Default:
+		case PresentInterval::One:
+		case PresentInterval::Two:
+			impl->vSyncValue = 1;
+			break;
+		case PresentInterval::Immediate:
+			impl->vSyncValue = 0;
+			break;
+		default:
+			impl->vSyncValue = 1;
+			break;
+		}		
+	}
+
+	bool GraphicsDevice::Present() const {
+		const auto currentPresenInterval = presentationParameters->PresentationInterval;
+		bool result = impl->_swapChain->Present(impl->vSyncValue != 0);		
+		
+		impl->_context->OMSetRenderTargets(
+			1, 
+			impl->_renderTarget2D->render_impl->_renderTargetView.GetAddressOf(), 
+			nullptr);
+
+		return result;
+	}		
+
+	void GraphicsDevice::Clear(Color const& color) const {
+		if (!impl) return;
+
+		const auto v4 = color.ToVector4();
+
+		impl->_backgroundColor[0] = v4.X;
+		impl->_backgroundColor[1] = v4.Y;
+		impl->_backgroundColor[2] = v4.Z;
+		impl->_backgroundColor[3] = v4.W;
+		
+		impl->_context->ClearRenderTargetView(
+			impl->_renderTarget2D->render_impl->_renderTargetView.Get(),
+			impl->_backgroundColor);
+	}
+
+	void GraphicsDevice::Clear(ClearOptions options, Color const& color, float depth, Int stencil) const {
+		if (!impl) return;
+
+		switch (options)
+		{
+		case xna::ClearOptions::DepthBuffer:
+			Exception::Throw(Exception::NOT_IMPLEMENTED);
+			break;
+		case xna::ClearOptions::Stencil:
+			Exception::Throw(Exception::NOT_IMPLEMENTED);
+			break;
+		case xna::ClearOptions::Target:
+			Clear(color);
+			break;
+		default:
+			return;
+		}
+	}			
+
+	void GraphicsDevice::Viewport(xna::Viewport const& value) {
+		viewport = value;
+		const auto view = DxHelpers::ViewportToDx(viewport);
+
+		impl->_context->RSSetViewports(1, &view);
+	}	
+	
+	void GraphicsDevice::BlendState(sptr<xna::BlendState> const& value) {
+		blendState = value;
+		blendState->Apply();
+	}
+	
+	void GraphicsDevice::DepthStencilState(sptr<xna::DepthStencilState> const& value) {
+		depthStencilState = value;
+		depthStencilState->Apply();
+	}
+	
+	void GraphicsDevice::RasterizerState(sptr<xna::RasterizerState> const& value) {
+		rasterizerState = value;
+		rasterizerState->Apply();
+	}		
+
+	void GraphicsDevice::Reset(sptr<PresentationParameters> const& parameters, sptr<GraphicsAdapter> const& graphicsAdapter){
+		impl = unew<PlatformImplementation>();
+		adapter = graphicsAdapter;
+		presentationParameters = parameters;
+		
+		Initialize();
+	}		
+
+	//
+	// INTERNAL
+	//
+
+	void reset(GraphicsDevice::PlatformImplementation& impl)
 	{
 		if (impl._device) {
 			impl._device->Release();
@@ -20,7 +179,7 @@ namespace xna {
 		}
 	}
 
-	static void createDevice(GraphicsDevice::PlatformImplementation& impl) {
+	void createDevice(GraphicsDevice::PlatformImplementation& impl, GraphicsAdapter& currentAdapter) {
 		//
 		// See ref
 		//
@@ -34,11 +193,10 @@ namespace xna {
 		auto createDeviceFlags = 0;
 #if _DEBUG
 		createDeviceFlags = D3D11_CREATE_DEVICE_FLAG::D3D11_CREATE_DEVICE_DEBUG;
-#endif        
+#endif  
 
-		const auto& currentAdapter = impl._adapter;
-		const auto& pAdapter = GraphicsAdapter::UseNullDevice() ? NULL : currentAdapter->impl->dxAdapter.Get();		
-		
+		const auto& pAdapter = GraphicsAdapter::UseNullDevice() ? NULL : currentAdapter.impl->dxAdapter.Get();
+
 		//
 		// if pAdapter is not NULL driverType must be D3D_DRIVER_TYPE_UNKNOWN
 		//
@@ -75,237 +233,19 @@ namespace xna {
 			Exception::Throw(Exception::FAILED_TO_CREATE);
 	}
 
-	static void initAndApplyState(GraphicsDevice::PlatformImplementation& impl, PGraphicsDevice const& device) {
-		impl._blendState->Bind(device);
-		impl._blendState->Initialize();
-		impl._blendState->Apply();
+	static void initAndApplyState(P_BlendState& blendState, P_RasterizerState& rasterizerState, P_DepthStencilState& depthStencilState, P_SamplerStateCollection& samplerStates, P_GraphicsDevice const& device) {
+		blendState->Bind(device);
+		blendState->Initialize();
+		blendState->Apply();
 
-		impl._rasterizerState->Bind(device);
-		impl._rasterizerState->Initialize();
-		impl._rasterizerState->Apply();
+		rasterizerState->Bind(device);
+		rasterizerState->Initialize();
+		rasterizerState->Apply();
 
-		impl._depthStencilState->Bind(device);
-		impl._depthStencilState->Initialize();
-		impl._depthStencilState->Apply();
+		depthStencilState->Bind(device);
+		depthStencilState->Initialize();
+		depthStencilState->Apply();
 
-		impl._samplerStates->Apply(*device);
-	}
-
-	GraphicsDevice::GraphicsDevice() {		
-		impl = unew<PlatformImplementation>();
-		impl->_adapter = GraphicsAdapter::DefaultAdapter();		
-	}
-
-	GraphicsDevice::GraphicsDevice(GraphicsDeviceInformation const& info) {
-		impl = unew<PlatformImplementation>();
-		
-		impl->_adapter = info.Adapter;
-		impl->_presentationParameters = info.PresentParameters;		
-	}	
-
-	GraphicsDevice::GraphicsDevice(sptr<GraphicsAdapter> const& adapter, GraphicsProfile const& graphicsProfile, sptr<PresentationParameters> const& presentationParameters) {
-		impl = unew<PlatformImplementation>();
-		impl->_adapter = adapter;			
-		impl->_presentationParameters = presentationParameters;		
-	}
-
-	bool GraphicsDevice::Initialize() {
-		auto _this = shared_from_this();
-
-		if (!impl)
-			impl = uptr<PlatformImplementation>();
-
-		reset(*impl);
-		
-		createDevice(*impl);
-
-		auto hr = CreateDXGIFactory1(__uuidof(IDXGIFactory1), (void**)&impl->_factory);
-		
-		if FAILED(hr)
-			Exception::Throw(Exception::FAILED_TO_CREATE);
-
-		//const auto bounds = impl->_gameWindow->ClientBounds();
-
-		impl->_viewport = xna::Viewport(0.0F, 0.0F,
-			impl->_presentationParameters->BackBufferWidth,
-			impl->_presentationParameters->BackBufferHeight,
-			0.0F, 1.F);
-
-		//COLORREF color = impl->_gameWindow->impl->Color();
-		const auto backColor = Colors::CornflowerBlue;
-		const auto backColorV3 = backColor.ToVector3();
-
-		impl->_backgroundColor[0] = backColorV3.X;
-		impl->_backgroundColor[1] = backColorV3.Y;
-		impl->_backgroundColor[2] = backColorV3.Z;
-		impl->_backgroundColor[3] = 1.0f;
-
-		impl->_swapChain = snew<xna::SwapChain>(_this);
-		impl->_swapChain->Initialize();
-
-		auto hwnd = reinterpret_cast<HWND>(impl->_presentationParameters->DeviceWindowHandle);
-		hr = impl->_factory->MakeWindowAssociation(hwnd, DXGI_MWA_NO_ALT_ENTER);
-		
-		if (FAILED(hr)) 
-			Exception::Throw(Exception::FAILED_TO_MAKE_WINDOW_ASSOCIATION);
-
-		impl->_renderTarget2D = snew<RenderTarget2D>(_this);
-		
-		if (!impl->_renderTarget2D->Initialize())
-			return false;
-
-		impl->_renderTarget2D->Apply();
-
-		D3D11_VIEWPORT view{};
-		view.TopLeftX = impl->_viewport.X;
-		view.TopLeftY = impl->_viewport.Y;
-		view.Width = impl->_viewport.Width;
-		view.Height = impl->_viewport.Height;
-		view.MinDepth = impl->_viewport.MinDetph;
-		view.MaxDepth = impl->_viewport.MaxDepth;
-
-		impl->_context->RSSetViewports(1, &view);
-
-		initAndApplyState(*impl, _this);
-
-		const auto currentPresenInterval = impl->_presentationParameters->PresentationInterval;		
-
-		switch (currentPresenInterval)
-		{
-		case PresentInterval::Default:
-		case PresentInterval::One:
-		case PresentInterval::Two:
-			impl->vSyncValue = 1;
-			break;
-		case PresentInterval::Immediate:
-			impl->vSyncValue = 0;
-			break;
-		default:
-			impl->vSyncValue = 1;
-			break;
-		}
-
-		return true;
-	}
-
-	bool GraphicsDevice::Present() const {
-		const auto currentPresenInterval = impl->_presentationParameters->PresentationInterval;
-		bool result = impl->_swapChain->Present(impl->vSyncValue != 0);		
-		
-		impl->_context->OMSetRenderTargets(
-			1, 
-			impl->_renderTarget2D->render_impl->_renderTargetView.GetAddressOf(), 
-			nullptr);
-
-		return result;
-	}		
-
-	void GraphicsDevice::Clear(Color const& color) const {
-		if (!impl) return;
-
-		const auto v4 = color.ToVector4();
-
-		impl->_backgroundColor[0] = v4.X;
-		impl->_backgroundColor[1] = v4.Y;
-		impl->_backgroundColor[2] = v4.Z;
-		impl->_backgroundColor[3] = v4.W;
-		
-		impl->_context->ClearRenderTargetView(
-			impl->_renderTarget2D->render_impl->_renderTargetView.Get(),
-			impl->_backgroundColor);
-	}
-
-	void GraphicsDevice::Clear(ClearOptions options, Color const& color, float depth, Int stencil) {
-		if (!impl) return;
-
-		switch (options)
-		{
-		case xna::ClearOptions::DepthBuffer:
-			Exception::Throw(Exception::NOT_IMPLEMENTED);
-			break;
-		case xna::ClearOptions::Stencil:
-			Exception::Throw(Exception::NOT_IMPLEMENTED);
-			break;
-		case xna::ClearOptions::Target:
-			Clear(color);
-			break;
-		default:
-			return;
-		}
-	}
-
-	void GraphicsDevice::Clear(ClearOptions options, Vector4 const& color, float depth, Int stencil) {
-		if (!impl) return;
-
-
-	}
-
-	sptr<GraphicsAdapter> GraphicsDevice::Adapter() const {
-		if (!impl) return nullptr;
-
-		return impl->_adapter;
-	}	
-
-	xna::Viewport GraphicsDevice::Viewport() const {
-		if (!impl) return {};
-
-		return impl->_viewport;
-	}
-
-	void GraphicsDevice::Viewport(xna::Viewport const& viewport) {
-		if (!impl) return;
-
-		impl->_viewport = viewport;
-	}
-
-	void GraphicsDevice::UseVSync(bool value) {
-		if (!impl) return;
-
-		impl->vSyncValue = static_cast<UINT>(value);
-	}	
-
-	
-	sptr<xna::BlendState> GraphicsDevice::BlendState() const {
-		return impl->_blendState;
-	}
-	
-	void GraphicsDevice::BlendState(sptr<xna::BlendState> const& value) {
-		impl->_blendState = value;
-	}
-	
-	sptr<xna::DepthStencilState> GraphicsDevice::DepthStencilState() const {
-		return impl->_depthStencilState;
-	}
-	
-	void GraphicsDevice::DepthStencilState(sptr<xna::DepthStencilState> const& value) {
-		impl->_depthStencilState = value;
-	}
-	
-	sptr<xna::RasterizerState> GraphicsDevice::RasterizerState() const {
-		return impl->_rasterizerState;
-	}
-	
-	void GraphicsDevice::RasterizerState(sptr<xna::RasterizerState> const& value) {
-		impl->_rasterizerState = value;
-	}
-
-	sptr<SamplerStateCollection> GraphicsDevice::SamplerStates() const {
-		return impl->_samplerStates;
-	}
-
-	Int GraphicsDevice::MultiSampleMask() const {
-		return impl->_multiSampleMask;
-	}
-
-	void GraphicsDevice::MultiSampleMask(Int value) {
-		impl->_multiSampleMask = value;
-	}
-
-	void GraphicsDevice::Reset(sptr<PresentationParameters> const& presentationParameters, sptr<GraphicsAdapter> const& graphicsAdapter){
-		impl = unew<PlatformImplementation>();
-		impl->_adapter = graphicsAdapter;
-		impl->_presentationParameters = presentationParameters;
-		
-		Initialize();
+		samplerStates->Apply(*device);
 	}
 }

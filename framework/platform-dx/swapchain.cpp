@@ -48,7 +48,7 @@ namespace xna {
             Exception::Throw(Exception::UNABLE_TO_INITIALIZE);
         }
         
-        const auto parameters = m_device->impl->_presentationParameters;
+        const auto parameters = m_device->PresentParameters();
 
         impl->dxDescription.Width = static_cast<UINT>(parameters->BackBufferWidth);
         impl->dxDescription.Height = static_cast<UINT>(parameters->BackBufferHeight);
