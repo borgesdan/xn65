@@ -43,11 +43,11 @@ namespace xna {
 			return PresentationParameters();
 		}
 
-		void Clear(Color const& color);
+		void Clear(Color const& color) const;
 		void Clear(ClearOptions options, Color const& color, float depth, Int stencil);
 		void Clear(ClearOptions options, Vector4 const& color, float depth, Int stencil);
 		bool Initialize();
-		bool Present();
+		bool Present() const;
 
 		void Reset(sptr<PresentationParameters> const& presentationParameters, sptr<GraphicsAdapter> const& graphicsAdapter);
 

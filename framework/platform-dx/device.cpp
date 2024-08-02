@@ -168,13 +168,30 @@ namespace xna {
 
 		initAndApplyState(*impl, _this);
 
+		const auto currentPresenInterval = impl->_presentationParameters->PresentationInterval;		
+
+		switch (currentPresenInterval)
+		{
+		case PresentInterval::Default:
+		case PresentInterval::One:
+		case PresentInterval::Two:
+			impl->vSyncValue = 1;
+			break;
+		case PresentInterval::Immediate:
+			impl->vSyncValue = 0;
+			break;
+		default:
+			impl->vSyncValue = 1;
+			break;
+		}
+
 		return true;
 	}
 
-	bool GraphicsDevice::Present() {
-		if (!impl) return false;
-
-		const auto result = impl->_swapChain->Present(impl->_usevsync);
+	bool GraphicsDevice::Present() const {
+		const auto currentPresenInterval = impl->_presentationParameters->PresentationInterval;
+		bool result = impl->_swapChain->Present(impl->vSyncValue != 0);		
+		
 		impl->_context->OMSetRenderTargets(
 			1, 
 			impl->_renderTarget2D->render_impl->_renderTargetView.GetAddressOf(), 
@@ -183,7 +200,7 @@ namespace xna {
 		return result;
 	}		
 
-	void GraphicsDevice::Clear(Color const& color) {
+	void GraphicsDevice::Clear(Color const& color) const {
 		if (!impl) return;
 
 		const auto v4 = color.ToVector4();
@@ -241,10 +258,10 @@ namespace xna {
 		impl->_viewport = viewport;
 	}
 
-	void GraphicsDevice::UseVSync(bool use) {
+	void GraphicsDevice::UseVSync(bool value) {
 		if (!impl) return;
 
-		impl->_usevsync = use;
+		impl->vSyncValue = static_cast<UINT>(value);
 	}	
 
 	

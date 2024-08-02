@@ -11,7 +11,7 @@ namespace xna {
 		SwapChain(sptr<GraphicsDevice> const& device);
 		~SwapChain() override;
 		bool Initialize();
-		bool Present(bool vsync);
+		bool Present(bool vsync) const;
 		bool GetBackBuffer(Texture2D& texture2D);
 	public:
 		struct PlatformImplementation;

@@ -873,7 +873,7 @@ namespace xna {
 	private:
 		friend class GraphicsDevice;
 		float _backgroundColor[4] = { 0, 0, 0, 0 };
-		bool _usevsync{ true };
+		UINT vSyncValue = 1;
 	};
 
 	struct Game::PlatformImplementation {
