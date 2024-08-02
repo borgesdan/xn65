@@ -15,4 +15,12 @@ namespace xna {
 			? services[hashCode]
 			: std::any();
 	}
+
+	void GameServiceContainer::RemoveService(Type& type) {
+		auto hashCode = type.GetHashCode();
+
+		if (services.contains(hashCode))
+			services.erase(hashCode);
+
+	}
 }
