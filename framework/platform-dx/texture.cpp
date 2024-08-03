@@ -37,7 +37,7 @@ namespace xna {
 		return texture2d;
 	}
 
-	bool Texture2D::Initialize()
+	void Texture2D::Initialize()
 	{
 		if (!m_device || !m_device->impl->_device) {
 			Exception::Throw(Exception::UNABLE_TO_INITIALIZE);
@@ -62,7 +62,8 @@ namespace xna {
 			Exception::Throw(Exception::FAILED_TO_CREATE);
 		}
 
-		return true;
+		surfaceFormat = DxHelpers::SurfaceFormatToXna(impl->dxDescription.Format);
+		levelCount = static_cast<Int>(impl->dxShaderDescription.Texture2D.MipLevels);
 	}
 
 	void setDefaultDesc(Texture2D::PlatformImplementation& impl) {
@@ -79,24 +80,24 @@ namespace xna {
 		impl.dxShaderDescription.Texture2D.MostDetailedMip = 0;
 	}
 
-	Texture2D::Texture2D() : GraphicsResource(nullptr) {
+	Texture2D::Texture2D() : Texture(nullptr) {
 		impl = unew<PlatformImplementation>();
 		setDefaultDesc(*impl);
 	}
 
-	Texture2D::Texture2D(sptr<GraphicsDevice> const& device, size_t width, size_t height) : GraphicsResource(device) {		
+	Texture2D::Texture2D(sptr<GraphicsDevice> const& device, size_t width, size_t height) : Texture(device) {
 		impl = unew<PlatformImplementation>();
 		setDefaultDesc(*impl);
 		impl->dxDescription.Width = static_cast<UINT>(width);
 		impl->dxDescription.Height = static_cast<UINT>(height);
 	}
 
-	Texture2D::Texture2D(sptr<GraphicsDevice> const& device) : GraphicsResource(device) {
+	Texture2D::Texture2D(sptr<GraphicsDevice> const& device) : Texture(device) {
 		impl = unew<PlatformImplementation>();
 		setDefaultDesc(*impl);
 	}
 
-	Texture2D::Texture2D(sptr<GraphicsDevice> const& device, size_t width, size_t height, size_t mipMap, SurfaceFormat format) : GraphicsResource(device)
+	Texture2D::Texture2D(sptr<GraphicsDevice> const& device, size_t width, size_t height, size_t mipMap, SurfaceFormat format) : Texture(device)
 	{
 		impl = unew<PlatformImplementation>();
 		setDefaultDesc(*impl);
