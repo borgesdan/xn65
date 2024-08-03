@@ -20,14 +20,14 @@ namespace xna {
 			//graphics->Initialize();
 			graphics->ApplyChanges();
 
-			std::any device = graphicsDevice;
-			services->AddService(*typeof<GraphicsDevice>(), device);
+			std::any device = Device();
+			Services()->AddService(*typeof<GraphicsDevice>(), device);
 
 			Game::Initialize();
 		}
 
 		void LoadContent() override {
-			spriteBatch = snew<SpriteBatch>(graphicsDevice);
+			spriteBatch = snew<SpriteBatch>(Device());
 			Game::LoadContent();
 		}
 
@@ -39,7 +39,7 @@ namespace xna {
 		}
 
 		void Draw(GameTime const& gameTime) override {
-			graphicsDevice->Clear(Colors::CornflowerBlue);
+			Device()->Clear(Colors::CornflowerBlue);
 			Game::Draw(gameTime);
 		}
 

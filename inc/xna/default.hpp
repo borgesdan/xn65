@@ -194,6 +194,16 @@ namespace xna {
 	struct GamePadState;
 	struct KeyboardState;
 	struct MouseState;
+
+	using P_BlendState = sptr<BlendState>;
+	using P_DepthStencilState = sptr<DepthStencilState>;
+	using P_GraphicsAdapter = sptr<GraphicsAdapter>;
+	using P_GraphicsDevice = sptr<GraphicsDevice>;
+	using P_RasterizerState = sptr<RasterizerState>;
+	using P_PresentationParameters = sptr<PresentationParameters>;
+	using P_SamplerStateCollection = sptr<SamplerStateCollection>;
+	using P_Texture = sptr<Texture>;
+	using P_Texture2D = sptr<Texture2D>;
 }
 
 

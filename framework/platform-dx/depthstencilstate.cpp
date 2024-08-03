@@ -63,7 +63,7 @@ namespace xna {
 		}
 
 		if (!impl->dxDepthStencil) {
-			Exception::Throw(Exception::INVALID_OPERATION);
+			Initialize();
 		}
 
 		m_device->impl->_context->OMSetDepthStencilState(impl->dxDepthStencil.Get(), 0);

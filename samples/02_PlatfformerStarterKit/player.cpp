@@ -92,7 +92,7 @@ namespace PlatformerStarterKit {
         auto gamePadState = xna::GamePad::GetState(xna::PlayerIndex::One);
         auto keyboardState = xna::Keyboard::GetState();
         
-        movement = gamePadState.ThumbSticks.Left().X * MoveStickScale;
+        movement = gamePadState.ThumbSticks().Left().X * MoveStickScale;
                 
         if (std::abs(movement) < 0.5f)
             movement = 0.0f;

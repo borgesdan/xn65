@@ -48,7 +48,7 @@ namespace xna {
             Exception::Throw(Exception::UNABLE_TO_INITIALIZE);
         }
         
-        const auto parameters = m_device->impl->_presentationParameters;
+        const auto parameters = m_device->PresentParameters();
 
         impl->dxDescription.Width = static_cast<UINT>(parameters->BackBufferWidth);
         impl->dxDescription.Height = static_cast<UINT>(parameters->BackBufferHeight);
@@ -79,11 +79,13 @@ namespace xna {
         return !FAILED(hr);
     }
 
-    bool SwapChain::Present(bool vsync) {
+    bool SwapChain::Present(bool vsync) const {
         if (!impl || !impl->dxSwapChain)
             return false;
 
-        const auto hr = impl->dxSwapChain->Present(vsync, NULL);
+        const auto presentValue = static_cast<UINT>(vsync);
+
+        const auto hr = impl->dxSwapChain->Present(presentValue, NULL);
         return !FAILED(hr);
     }
 }

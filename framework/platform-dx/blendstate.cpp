@@ -122,7 +122,7 @@ namespace xna {
 		}
 
 		if (!impl->dxBlendState) {
-			Exception::Throw(Exception::INVALID_OPERATION);
+			Initialize();
 		}
 
 		m_device->impl->_context->OMSetBlendState(

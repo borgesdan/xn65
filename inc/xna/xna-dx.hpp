@@ -831,31 +831,14 @@ namespace xna {
 		uptr<DirectX::AudioEngine> _dxAudioEngine = nullptr;
 	};
 
-	struct GraphicsDevice::PlatformImplementation {
-		PlatformImplementation() {
-			_blendState = xna::BlendState::Opaque();
-			_depthStencilState = xna::DepthStencilState::Default();			
-			_rasterizerState = xna::RasterizerState::CullCounterClockwise();
-			_samplerStates = snew<SamplerStateCollection>();
-		}				
-
-	public:
+	struct GraphicsDevice::PlatformImplementation {			
 		comptr<ID3D11Device> _device = nullptr;
 		comptr<ID3D11DeviceContext> _context = nullptr;
-		comptr<IDXGIFactory1> _factory = nullptr;
-		
-		PBlendState _blendState = nullptr;
-		PRasterizerState _rasterizerState = nullptr;
-		PDepthStencilState _depthStencilState = nullptr;
-		PSamplerStateCollection _samplerStates = nullptr;
-		Int _multiSampleMask = 0xffffffff;
-		
+		comptr<IDXGIFactory1> _factory = nullptr;								
+
 		sptr<SwapChain> _swapChain = nullptr;
-		sptr<GraphicsAdapter> _adapter = nullptr;
 		sptr<RenderTarget2D> _renderTarget2D = nullptr;
-		intptr_t windowHandle{ 0 };
-		xna::Viewport _viewport{};
-		sptr<xna::PresentationParameters> _presentationParameters;
+		intptr_t windowHandle{ 0 };		
 		
 		D3D_FEATURE_LEVEL featureLevels[7] = 
 		{
@@ -873,7 +856,7 @@ namespace xna {
 	private:
 		friend class GraphicsDevice;
 		float _backgroundColor[4] = { 0, 0, 0, 0 };
-		bool _usevsync{ true };
+		UINT vSyncValue = 1;
 	};
 
 	struct Game::PlatformImplementation {

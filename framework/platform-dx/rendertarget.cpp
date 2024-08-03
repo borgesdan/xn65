@@ -37,8 +37,10 @@ namespace xna {
 			Exception::Throw(Exception::FAILED_TO_APPLY);
 		}
 
-		if(!render_impl->_renderTargetView)
-			Exception::Throw(Exception::INVALID_OPERATION);
+		if (!render_impl->_renderTargetView)
+		{
+			Initialize();
+		}
 
 		auto& context = m_device->impl->_context;
 		context->OMSetRenderTargets(1, render_impl->_renderTargetView.GetAddressOf(), nullptr);
