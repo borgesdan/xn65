@@ -202,6 +202,9 @@ namespace xna {
 	using P_RasterizerState = sptr<RasterizerState>;
 	using P_PresentationParameters = sptr<PresentationParameters>;
 	using P_SamplerStateCollection = sptr<SamplerStateCollection>;
+	using P_Stream = sptr<Stream>;
+	using P_MemoryStream = sptr<MemoryStream>;
+	using P_FileStream = sptr<FileStream>;
 	using P_Texture = sptr<Texture>;
 	using P_Texture2D = sptr<Texture2D>;
 }
