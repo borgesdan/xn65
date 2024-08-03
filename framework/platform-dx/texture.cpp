@@ -1,7 +1,8 @@
 #include "xna/xna-dx.hpp"
 
 namespace xna {	
-	static HRESULT internalSetData(Texture2D::PlatformImplementation& impl, GraphicsDevice& device, UINT const* data);
+	static void setDefaultTexture2DDesc(Texture2D::PlatformImplementation& impl);
+	static HRESULT internalTexture2DSetData(Texture2D::PlatformImplementation& impl, GraphicsDevice& device, UINT const* data);
 
 	void Texture2D::Initialize()
 	{
@@ -30,43 +31,29 @@ namespace xna {
 
 		surfaceFormat = DxHelpers::SurfaceFormatToXna(impl->dxDescription.Format);
 		levelCount = static_cast<Int>(impl->dxShaderDescription.Texture2D.MipLevels);
-	}
-
-	void setDefaultDesc(Texture2D::PlatformImplementation& impl) {
-		impl.dxDescription.MipLevels = 1;
-		impl.dxDescription.ArraySize = 1;
-		impl.dxDescription.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-		impl.dxDescription.SampleDesc.Count = 1;
-		impl.dxDescription.Usage = D3D11_USAGE_DEFAULT;
-		impl.dxDescription.BindFlags = D3D11_BIND_SHADER_RESOURCE;
-	
-		impl.dxShaderDescription.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-		impl.dxShaderDescription.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
-		impl.dxShaderDescription.Texture2D.MipLevels = impl.dxDescription.MipLevels;
-		impl.dxShaderDescription.Texture2D.MostDetailedMip = 0;
-	}
+	}	
 
 	Texture2D::Texture2D() : Texture(nullptr) {
 		impl = unew<PlatformImplementation>();
-		setDefaultDesc(*impl);
+		setDefaultTexture2DDesc(*impl);
 	}
 
 	Texture2D::Texture2D(sptr<GraphicsDevice> const& device, size_t width, size_t height) : Texture(device) {
 		impl = unew<PlatformImplementation>();
-		setDefaultDesc(*impl);
+		setDefaultTexture2DDesc(*impl);
 		impl->dxDescription.Width = static_cast<UINT>(width);
 		impl->dxDescription.Height = static_cast<UINT>(height);
 	}
 
 	Texture2D::Texture2D(sptr<GraphicsDevice> const& device) : Texture(device) {
 		impl = unew<PlatformImplementation>();
-		setDefaultDesc(*impl);
+		setDefaultTexture2DDesc(*impl);
 	}
 
 	Texture2D::Texture2D(sptr<GraphicsDevice> const& device, size_t width, size_t height, size_t mipMap, SurfaceFormat format) : Texture(device)
 	{
 		impl = unew<PlatformImplementation>();
-		setDefaultDesc(*impl);
+		setDefaultTexture2DDesc(*impl);
 		impl->dxDescription.Width = static_cast<UINT>(width);
 		impl->dxDescription.Height = static_cast<UINT>(height);
 		impl->dxDescription.MipLevels = static_cast<UINT>(mipMap);
@@ -79,7 +66,7 @@ namespace xna {
 			Exception::Throw(Exception::INVALID_OPERATION);
 		}		
 
-		internalSetData(*impl, *m_device, data.data());
+		internalTexture2DSetData(*impl, *m_device, data.data());
 	}
 
 	void Texture2D::SetData(std::vector<Byte> const& data, size_t startIndex, size_t elementCount)
@@ -100,7 +87,7 @@ namespace xna {
 			++fIndex;
 		}
 
-		internalSetData(*impl, *m_device, finalData.data());
+		internalTexture2DSetData(*impl, *m_device, finalData.data());
 	}	
 
 	void Texture2D::SetData(Int level, Rectangle* rect, std::vector<Byte> const& data, size_t startIndex, size_t elementCount)
@@ -175,7 +162,7 @@ namespace xna {
 			++finalDataIndex;
 		}	
 
-		internalSetData(*impl, *m_device, finalData.data());
+		internalTexture2DSetData(*impl, *m_device, finalData.data());
 	}
 
 	P_Texture2D Texture2D::FromStream(GraphicsDevice& device, P_Stream const& stream)
@@ -267,7 +254,7 @@ namespace xna {
 		);
 	}
 
-	HRESULT internalSetData(Texture2D::PlatformImplementation& impl, GraphicsDevice& device, UINT const* data)
+	HRESULT internalTexture2DSetData(Texture2D::PlatformImplementation& impl, GraphicsDevice& device, UINT const* data)
 	{
 		if (!impl.dxTexture2D) {
 			auto hr = device.impl->_device->CreateTexture2D(&impl.dxDescription, nullptr, impl.dxTexture2D.ReleaseAndGetAddressOf());
@@ -297,5 +284,19 @@ namespace xna {
 		impl.dxTexture2D->GetDesc(&impl.dxDescription);
 
 		return NO_ERROR;
+	}
+
+	void setDefaultTexture2DDesc(Texture2D::PlatformImplementation& impl) {
+		impl.dxDescription.MipLevels = 1;
+		impl.dxDescription.ArraySize = 1;
+		impl.dxDescription.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+		impl.dxDescription.SampleDesc.Count = 1;
+		impl.dxDescription.Usage = D3D11_USAGE_DEFAULT;
+		impl.dxDescription.BindFlags = D3D11_BIND_SHADER_RESOURCE;
+
+		impl.dxShaderDescription.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+		impl.dxShaderDescription.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+		impl.dxShaderDescription.Texture2D.MipLevels = impl.dxDescription.MipLevels;
+		impl.dxShaderDescription.Texture2D.MostDetailedMip = 0;
 	}
 }
