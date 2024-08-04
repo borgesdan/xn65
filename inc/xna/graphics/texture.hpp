@@ -8,9 +8,7 @@ namespace xna {
 	//Represents a texture resource. 
 	class Texture : public GraphicsResource {
 	public:
-		Texture(P_GraphicsDevice const& graphicsDevice) : GraphicsResource(graphicsDevice) {}
-
-		virtual ~Texture() {}
+		Texture(P_GraphicsDevice const& graphicsDevice) : GraphicsResource(graphicsDevice) {}		
 
 		//Gets the format of the texture data.
 		virtual SurfaceFormat Format() const = 0;
@@ -24,16 +22,14 @@ namespace xna {
 		Texture2D();
 		Texture2D(P_GraphicsDevice const& device);
 		Texture2D(P_GraphicsDevice const& device, size_t width, size_t height);
-		Texture2D(P_GraphicsDevice const& device, size_t width, size_t height, size_t mipMap, SurfaceFormat format);	
-
-		~Texture2D() override {}
+		Texture2D(P_GraphicsDevice const& device, size_t width, size_t height, size_t mipMap, SurfaceFormat format);			
 
 		//Gets the width of this texture resource, in pixels.
-		Int Width() const;
+		constexpr Int Width() const { return width; }
 		//Gets the height of this texture resource, in pixels.
-		Int Height() const;
+		constexpr Int Height() const { return height; }
 		//Gets the size of this resource.
-		Rectangle Bounds() const;
+		constexpr Rectangle Bounds() const { return { 0, 0, width, height }; }
 		//Gets the format of the texture data.
 		constexpr SurfaceFormat Format() const override { return surfaceFormat; }
 		//Gets the number of texture levels in a multilevel texture. 
@@ -57,9 +53,11 @@ namespace xna {
 		
 		void Initialize();
 
-	private:
+	protected:
 		SurfaceFormat surfaceFormat{ SurfaceFormat::Color };
 		Int levelCount{ 0 };
+		int width{ 0 };
+		int height{ 0 };
 
 	public:
 		struct PlatformImplementation;

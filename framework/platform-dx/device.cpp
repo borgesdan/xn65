@@ -87,7 +87,7 @@ namespace xna {
 		
 		impl->_context->OMSetRenderTargets(
 			1, 
-			impl->_renderTarget2D->render_impl->_renderTargetView.GetAddressOf(), 
+			impl->_renderTarget2D->impl2->_renderTargetView.GetAddressOf(), 
 			nullptr);
 
 		return result;
@@ -104,7 +104,7 @@ namespace xna {
 		impl->_backgroundColor[3] = v4.W;
 		
 		impl->_context->ClearRenderTargetView(
-			impl->_renderTarget2D->render_impl->_renderTargetView.Get(),
+			impl->_renderTarget2D->impl2->_renderTargetView.Get(),
 			impl->_backgroundColor);
 	}
 

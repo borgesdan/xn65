@@ -1,49 +1,49 @@
 #include "xna/xna-dx.hpp"
 
 namespace xna {
-	RenderTarget2D::RenderTarget2D() : Texture2D() {
-		render_impl = unew<PlatformImplementation>();
-	}
-
 	RenderTarget2D::RenderTarget2D(sptr<GraphicsDevice> const& device) : Texture2D(device) {
-		render_impl = unew<PlatformImplementation>();
-	}
+		impl2 = unew<PlatformImplementation>();
+	}	
 
-	RenderTarget2D::~RenderTarget2D() {
-		render_impl = nullptr;
-	}
-
-	bool RenderTarget2D::Initialize() {
+	void RenderTarget2D::Initialize() {
 		if (!impl || !m_device || !m_device->impl->_device) {
 			Exception::Throw(Exception::UNABLE_TO_INITIALIZE);
 		}		
 
-		if (!m_device->impl->_swapChain->impl->GetBackBuffer(impl->dxTexture2D))
-			return false;
+		auto& swapChain = m_device->impl->_swapChain;
 
+		if (!swapChain->impl->GetBackBuffer(impl->dxTexture2D))
+		{
+			Exception::Throw(Exception::FAILED_TO_CREATE);
+		}
+
+		impl->dxTexture2D->GetDesc(&impl->dxDescription);
 		auto& dxdevice = m_device->impl->_device;
 		
-		const auto hr = dxdevice->CreateRenderTargetView(impl->dxTexture2D.Get(), NULL, render_impl->_renderTargetView.ReleaseAndGetAddressOf());
+		const auto hr = dxdevice->CreateRenderTargetView(impl->dxTexture2D.Get(), NULL, impl2->_renderTargetView.ReleaseAndGetAddressOf());
 
 		if (FAILED(hr)) {
 			Exception::Throw(Exception::FAILED_TO_CREATE);
 		}
 
-		return true;
+		impl2->_renderTargetView->GetDesc(&impl2->_renderTargetDesc);
+
+		//depthStencilFormat = DepthFormat::None;
+		multiSampleCount = impl->dxDescription.SampleDesc.Count;
+		//targetUsage = RenderTargetUsage::DiscardContent;
 	}
 
-	bool RenderTarget2D::Apply() {
+	void RenderTarget2D::Apply() {
 		if (!m_device || !m_device->impl->_context) {
 			Exception::Throw(Exception::FAILED_TO_APPLY);
 		}
 
-		if (!render_impl->_renderTargetView)
+		if (!impl2->_renderTargetView)
 		{
 			Initialize();
 		}
 
 		auto& context = m_device->impl->_context;
-		context->OMSetRenderTargets(1, render_impl->_renderTargetView.GetAddressOf(), nullptr);
-		return true;
+		context->OMSetRenderTargets(1, impl2->_renderTargetView.GetAddressOf(), nullptr);		
 	}
 }

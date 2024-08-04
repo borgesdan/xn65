@@ -31,6 +31,8 @@ namespace xna {
 
 		surfaceFormat = DxHelpers::SurfaceFormatToXna(impl->dxDescription.Format);
 		levelCount = static_cast<Int>(impl->dxShaderDescription.Texture2D.MipLevels);
+		width = static_cast<Int>(impl->dxDescription.Width);
+		height = static_cast<Int>(impl->dxDescription.Height);
 	}	
 
 	Texture2D::Texture2D() : Texture(nullptr) {
@@ -236,23 +238,7 @@ namespace xna {
 		texture2d->impl->dxDescription = desc;
 
 		return texture2d;
-	}	
-
-	Int Texture2D::Width() const {
-		return static_cast<Int>(impl->dxDescription.Width);
-	}
-
-	Int Texture2D::Height() const {
-		return static_cast<Int>(impl->dxDescription.Height);
-	}
-
-	Rectangle Texture2D::Bounds() const {
-		return Rectangle(
-			0, 0,
-			static_cast<Int>(impl->dxDescription.Width),
-			static_cast<Int>(impl->dxDescription.Height)
-		);
-	}
+	}		
 
 	HRESULT internalTexture2DSetData(Texture2D::PlatformImplementation& impl, GraphicsDevice& device, UINT const* data)
 	{
