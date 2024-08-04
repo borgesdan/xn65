@@ -1,41 +1,8 @@
 #include "xna/xna-dx.hpp"
 
 namespace xna {	
-	Texture2D::~Texture2D() {
-		impl = nullptr;
-	}
-
-	sptr<Texture2D> Texture2D::FromStream(GraphicsDevice& device, String const& fileName)
-	{		
-		auto _this = device.shared_from_this();
-		auto texture2d = snew<Texture2D>(_this);
-		comptr<ID3D11Resource> resource = nullptr;		
-		auto wstr = XnaHelper::ToWString(fileName);
-		
-		HRESULT result = DirectX::CreateWICTextureFromFile(
-			device.impl->_device.Get(),
-			device.impl->_context.Get(),
-			wstr.c_str(),
-			resource.GetAddressOf(),
-			texture2d->impl->dxShaderResource.ReleaseAndGetAddressOf(),
-			0U);		
-
-		if (FAILED(result)) {	
-			return nullptr;
-		}
-		
-		result = resource->QueryInterface(IID_ID3D11Texture2D, (void**)texture2d->impl->dxTexture2D.ReleaseAndGetAddressOf());
-
-		if (FAILED(result)) {
-			return nullptr;
-		}
-
-		D3D11_TEXTURE2D_DESC desc;
-		texture2d->impl->dxTexture2D->GetDesc(&desc);
-		texture2d->impl->dxDescription = desc;		
-
-		return texture2d;
-	}
+	static void setDefaultTexture2DDesc(Texture2D::PlatformImplementation& impl);
+	static HRESULT internalTexture2DSetData(Texture2D::PlatformImplementation& impl, GraphicsDevice& device, UINT const* data);
 
 	void Texture2D::Initialize()
 	{
@@ -64,80 +31,36 @@ namespace xna {
 
 		surfaceFormat = DxHelpers::SurfaceFormatToXna(impl->dxDescription.Format);
 		levelCount = static_cast<Int>(impl->dxShaderDescription.Texture2D.MipLevels);
-	}
-
-	void setDefaultDesc(Texture2D::PlatformImplementation& impl) {
-		impl.dxDescription.MipLevels = 1;
-		impl.dxDescription.ArraySize = 1;
-		impl.dxDescription.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-		impl.dxDescription.SampleDesc.Count = 1;
-		impl.dxDescription.Usage = D3D11_USAGE_DEFAULT;
-		impl.dxDescription.BindFlags = D3D11_BIND_SHADER_RESOURCE;
-	
-		impl.dxShaderDescription.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-		impl.dxShaderDescription.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
-		impl.dxShaderDescription.Texture2D.MipLevels = impl.dxDescription.MipLevels;
-		impl.dxShaderDescription.Texture2D.MostDetailedMip = 0;
-	}
+		width = static_cast<Int>(impl->dxDescription.Width);
+		height = static_cast<Int>(impl->dxDescription.Height);
+	}	
 
 	Texture2D::Texture2D() : Texture(nullptr) {
 		impl = unew<PlatformImplementation>();
-		setDefaultDesc(*impl);
+		setDefaultTexture2DDesc(*impl);
 	}
 
 	Texture2D::Texture2D(sptr<GraphicsDevice> const& device, size_t width, size_t height) : Texture(device) {
 		impl = unew<PlatformImplementation>();
-		setDefaultDesc(*impl);
+		setDefaultTexture2DDesc(*impl);
 		impl->dxDescription.Width = static_cast<UINT>(width);
 		impl->dxDescription.Height = static_cast<UINT>(height);
 	}
 
 	Texture2D::Texture2D(sptr<GraphicsDevice> const& device) : Texture(device) {
 		impl = unew<PlatformImplementation>();
-		setDefaultDesc(*impl);
+		setDefaultTexture2DDesc(*impl);
 	}
 
 	Texture2D::Texture2D(sptr<GraphicsDevice> const& device, size_t width, size_t height, size_t mipMap, SurfaceFormat format) : Texture(device)
 	{
 		impl = unew<PlatformImplementation>();
-		setDefaultDesc(*impl);
+		setDefaultTexture2DDesc(*impl);
 		impl->dxDescription.Width = static_cast<UINT>(width);
 		impl->dxDescription.Height = static_cast<UINT>(height);
 		impl->dxDescription.MipLevels = static_cast<UINT>(mipMap);
 		impl->dxDescription.Format = DxHelpers::SurfaceFormatToDx(format);
-	}
-
-	HRESULT internalSetData(Texture2D::PlatformImplementation& impl, GraphicsDevice& device,  UINT const* data)
-	{
-		if (!impl.dxTexture2D) {
-			auto hr = device.impl->_device->CreateTexture2D(&impl.dxDescription, nullptr, impl.dxTexture2D.ReleaseAndGetAddressOf());
-
-			if (FAILED(hr)) {
-				Exception::Throw(Exception::FAILED_TO_CREATE);
-			}
-		}
-
-		comptr<ID3D11Resource> resource = nullptr;
-		auto hr = impl.dxTexture2D->QueryInterface(IID_ID3D11Resource, (void**)resource.GetAddressOf());
-
-		if (FAILED(hr)) {
-			Exception::Throw(Exception::INVALID_OPERATION);
-		}
-
-		constexpr int R8G8B8A8U_BYTE_SIZE = 4;
-		device.impl->_context->UpdateSubresource(resource.Get(), 0, nullptr, data, impl.dxDescription.Width * R8G8B8A8U_BYTE_SIZE, 0);		
-
-		impl.dxShaderDescription.Texture2D.MipLevels = impl.dxDescription.MipLevels;
-		hr = device.impl->_device->CreateShaderResourceView(resource.Get(), &impl.dxShaderDescription, impl.dxShaderResource.ReleaseAndGetAddressOf());		
-
-		if (FAILED(hr)) {
-			Exception::Throw(Exception::FAILED_TO_CREATE);
-		}
-
-		impl.dxTexture2D->GetDesc(&impl.dxDescription);
-
-		return NO_ERROR;
-	}
+	}	
 
 	void Texture2D::SetData(std::vector<Uint> const& data, size_t startIndex, size_t elementCount)
 	{
@@ -145,7 +68,7 @@ namespace xna {
 			Exception::Throw(Exception::INVALID_OPERATION);
 		}		
 
-		internalSetData(*impl, *m_device, data.data());
+		internalTexture2DSetData(*impl, *m_device, data.data());
 	}
 
 	void Texture2D::SetData(std::vector<Byte> const& data, size_t startIndex, size_t elementCount)
@@ -166,8 +89,8 @@ namespace xna {
 			++fIndex;
 		}
 
-		internalSetData(*impl, *m_device, finalData.data());
-	}
+		internalTexture2DSetData(*impl, *m_device, finalData.data());
+	}	
 
 	void Texture2D::SetData(Int level, Rectangle* rect, std::vector<Byte> const& data, size_t startIndex, size_t elementCount)
 	{
@@ -241,10 +164,51 @@ namespace xna {
 			++finalDataIndex;
 		}	
 
-		internalSetData(*impl, *m_device, finalData.data());
+		internalTexture2DSetData(*impl, *m_device, finalData.data());
 	}
 
-	sptr<Texture2D> Texture2D::FromMemory(GraphicsDevice& device, std::vector<Byte> const& data)
+	P_Texture2D Texture2D::FromStream(GraphicsDevice& device, P_Stream const& stream)
+	{
+		std::vector<Byte> data;
+		const auto lenght = stream->Length();
+		stream->Read(data, 0, lenght - 1);
+
+		return FromStream(device, data);
+	}
+
+	sptr<Texture2D> Texture2D::FromStream(GraphicsDevice& device, String const& fileName)
+	{
+		auto _this = device.shared_from_this();
+		auto texture2d = snew<Texture2D>(_this);
+		comptr<ID3D11Resource> resource = nullptr;
+		auto wstr = XnaHelper::ToWString(fileName);
+
+		HRESULT result = DirectX::CreateWICTextureFromFile(
+			device.impl->_device.Get(),
+			device.impl->_context.Get(),
+			wstr.c_str(),
+			resource.GetAddressOf(),
+			texture2d->impl->dxShaderResource.ReleaseAndGetAddressOf(),
+			0U);
+
+		if (FAILED(result)) {
+			return nullptr;
+		}
+
+		result = resource->QueryInterface(IID_ID3D11Texture2D, (void**)texture2d->impl->dxTexture2D.ReleaseAndGetAddressOf());
+
+		if (FAILED(result)) {
+			return nullptr;
+		}
+
+		D3D11_TEXTURE2D_DESC desc;
+		texture2d->impl->dxTexture2D->GetDesc(&desc);
+		texture2d->impl->dxDescription = desc;
+
+		return texture2d;
+	}
+
+	sptr<Texture2D> Texture2D::FromStream(GraphicsDevice& device, std::vector<Byte> const& data)
 	{
 		auto _this = device.shared_from_this();
 		auto texture2d = snew<Texture2D>(_this);
@@ -274,27 +238,51 @@ namespace xna {
 		texture2d->impl->dxDescription = desc;
 
 		return texture2d;
-	}	
+	}		
 
-	Int Texture2D::Width() const {
-		if (!impl) return 0;
+	HRESULT internalTexture2DSetData(Texture2D::PlatformImplementation& impl, GraphicsDevice& device, UINT const* data)
+	{
+		if (!impl.dxTexture2D) {
+			auto hr = device.impl->_device->CreateTexture2D(&impl.dxDescription, nullptr, impl.dxTexture2D.ReleaseAndGetAddressOf());
 
-		return static_cast<Int>(impl->dxDescription.Width);
+			if (FAILED(hr)) {
+				Exception::Throw(Exception::FAILED_TO_CREATE);
+			}
+		}
+
+		comptr<ID3D11Resource> resource = nullptr;
+		auto hr = impl.dxTexture2D->QueryInterface(IID_ID3D11Resource, (void**)resource.GetAddressOf());
+
+		if (FAILED(hr)) {
+			Exception::Throw(Exception::INVALID_OPERATION);
+		}
+
+		constexpr int R8G8B8A8U_BYTE_SIZE = 4;
+		device.impl->_context->UpdateSubresource(resource.Get(), 0, nullptr, data, impl.dxDescription.Width * R8G8B8A8U_BYTE_SIZE, 0);
+
+		impl.dxShaderDescription.Texture2D.MipLevels = impl.dxDescription.MipLevels;
+		hr = device.impl->_device->CreateShaderResourceView(resource.Get(), &impl.dxShaderDescription, impl.dxShaderResource.ReleaseAndGetAddressOf());
+
+		if (FAILED(hr)) {
+			Exception::Throw(Exception::FAILED_TO_CREATE);
+		}
+
+		impl.dxTexture2D->GetDesc(&impl.dxDescription);
+
+		return NO_ERROR;
 	}
 
-	Int Texture2D::Height() const {
-		if (!impl) return 0;
+	void setDefaultTexture2DDesc(Texture2D::PlatformImplementation& impl) {
+		impl.dxDescription.MipLevels = 1;
+		impl.dxDescription.ArraySize = 1;
+		impl.dxDescription.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+		impl.dxDescription.SampleDesc.Count = 1;
+		impl.dxDescription.Usage = D3D11_USAGE_DEFAULT;
+		impl.dxDescription.BindFlags = D3D11_BIND_SHADER_RESOURCE;
 
-		return static_cast<Int>(impl->dxDescription.Height);
-	}
-
-	Rectangle Texture2D::Bounds() const {
-		if (!impl) return {};
-
-		return Rectangle(
-			0, 0,
-			static_cast<Int>(impl->dxDescription.Width),
-			static_cast<Int>(impl->dxDescription.Height)
-		);
+		impl.dxShaderDescription.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+		impl.dxShaderDescription.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+		impl.dxShaderDescription.Texture2D.MipLevels = impl.dxDescription.MipLevels;
+		impl.dxShaderDescription.Texture2D.MostDetailedMip = 0;
 	}
 }

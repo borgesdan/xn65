@@ -11,8 +11,8 @@ namespace xna {
 	}
 
 	int LzxDecoder::Decompress(Stream* inData, int inLen, Stream* outData, int outLen) {
-		auto input = reinterpret_cast<mspack_file*>(inData->Data());
-		auto output = reinterpret_cast<mspack_file*>(outData->Data());
+		mspack_file* input = nullptr;
+		mspack_file* output = nullptr;
 
 		auto lzxstream = lzxd_init(
 			//struct mspack_system* system,

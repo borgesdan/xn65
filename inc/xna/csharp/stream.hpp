@@ -38,9 +38,7 @@ namespace xna {
 		virtual void Write(std::vector<Byte> const& buffer, Int offset, Int count) = 0;
 		
 		//Writes a byte to the current position in the stream and advances the position within the stream by one byte.
-		virtual void WriteByte(Byte value) = 0;
-
-		virtual void* Data() = 0;
+		virtual void WriteByte(Byte value) = 0;		
 	};
 
 	//A simplified port of the System.IO.MemoryStream.
@@ -84,10 +82,6 @@ namespace xna {
 		virtual void Write(Byte const* buffer, Int bufferLength, Int offset, Int count) override;
 		virtual void Write(std::vector<Byte> const& buffer, Int offset, Int count) override;
 		virtual void WriteByte(Byte value) override;
-	
-		virtual void* Data() override {
-			return _buffer.data();
-		}
 
 	public:
 		std::vector<Byte> _buffer;
@@ -125,11 +119,7 @@ namespace xna {
 		virtual Int ReadByte() override;
 		virtual void Write(Byte const* buffer, Int bufferLength, Int offset, Int count) override;
 		virtual void Write(std::vector<Byte> const& buffer, Int offset, Int count) override;
-		virtual void WriteByte(Byte value) override;
-
-		virtual void* Data() override {
-			return _fstream.rdbuf();
-		}
+		virtual void WriteByte(Byte value) override;		
 
 	public:
 		std::fstream _fstream;

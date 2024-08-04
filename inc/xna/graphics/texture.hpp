@@ -8,38 +8,56 @@ namespace xna {
 	//Represents a texture resource. 
 	class Texture : public GraphicsResource {
 	public:
-		Texture(P_GraphicsDevice const& graphicsDevice) : GraphicsResource(graphicsDevice) {}
-
-		virtual ~Texture() {}
+		Texture(P_GraphicsDevice const& graphicsDevice) : GraphicsResource(graphicsDevice) {}		
 
 		//Gets the format of the texture data.
-		constexpr SurfaceFormat Format() const { return surfaceFormat; }
+		virtual SurfaceFormat Format() const = 0;
 		//Gets the number of texture levels in a multilevel texture. 
-		constexpr Int LevelCount() const { return levelCount; }
-
-	protected:
-		SurfaceFormat surfaceFormat{SurfaceFormat::Color};
-		Int levelCount{ 0 };
+		virtual Int LevelCount() const = 0;
 	};
 
+	//Represents a 2D grid of texels. 
 	class Texture2D : public Texture {
 	public:
 		Texture2D();
 		Texture2D(P_GraphicsDevice const& device);
 		Texture2D(P_GraphicsDevice const& device, size_t width, size_t height);
-		Texture2D(P_GraphicsDevice const& device, size_t width, size_t height, size_t mipMap, SurfaceFormat format);
-		~Texture2D() override;
-		Int Width() const;
-		Int Height() const;
-		Rectangle Bounds() const;
+		Texture2D(P_GraphicsDevice const& device, size_t width, size_t height, size_t mipMap, SurfaceFormat format);			
+
+		//Gets the width of this texture resource, in pixels.
+		constexpr Int Width() const { return width; }
+		//Gets the height of this texture resource, in pixels.
+		constexpr Int Height() const { return height; }
+		//Gets the size of this resource.
+		constexpr Rectangle Bounds() const { return { 0, 0, width, height }; }
+		//Gets the format of the texture data.
+		constexpr SurfaceFormat Format() const override { return surfaceFormat; }
+		//Gets the number of texture levels in a multilevel texture. 
+		constexpr Int LevelCount() const { return levelCount; }
+
+		//Sets data to the texture.
 		void SetData(std::vector<Color> const& data, size_t startIndex = 0, size_t elementCount = 0);
+		//Sets data to the texture.
 		void SetData(std::vector<Uint> const& data, size_t startIndex = 0, size_t elementCount = 0);
+		//Sets data to the texture.
 		void SetData(std::vector<Byte> const& data, size_t startIndex = 0, size_t elementCount = 0);
+		//Sets data to the texture.
 		void SetData(Int level, Rectangle* rect, std::vector<Byte> const& data, size_t startIndex, size_t elementCount);
-		static P_Texture2D FromStream(GraphicsDevice& device, String const& fileName);
-		static P_Texture2D FromMemory(GraphicsDevice& device, std::vector<Byte> const& data);	
 		
-	void Initialize();
+		//Loads texture data from a stream. 
+		static P_Texture2D FromStream(GraphicsDevice& device, P_Stream const& stream);
+		//Loads texture data from a file. 
+		static P_Texture2D FromStream(GraphicsDevice& device, String const& fileName);
+		//Loads texture data from a data. 
+		static P_Texture2D FromStream(GraphicsDevice& device, std::vector<Byte> const& data);	
+		
+		void Initialize();
+
+	protected:
+		SurfaceFormat surfaceFormat{ SurfaceFormat::Color };
+		Int levelCount{ 0 };
+		int width{ 0 };
+		int height{ 0 };
 
 	public:
 		struct PlatformImplementation;
