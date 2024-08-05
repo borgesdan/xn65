@@ -35,34 +35,42 @@ namespace xna {
 	{
 		if (!m_device || !m_device->impl->_device) {
 			Exception::Throw(Exception::UNABLE_TO_INITIALIZE);
-		}
+		}		
+
+		auto& deviceImpl = m_device->impl;
 
 		HRESULT hr = 0;
-
+		
 		if (!impl->dxTexture2D) {
-			hr = m_device->impl->_device->CreateTexture2D(&impl->dxDescription, nullptr, impl->dxTexture2D.ReleaseAndGetAddressOf());
+			hr = deviceImpl->_device->CreateTexture2D(
+				&impl->dxDescription, 
+				nullptr, 
+				impl->dxTexture2D.ReleaseAndGetAddressOf());
 
-			if (FAILED(hr)) {
+			if FAILED(hr) 
 				Exception::Throw(Exception::FAILED_TO_CREATE);
-			}
 		}
 		else {
+			//Updates description if texture is not null
 			impl->dxTexture2D->GetDesc(&impl->dxDescription);
 		}
 
 		comptr<ID3D11Resource> resource = nullptr;
 		hr = impl->dxTexture2D->QueryInterface(IID_ID3D11Resource, (void**)resource.GetAddressOf());
 
-		if (FAILED(hr)) {
+		if FAILED(hr)
 			Exception::Throw(Exception::INVALID_OPERATION);
-		}
 		
+		//Only initializes if it is a ShaderResource
 		if (impl->dxDescription.BindFlags & D3D11_BIND_SHADER_RESOURCE) {
-			hr = m_device->impl->_device->CreateShaderResourceView(resource.Get(), &impl->dxShaderDescription, impl->dxShaderResource.ReleaseAndGetAddressOf());
+			hr = deviceImpl->_device->CreateShaderResourceView(
+				resource.Get(), 
+				&impl->dxShaderDescription,
+				impl->dxShaderResource.ReleaseAndGetAddressOf());
 
-			if (FAILED(hr)) {
+			if FAILED(hr)
 				Exception::Throw(Exception::FAILED_TO_CREATE);
-			}
+			
 		}		
 
 		surfaceFormat = DxHelpers::SurfaceFormatToXna(impl->dxDescription.Format);
