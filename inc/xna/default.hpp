@@ -207,6 +207,7 @@ namespace xna {
 	using P_FileStream = sptr<FileStream>;
 	using P_Texture = sptr<Texture>;
 	using P_Texture2D = sptr<Texture2D>;
+	using P_RenderTarget2D = sptr<RenderTarget2D>;
 }
 
 

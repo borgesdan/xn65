@@ -54,8 +54,7 @@ namespace xna {
 		if (FAILED(hr)) 
 			Exception::Throw(Exception::FAILED_TO_MAKE_WINDOW_ASSOCIATION);		
 		
-		impl->_renderTarget2D = snew<RenderTarget2D>(_this);
-		impl->_renderTarget2D->Initialize();
+		impl->_renderTarget2D = RenderTarget2D::FromBackBuffer(_this);
 		impl->_renderTarget2D->Apply();
 
 		D3D11_VIEWPORT view = DxHelpers::ViewportToDx(viewport);
