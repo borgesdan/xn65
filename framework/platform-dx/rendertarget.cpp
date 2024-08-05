@@ -30,6 +30,9 @@ namespace xna {
 			Exception::Throw(Exception::UNABLE_TO_INITIALIZE);
 		}				
 
+		if (impl2->_renderTargetView)
+			return;
+
 		impl->dxDescription.Width = width;
 		impl->dxDescription.Height = height;
 		impl->dxDescription.BindFlags = D3D11_BIND_FLAG::D3D11_BIND_RENDER_TARGET;

@@ -101,13 +101,19 @@ namespace xna {
 		//Render Target
 		//
 
-		impl->_renderTarget2D = RenderTarget2D::FromBackBuffer(_this);
+		if (renderTarget) {
+			renderTarget->Initialize();
+			impl->_renderTarget2D = renderTarget;
+		}
+		else {
+			impl->_renderTarget2D = RenderTarget2D::FromBackBuffer(_this);
+		}
+
 		const auto& renderView = impl->_renderTarget2D->impl2->_renderTargetView;
 		impl->_context->OMSetRenderTargets(1, renderView.GetAddressOf(), nullptr);
 	}
 
 	bool GraphicsDevice::Present() const {
-		const auto currentPresenInterval = presentationParameters->PresentationInterval;
 		bool result = impl->_swapChain->Present(impl->vSyncValue != 0);		
 		
 		impl->_context->OMSetRenderTargets(

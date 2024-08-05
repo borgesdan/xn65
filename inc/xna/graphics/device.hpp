@@ -45,7 +45,9 @@ namespace xna {
 		constexpr xna::Viewport Viewport() const { return viewport; }
 		//Gets or sets a viewport identifying the portion of the render target to receive draw calls. 
 		void Viewport(xna::Viewport const& viewport);
-		
+		//Sets a new render target for this GraphicsDevice. 
+		void SetRenderTarget(P_RenderTarget2D const& renderTarget) { this->renderTarget = renderTarget; }
+
 		void Initialize();
 
 	private:
@@ -55,6 +57,7 @@ namespace xna {
 		P_RasterizerState rasterizerState{ nullptr };
 		P_SamplerStateCollection samplerStateCollection{ nullptr };
 		P_PresentationParameters presentationParameters{ nullptr };
+		P_RenderTarget2D renderTarget{ nullptr };
 		GraphicsProfile graphicsProfile{ GraphicsProfile::HiDef };
 		xna::Viewport viewport{};
 
