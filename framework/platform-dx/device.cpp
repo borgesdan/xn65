@@ -22,45 +22,60 @@ namespace xna {
 	}
 
 	void GraphicsDevice::Initialize() {
-		auto _this = shared_from_this();		
-
-		reset(*impl);		
-		createDevice(*impl, *adapter);
-
-		auto hr = CreateDXGIFactory1(__uuidof(IDXGIFactory1), (void**)&impl->_factory);
+		reset(*impl);
 		
-		if FAILED(hr)
-			Exception::Throw(Exception::FAILED_TO_CREATE);		
-
-		viewport = xna::Viewport(0.0F, 0.0F,
-			presentationParameters->BackBufferWidth,
-			presentationParameters->BackBufferHeight,
-			0.0F, 1.F);
+		auto _this = shared_from_this();				
+			
+		createDevice(*impl, *adapter);	
 		
+		//
+		// Background
+		// 
+
 		const auto backColor = Colors::CornflowerBlue;
 		const auto backColorV3 = backColor.ToVector3();
 
 		impl->_backgroundColor[0] = backColorV3.X;
 		impl->_backgroundColor[1] = backColorV3.Y;
 		impl->_backgroundColor[2] = backColorV3.Z;
-		impl->_backgroundColor[3] = 1.0f;
+		impl->_backgroundColor[3] = 1.0f;		
 
-		impl->_swapChain = snew<xna::SwapChain>(_this);
-		impl->_swapChain->Initialize();
+		//
+		// Window Association
+		//
+
+		auto hr = CreateDXGIFactory1(__uuidof(IDXGIFactory1), (void**)&impl->_factory);
+
+		if FAILED(hr)
+			Exception::Throw(Exception::FAILED_TO_CREATE);
 
 		auto hwnd = reinterpret_cast<HWND>(presentationParameters->DeviceWindowHandle);
 		hr = impl->_factory->MakeWindowAssociation(hwnd, DXGI_MWA_NO_ALT_ENTER);
 		
 		if (FAILED(hr)) 
 			Exception::Throw(Exception::FAILED_TO_MAKE_WINDOW_ASSOCIATION);		
-		
-		impl->_renderTarget2D = RenderTarget2D::FromBackBuffer(_this);
-		impl->_renderTarget2D->Apply();
+
+		//
+		// Viewport
+		//
+
+		viewport = xna::Viewport(0.0F, 0.0F,
+			presentationParameters->BackBufferWidth,
+			presentationParameters->BackBufferHeight,
+			0.0F, 1.F);
 
 		D3D11_VIEWPORT view = DxHelpers::ViewportToDx(viewport);
 		impl->_context->RSSetViewports(1, &view);
 
+		//
+		// States
+		//
+
 		initAndApplyState(blendState, rasterizerState, depthStencilState, samplerStateCollection, _this);
+
+		//
+		// Presentation
+		//
 
 		const auto currentPresenInterval = presentationParameters->PresentationInterval;		
 
@@ -78,6 +93,17 @@ namespace xna {
 			impl->vSyncValue = 1;
 			break;
 		}		
+
+		impl->_swapChain = snew<xna::SwapChain>(_this);
+		impl->_swapChain->Initialize();
+
+		//
+		//Render Target
+		//
+
+		impl->_renderTarget2D = RenderTarget2D::FromBackBuffer(_this);
+		const auto& renderView = impl->_renderTarget2D->impl2->_renderTargetView;
+		impl->_context->OMSetRenderTargets(1, renderView.GetAddressOf(), nullptr);
 	}
 
 	bool GraphicsDevice::Present() const {

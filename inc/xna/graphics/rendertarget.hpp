@@ -5,16 +5,15 @@
 #include "texture.hpp"
 
 namespace xna {
+	//Contains a 2D texture that can be used as a render target. 
 	class RenderTarget2D : public Texture2D {
 	public:
 		RenderTarget2D();
-		RenderTarget2D(sptr<GraphicsDevice> const& device);		
-		
+		RenderTarget2D(sptr<GraphicsDevice> const& device);				
 
 		static P_RenderTarget2D FromBackBuffer(P_GraphicsDevice const& device);
 
 		void Initialize();
-		void Apply();
 	public:
 		struct PlatformImplementation;
 		uptr<PlatformImplementation> impl2 = nullptr;

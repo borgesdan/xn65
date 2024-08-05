@@ -49,18 +49,4 @@ namespace xna {
 
 		impl2->_renderTargetView->GetDesc(&impl2->_renderTargetDesc);
 	}
-
-	void RenderTarget2D::Apply() {
-		if (!m_device || !m_device->impl->_context) {
-			Exception::Throw(Exception::FAILED_TO_APPLY);
-		}
-
-		if (!impl2->_renderTargetView)
-		{
-			Initialize();
-		}
-
-		auto& context = m_device->impl->_context;
-		context->OMSetRenderTargets(1, impl2->_renderTargetView.GetAddressOf(), nullptr);		
-	}
 }
