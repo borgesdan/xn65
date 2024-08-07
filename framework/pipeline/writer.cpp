@@ -2,6 +2,11 @@
 #include "xna/pipeline/compiler.hpp"
 
 namespace xna {
+
+    //
+    // ContentWriter
+    //
+
 	ContentWriter::ContentWriter(
         P_ContentCompiler& compiler,
         P_Stream const& output,
@@ -159,4 +164,8 @@ namespace xna {
     void ContentWriter::Write(Color const& value) {
         Write(value.PackedValue());
     }
+    
+    //
+    //
+    //    
 }

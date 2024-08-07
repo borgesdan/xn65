@@ -1,27 +1,58 @@
 #ifndef XNA_PIPELINE_WRITER_HPP
 #define XNA_PIPELINE_WRITER_HPP
 
+#include "../common/color.hpp"
+#include "../common/numerics.hpp"
 #include "../csharp/binary.hpp"
+#include "../csharp/type.hpp"
 #include "../default.hpp"
 #include "pipeline-enums.hpp"
-#include "../common/numerics.hpp"
-#include "../common/color.hpp"
-#include "../csharp/type.hpp"
 
 namespace xna {
+    //Provides an implementation for many of the ContentCompiler methods including compilation, state tracking for shared resources and creation of the header type manifest.
     class ContentTypeWriter {
     public:
-        virtual String GetRuntimeReader(TargetPlatform targetPlatform) = 0;
+        //Gets the assembly qualified name of the runtime loader for this type.
+        virtual String GetRuntimeReader(TargetPlatform targetPlatform) { return String(); }
+        //Gets a format version number for this type.
         virtual Int TypeVersion() const { return 0; }
+        //Compiles an object into binary format.
+        virtual void Write(ContentWriter& output, Object& value){}
 
-        virtual void Write(ContentWriter& output, Object& value);
+    protected:
+        ContentTypeWriter(P_Type const& targetType) : targetType(targetType) {}
+
+    private:
+        P_Type targetType{ nullptr };
+    };
+
+    //Provides a generic implementation of ContentTypeWriter methods and properties for compiling a specific managed type into a binary format.
+    template <class T>
+    class ContentTypeWriter_T : public ContentTypeWriter {
+    public:        
+        //Compiles a strongly typed object into binary format.
+        virtual void Write(ContentWriter& output, T& value) {}
+
+    protected:
+        ContentTypeWriter_T() : ContentTypeWriter(typeof<T>()){}
     };
 
     template <class T>
-    class ContentTypeWriter_T : public ContentTypeWriter {
-    public:
-        template <typename T>
-        virtual void Write(ContentWriter& output, T& value);
+    class BuiltinTypeWriter : public ContentTypeWriter_T<T> {
+        String GetRuntimeReader(TargetPlatform targetPlatform) override {
+            String name = typeid(T).name();
+            
+            switch (targetPlatform)
+            {
+            case xna::TargetPlatform::Windows:
+                name.append("::Windows");
+                break;
+            default:
+                break;
+            }
+
+            return name;
+        }
     };
 
     template <class T>
@@ -124,7 +155,11 @@ namespace xna {
 
     template <class T>
     void ContentWriter::WriteObject(T& value) {
-        Exception::ThrowTIsNull(value);
+        if constexpr (XnaHelper::IsSmartPoint<T>()) {
+            if (value == nullptr) {
+                Exception::Throw(Exception::ARGUMENT_IS_NULL);
+            }
+        }
 
         const auto type = typeof<T>();
         Int _;
@@ -137,7 +172,7 @@ namespace xna {
     void ContentWriter::WriteObject(T& value, ContentTypeWriter& writer) {
         auto contentTypeWriter = reinterpret_cast<ContentTypeWriter_T<T>*>(&writer);
 
-        if (_writer) {
+        if (contentTypeWriter) {
             contentTypeWriter->Write(*this, value);
         }
         else {
@@ -148,7 +183,11 @@ namespace xna {
         
     template <class T> 
     void ContentWriter::WriteRawObject(T& value) {
-        Exception::ThrowTIsNull(value);
+        if constexpr (XnaHelper::IsSmartPoint<T>()) {
+            if (value == nullptr) {
+                Exception::Throw(Exception::ARGUMENT_IS_NULL);
+            }
+        }
 
         const auto type = typeof<T>();
         Int _;
@@ -200,7 +239,7 @@ namespace xna {
             String filename2;
             
             if (filename1.ends_with(FilenameExt))
-                filename2 = filename1.substr(0, filename.size() - FilenameExt.size());
+                filename2 = filename1.substr(0, filename1.size() - FilenameExt.size());
             else
                 Exception::Throw(Exception::INVALID_OPERATION);
 

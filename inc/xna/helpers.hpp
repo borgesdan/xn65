@@ -70,8 +70,8 @@ namespace xna {
 			}
 
 			return false;
-		}		
-	};		
+		}	
+	};			
 }
 
 #endif
