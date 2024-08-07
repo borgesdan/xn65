@@ -1,4 +1,5 @@
 #include "xna/pipeline/writer.hpp"
+#include "xna/pipeline/compiler.hpp"
 
 namespace xna {
 	ContentWriter::ContentWriter(
@@ -20,6 +21,34 @@ namespace xna {
         headerData = snew<MemoryStream>();
         contentData = snew<MemoryStream>();
         OutStream = reinterpret_pointer_cast<Stream>(contentData);
+    }
+
+    P_ContentTypeWriter ContentWriter::GetTypeWriter(Type const& type, Int& typeIndex) {
+        const auto& hash = type.GetHashCode();
+
+        if (typeTable.contains(hash)) {
+            typeIndex = typeTable[hash];
+            return typeWriters[typeIndex];
+        }
+
+        std::vector<P_Type> dependecies;
+        auto typeWriter = compiler->GetTypeWriter(type, dependecies);
+        typeIndex = typeWriters.size();
+
+        typeWriters.push_back(typeWriter);
+        typeTable.emplace(type.GetHashCode(), typeIndex);
+
+        for (size_t i = 0; i < dependecies.size(); ++i) {
+            const auto& type1 = dependecies[i];
+
+            if (type1 != typeof<std::any>())
+            {
+                Int _;
+                GetTypeWriter(*type1, _);
+            }
+        }
+
+        return typeWriter;
     }
 
     void ContentWriter::WriteSharedResources() {

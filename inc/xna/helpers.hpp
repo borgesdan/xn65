@@ -62,6 +62,15 @@ namespace xna {
 			else
 				Exception::Throw(Exception::UNABLE_TO_BUILD_OBJECT, location);
 		}
+
+		template <typename T>
+		static inline bool TIsNull(T const& value) {
+			if constexpr (IsSmartPoint<T>()) {
+				return value == nullptr;
+			}
+
+			return false;
+		}		
 	};		
 }
 

@@ -20,6 +20,10 @@
 #include "helpers.hpp"
 
 namespace xna {
+	//
+	// Util types
+	//
+	using HashValue = size_t;
 
 	//
 	//C# nameof
@@ -221,6 +225,7 @@ namespace xna {
 	using P_Stream = sptr<Stream>;	
 	using P_MemoryStream = sptr<MemoryStream>;
 	using P_FileStream = sptr<FileStream>;
+	using P_Type = sptr<Type>;
 	//Pipeline
 	using P_ContentWriter = sptr<ContentWriter>;
 	using P_ContentCompiler = sptr<ContentCompiler>;

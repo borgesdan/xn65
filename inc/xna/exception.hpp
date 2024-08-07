@@ -22,6 +22,9 @@ namespace xna {
 
 		static void ThrowIfNull(void const* argument, std::string const& argumentName, std::source_location const& location = std::source_location::current());
 
+		template <class T>
+		static void ThrowTIsNull(T const& value, std::source_location const& location = std::source_location::current());		
+
 		inline static const std::string FAILED_TO_CREATE = "Failed to create component.";
 		inline static const std::string FAILED_TO_APPLY = "Failed to apply component.";		
 		inline static const std::string FAILED_TO_MAKE_WINDOW_ASSOCIATION = "Failed to create association with window.";
@@ -34,6 +37,15 @@ namespace xna {
 		inline static const std::string OUT_OF_BOUNDS = "Out of bounds.";
 		inline static const std::string END_OF_FILE = "End of file.";
 	};	
+
+	template <class T>
+	static void Exception::ThrowTIsNull(T const& value, std::source_location const& location) {
+		if constexpr (XnaHelper::IsSmartPoint<T>()) {
+			if (value == nullptr) {
+				Exception::Throw(Exception::ARGUMENT_IS_NULL, location);
+			}
+		}
+	}
 }
 
 #endif

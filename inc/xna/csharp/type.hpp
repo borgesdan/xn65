@@ -16,7 +16,7 @@ namespace xna {
 		constexpr bool IsPrimitive() const { return isPrimitive; }
 		constexpr bool IsPointer() const { return isPointer; }
 
-		size_t GetHashCode() const;
+		HashValue GetHashCode() const;
 
 		constexpr bool operator==(const Type& other) const {
 			return

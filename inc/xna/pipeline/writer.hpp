@@ -6,17 +6,28 @@
 #include "pipeline-enums.hpp"
 #include "../common/numerics.hpp"
 #include "../common/color.hpp"
+#include "../csharp/type.hpp"
 
 namespace xna {
     class ContentTypeWriter {
     public:
         virtual String GetRuntimeReader(TargetPlatform targetPlatform) = 0;
         virtual Int TypeVersion() const { return 0; }
+
+        virtual void Write(ContentWriter& output, Object& value);
+    };
+
+    template <class T>
+    class ContentTypeWriter_T : public ContentTypeWriter {
+    public:
+        template <typename T>
+        virtual void Write(ContentWriter& output, T& value);
     };
 
     template <class T>
     class ExternalReference {
-
+    public:
+        String FileName() const;
     };
 
     //Provides an implementation for many of the ContentCompiler methods including compilation, state tracking for shared resources and creation of the header type manifest.
@@ -73,7 +84,7 @@ namespace xna {
 
     private:
         template <class T> void InvokeWriter(T& value, ContentTypeWriter& writer);
-        sptr<ContentTypeWriter> GetTypeWriter(Type const& type, int& typeIndex) { return nullptr; }
+        P_ContentTypeWriter GetTypeWriter(Type const& type, Int& typeIndex);
         void WriteSharedResources();
         void WriteHeader();
         void WriteFinalOutput();
@@ -94,6 +105,7 @@ namespace xna {
         std::vector<P_ContentTypeWriter> typeWriters;
         std::map<std::any, Int> sharedResourceNames;
         std::queue<std::any> sharedResources;
+        std::map<HashValue, Int> typeTable;
 
     private:
         static constexpr Ushort XnbVersion = 5;
@@ -103,6 +115,7 @@ namespace xna {
         static constexpr Int XnbVersionOffset = 4;
         static constexpr Int XnbFileSizeOffset = 6;
         static constexpr Int XnbPrologueSize = 10;
+        inline static const String FilenameExt = ".xnb";
 	};
 
     //
@@ -111,39 +124,105 @@ namespace xna {
 
     template <class T>
     void ContentWriter::WriteObject(T& value) {
+        Exception::ThrowTIsNull(value);
 
+        const auto type = typeof<T>();
+        Int _;
+        auto typeWriter = GetTypeWriter(*type, _);
+
+        InvokeWriter<T>(value, *typeWriter);
     }
 
     template <class T> 
     void ContentWriter::WriteObject(T& value, ContentTypeWriter& writer) {
+        auto contentTypeWriter = reinterpret_cast<ContentTypeWriter_T<T>*>(&writer);
 
+        if (_writer) {
+            contentTypeWriter->Write(*this, value);
+        }
+        else {
+            Object _value = value;
+            writer.Write(*this, _value);
+        }
     }
         
     template <class T> 
     void ContentWriter::WriteRawObject(T& value) {
+        Exception::ThrowTIsNull(value);
 
+        const auto type = typeof<T>();
+        Int _;
+        auto typeWriter = GetTypeWriter(*type, _);
+
+        InvokeWriter<T>(value, *typeWriter);
     }
     
     template <class T> 
     void ContentWriter::WriteRawObject(T& value, ContentTypeWriter& typeWriter) {
+        Exception::ThrowTIsNull(value);
 
+        InvokeWriter<T>(value, typeWriter);
     }
 
     
     template <class T> 
     void ContentWriter::WriteSharedResource(T& value) {
+        if constexpr (XnaHelper::IsSmartPoint<T>()) {
+            if (value == nullptr)
+                Write7BitEncodedInt(0);
+        }
+        else {
+            Int num;
+            Object obj = value;
 
+            if (!sharedResourceNames.contains(value)) {
+                num = sharedResourceNames.size() + 1;
+                sharedResourceNames.emplace(obj, num);
+                sharedResources.push(obj);
+            }
+            else {
+                num = sharedResourceNames[value];
+            }
+
+            Write7BitEncodedInt(num);
+        }
     }
 
     
     template <class T> 
-    void ContentWriter::WriteExternalReference(ExternalReference<T>& reference) {
+    void ContentWriter::WriteExternalReference(ExternalReference<T>& reference) {        
+        const auto& filename1 = reference.FileName();
 
+        if (filename1.empty()) {
+            Write("");
+        }
+        else {
+            String filename2;
+            
+            if (filename1.ends_with(FilenameExt))
+                filename2 = filename1.substr(0, filename.size() - FilenameExt.size());
+            else
+                Exception::Throw(Exception::INVALID_OPERATION);
+
+            if(!filename2.starts_with(rootDirectory))
+                Exception::Throw(Exception::INVALID_OPERATION);
+
+            
+            Exception::Throw(Exception::NOT_IMPLEMENTED);
+        }
     }
 
     template <class T> 
     void ContentWriter::InvokeWriter(T& value, ContentTypeWriter& writer) {
-
+        auto contentTypeWriter = reinterpret_cast<ContentTypeWriter_T<T>*>(&writer);
+        
+        if (contentTypeWriter) {
+            contentTypeWriter->Write(*this, value);
+        }
+        else {
+            Object obj = value;
+            writer.Write(*this, obj);
+        }
     }
 }
 
