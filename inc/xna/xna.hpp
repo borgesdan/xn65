@@ -53,6 +53,8 @@
 #include "input/gamepad.hpp"
 #include "input/keyboard.hpp"
 #include "input/mouse.hpp"
+#include "pipeline/writer.hpp"
+#include "pipeline/compiler.hpp"
 
 namespace xna {
 	//Exposes functions that must be implemented by the platform

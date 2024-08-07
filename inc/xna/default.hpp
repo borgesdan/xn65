@@ -13,6 +13,7 @@
 #include <string>
 #include <utility>
 #include <vector>
+#include <queue>
 
 #include "enumerations.hpp"
 #include "exception.hpp"
@@ -195,6 +196,17 @@ namespace xna {
 	struct KeyboardState;
 	struct MouseState;
 
+	//Pipeline
+	class ContentWriter;
+	class ContentCompiler;
+	class ContentTypeWriter;
+
+
+	//
+	// Forward Pointers
+	//
+	
+	//Graphics
 	using P_BlendState = sptr<BlendState>;
 	using P_DepthStencilState = sptr<DepthStencilState>;
 	using P_GraphicsAdapter = sptr<GraphicsAdapter>;
@@ -202,12 +214,17 @@ namespace xna {
 	using P_RasterizerState = sptr<RasterizerState>;
 	using P_PresentationParameters = sptr<PresentationParameters>;
 	using P_SamplerStateCollection = sptr<SamplerStateCollection>;
-	using P_Stream = sptr<Stream>;
-	using P_MemoryStream = sptr<MemoryStream>;
-	using P_FileStream = sptr<FileStream>;
+	using P_RenderTarget2D = sptr<RenderTarget2D>;
 	using P_Texture = sptr<Texture>;
 	using P_Texture2D = sptr<Texture2D>;
-	using P_RenderTarget2D = sptr<RenderTarget2D>;
+	//CSharp
+	using P_Stream = sptr<Stream>;	
+	using P_MemoryStream = sptr<MemoryStream>;
+	using P_FileStream = sptr<FileStream>;
+	//Pipeline
+	using P_ContentWriter = sptr<ContentWriter>;
+	using P_ContentCompiler = sptr<ContentCompiler>;
+	using P_ContentTypeWriter = sptr<ContentTypeWriter>;
 }
 
 

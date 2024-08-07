@@ -44,6 +44,8 @@ namespace xna {
 	//A simplified port of the System.IO.MemoryStream.
 	class MemoryStream : public Stream {
 	public:
+		constexpr MemoryStream(){}
+
 		constexpr MemoryStream(std::vector<Byte> const& bytes):
 			_buffer(bytes), 
 			_length(static_cast<Int>(bytes.size())){}
@@ -82,6 +84,10 @@ namespace xna {
 		virtual void Write(Byte const* buffer, Int bufferLength, Int offset, Int count) override;
 		virtual void Write(std::vector<Byte> const& buffer, Int offset, Int count) override;
 		virtual void WriteByte(Byte value) override;
+
+		virtual std::vector<Byte> GetBuffer() const {
+			return _buffer;
+		}
 
 	public:
 		std::vector<Byte> _buffer;
