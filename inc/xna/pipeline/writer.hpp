@@ -18,6 +18,8 @@ namespace xna {
         virtual Int TypeVersion() const { return 0; }
         //Compiles an object into binary format.
         virtual void Write(ContentWriter& output, Object& value){}
+        //Determines if deserialization into an existing object is possible.
+        virtual bool CanDeserializeIntoExistingObject() const { return false; }
 
     protected:
         ContentTypeWriter(P_Type const& targetType) : targetType(targetType) {}

@@ -55,6 +55,7 @@
 #include "input/mouse.hpp"
 #include "pipeline/writer.hpp"
 #include "pipeline/compiler.hpp"
+#include "pipeline/writers/default.hpp"
 
 namespace xna {
 	//Exposes functions that must be implemented by the platform

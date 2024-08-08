@@ -1,6 +1,7 @@
 #include "xna/pipeline/writer.hpp"
 #include "xna/pipeline/compiler.hpp"
 
+
 namespace xna {
 
     //
