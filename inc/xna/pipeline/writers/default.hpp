@@ -80,6 +80,146 @@ namespace xna {
 		}
 
 	};
+
+	class DoubleWriter : public BuiltinTypeWriter<double> {
+	public:
+		void Write(ContentWriter& output, double& value) override {
+			output.Write(value);
+		}
+	};
+	
+	class Int16Writer : public BuiltinTypeWriter<Short> {
+	public:
+		void Write(ContentWriter& output, Short& value) override {
+			output.Write(value);
+		}
+	};
+	
+	class Int32Writer : public BuiltinTypeWriter<Int> {
+	public:
+		void Write(ContentWriter& output, Int& value) override {
+			output.Write(value);
+		}
+	};
+	
+	class Int64Writer : public BuiltinTypeWriter<Long> {
+	public:
+		void Write(ContentWriter& output, Long& value) override {
+			output.Write(value);
+		}
+	};
+	
+	class MatrixWriter : public BuiltinTypeWriter<Matrix> {
+	public:
+		void Write(ContentWriter& output, Matrix& value) override {
+			output.Write(value);
+		}
+	};
+	
+	class PlaneWriter : public BuiltinTypeWriter<Plane> {
+	public:
+		void Write(ContentWriter& output, Plane& value) override {
+			output.Write(value.Normal);
+			output.Write(value.D);
+		}
+	};
+	
+	class PointWriter : public BuiltinTypeWriter<Point> {
+	public:
+		void Write(ContentWriter& output, Point& value) override {
+			output.Write(value.X);
+			output.Write(value.Y);
+		}
+	};
+	
+	class QuaternionWriter : public BuiltinTypeWriter<Quaternion> {
+	public:
+		void Write(ContentWriter& output, Quaternion& value) override {
+			output.Write(value);
+		}
+	};
+	
+	class RayWriter : public BuiltinTypeWriter<Ray> {
+	public:
+		void Write(ContentWriter& output, Ray& value) override {
+			output.Write(value.Position);
+			output.Write(value.Direction);
+		}
+	};
+	
+	class RectangleWriter : public BuiltinTypeWriter<Rectangle> {
+	public:
+		void Write(ContentWriter& output, Rectangle& value) override {
+			output.Write(value.X);
+			output.Write(value.Y);
+			output.Write(value.Width);
+			output.Write(value.Height);
+		}
+	};
+	
+	class SByteWriter : public BuiltinTypeWriter<Sbyte> {
+	public:
+		void Write(ContentWriter& output, Sbyte& value) override {
+			output.Write(value);
+		}
+	};
+	
+	class SingleWriter : public BuiltinTypeWriter<float> {
+	public:
+		void Write(ContentWriter& output, float& value) override {
+			output.Write(value);
+		}
+	};
+	
+	class StringWriter : public BuiltinTypeWriter<String> {
+	public:
+		void Write(ContentWriter& output, String& value) override {
+			output.Write(value);
+		}
+	};
+	
+	class UInt16Writer : public BuiltinTypeWriter<Ushort> {
+	public:
+		void Write(ContentWriter& output, Ushort& value) override {
+			output.Write(value);
+		}
+	};
+	
+	class UInt32Writer : public BuiltinTypeWriter<Uint> {
+	public:
+		void Write(ContentWriter& output, Uint& value) override {
+			output.Write(value);
+		}
+	};
+	
+	class UInt64Writer : public BuiltinTypeWriter<Ulong> {
+	public:
+		void Write(ContentWriter& output, Ulong& value) override {
+			output.Write(value);
+		}
+	};
+	
+	class Vector2Writer : public BuiltinTypeWriter<Vector2> {
+	public:
+		void Write(ContentWriter& output, Vector2& value) override {
+			output.Write(value);
+		}
+	};
+	
+	class Vector3Writer : public BuiltinTypeWriter<Vector3> {
+	public:
+		void Write(ContentWriter& output, Vector3& value) override {
+			output.Write(value);
+		}
+	};
+	
+	class Vector4Writer : public BuiltinTypeWriter<Vector4> {
+	public:
+		void Write(ContentWriter& output, Vector4& value) override {
+			output.Write(value);
+		}
+	};
+	
 }
 
 #endif
