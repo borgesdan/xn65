@@ -1,4 +1,4 @@
-#include "xna/xna-dx.hpp"
+#include "xna-dx/framework.hpp"
 
 namespace xna {
 	static bool IsWindowOnAdapter(intptr_t windowHandle, GraphicsAdapter const& adapter);

@@ -3,7 +3,7 @@
 #include "xna/content/readers/audio.hpp"
 #include "xna/content/typereadermanager.hpp"
 #include "xna/content/readers/default.hpp"
-#include "xna/xna-dx.hpp"
+#include "xna-dx/framework.hpp"
 
 namespace xna {
 	void Platform::Init() {		

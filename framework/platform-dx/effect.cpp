@@ -1,5 +1,5 @@
 #include "xna/graphics/effect.hpp"
-#include "xna/xna-dx.hpp"
+#include "xna-dx/framework.hpp"
 #include "xna/common/math.hpp"
 
 using DxBasicEffect = DirectX::BasicEffect;

@@ -1,4 +1,4 @@
-#include "xna/xna-dx.hpp"
+#include "xna-dx/framework.hpp"
 
 namespace xna {
 	static void reset(GraphicsDevice::PlatformImplementation& impl);

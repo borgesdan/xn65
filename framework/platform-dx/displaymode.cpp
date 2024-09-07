@@ -1,4 +1,4 @@
-#include "xna/xna-dx.hpp"
+#include "xna-dx/framework.hpp"
 #include "xna/graphics/displaymode.hpp"
 
 namespace xna {

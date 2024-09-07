@@ -1,4 +1,4 @@
-#include "xna/xna-dx.hpp"
+#include "xna-dx/framework.hpp"
 #include <functional>
 
 using DxSpriteBatch = DirectX::SpriteBatch;

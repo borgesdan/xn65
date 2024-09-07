@@ -1,4 +1,4 @@
-#include "xna/xna-dx.hpp"
+#include "xna-dx/framework.hpp"
 #include "xna/csharp/stream.hpp"
 
 using DxSoundEffect = DirectX::SoundEffect;

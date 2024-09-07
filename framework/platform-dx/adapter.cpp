@@ -1,4 +1,4 @@
-#include "xna/xna-dx.hpp"
+#include "xna-dx/framework.hpp"
 
 namespace xna {	
 	static void setOutputVars(comptr<IDXGIAdapter1> const& adapter, String& deviceName, intptr_t& monitorHandle);

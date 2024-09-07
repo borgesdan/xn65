@@ -1,6 +1,6 @@
 #include "xna/graphics/samplerstate.hpp"
 #include "xna/graphics/samplerstate.hpp"
-#include "xna/xna-dx.hpp"
+#include "xna-dx/framework.hpp"
 
 namespace xna {
 	SamplerState::SamplerState() : SamplerState(nullptr){}
