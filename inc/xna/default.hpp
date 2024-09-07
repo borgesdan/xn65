@@ -14,6 +14,7 @@
 #include <utility>
 #include <vector>
 #include <queue>
+#include <stack>
 
 #include "enumerations.hpp"
 #include "exception.hpp"
@@ -204,6 +205,7 @@ namespace xna {
 	class ContentWriter;
 	class ContentCompiler;
 	class ContentTypeWriter;
+	class ContentTypeWriterFactory;
 
 
 	//
@@ -230,6 +232,7 @@ namespace xna {
 	using P_ContentWriter = sptr<ContentWriter>;
 	using P_ContentCompiler = sptr<ContentCompiler>;
 	using P_ContentTypeWriter = sptr<ContentTypeWriter>;
+	using P_ContentTypeWriterFactory = sptr<ContentTypeWriterFactory>;
 }
 
 

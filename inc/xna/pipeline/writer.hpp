@@ -151,8 +151,22 @@ namespace xna {
         inline static const String FilenameExt = ".xnb";
 	};
 
+    template <class T>
+    class TypeHandlerFactory {
+
+    };
+
+    class ContentTypeWriterFactory : public TypeHandlerFactory<ContentTypeWriter> {
+    public:
+        std::vector<P_ContentTypeWriter> Initialize() const {
+            std::vector<P_ContentTypeWriter> writers;
+
+            return writers;
+        }
+    };
+
     //
-    // Generics implementations
+    // ContentTypeWriter
     //
 
     template <class T>
