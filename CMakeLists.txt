@@ -21,9 +21,7 @@ project ("xna")
 
 # Include sub-projects.
 include_directories(${PROJECT_INCLUDES_DIR})
-add_subdirectory ("framework")
-add_subdirectory ("framework-dx")
-
+add_subdirectory ("sources")
 add_subdirectory ("samples")
 
 
