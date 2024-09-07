@@ -51,7 +51,7 @@
 
 //Xna
 
-#include "xna/xna.hpp"
+#include "xna/framework.hpp"
 
 //---------------- USINGS ----------------//
 

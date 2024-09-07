@@ -1,1 +1,1 @@
-#include "xna/xna-dx.hpp"
+#include "xna-dx/framework.hpp"

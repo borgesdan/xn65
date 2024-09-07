@@ -2,7 +2,7 @@
 //
 
 #include "xna/xna.hpp"
-#include "xna/xna-dx.hpp"
+#include "xna-dx/framework.hpp"
 
 using namespace std;
 using namespace xna;
