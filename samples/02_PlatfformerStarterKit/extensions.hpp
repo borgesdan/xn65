@@ -1,7 +1,7 @@
 #ifndef PLATFORMSTARTERKIT_EXTENSIONS_HPP
 #define PLATFORMSTARTERKIT_EXTENSIONS_HPP
 
-#include "xna/xna.hpp"
+#include "headers.hpp"
 
 namespace PlatformerStarterKit {
 	struct RectangleExtensions {
