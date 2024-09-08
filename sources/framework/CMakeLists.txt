@@ -19,6 +19,7 @@ add_library (Xn65 STATIC
 "common/numerics.cpp"
 "common/packedvalue.cpp"
 "graphics/gresource.cpp"
+"graphics/displaymode"
 "exception.cpp")
 
 if (CMAKE_VERSION VERSION_GREATER 3.12)

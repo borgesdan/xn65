@@ -21,7 +21,6 @@ add_library (Xn65DX STATIC
 "mouse.cpp"
 "gamepad.cpp"
 "soundeffect.cpp"
-"displaymode.cpp"
 "init.cpp"
 "audioengine.cpp"
 "effect.cpp"
