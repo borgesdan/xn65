@@ -11,5 +11,5 @@ endif()
 
 # TODO: Add tests and install targets if needed.
 target_link_libraries(
-	PlatformApp Xn65
+	PlatformApp Xn65DX
 )

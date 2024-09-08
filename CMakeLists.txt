@@ -13,7 +13,7 @@ endif()
 # VCPKG source directory
 set(PROJECT_VCPKG_DIRECTORY "C:/vcpkg")
 # Includes directory
-set(PROJECT_INCLUDES_DIR "${CMAKE_CURRENT_SOURCE_DIR}/inc")
+set(PROJECT_INCLUDES_DIR "${CMAKE_CURRENT_SOURCE_DIR}/includes")
 # CMAKE_TOOLCHAIN_FILE
 include("${PROJECT_VCPKG_DIRECTORY}/scripts/buildsystems/vcpkg.cmake")
 
@@ -21,8 +21,7 @@ project ("xna")
 
 # Include sub-projects.
 include_directories(${PROJECT_INCLUDES_DIR})
-add_subdirectory ("framework")
-
+add_subdirectory ("sources")
 add_subdirectory ("samples")
 
 
