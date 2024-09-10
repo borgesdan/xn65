@@ -5,6 +5,7 @@
 #include "packedvalue.hpp"
 
 namespace xna {
+	//Represents a four-component color using red, green, blue, and alpha data. 
 	struct Color : public IPackedVector, public IPackedVectorT<Uint> {
 		constexpr Color() = default;
 
@@ -33,10 +34,13 @@ namespace xna {
 
 		virtual void PackFromVector4(Vector4 const& vector) override;
 
+		//Converts a non-premultipled alpha color to a color that contains premultiplied alpha.
 		static Color FromNonPremultiplied(Vector4 const& vector);
 
+		//Converts a non-premultipled alpha color to a color that contains premultiplied alpha.
 		static Color FromNonPremultiplied(Int r, Int g, Int b, Int a);
 
+		//Gets a three-component vector representation for this object.
 		constexpr Vector3 ToVector3() const {
 			Vector3 vector3;
 			const auto byteMax = static_cast<Uint>(ByteMaxValue);
@@ -46,6 +50,7 @@ namespace xna {
 			return vector3;
 		}
 
+		//Gets a four-component vector representation for this object.
 		constexpr virtual Vector4 ToVector4() const	override {
 			Vector4 vector4;
 			const auto byteMax = static_cast<Uint>(ByteMaxValue);
@@ -56,48 +61,60 @@ namespace xna {
 			return vector4;
 		}
 
+		//Gets or sets the red component value of this Color. 
 		constexpr Byte R() const {
 			return static_cast<Byte>(_packedValue);
 		}
 
+		//Gets or sets the red component value of this Color. 
 		constexpr void R(Byte value) {
 			_packedValue = _packedValue & (UintMaxValue - 255) | static_cast<Uint>(value);
 		}
 
+		//Gets or sets the green component value of this Color. 
 		constexpr Byte G() const {
 			return static_cast<Byte>(_packedValue >> 8);
 		}
 
+		//Gets or sets the green component value of this Color. 
 		constexpr void G(Byte value) {
 			_packedValue = (static_cast<Int>(_packedValue) & -65281 | static_cast<Int>(value) << 8);
 		}
 
+		//Gets or sets the blue component value of this Color. 
 		constexpr Byte B() const {
 			return static_cast<Byte>(_packedValue >> 16);
 		}
 
+		//Gets or sets the blue component value of this Color. 
 		constexpr void B(Byte value) {
 			_packedValue = (static_cast<Int>(_packedValue) & -16711681 | static_cast<Int>(value) << 16);
 		}
 
+		//Gets or sets the alpha component value. 
 		constexpr Byte A() const {
 			return static_cast<Byte>(_packedValue >> 24);
 		}
 
+		//Gets or sets the alpha component value. 
 		constexpr void A(Byte value) {
 			_packedValue = (static_cast<Int>(_packedValue) & 16777215 | static_cast<Int>(value) << 24);
 		}
 
+		//Gets or sets the current color as a packed value.
 		virtual constexpr Uint PackedValue() const override {
 			return _packedValue;
 		}
 
+		//Gets or sets the current color as a packed value.
 		virtual constexpr void PackedValue(Uint const& value) override {
 			_packedValue = value;
 		}
 
+		//Linearly interpolate a color.
 		static Color Lerp(Color const& value1, Color const& value2, float amount);
 
+		//Multiply each color component by the scale factor.
 		static constexpr Color Multiply(Color const& value, float scale) {
 			const Uint r = value.R();
 			const Uint g = value.G();
