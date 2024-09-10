@@ -1,4 +1,4 @@
-#ifndef XNA_COMMON_VECTORS_HPP
+﻿#ifndef XNA_COMMON_VECTORS_HPP
 #define XNA_COMMON_VECTORS_HPP
 
 #include <cmath>
@@ -23,6 +23,7 @@ namespace xna {
 		Uint Denominator{ 0 };
 	};
 
+	//Defines a point in 2D space.
 	struct Point {
 		Int X{ 0 };
 		Int Y{ 0 };
@@ -37,6 +38,7 @@ namespace xna {
 		}
 	};
 
+	//Defines a rectangle. 
 	struct Rectangle {
 		Int X{ 0 };
 		Int Y{ 0 };
@@ -56,33 +58,41 @@ namespace xna {
 			return std::make_optional<Rectangle>(X, Y, Width, Height);
 		}
 
+		//Returns the x-coordinate of the left side of the rectangle.
 		constexpr Int Left() const { return X; }
+		//Returns the x-coordinate of the right side of the rectangle.
 		constexpr Int Right() const { return X + Width; }
+		//Returns the y-coordinate of the top of the rectangle.
 		constexpr Int Top() const { return Y; }
+		//Returns the y-coordinate of the bottom of the rectangle.
 		constexpr Int Bottom() const { return Y + Height; }
-
+		//Gets or sets the upper-left value of the Rectangle.
 		constexpr Point Location() const { return { X, Y }; }
+		//Gets or sets the upper-left value of the Rectangle.
 		constexpr void Location(Point const& p) {
 			X = p.X;
 			Y = p.Y;
 		}
-
+		//Gets the Point that specifies the center of the rectangle.
 		constexpr Point Center() const { return { X + Width / 2, Y + Height / 2 }; }
-
+		//Returns a Rectangle with all of its values set to zero.
 		constexpr static Rectangle Empty() { return {}; }
-
+		//Gets a value that indicates whether the Rectangle is empty.
 		constexpr bool IsEmpty() const { return Width == 0 && Height == 0 && X == 0 && Y == 0; }
 
+		//Changes the position of the Rectangle.
 		constexpr void Offset(Point const& amount) {
 			X += amount.X;
 			Y += amount.Y;
 		}
 
+		//Changes the position of the Rectangle.
 		constexpr void Offset(Int x, Int y) {
 			X += x;
 			Y += y;
 		}
 
+		//Pushes the edges of the Rectangle out by the horizontal and vertical values specified.
 		constexpr void Inflate(Int horizontalAmount, Int verticalAmount) {
 			X -= horizontalAmount;
 			Y -= verticalAmount;
@@ -90,22 +100,27 @@ namespace xna {
 			Height += verticalAmount * 2;
 		}
 
+		//Determines whether this Rectangle contains a specified point or Rectangle.
 		constexpr bool Contains(Int x, Int y) const {
 			return X <= x && x < X + Width && Y <= y && y < Y + Height;
 		}
 
+		//Determines whether this Rectangle contains a specified point or Rectangle.
 		constexpr bool Contains(Point const& value) const {
 			return X <= value.X && value.X < X + Width && Y <= value.Y && value.Y < Y + Height;
 		}
 
+		//Determines whether this Rectangle contains a specified point or Rectangle.
 		constexpr bool Contains(Rectangle const& value) const {
 			return X <= value.X && value.X + value.Width <= X + Width && Y <= value.Y && value.Y + value.Height <= Y + Height;
 		}
 
+		//Determines whether a specified Rectangle intersects with this Rectangle.
 		constexpr bool Intersects(Rectangle const& value) const {
 			return value.X < X + Width && X < value.X + value.Width && value.Y < Y + Height && Y < value.Y + value.Height;
 		}
 
+		//Creates a Rectangle defining the area where one rectangle overlaps another rectangle. 
 		constexpr static Rectangle Intersect(Rectangle const& value1, Rectangle const& value2) {
 			const auto num1 = value1.X + value1.Width;
 			const auto num2 = value2.X + value2.Width;
@@ -129,6 +144,7 @@ namespace xna {
 			return rectangle;
 		}
 
+		//Creates a new Rectangle that exactly contains two other rectangles. 
 		constexpr static Rectangle Union(Rectangle const& value1, Rectangle const& value2) {
 			const auto num1 = value1.X + value1.Width;
 			const auto num2 = value2.X + value2.Width;
@@ -149,6 +165,7 @@ namespace xna {
 		}
 	};
 
+	//Defines a vector with two components. 
 	struct Vector2 {
 		float X{ 0 };
 		float Y{ 0 };
@@ -162,10 +179,14 @@ namespace xna {
 		constexpr bool operator==(const Vector2& other) const {
 			return X == other.X && Y == other.Y;
 		}
-
+		
+		//Returns a Vector2 with all of its components set to zero.
 		static constexpr Vector2 Zero() { return {}; }
+		//Returns a Vector2 with both of its components set to one.
 		static constexpr Vector2 One() { return { 1 }; }
+		//Returns the unit vector for the x-axis.
 		static constexpr Vector2 UnitX() { return { 1, 0 }; }
+		//Returns the unit vector for the y-axis.
 		static constexpr Vector2 UnitY() { return { 0, 1 }; }
 
 		inline float Length() const {
@@ -361,6 +382,7 @@ namespace xna {
 		}
 	};
 
+	//Defines a vector with three components. 
 	struct Vector3 {
 		float X{ 0 };
 		float Y{ 0 };
@@ -381,16 +403,27 @@ namespace xna {
 			return X == other.X && Y == other.Y && Z == other.Z;
 		}
 
+		//Returns a Vector3 with all of its components set to zero.
 		static Vector3 Zero() { return {}; }
+		//Returns a Vector2 with both of its components set to one.
 		static Vector3 One() { return { 1 }; }
+		//Returns the x unit Vector3(1, 0, 0).
 		static Vector3 UnitX() { return { 1,0,0 }; }
+		//Returns the y unit Vector3 (0, 1, 0). 
 		static Vector3 UnitY() { return { 0,1,0 }; }
+		//Returns the z unit Vector3 (0, 0, 1). 
 		static Vector3 UnitZ() { return { 0,0,1 }; }
+		//Returns a unit vector designating up (0, 1, 0).
 		static Vector3 Up() { return UnitY(); }
+		//Returns a unit Vector3 designating down (0, −1, 0).
 		static Vector3 Down() { return -UnitY(); }
+		//Returns a unit Vector3 pointing to the right (1, 0, 0).
 		static Vector3 Right() { return UnitX(); }
+		//Returns a unit Vector3 designating left (−1, 0, 0).
 		static Vector3 Left() { return -UnitX(); }
+		//Returns a unit Vector3 designating forward in a right-handed coordinate system(0, 0, −1).
 		static Vector3 Forward() { return -UnitZ(); }
+		//Returns a unit Vector3 designating backward in a right-handed coordinate system (0, 0, 1).
 		static Vector3 Backward() { return UnitZ(); }
 
 		inline float Length() const { return sqrt(LengthSquared());	}
