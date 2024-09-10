@@ -93,13 +93,7 @@ namespace xna {
         Alpha,
         All,
         None
-    };
-
-    enum class ContainmentType {
-        Disjoint,
-        Contains,
-        Intersects,
-    };
+    };    
 
     enum class ComparisonFunction {
         Never,
@@ -187,13 +181,7 @@ namespace xna {
         //Use the largest available set of graphic features and capabilities to target devices,
         //such as an Xbox 360 console and a Windows-based computer, that have more enhanced graphic capabilities. 
         HiDef
-    };
-
-    enum class PlaneIntersectionType {
-        Front,
-        Back,
-        Intersecting,
-    };
+    };    
 
     enum class PlayerIndex
     {
