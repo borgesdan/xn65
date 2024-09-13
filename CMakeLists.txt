@@ -24,4 +24,6 @@ include_directories(${PROJECT_INCLUDES_DIR})
 add_subdirectory ("sources")
 add_subdirectory ("samples")
 
-
+#ver depois
+#add_compile_definitions
+#target_compile_definitions
