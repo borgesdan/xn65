@@ -1,22 +1,33 @@
 #ifndef XNA_CSHARP_TYPE_HPP
 #define XNA_CSHARP_TYPE_HPP
 
-#include "../default.hpp"
+#include "xna/helpers.hpp"
+#include <map>
+#include <memory>
+#include <string>
 #include <type_traits>
 #include <typeinfo>
-#include <map>
 
 namespace xna {
 	class Type {
 	public:
-		constexpr String FullName() const { return fullName; }
+		constexpr std::string FullName() const { return fullName; }
 		constexpr bool IsClass() const { return isClass; }
 		constexpr bool IsEnum() const { return isEnum; }
 		constexpr bool IsValueType() const { return isValueType; }
 		constexpr bool IsPrimitive() const { return isPrimitive; }
 		constexpr bool IsPointer() const { return isPointer; }
 
-		size_t GetHashCode() const;
+		constexpr size_t GetHashCode() const {
+			size_t seed = 0;
+			XnaHelper::HashCombine(seed, fullName);
+			XnaHelper::HashCombine(seed, isClass);
+			XnaHelper::HashCombine(seed, isEnum);
+			XnaHelper::HashCombine(seed, isValueType);
+			XnaHelper::HashCombine(seed, isPrimitive);
+
+			return seed;
+		}
 
 		constexpr bool operator==(const Type& other) const {
 			return
@@ -33,13 +44,13 @@ namespace xna {
 		}
 
 		template <class T>
-		friend sptr<Type> typeof();
+		friend std::shared_ptr<Type> typeof();
 
 	public:
-		inline static auto NameOfRegisteredTypes = std::map<std::string, sptr<Type>>();
+		inline static auto NameOfRegisteredTypes = std::map<std::string, std::shared_ptr<Type>>();
 
 	private:
-		String fullName;						
+		std::string fullName;						
 		bool isClass{ false };
 		bool isEnum{ false };
 		bool isValueType{ false };
@@ -48,9 +59,9 @@ namespace xna {
 	};
 
 	template <class T>
-	inline sptr<Type> typeof() {
+	inline std::shared_ptr<Type> typeof() {
 		if (std::is_arithmetic<T>::value) {
-			auto primitiveType = snew<Type>();			
+			auto primitiveType = std::make_shared<Type>();			
 			primitiveType->fullName = typeid(T).name();
 			primitiveType->isPrimitive = true;
 			primitiveType->isValueType = true;
@@ -58,7 +69,7 @@ namespace xna {
 		}
 
 		if (std::is_enum<T>::value) {
-			auto enumType = snew<Type>();
+			auto enumType = std::make_shared<Type>();
 			enumType->fullName = typeid(T).name();
 			enumType->isValueType = true;
 			enumType->isEnum = true;
@@ -66,14 +77,14 @@ namespace xna {
 		}
 
 		if (std::is_pointer<T>::value) {
-			auto pointerType = snew<Type>();
+			auto pointerType = std::make_shared<Type>();
 			pointerType->fullName = typeid(T).name();
 			pointerType->isPointer = true;
 			return pointerType;
 		}
 
 		if (std::is_class<T>::value) {
-			auto classType = snew<Type>();
+			auto classType = std::make_shared<Type>();
 			classType->fullName = typeid(T).name();
 			classType->isClass = true;
 			
@@ -84,12 +95,12 @@ namespace xna {
 	}	
 
 	template <class T>
-	inline sptr<Type> typeof(T const* object) {
+	inline std::shared_ptr<Type> typeof(T const* object) {
 		return typeof<T>();
 	}
 
 	template <class T>
-	inline sptr<Type> typeof(T const& object) {
+	inline std::shared_ptr<Type> typeof(T const& object) {
 		return typeof<T>();
 	}
 }

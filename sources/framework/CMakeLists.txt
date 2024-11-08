@@ -6,7 +6,7 @@
 add_library (Xn65 STATIC 
 "csharp/stream.cpp"
 "csharp/binary.cpp"
-"csharp/type.cpp"
+
 "game/component.cpp"
 "game/servicecontainer.cpp"
 "content/manager.cpp"
