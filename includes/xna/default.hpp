@@ -105,6 +105,12 @@ namespace xna {
 	}
 
 	//
+	// Hash value
+	//
+
+	using HashValue = size_t;
+
+	//
 	// Forward
 	//
 
@@ -199,15 +205,16 @@ namespace xna {
 	using P_DepthStencilState = sptr<DepthStencilState>;
 	using P_GraphicsAdapter = sptr<GraphicsAdapter>;
 	using P_GraphicsDevice = sptr<GraphicsDevice>;
-	using P_RasterizerState = sptr<RasterizerState>;
+	using P_FileStream = sptr<FileStream>;
+	using P_MemoryStream = sptr<MemoryStream>;
 	using P_PresentationParameters = sptr<PresentationParameters>;
+	using P_RenderTarget2D = sptr<RenderTarget2D>;
 	using P_SamplerStateCollection = sptr<SamplerStateCollection>;
 	using P_Stream = sptr<Stream>;
-	using P_MemoryStream = sptr<MemoryStream>;
-	using P_FileStream = sptr<FileStream>;
+	using P_RasterizerState = sptr<RasterizerState>;
+	using P_Type = sptr<Type>;
 	using P_Texture = sptr<Texture>;
 	using P_Texture2D = sptr<Texture2D>;
-	using P_RenderTarget2D = sptr<RenderTarget2D>;
 }
 
 
