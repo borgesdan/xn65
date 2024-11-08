@@ -152,16 +152,7 @@ namespace xna {
         Texture3D,
         TextureCube,
         Void
-    };
-
-    enum class FileMode {
-        CreateNew,
-        Create,
-        Append,
-        Open,
-        OpenOrCreate,
-        Truncate
-    };
+    };    
 
     enum class FillMode
     {
