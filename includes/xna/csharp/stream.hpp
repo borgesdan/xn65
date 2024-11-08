@@ -116,6 +116,7 @@ namespace xna {
 		virtual constexpr void Close() override {
 			_closed = true;
 			_buffer = std::vector<uint8_t>();
+			
 		}		
 
 		virtual int64_t Seek(int64_t offset, SeekOrigin const& origin) override;

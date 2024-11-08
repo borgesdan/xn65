@@ -128,14 +128,12 @@ namespace xna {
 		{
 			//Especifica se deve abrir um arquivo existente.
 		case FileMode::Open:
-			if (!exists) {
-				_closed = true;
-				return;
-			}
+			if (!exists) 
+				Exception::Throw("The specified file does not exist.");
 			break;
 			//Especifica que se deve abrir um arquivo, se existir;
 			// caso contrário, um novo arquivo deverá ser criado.
-		case FileMode::OpenOrCreate:
+		case FileMode::OpenOrCreate:			
 		case FileMode::Create:
 			if (!exists)
 				flags |= std::fstream::trunc;
@@ -146,7 +144,7 @@ namespace xna {
 			if (!exists)
 				flags |= std::fstream::trunc;
 			else
-				return;
+				Exception::Throw("The specified file already exists.");
 			break;
 			//Abre o arquivo, se existir, e busca o final do arquivo ou cria um novo arquivo.
 		case FileMode::Append:
@@ -160,6 +158,9 @@ namespace xna {
 			//para que seu tamanho seja zero bytes.
 			//Tentativa de ler um arquivo truncado retornará 0;
 		case FileMode::Truncate:
+			if(!exists)
+				Exception::Throw("The specified file does not exist.");
+
 			flags |= std::fstream::trunc;
 			_truncated = true;
 			break;
