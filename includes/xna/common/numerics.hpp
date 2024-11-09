@@ -4,50 +4,59 @@
 #include <cmath>
 #include "../default.hpp"
 #include <optional>
+#include <cstdint>
 
 namespace xna {
 	//Represents a rational number.
 	struct RationalNumber {
 		constexpr RationalNumber() = default;
 
-		constexpr RationalNumber(Uint numerator, Uint denominator)
+		constexpr RationalNumber(uint32_t numerator, uint32_t denominator)
 			: Numerator(numerator), Denominator(denominator) {}
 
 		constexpr bool operator==(const RationalNumber& other) const {
 			return Numerator == other.Numerator && Denominator == other.Denominator;
 		}
 
+		constexpr operator std::optional<RationalNumber>() const {
+			return std::make_optional<RationalNumber>(Numerator, Denominator);
+		}
+
 		//An unsigned integer value representing the top of the rational number.
-		Uint Numerator{ 0 };
+		uint32_t Numerator{ 0 };
 		//An unsigned integer value representing the bottom of the rational number.
-		Uint Denominator{ 0 };
+		uint32_t Denominator{ 0 };
 	};
 
 	//Defines a point in 2D space.
 	struct Point {
-		Int X{ 0 };
-		Int Y{ 0 };
+		int32_t X{ 0 };
+		int32_t Y{ 0 };
 
 		constexpr Point() = default;
 
-		constexpr Point(const Int& X, const Int& Y)
+		constexpr Point(const int32_t& X, const int32_t& Y)
 			: X(X), Y(Y) {}
 
 		constexpr bool operator==(const Point& other) const {
 			return X == other.X && Y == other.Y;
 		}
+
+		constexpr operator std::optional<Point>() const {
+			return std::make_optional<Point>(X, Y);
+		}
 	};
 
 	//Defines a rectangle. 
 	struct Rectangle {
-		Int X{ 0 };
-		Int Y{ 0 };
-		Int Width{ 0 };
-		Int Height{ 0 };
+		int32_t X{ 0 };
+		int32_t Y{ 0 };
+		int32_t Width{ 0 };
+		int32_t Height{ 0 };
 
 		constexpr Rectangle() = default;
 
-		constexpr Rectangle(const Int& X, const Int& Y, const Int& Width, const Int& Height) :
+		constexpr Rectangle(const int32_t& X, const int32_t& Y, const int32_t& Width, const int32_t& Height) :
 			X(X), Y(Y), Width(Width), Height(Height) {}
 
 		constexpr bool operator==(const Rectangle& other) const {
@@ -59,13 +68,13 @@ namespace xna {
 		}
 
 		//Returns the x-coordinate of the left side of the rectangle.
-		constexpr Int Left() const { return X; }
+		constexpr int32_t Left() const { return X; }
 		//Returns the x-coordinate of the right side of the rectangle.
-		constexpr Int Right() const { return X + Width; }
+		constexpr int32_t Right() const { return X + Width; }
 		//Returns the y-coordinate of the top of the rectangle.
-		constexpr Int Top() const { return Y; }
+		constexpr int32_t Top() const { return Y; }
 		//Returns the y-coordinate of the bottom of the rectangle.
-		constexpr Int Bottom() const { return Y + Height; }
+		constexpr int32_t Bottom() const { return Y + Height; }
 		//Gets or sets the upper-left value of the Rectangle.
 		constexpr Point Location() const { return { X, Y }; }
 		//Gets or sets the upper-left value of the Rectangle.
@@ -87,13 +96,13 @@ namespace xna {
 		}
 
 		//Changes the position of the Rectangle.
-		constexpr void Offset(Int x, Int y) {
+		constexpr void Offset(int32_t x, int32_t y) {
 			X += x;
 			Y += y;
 		}
 
 		//Pushes the edges of the Rectangle out by the horizontal and vertical values specified.
-		constexpr void Inflate(Int horizontalAmount, Int verticalAmount) {
+		constexpr void Inflate(int32_t horizontalAmount, int32_t verticalAmount) {
 			X -= horizontalAmount;
 			Y -= verticalAmount;
 			Width += horizontalAmount * 2;
@@ -101,7 +110,7 @@ namespace xna {
 		}
 
 		//Determines whether this Rectangle contains a specified point or Rectangle.
-		constexpr bool Contains(Int x, Int y) const {
+		constexpr bool Contains(int32_t x, int32_t y) const {
 			return X <= x && x < X + Width && Y <= y && y < Y + Height;
 		}
 
@@ -122,10 +131,10 @@ namespace xna {
 
 		//Creates a Rectangle defining the area where one rectangle overlaps another rectangle. 
 		constexpr static Rectangle Intersect(Rectangle const& value1, Rectangle const& value2) {
-			const auto num1 = value1.X + value1.Width;
-			const auto num2 = value2.X + value2.Width;
-			const auto num3 = value1.Y + value1.Height;
-			const auto num4 = value2.Y + value2.Height;
+			const auto num1 = value1.Right();
+			const auto num2 = value2.Right();
+			const auto num3 = value1.Bottom();
+			const auto num4 = value2.Bottom();
 			const auto num5 = value1.X > value2.X ? value1.X : value2.X;
 			const auto num6 = value1.Y > value2.Y ? value1.Y : value2.Y;
 			const auto num7 = num1 < num2 ? num1 : num2;
@@ -146,10 +155,10 @@ namespace xna {
 
 		//Creates a new Rectangle that exactly contains two other rectangles. 
 		constexpr static Rectangle Union(Rectangle const& value1, Rectangle const& value2) {
-			const auto num1 = value1.X + value1.Width;
-			const auto num2 = value2.X + value2.Width;
-			const auto num3 = value1.Y + value1.Height;
-			const auto num4 = value2.Y + value2.Height;
+			const auto num1 = value1.Right();
+			const auto num2 = value2.Right();
+			const auto num3 = value1.Bottom();
+			const auto num4 = value2.Bottom();
 			const auto num5 = value1.X < value2.X ? value1.X : value2.X;
 			const auto num6 = value1.Y < value2.Y ? value1.Y : value2.Y;
 			const auto num7 = num1 > num2 ? num1 : num2;
@@ -178,6 +187,10 @@ namespace xna {
 
 		constexpr bool operator==(const Vector2& other) const {
 			return X == other.X && Y == other.Y;
+		}
+
+		constexpr operator std::optional<Vector2>() const {
+			return std::make_optional<Vector2>(X, Y);
 		}
 		
 		//Returns a Vector2 with all of its components set to zero.
@@ -401,6 +414,10 @@ namespace xna {
 
 		constexpr bool operator==(const Vector3& other) const {
 			return X == other.X && Y == other.Y && Z == other.Z;
+		}
+
+		constexpr operator std::optional<Vector3>() const {
+			return std::make_optional<Vector3>(X, Y, Z);
 		}
 
 		//Returns a Vector3 with all of its components set to zero.
@@ -704,6 +721,10 @@ namespace xna {
 			return X == other.X && Y == other.Y && Z == other.Z && W == other.W;
 		}
 
+		constexpr operator std::optional<Vector4>() const {
+			return std::make_optional<Vector4>(X, Y, Z,W);
+		}
+
 		static Vector4 Zero() { return {}; }
 		static Vector4 One() { return { 1 }; }
 		static Vector4 UnitX() { return { 1,0,0,0 }; }
@@ -991,13 +1012,21 @@ namespace xna {
 			M11(M11), M12(M12), M13(M13), M14(M14),
 			M21(M21), M22(M22), M23(M23), M24(M24),
 			M31(M31), M32(M32), M33(M33), M34(M34),
-			M41(M41), M42(M42), M43(M43), M44(M44) { }
+			M41(M41), M42(M42), M43(M43), M44(M44) { }			
 
 		constexpr bool operator==(const Matrix& other) const {
 			return M11 == other.M11 && M12 == other.M12 && M13 == other.M13 && M14 == other.M14
 				&& M21 == other.M21 && M22 == other.M22 && M23 == other.M23 && M24 == other.M24
 				&& M31 == other.M31 && M32 == other.M32 && M33 == other.M33 && M34 == other.M34
 				&& M41 == other.M41 && M42 == other.M42 && M43 == other.M43 && M44 == other.M44;
+		}
+
+		constexpr operator std::optional<Matrix>() const {
+			return std::make_optional<Matrix>(
+				M11, M12, M13, M14,
+				M21, M22, M23, M24,
+				M31, M32, M33, M34,
+				M41, M42, M43, M44);
 		}
 
 		constexpr static Matrix Identity() {
@@ -1561,6 +1590,10 @@ namespace xna {
 
 		constexpr bool operator==(const Quaternion& other) const {
 			return X == other.X && Y == other.Y && Z == other.Z && W == other.W;
+		}
+
+		constexpr operator std::optional<Quaternion>() const {
+			return std::make_optional<Quaternion>(X, Y, Z, W);
 		}
 
 		static constexpr Quaternion Identity() {
