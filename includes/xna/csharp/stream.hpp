@@ -62,6 +62,9 @@ namespace xna {
 		//Gets or sets the position within the current stream.
 		virtual void Position(int64_t value) {	Seek(value, SeekOrigin::Begin); }
 
+		//When overridden in a derived class, sets the length of the current stream.
+		virtual void SetLength(int64_t value) = 0;
+
 		//Closes the current stream and releases any resources
 		virtual void Close() = 0;
 		//Sets the position within the current stream.
@@ -108,6 +111,11 @@ namespace xna {
 			return _length;
 		}
 
+		virtual constexpr void SetLength(int64_t value) override {
+			_buffer.reserve(value);
+			_length = value;
+		}
+
 		virtual constexpr int64_t Position() override {
 			if (_closed)
 				return 0;
@@ -151,6 +159,10 @@ namespace xna {
 
 		virtual int64_t Length() override;
 		virtual int64_t Position() override;
+
+		virtual constexpr void SetLength(int64_t value) override {
+			Exception::Throw(Exception::NOT_IMPLEMENTED);
+		}
 
 		inline virtual void Close() override {
 			_closed = true;

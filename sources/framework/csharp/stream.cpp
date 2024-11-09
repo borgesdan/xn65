@@ -88,7 +88,7 @@ namespace xna {
 		auto i = _position + count;
 
 		if (i < 0 || i > _length) {
-			return;
+			Exception::Throw("i < 0 || i > _length");
 		}
 
 		if (count <= 8)	{
