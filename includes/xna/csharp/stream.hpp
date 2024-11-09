@@ -87,6 +87,8 @@ namespace xna {
 	//A simplified port of the System.IO.MemoryStream.
 	class MemoryStream : public Stream {
 	public:
+		constexpr MemoryStream(){}
+
 		constexpr MemoryStream(std::vector<uint8_t> const& bytes):
 			_buffer(bytes), 
 			_length(static_cast<int64_t>(bytes.size())){}

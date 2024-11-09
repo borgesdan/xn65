@@ -3,7 +3,7 @@
 
 #include "xna/default.hpp"
 #include "xna/csharp/stream.hpp"
-#include "pipeline-enums.hpp"
+#include "enums.hpp"
 #include "default.hpp"
 #include <stack>
 
