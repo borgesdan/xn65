@@ -2,11 +2,18 @@
 #define XNA_COMMON_VECTORS_HPP
 
 #include <cmath>
-#include "../default.hpp"
 #include <optional>
 #include <cstdint>
+#include <vector>
 
 namespace xna {
+	struct Vector2;
+	struct Vector3;
+	struct Vector4;
+	struct Matrix;
+	struct Quaternion;
+	struct Plane;
+
 	//Represents a rational number.
 	struct RationalNumber {
 		constexpr RationalNumber() = default;
