@@ -1,26 +1,26 @@
 #include "xna/common/packedvalue.hpp"
 
 namespace xna {
-	Uint PackUtils::PackUnsigned(float bitmask, float value) {
-		return static_cast<Uint>(ClampAndRound(value, 0.0f, bitmask));
+	uint32_t PackUtils::PackUnsigned(float bitmask, float value) {
+		return static_cast<uint32_t>(ClampAndRound(value, 0.0f, bitmask));
 	}
 
-	Uint PackUtils::PackSigned(Uint bitmask, float value) {
+	uint32_t PackUtils::PackSigned(uint32_t bitmask, float value) {
 		const auto max = static_cast<float>(bitmask >> 1);
 		const auto min = -max - 1.0F;
 
-		return static_cast<Uint>(ClampAndRound(value, min, max)) & bitmask;
+		return static_cast<uint32_t>(ClampAndRound(value, min, max)) & bitmask;
 	}
 
-	Uint PackUtils::PackUNorm(float bitmask, float value) {
+	uint32_t PackUtils::PackUNorm(float bitmask, float value) {
 		value *= bitmask;
-		return static_cast<Uint>(ClampAndRound(value, 0.0f, bitmask));
+		return static_cast<uint32_t>(ClampAndRound(value, 0.0f, bitmask));
 	}
 
-	Uint PackUtils::PackSNorm(Uint bitmask, float value) {
+	uint32_t PackUtils::PackSNorm(uint32_t bitmask, float value) {
 		const auto max = static_cast<float>(bitmask >> 1);
 		value *= max;
-		return static_cast<Uint>(ClampAndRound(value, -max, max)) & bitmask;
+		return static_cast<uint32_t>(ClampAndRound(value, -max, max)) & bitmask;
 	}
 
 	double PackUtils::ClampAndRound(float value, float min, float max) {
