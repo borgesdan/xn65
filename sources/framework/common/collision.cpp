@@ -64,7 +64,7 @@ namespace xna {
 		if (result1.LengthSquared() < 9.9999997473787516E-06)
 			result1 = Vector3::Subtract(corners[0], box.Max);
 
-		auto num1 = FloatMaxValue;
+		auto num1 = FLOAT_MAX_VALUE;
 		float num2 = 0;
 		do
 		{
@@ -101,8 +101,8 @@ namespace xna {
 		if (result1 == ContainmentType::Contains)
 			return 0.0F;
 
-		auto num1 = FloatMinValue;
-		auto num2 = FloatMaxValue;
+		auto num1 = FLOAT_MIN_VALUE;
+		auto num2 = FLOAT_MAX_VALUE;
 
 		for (size_t i = 0; i < planes.size(); ++i) {
 			const auto& plane = planes[i];
@@ -153,7 +153,7 @@ namespace xna {
 		if (result1.LengthSquared() < 9.9999997473787516E-06)
 			result1 = Vector3::UnitX();
 
-		auto num1 = FloatMaxValue;
+		auto num1 = FLOAT_MAX_VALUE;
 		auto num2 = 0.0F;
 
 		do
@@ -199,7 +199,7 @@ namespace xna {
 		if (result1.LengthSquared() < 9.9999997473787516E-06)
 			result1 = Vector3::Subtract(corners[0], frustum.corners[1]);
 
-		float num1 = FloatMaxValue;
+		float num1 = FLOAT_MAX_VALUE;
 		float num2 = 0;
 
 		do
@@ -255,7 +255,7 @@ namespace xna {
 
 	std::optional<float> BoundingBox::Intersects(Ray const& ray) const {
 		float num1 = 0.0f;
-		float num2 = FloatMaxValue;
+		float num2 = FLOAT_MAX_VALUE;
 
 		if (std::abs(ray.Direction.X) < 9.9999999747524271E-07)
 		{

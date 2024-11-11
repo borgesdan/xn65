@@ -1,12 +1,20 @@
 #ifndef XNA_COMMON_COLLISION_HPP
 #define XNA_COMMON_COLLISION_HPP
 
-#include "../default.hpp"
 #include "math.hpp"
 #include "numerics.hpp"
 #include <optional>
+#include <cstdint>
+#include <vector>
+#include <limits>
 
 namespace xna {
+	struct Plane;
+	struct BoundingFrustum;
+	struct BoundingBox;
+	struct BoundingSphere;
+	struct Ray;	
+
 	class Gjk {
 	public:
 		constexpr Gjk() {}
@@ -28,11 +36,11 @@ namespace xna {
 		using listf = std::vector<float>;
 		using listff = std::vector<std::vector<float>>;
 
-		void UpdateDeterminant(Int xmIdx);
-		bool UpdateSimplex(Int newIndex);
+		void UpdateDeterminant(int32_t xmIdx);
+		bool UpdateSimplex(int32_t newIndex);
 		Vector3 ComputeClosestPoint();
 
-		constexpr bool IsSatisfiesRule(Int xBits, Int yBits) const {
+		constexpr bool IsSatisfiesRule(int32_t xBits, int32_t yBits) const {
 			bool flag = true;
 			for (auto bitsToIndex = Gjk::BitsToIndices[yBits]; bitsToIndex != 0; bitsToIndex >>= 3)
 			{
@@ -54,17 +62,12 @@ namespace xna {
 		}
 
 	private:
-		inline static auto BitsToIndices = std::vector<Int>{
+		inline static auto BitsToIndices = std::vector<int32_t>{
 			0, 1, 2, 17, 3, 25, 26, 209, 4, 33, 34, 273, 35, 281, 282, 2257
 		};
 
-		using listv3 = std::vector<Vector3>;
-		using listv3v3 = std::vector<std::vector<Vector3>>;
-		using listf = std::vector<float>;
-		using listff = std::vector<std::vector<float>>;
-
 		Vector3 closestPoint{};
-		Int simplexBits{ 0 };
+		int32_t simplexBits{ 0 };
 		float maxLengthSq{ 0 };
 		listv3 y = listv3(4);
 		listf yLengthSq = listf(4);
@@ -212,6 +215,10 @@ namespace xna {
 	private:
 		static constexpr Ray ComputeIntersectionLine(Plane const& p1, Plane const& p2);
 		static constexpr Vector3 ComputeIntersection(Plane const& plane, Ray const& ray);
+
+	private:
+		static constexpr float FLOAT_MIN_VALUE = (std::numeric_limits<float>::min)();
+		static constexpr float FLOAT_MAX_VALUE = (std::numeric_limits<float>::max)();
 	};
 
 	//Defines an axis-aligned box-shaped 3D volume. 
@@ -263,6 +270,10 @@ namespace xna {
 		constexpr ContainmentType Contains(BoundingSphere const& sphere) const;
 
 		constexpr void SupportMapping(Vector3 const& v, Vector3& result) const;
+
+	private:
+		static constexpr float FLOAT_MIN_VALUE = (std::numeric_limits<float>::min)();
+		static constexpr float FLOAT_MAX_VALUE = (std::numeric_limits<float>::max)();
 	};
 
 	//Defines a sphere. 
@@ -556,8 +567,8 @@ namespace xna {
 	}
 
 	constexpr BoundingBox BoundingBox::CreateFromPoints(std::vector<Vector3> const& points) {
-		Vector3 result1 = Vector3(FloatMaxValue);
-		Vector3 result2 = Vector3(FloatMinValue);
+		Vector3 result1 = Vector3(FLOAT_MAX_VALUE);
+		Vector3 result2 = Vector3(FLOAT_MIN_VALUE);
 		
 		for (size_t i = 0; i < points.size(); ++i) {
 			const auto& point = points[i];

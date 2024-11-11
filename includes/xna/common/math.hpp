@@ -3,6 +3,7 @@
 
 #include <limits>
 #include <cmath>
+#include <algorithm>
 
 namespace xna {
 	//Contains commonly used precalculated values. 

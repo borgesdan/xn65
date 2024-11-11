@@ -18,7 +18,7 @@ namespace xna {
 		return zero / num1;
 	}
 
-	bool Gjk::UpdateSimplex(Int newIndex) {
+	bool Gjk::UpdateSimplex(int32_t newIndex) {
         auto yBits = simplexBits | 1 << newIndex;
         auto xBits = 1 << newIndex;
         for (auto sb = simplexBits; sb != 0; --sb)
@@ -43,7 +43,7 @@ namespace xna {
         return flag;
 	}
 
-    void Gjk::UpdateDeterminant(Int xmIdx) {
+    void Gjk::UpdateDeterminant(int32_t xmIdx) {
         auto index1 = 1 << xmIdx;
         det[index1][xmIdx] = 1.0f;
         auto bitsToIndex = Gjk::BitsToIndices[simplexBits];
