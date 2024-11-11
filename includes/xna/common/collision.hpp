@@ -155,17 +155,17 @@ namespace xna {
 		}
 
 		//Gets the near plane of the BoundingFrustum.
-		Plane Near() { return planes[0]; }
+		constexpr Plane Near() const { return planes[0]; }
 		//Gets the far plane of the BoundingFrustum.
-		Plane Far() { return planes[1]; }
+		constexpr Plane Far() const { return planes[1]; }
 		//Gets the left plane of the BoundingFrustum.
-		Plane Left() { return planes[2]; }
+		constexpr Plane Left() const { return planes[2]; }
 		//Gets the right plane of the BoundingFrustum.
-		Plane Right() { return planes[3]; }
+		constexpr Plane Right() const { return planes[3]; }
 		//Gets the top plane of the BoundingFrustum.
-		Plane Top() { return planes[4]; }
+		constexpr Plane Top() const { return planes[4]; }
 		//Gets the bottom plane of the BoundingFrustum.
-		Plane Bottom() { return planes[5]; }
+		constexpr Plane Bottom() const { return planes[5]; }
 
 		constexpr bool operator==(BoundingFrustum const& other) const {
 			return matrix == other.matrix;
