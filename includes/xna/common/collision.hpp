@@ -13,7 +13,7 @@ namespace xna {
 	struct BoundingFrustum;
 	struct BoundingBox;
 	struct BoundingSphere;
-	struct Ray;	
+	struct Ray;
 
 	class Gjk {
 	public:
@@ -104,12 +104,12 @@ namespace xna {
 		float D{ 0 };
 
 		constexpr Plane() = default;
-		constexpr Plane(float a, float b, float c, float d):
-			Normal({a,b,c}), D(d){}
-		constexpr Plane(Vector3 const& normal, float d):
-			Normal(normal), D(d){}
-		constexpr Plane(Vector4 const& value):
-			Normal({value.X, value.Y, value.Z}), D(value.W){}
+		constexpr Plane(float a, float b, float c, float d) :
+			Normal({ a,b,c }), D(d) {}
+		constexpr Plane(Vector3 const& normal, float d) :
+			Normal(normal), D(d) {}
+		constexpr Plane(Vector4 const& value) :
+			Normal({ value.X, value.Y, value.Z }), D(value.W) {}
 
 		Plane(Vector3 const& point1, Vector3 const& point2, Vector3 const& point3);
 
@@ -146,8 +146,8 @@ namespace xna {
 
 	//Defines a frustum and helps determine whether forms intersect with it. 
 	struct BoundingFrustum {
-		inline static constexpr int CornerCount = 8;
-		inline static constexpr int PlaneCount = 6;
+		static constexpr int CornerCount = 8;
+		static constexpr int PlaneCount = 6;
 
 		constexpr BoundingFrustum() = default;
 		constexpr BoundingFrustum(Matrix const& matrix) {
@@ -203,12 +203,12 @@ namespace xna {
 		//Checks whether the current BoundingFrustum contains a specified bounding volume. 
 		constexpr ContainmentType Contains(BoundingSphere const& box) const;
 
-		constexpr void SupportMapping(Vector3 const& v, Vector3& result) const;	
+		constexpr void SupportMapping(Vector3 const& v, Vector3& result) const;
 	public:
-		std::vector<Vector3> corners{ 8 };
+		Vector3 corners[8];
+		Plane planes[6];
 
-	private:
-		std::vector<Plane> planes{ 6 };
+	private:		
 		Matrix matrix{ Matrix::Identity() };
 		Gjk gjk{};
 
@@ -232,8 +232,8 @@ namespace xna {
 		Vector3 Max{};
 
 		constexpr BoundingBox() = default;
-		constexpr BoundingBox(Vector3 const& min, Vector3 const& max):
-			Min(min), Max(max){}
+		constexpr BoundingBox(Vector3 const& min, Vector3 const& max) :
+			Min(min), Max(max) {}
 
 		constexpr bool operator==(BoundingBox const& other) const {
 			return Min == other.Min && Max == other.Max;
@@ -247,7 +247,11 @@ namespace xna {
 		//Creates the smallest BoundingBox that will contain the specified BoundingSphere. 
 		static constexpr BoundingBox CreateFromSphere(BoundingSphere const& sphere);
 		//Creates the smallest BoundingBox that will contain a group of points.
-		static constexpr BoundingBox CreateFromPoints(std::vector<Vector3> const& points);		
+		static constexpr BoundingBox CreateFromPoints(std::vector<Vector3> const& points) {
+			return CreateFromPoints(points.data(), points.size());
+		}
+		//Creates the smallest BoundingBox that will contain a group of points.
+		static constexpr BoundingBox CreateFromPoints(Vector3 const* points, size_t size);
 
 		//Checks whether the current BoundingBox intersects with another bounding volume.
 		constexpr bool Intersects(BoundingBox const& box) const;
@@ -259,7 +263,7 @@ namespace xna {
 		std::optional<float> Intersects(Ray const& ray) const;
 		//Checks whether the current BoundingBox intersects with another bounding volume.
 		constexpr bool Intersects(BoundingSphere const& sphere) const;
-		
+
 		//Tests whether the BoundingBox overlaps another bounding volume.
 		constexpr ContainmentType Contains(BoundingBox const& box) const;
 		//Tests whether the BoundingBox overlaps another bounding volume.
@@ -284,8 +288,8 @@ namespace xna {
 		float Radius{ 0 };
 
 		constexpr BoundingSphere() = default;
-		constexpr BoundingSphere(Vector3 const& center, float radius):
-			Center(center), Radius(radius < 0 ? 0 : radius){}
+		constexpr BoundingSphere(Vector3 const& center, float radius) :
+			Center(center), Radius(radius < 0 ? 0 : radius) {}
 
 		constexpr bool operator==(BoundingSphere const& other) const {
 			return Center == other.Center && Radius == other.Radius;
@@ -296,7 +300,12 @@ namespace xna {
 		//Creates the smallest BoundingSphere that can contain a specified BoundingBox. 
 		static BoundingSphere CreateFromBoundingBox(BoundingBox const& box);
 		//Creates a BoundingSphere that can contain a specified list of points.
-		static BoundingSphere CreateFromPoints(std::vector<Vector3> const& points);
+		static BoundingSphere CreateFromPoints(std::vector<Vector3> const& points) {
+			return CreateFromPoints(points.data(), points.size());
+		}
+		//Creates a BoundingSphere that can contain a specified list of points.
+		static BoundingSphere CreateFromPoints(Vector3 const* points, size_t size);
+
 		//Creates the smallest BoundingSphere that can contain a specified BoundingFrustum. 
 		static BoundingSphere CreateFromFrustum(BoundingFrustum const& points);
 
@@ -334,8 +343,8 @@ namespace xna {
 		Vector3 Direction{};
 
 		constexpr Ray() = default;
-		constexpr Ray(Vector3 const& position, Vector3 const& direction):
-			Position(position), Direction(direction){}
+		constexpr Ray(Vector3 const& position, Vector3 const& direction) :
+			Position(position), Direction(direction) {}
 
 		constexpr bool operator==(Ray const& other) const {
 			return Position == other.Position && Direction == other.Direction;
@@ -447,7 +456,7 @@ namespace xna {
 			}
 		}
 		return !flag ? ContainmentType::Contains : ContainmentType::Intersects;
-	}	
+	}
 
 	constexpr ContainmentType BoundingFrustum::Contains(BoundingSphere const& sphere) const {
 		auto center = sphere.Center;
@@ -495,7 +504,7 @@ namespace xna {
 		planes[1].Normal.Y = -value.M24 + value.M23;
 		planes[1].Normal.Z = -value.M34 + value.M33;
 		planes[1].D = -value.M44 + value.M43;
-		
+
 		for (size_t index = 0; index < PlaneCount; ++index)
 		{
 			const auto num = planes[index].Normal.Length();
@@ -564,13 +573,13 @@ namespace xna {
 		fromSphere.Max.Y = sphere.Center.Y + sphere.Radius;
 		fromSphere.Max.Z = sphere.Center.Z + sphere.Radius;
 		return fromSphere;
-	}
+	}	
 
-	constexpr BoundingBox BoundingBox::CreateFromPoints(std::vector<Vector3> const& points) {
+	constexpr BoundingBox BoundingBox::CreateFromPoints(Vector3 const* points, size_t size) {
 		Vector3 result1 = Vector3(FLOAT_MAX_VALUE);
 		Vector3 result2 = Vector3(FLOAT_MIN_VALUE);
-		
-		for (size_t i = 0; i < points.size(); ++i) {
+
+		for (size_t i = 0; i < size; ++i) {
 			const auto& point = points[i];
 			result1 = Vector3::Min(result1, point);
 			result2 = Vector3::Max(result2, point);
@@ -580,11 +589,11 @@ namespace xna {
 	}
 
 	constexpr bool BoundingBox::Intersects(BoundingBox const& box) const {
-		return Max.X >= box.Min.X 
-			&& Min.X <= box.Max.X 
-			&& Max.Y >= box.Min.Y 
-			&& Min.Y <= box.Max.Y 
-			&& Max.Z >= box.Min.Z 
+		return Max.X >= box.Min.X
+			&& Min.X <= box.Max.X
+			&& Max.Y >= box.Min.Y
+			&& Min.Y <= box.Max.Y
+			&& Max.Z >= box.Min.Z
 			&& Min.Z <= box.Max.Z;
 	}
 
@@ -604,28 +613,28 @@ namespace xna {
 		if (plane.Normal.X * vector3_1.X + plane.Normal.Y * vector3_1.Y + plane.Normal.Z * vector3_1.Z + plane.D > 0.0)
 			return PlaneIntersectionType::Front;
 
-		return plane.Normal.X * vector3_2.X + plane.Normal.Y * vector3_2.Y + plane.Normal.Z * vector3_2.Z + plane.D < 0.0 
-			? PlaneIntersectionType::Back 
+		return plane.Normal.X * vector3_2.X + plane.Normal.Y * vector3_2.Y + plane.Normal.Z * vector3_2.Z + plane.D < 0.0
+			? PlaneIntersectionType::Back
 			: PlaneIntersectionType::Intersecting;
-	}	
+	}
 
 	constexpr bool BoundingBox::Intersects(BoundingSphere const& sphere) const {
 		const auto result1 = Vector3::Clamp(sphere.Center, Min, Max);
-		const auto result2 =  Vector3::DistanceSquared(sphere.Center, result1);
+		const auto result2 = Vector3::DistanceSquared(sphere.Center, result1);
 		return result2 <= sphere.Radius * sphere.Radius;
 	}
 
 	constexpr ContainmentType BoundingBox::Contains(BoundingBox const& box) const {
 		if (Max.X < box.Min.X || Min.X > box.Max.X || Max.Y < box.Min.Y || Min.Y > box.Max.Y || Max.Z < box.Min.Z || Min.Z > box.Max.Z)
 			return ContainmentType::Disjoint;
-		return Min.X > box.Min.X || box.Max.X > Max.X || Min.Y > box.Min.Y || box.Max.Y > Max.Y || Min.Z > box.Min.Z || box.Max.Z > Max.Z 
+		return Min.X > box.Min.X || box.Max.X > Max.X || Min.Y > box.Min.Y || box.Max.Y > Max.Y || Min.Z > box.Min.Z || box.Max.Z > Max.Z
 			? ContainmentType::Intersects
 			: ContainmentType::Contains;
-	}	
+	}
 
 	constexpr ContainmentType BoundingBox::Contains(Vector3 const& point) const {
-		return Min.X >  point.X || point.X > Max.X || Min.Y > point.Y || point.Y > Max.Y || Min.Z > point.Z || point.Z > Max.Z 
-			? ContainmentType::Disjoint 
+		return Min.X > point.X || point.X > Max.X || Min.Y > point.Y || point.Y > Max.Y || Min.Z > point.Z || point.Z > Max.Z
+			? ContainmentType::Disjoint
 			: ContainmentType::Contains;
 	}
 
@@ -633,12 +642,12 @@ namespace xna {
 		Vector3 result1 = Vector3::Clamp(sphere.Center, Min, Max);
 		float result2 = Vector3::DistanceSquared(sphere.Center, result1);
 		float radius = sphere.Radius;
-		
+
 		if (result2 > radius * radius)
 			return ContainmentType::Disjoint;
 
-		return Min.X + radius > sphere.Center.X || sphere.Center.X > Max.X - radius || Max.X - Min.X <= radius || Min.Y + radius > sphere.Center.Y || sphere.Center.Y > Max.Y - radius || Max.Y - Min.Y <= radius || Min.Z + radius > sphere.Center.Z || sphere.Center.Z > Max.Z - radius || Max.X - Min.X <= radius 
-			? ContainmentType::Intersects 
+		return Min.X + radius > sphere.Center.X || sphere.Center.X > Max.X - radius || Max.X - Min.X <= radius || Min.Y + radius > sphere.Center.Y || sphere.Center.Y > Max.Y - radius || Max.Y - Min.Y <= radius || Min.Z + radius > sphere.Center.Z || sphere.Center.Z > Max.Z - radius || Max.X - Min.X <= radius
+			? ContainmentType::Intersects
 			: ContainmentType::Contains;
 	}
 
@@ -646,12 +655,12 @@ namespace xna {
 		result.X = v.X >= 0.0 ? Max.X : Min.X;
 		result.Y = v.Y >= 0.0 ? Max.Y : Min.Y;
 		result.Z = v.Z >= 0.0 ? Max.Z : Min.Z;
-	}	
+	}
 
 
 	constexpr bool BoundingSphere::Intersects(BoundingBox const& box) const {
 		Vector3 result1 = Vector3::Clamp(Center, box.Min, box.Max);
-		float result2 =	Vector3::DistanceSquared(Center, result1);
+		float result2 = Vector3::DistanceSquared(Center, result1);
 		return result2 <= Radius * Radius;
 	}
 
@@ -661,12 +670,12 @@ namespace xna {
 
 	constexpr PlaneIntersectionType BoundingSphere::Intersects(Plane const& plane) const {
 		const auto num = (Center.X * plane.Normal.X + Center.Y * plane.Normal.Y + Center.Z * plane.Normal.Z) + plane.D;
-		
+
 		if (num > Radius)
 			return PlaneIntersectionType::Front;
 
 		return num < -Radius ? PlaneIntersectionType::Back : PlaneIntersectionType::Intersecting;
-	}	
+	}
 
 	constexpr bool BoundingSphere::Intersects(BoundingSphere const& sphere) const {
 		const auto result = Vector3::DistanceSquared(Center, sphere.Center);
@@ -677,7 +686,7 @@ namespace xna {
 
 
 	constexpr Plane Plane::Transform(Plane const& plane, Matrix const& matrix) {
-		Matrix result =	Matrix::Invert(matrix);
+		Matrix result = Matrix::Invert(matrix);
 		const auto x = plane.Normal.X;
 		const auto y = plane.Normal.Y;
 		const auto z = plane.Normal.Z;
@@ -744,11 +753,11 @@ namespace xna {
 		vector3_2.X = Normal.X >= 0.0f ? box.Max.X : box.Min.X;
 		vector3_2.Y = Normal.Y >= 0.0f ? box.Max.Y : box.Min.Y;
 		vector3_2.Z = Normal.Z >= 0.0f ? box.Max.Z : box.Min.Z;
-		
+
 		if (Normal.X * vector3_1.X + Normal.Y * vector3_1.Y + Normal.Z * vector3_1.Z + D > 0.0F)
 			return PlaneIntersectionType::Front;
 
-		return Normal.X * vector3_2.X + Normal.Y * vector3_2.Y + Normal.Z * vector3_2.Z + D < 0.0F 
+		return Normal.X * vector3_2.X + Normal.Y * vector3_2.Y + Normal.Z * vector3_2.Z + D < 0.0F
 			? PlaneIntersectionType::Back : PlaneIntersectionType::Intersecting;
 	}
 
@@ -758,13 +767,13 @@ namespace xna {
 
 	constexpr PlaneIntersectionType Plane::Intersects(BoundingSphere const& sphere) const {
 		const auto num = (sphere.Center.X * Normal.X + sphere.Center.Y * Normal.Y + sphere.Center.Z * Normal.Z) + D;
-		
-		if (num >  sphere.Radius)
+
+		if (num > sphere.Radius)
 			return PlaneIntersectionType::Front;
-		
-		return num < -sphere.Radius 
+
+		return num < -sphere.Radius
 			? PlaneIntersectionType::Back : PlaneIntersectionType::Intersecting;
-	}	
+	}
 }
 
 #endif
