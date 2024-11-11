@@ -1,7 +1,6 @@
 #ifndef XNA_COMMON_CURVE_HPP
 #define XNA_COMMON_CURVE_HPP
 
-#include "../default.hpp"
 #include <algorithm>
 
 namespace xna {
@@ -230,7 +229,7 @@ namespace xna {
 					num1 = (key2.Value - key1.Value) * num2;
 				}
 				else {
-					t = (static_cast<Int>(num2) & 1) != 0 ? key2.Position - num3 : key1.Position + num3;
+					t = (static_cast<int32_t>(num2) & 1) != 0 ? key2.Position - num3 : key1.Position + num3;
 				}
 			}
 			else if (key2.Position < t)
@@ -256,7 +255,7 @@ namespace xna {
 					num1 = (key2.Value - key1.Value) * num4;
 				}
 				else {
-					t = (static_cast<Int>(num4) & 1) != 0 ? key2.Position - num5 : key1.Position + num5;
+					t = (static_cast<int32_t>(num4) & 1) != 0 ? key2.Position - num5 : key1.Position + num5;
 				}
 			}
 
@@ -342,7 +341,7 @@ namespace xna {
 			if (num < 0.0)
 				--num;
 
-			return static_cast<float>(static_cast<Int>(num));
+			return static_cast<float>(static_cast<int32_t>(num));
 		}
 
 		constexpr float FindSegment(float t, CurveKey& k0, CurveKey& k1) {
