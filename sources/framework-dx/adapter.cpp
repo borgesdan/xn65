@@ -22,8 +22,8 @@ namespace xna {
 		if (pFactory->EnumAdapters1(0, pAdapter.GetAddressOf()) != DXGI_ERROR_NOT_FOUND) {
 			auto adp = uptr<GraphicsAdapter>(new GraphicsAdapter());
 
-			adp->impl->dxAdapter = pAdapter;
-			adp->impl->dxFactory = pFactory;
+			adp->impl->adapter = pAdapter;
+			adp->impl->factory = pFactory;
 
 			DXGI_ADAPTER_DESC1 desc{};
 			pAdapter->GetDesc1(&desc);
@@ -62,8 +62,8 @@ namespace xna {
 		for (UINT count = 0; pFactory->EnumAdapters1(count, pAdapter.GetAddressOf()) != DXGI_ERROR_NOT_FOUND; ++count) {
 			auto adp = uptr<GraphicsAdapter>(new GraphicsAdapter());
 
-			adp->impl->dxAdapter = pAdapter;
-			adp->impl->dxFactory = pFactory;
+			adp->impl->adapter = pAdapter;
+			adp->impl->factory = pFactory;
 
 			DXGI_ADAPTER_DESC1 desc{};
 			pAdapter->GetDesc1(&desc);
@@ -101,7 +101,7 @@ namespace xna {
 
 		comptr<IDXGIOutput> pOutput = nullptr;		
 
-		if (impl->dxAdapter->EnumOutputs(0, pOutput.GetAddressOf()) != DXGI_ERROR_NOT_FOUND){
+		if (impl->adapter->EnumOutputs(0, pOutput.GetAddressOf()) != DXGI_ERROR_NOT_FOUND){
 			comptr<IDXGIOutput1> pOutput1 = nullptr;
 
 			pOutput->QueryInterface(IID_IDXGIOutput1, (void**)pOutput1.GetAddressOf());

@@ -5,8 +5,19 @@
 
 namespace xna {
 	struct GraphicsAdapter::ImplementationBase::PlatformImplementation {
-		comptr<IDXGIAdapter1> dxAdapter;
-		comptr<IDXGIFactory1> dxFactory;
+		comptr<IDXGIAdapter1> Adapter() const {
+			return adapter;
+		}
+
+		comptr<IDXGIFactory1> Factory() const {
+			return factory;
+		}
+	
+	private:
+		friend class GraphicsAdapter;
+
+		comptr<IDXGIAdapter1> adapter;
+		comptr<IDXGIFactory1> factory;
 	};
 
 	struct SpriteFont::PlatformImplementation {
