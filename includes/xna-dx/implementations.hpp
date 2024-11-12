@@ -4,6 +4,11 @@
 #include "headers.hpp"
 
 namespace xna {
+	struct GraphicsAdapter::ImplementationBase::PlatformImplementation {
+		comptr<IDXGIAdapter1> dxAdapter;
+		comptr<IDXGIFactory1> dxFactory;
+	};
+
 	struct SpriteFont::PlatformImplementation {
 		uptr<DirectX::SpriteFont> dxSpriteFont{ nullptr };
 	};
@@ -12,12 +17,7 @@ namespace xna {
 		sptr<DirectX::SpriteBatch> dxSpriteBatch = nullptr;
 		comptr<ID3D11InputLayout> dxInputLayout = nullptr;
 		sptr<DirectX::DX11::IEffect> dxEffectBuffer = nullptr;
-	};
-
-	struct GraphicsAdapter::PlatformImplementation {
-		comptr<IDXGIAdapter1> dxAdapter = nullptr;
-		comptr<IDXGIFactory1> dxFactory = nullptr;
-	};
+	};		
 
 	struct BlendRenderTarget {
 		bool Enabled{ true };
