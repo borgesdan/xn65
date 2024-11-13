@@ -12,7 +12,7 @@ namespace xna {
 	struct GraphicsAdapterImplementation;
 
 	//Provides methods to retrieve and manipulate graphics adapters.
-	class GraphicsAdapter : public ImplementationBase<GraphicsAdapterImplementation> {
+	class GraphicsAdapter : public PlatformImplementation<GraphicsAdapterImplementation> {
 	public:
 		//Collection of available adapters on the system.
 		static void Adapters(std::vector<std::unique_ptr<GraphicsAdapter>>& adapters);

@@ -104,7 +104,7 @@ namespace xna {
 	struct BlendStateImplementation;
 
 	//Contains blend state for the device. 
-	class BlendState : public GraphicsResource, public ImplementationBase<BlendStateImplementation> {
+	class BlendState : public GraphicsResource, public PlatformImplementation<BlendStateImplementation> {
 	public:
 		BlendState();
 		BlendState(std::shared_ptr<GraphicsDevice> const& device);
