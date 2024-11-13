@@ -9,20 +9,7 @@ namespace xna {
 
 		comptr<IDXGIAdapter1> Adapter;
 		comptr<IDXGIFactory1> Factory;
-	};
-
-	struct BlendRenderTarget {
-		bool Enabled{ true };
-		Blend Source{ Blend::SourceAlpha };
-		Blend Destination{ Blend::InverseSourceAlpha };
-		BlendOperation Operation{ BlendOperation::Add };
-		Blend SourceAlpha{ Blend::One };
-		Blend DestinationAlpha{ Blend::Zero };
-		BlendOperation OperationAlpha{ BlendOperation::Add };
-		ColorWriteChannels WriteMask{ ColorWriteChannels::All };
-
-		constexpr BlendRenderTarget() = default;
-	};
+	};	
 
 	struct BlendStateImplementation {
 		friend class BlendState;

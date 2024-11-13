@@ -3,11 +3,23 @@
 
 #include "../common/color.hpp"
 #include "../default.hpp"
-#include "gresource.hpp"
 #include "../platform.hpp"
+#include "gresource.hpp"
 
 namespace xna {
-	struct BlendRenderTarget;
+	struct BlendRenderTarget {
+		bool Enabled{ true };
+		Blend Source{ Blend::SourceAlpha };
+		Blend Destination{ Blend::InverseSourceAlpha };
+		BlendOperation Operation{ BlendOperation::Add };
+		Blend SourceAlpha{ Blend::One };
+		Blend DestinationAlpha{ Blend::Zero };
+		BlendOperation OperationAlpha{ BlendOperation::Add };
+		ColorWriteChannels WriteMask{ ColorWriteChannels::All };
+
+		constexpr BlendRenderTarget() = default;
+	};
+
 	struct BlendStateImplementation;
 
 	//Contains blend state for the device. 
