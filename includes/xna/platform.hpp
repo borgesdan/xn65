@@ -6,7 +6,7 @@
 namespace xna {
 	struct ImplementationBase {
 		struct PlatformImplementation;
-		std::unique_ptr<PlatformImplementation> impl;
+		std::unique_ptr<PlatformImplementation> Implementation;
 	};
 }
 

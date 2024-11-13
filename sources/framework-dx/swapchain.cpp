@@ -27,7 +27,7 @@ namespace xna {
         auto adapter = device.Adapter();        
 
         comptr<IDXGIFactory2> dxFactory2 = nullptr;
-        const auto hr = adapter->impl->Factory()->QueryInterface(IID_IDXGIFactory2, (void**)&dxFactory2);
+        const auto hr = adapter->Implementation->Factory()->QueryInterface(IID_IDXGIFactory2, (void**)&dxFactory2);
 
         if (FAILED(hr)) 
             return false;
