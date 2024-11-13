@@ -169,8 +169,6 @@ namespace xna {
 		//that is blending source and destination data using alpha while assuming the color data contains no alpha information.
 		static std::unique_ptr<BlendState> NonPremultiplied();
 	};	
-
-	using PBlendState = std::shared_ptr<BlendState>;
 }
 
 #endif

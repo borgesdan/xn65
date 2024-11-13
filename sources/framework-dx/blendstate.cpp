@@ -142,7 +142,7 @@ namespace xna {
 	}
 	
 	void BlendState::RenderTargets(BlendRenderTarget const* value, size_t size) {
-		for (size_t i = 0; i < size && i < 8; ++i) {
+		for (size_t i = 0; i < size && i < Implementation->MAX_RENDER_TARGETS; ++i) {
 			Implementation->Description.RenderTarget[i].BlendEnable = value[i].Enabled;
 			Implementation->Description.RenderTarget[i].SrcBlend = DxHelpers::BlendToDx(value[i].Source);
 			Implementation->Description.RenderTarget[i].DestBlend = DxHelpers::BlendToDx(value[i].Destination);

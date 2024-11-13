@@ -17,7 +17,9 @@ namespace xna {
 		D3D11_BLEND_DESC Description{};
 		float BlendFactor[4]{ 1.0F, 1.0F, 1.0F, 1.0F };
 		UINT SampleMask{ 0xffffffff };			
-		comptr<ID3D11BlendState> BlendState;		
+		comptr<ID3D11BlendState> BlendState;
+
+		static constexpr int MAX_RENDER_TARGETS = 8;
 	};
 
 	struct SpriteFont::PlatformImplementation {
