@@ -91,7 +91,7 @@ namespace xna {
 		return static_cast<Int>(Implementation->SampleMask);
 	}
 	
-	void BlendState::MultiSampleMast(Int value) {
+	void BlendState::MultiSampleMask(Int value) {
 		Implementation->SampleMask = static_cast<UINT>(value);
 	}
 

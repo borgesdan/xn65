@@ -43,36 +43,6 @@ namespace xna {
         Max
     };
 
-    enum class Blend {
-        Zero,
-        One,
-        SourceColor,
-        InverseSourceColor,
-        SourceAlpha,
-        InverseSourceAlpha,
-        DestinationAlpha,
-        InverseDestinationAlpha,
-        DestinationColor,
-        InverseDestinationColor,
-        SourceAlphaSaturation,
-        BlendFactor,
-        InverseBlendFactor,
-        Source1Color,
-        InverseSource1Color,
-        Source1Alpha,
-        InverseSource1Alpha
-    };
-
-    enum class BlendFunction {
-        Add = 0,
-        Subtract = 1,
-        ReverseSubtract = 2,
-        Min = 3,
-        Max = 4,
-    };
-
-    using BlendOperation = BlendFunction;
-
     enum class BufferUsage {
         Default,
         Immutable,
@@ -84,15 +54,6 @@ namespace xna {
         DepthBuffer,
         Stencil,
         Target,
-    };
-
-    enum class ColorWriteChannels {
-        Red,
-        Green,
-        Blue,
-        Alpha,
-        All,
-        None
     };    
 
     enum class ComparisonFunction {
