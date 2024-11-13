@@ -140,9 +140,9 @@ namespace xna {
 	void BlendState::IndependentBlendEnable(bool value) {
 		Implementation->Description.IndependentBlendEnable = value;
 	}
-
-	void BlendState::RenderTargets(std::vector<BlendRenderTarget> const& value) {
-		for (size_t i = 0; i < value.size() && i < 8; ++i) {
+	
+	void BlendState::RenderTargets(BlendRenderTarget const* value, size_t size) {
+		for (size_t i = 0; i < size && i < 8; ++i) {
 			Implementation->Description.RenderTarget[i].BlendEnable = value[i].Enabled;
 			Implementation->Description.RenderTarget[i].SrcBlend = DxHelpers::BlendToDx(value[i].Source);
 			Implementation->Description.RenderTarget[i].DestBlend = DxHelpers::BlendToDx(value[i].Destination);

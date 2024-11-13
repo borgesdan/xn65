@@ -150,7 +150,9 @@ namespace xna {
 		//Specifies whether to enable independent blending in simultaneous render targets
 		void IndependentBlendEnable(bool value);
 
-		void RenderTargets(std::vector<BlendRenderTarget> const& value);
+		void RenderTargets(std::vector<BlendRenderTarget> const& value) { return RenderTargets(value.data(), value.size()); }
+		void RenderTargets(BlendRenderTarget const* value, size_t size);
+
 		bool Initialize();
 		bool Apply();
 
