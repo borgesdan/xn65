@@ -4,7 +4,7 @@
 #include "headers.hpp"
 
 namespace xna {
-	struct GraphicsAdapter::ImplementationBase::PlatformImplementation {
+	struct GraphicsAdapterImpl {
 		comptr<IDXGIAdapter1> Adapter() const {
 			return adapter;
 		}
@@ -20,16 +20,6 @@ namespace xna {
 		comptr<IDXGIFactory1> factory;
 	};
 
-	struct SpriteFont::PlatformImplementation {
-		uptr<DirectX::SpriteFont> dxSpriteFont{ nullptr };
-	};
-
-	struct SpriteBatch::PlatformImplementation {
-		sptr<DirectX::SpriteBatch> dxSpriteBatch = nullptr;
-		comptr<ID3D11InputLayout> dxInputLayout = nullptr;
-		sptr<DirectX::DX11::IEffect> dxEffectBuffer = nullptr;
-	};		
-
 	struct BlendRenderTarget {
 		bool Enabled{ true };
 		Blend Source{ Blend::SourceAlpha };
@@ -43,12 +33,24 @@ namespace xna {
 		constexpr BlendRenderTarget() = default;
 	};
 
-	struct BlendState::PlatformImplementation {
-		comptr<ID3D11BlendState> dxBlendState = nullptr;
-		D3D11_BLEND_DESC dxDescription{};
-		float blendFactor[4]{ 1.0F, 1.0F, 1.0F, 1.0F };
-		UINT sampleMask{ 0xffffffff };
+	struct BlendStateImplementation {
+		friend class BlendState;
+
+		D3D11_BLEND_DESC Description{};
+		float BlendFactor[4]{ 1.0F, 1.0F, 1.0F, 1.0F };
+		UINT SampleMask{ 0xffffffff };			
+		comptr<ID3D11BlendState> BlendState;		
 	};
+
+	struct SpriteFont::PlatformImplementation {
+		uptr<DirectX::SpriteFont> dxSpriteFont{ nullptr };
+	};
+
+	struct SpriteBatch::PlatformImplementation {
+		sptr<DirectX::SpriteBatch> dxSpriteBatch = nullptr;
+		comptr<ID3D11InputLayout> dxInputLayout = nullptr;
+		sptr<DirectX::DX11::IEffect> dxEffectBuffer = nullptr;
+	};			
 
 	struct DepthStencilState::PlatformImplementation {
 		comptr<ID3D11DepthStencilState> dxDepthStencil = nullptr;

@@ -8,7 +8,7 @@ namespace xna {
 	static sptr<DisplayModeCollection> getSupportedDisplayModes(comptr<IDXGIAdapter1>& dxAdapter);
 
 	GraphicsAdapter::GraphicsAdapter() {
-		Implementation = unew<PlatformImplementation>();
+		Implementation = unew<GraphicsAdapterImpl>();
 	}
 
 	uptr<GraphicsAdapter> GraphicsAdapter::DefaultAdapter() {

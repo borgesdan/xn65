@@ -1,15 +1,17 @@
 #ifndef XNA_GRAPHICS_ADAPTER_HPP
 #define XNA_GRAPHICS_ADAPTER_HPP
 
-#include "displaymode.hpp"
 #include "../platform.hpp"
-#include <memory>
+#include "displaymode.hpp"
 #include <cstdint>
+#include <memory>
 #include <string>
 
 namespace xna {
+	
+	struct GraphicsAdapterImpl;
 	//Provides methods to retrieve and manipulate graphics adapters.
-	class GraphicsAdapter : public ImplementationBase {
+	class GraphicsAdapter : public ImplementationBase<GraphicsAdapterImpl> {
 	public:
 		//Collection of available adapters on the system.
 		static void Adapters(std::vector<std::unique_ptr<GraphicsAdapter>>& adapters);

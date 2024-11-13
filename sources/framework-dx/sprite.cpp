@@ -159,7 +159,7 @@ namespace xna {
 
 		impl->dxSpriteBatch->Begin(
 			_sortMode,
-			blendState ? blendState->impl->dxBlendState.Get() : nullptr,
+			blendState ? blendState->Implementation->BlendState.Get() : nullptr,
 			samplerState ? samplerState->impl->_samplerState.Get() : nullptr,
 			depthStencil ? depthStencil->impl->dxDepthStencil.Get() : nullptr,
 			rasterizerState ? rasterizerState->impl->dxRasterizerState.Get() : nullptr,

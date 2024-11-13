@@ -4,12 +4,14 @@
 #include "../common/color.hpp"
 #include "../default.hpp"
 #include "gresource.hpp"
+#include "../platform.hpp"
 
 namespace xna {
 	struct BlendRenderTarget;
+	struct BlendStateImplementation;
 
 	//Contains blend state for the device. 
-	class BlendState : public GraphicsResource {
+	class BlendState : public GraphicsResource, public ImplementationBase<BlendStateImplementation> {
 	public:
 		BlendState();
 		BlendState(sptr<GraphicsDevice> const& device);
@@ -70,11 +72,7 @@ namespace xna {
 		static uptr<BlendState> Additive();
 		//A built-in state object with settings for blending with non-premultipled alpha, 
 		//that is blending source and destination data using alpha while assuming the color data contains no alpha information.
-		static uptr<BlendState> NonPremultiplied();
-
-	public:
-		struct PlatformImplementation;
-		uptr<PlatformImplementation> impl = nullptr;
+		static uptr<BlendState> NonPremultiplied();	
 	};	
 
 	using PBlendState = sptr<BlendState>;

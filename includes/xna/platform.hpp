@@ -4,9 +4,10 @@
 #include <memory>
 
 namespace xna {
-	struct ImplementationBase {
-		struct PlatformImplementation;
-		std::unique_ptr<PlatformImplementation> Implementation;
+	template <typename T> struct ImplementationBase {
+		virtual ~ImplementationBase() {}
+		
+		std::unique_ptr<T> Implementation;
 	};
 }
 
