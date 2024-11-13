@@ -4,20 +4,11 @@
 #include "headers.hpp"
 
 namespace xna {
-	struct GraphicsAdapterImpl {
-		comptr<IDXGIAdapter1> Adapter() const {
-			return adapter;
-		}
-
-		comptr<IDXGIFactory1> Factory() const {
-			return factory;
-		}
-	
-	private:
+	struct GraphicsAdapterImplementation {
 		friend class GraphicsAdapter;
 
-		comptr<IDXGIAdapter1> adapter;
-		comptr<IDXGIFactory1> factory;
+		comptr<IDXGIAdapter1> Adapter;
+		comptr<IDXGIFactory1> Factory;
 	};
 
 	struct BlendRenderTarget {

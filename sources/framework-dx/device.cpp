@@ -226,7 +226,7 @@ namespace xna {
 		createDeviceFlags = D3D11_CREATE_DEVICE_FLAG::D3D11_CREATE_DEVICE_DEBUG;
 #endif  
 
-		const auto& pAdapter = GraphicsAdapter::UseNullDevice() ? NULL : currentAdapter.Implementation->Adapter().Get();
+		const auto& pAdapter = GraphicsAdapter::UseNullDevice() ? NULL : currentAdapter.Implementation->Adapter.Get();
 
 		//
 		// if pAdapter is not NULL driverType must be D3D_DRIVER_TYPE_UNKNOWN

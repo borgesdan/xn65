@@ -9,9 +9,10 @@
 
 namespace xna {
 	
-	struct GraphicsAdapterImpl;
+	struct GraphicsAdapterImplementation;
+
 	//Provides methods to retrieve and manipulate graphics adapters.
-	class GraphicsAdapter : public ImplementationBase<GraphicsAdapterImpl> {
+	class GraphicsAdapter : public ImplementationBase<GraphicsAdapterImplementation> {
 	public:
 		//Collection of available adapters on the system.
 		static void Adapters(std::vector<std::unique_ptr<GraphicsAdapter>>& adapters);
