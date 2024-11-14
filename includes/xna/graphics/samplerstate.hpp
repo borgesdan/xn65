@@ -2,6 +2,7 @@
 #define XNA_GRAPHICS_SAMPLERSTATE_HPP
 
 #include "../default.hpp"
+#include "shared.hpp"
 #include "gresource.hpp"
 
 namespace xna {

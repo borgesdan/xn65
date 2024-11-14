@@ -1,11 +1,24 @@
 #ifndef XNA_GRAPHICS_DEPTHSTENCILSTATE_HPP
 #define XNA_GRAPHICS_DEPTHSTENCILSTATE_HPP
 
-#include "../default.hpp"
 #include "gresource.hpp"
 #include "../platform.hpp"
+#include "shared.hpp"
+#include <memory>
+#include <cstdint>
 
 namespace xna {
+	enum class StencilOperation
+	{
+		Keep,
+		Zero,
+		Replace,
+		IncrementSaturation,
+		DecrementSaturation,
+		Invert,
+		Increment,
+		Decrement,
+	};	
 
 	struct DepthStencilStateImplementation;
 
@@ -13,7 +26,7 @@ namespace xna {
 	class DepthStencilState : public GraphicsResource, public PlatformImplementation<DepthStencilStateImplementation> {
 	public:
 		DepthStencilState();
-		DepthStencilState(sptr<GraphicsDevice> const& device);
+		DepthStencilState(std::shared_ptr<GraphicsDevice> const& device);
 		
 		//Gets or sets the stencil operation to perform if the stencil test passes and the depth-buffer test fails for a counterclockwise triangle.
 		//The default is StencilOperation.Keep. 
@@ -65,14 +78,14 @@ namespace xna {
 		CompareFunction StencilFunction() const;		
 		//Gets or sets the mask applied to the reference value and each stencil buffer entry to determine the significant bits for the stencil test.
 		//The default mask is Int32.MaxValue. 
-		void StencilMask(Int value);
+		void StencilMask(int32_t value);
 		//Gets or sets the mask applied to the reference value and each stencil buffer entry to determine the significant bits for the stencil test.
 		//The default mask is Int32.MaxValue. 
-		Int StencilMask() const;
+		int32_t StencilMask() const;
 		//Gets or sets the write mask applied to values written into the stencil buffer. The default mask is Int32.MaxValue. 
-		void StencilWriteMask(Int value);
+		void StencilWriteMask(int32_t value);
 		//Gets or sets the write mask applied to values written into the stencil buffer. The default mask is Int32.MaxValue. 
-		Int StencilWriteMask() const;
+		int32_t StencilWriteMask() const;
 		//Gets or sets the stencil operation to perform if the stencil test passes. The default is StencilOperation.Keep. 
 		void StencilPass(StencilOperation value);
 		//Gets or sets the stencil operation to perform if the stencil test passes. The default is StencilOperation.Keep. 
@@ -83,11 +96,11 @@ namespace xna {
 		StencilOperation StencilDepthBufferFail() const;		
 
 		//A built-in state object with settings for not using a depth stencil buffer.
-		static uptr<DepthStencilState> None();
+		static std::unique_ptr<DepthStencilState> None();
 		//A built-in state object with default settings for using a depth stencil buffer.
-		static uptr<DepthStencilState> Default();
+		static std::unique_ptr<DepthStencilState> Default();
 		//A built-in state object with settings for enabling a read-only depth stencil buffer.
-		static uptr<DepthStencilState> DepthRead();
+		static std::unique_ptr<DepthStencilState> DepthRead();
 
 		bool Initialize();
 		bool Apply();	

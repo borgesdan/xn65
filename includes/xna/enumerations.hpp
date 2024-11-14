@@ -54,20 +54,7 @@ namespace xna {
         DepthBuffer,
         Stencil,
         Target,
-    };    
-
-    enum class ComparisonFunction {
-        Never,
-        Less,
-        Equal,
-        LessEquals,
-        Greater,
-        NotEqual,
-        GreaterEqual,
-        Always
-    };
-
-    using CompareFunction = ComparisonFunction;
+    };        
 
     enum class CullMode {
         None,
@@ -183,19 +170,7 @@ namespace xna {
         Texture,
         BackToFront,
         FrontToBack,
-    };
-
-    enum class StencilOperation
-    {
-        Keep,
-        Zero,
-        Replace,
-        IncrementSaturation,
-        DecrementSaturation,
-        Invert,
-        Increment,
-        Decrement,
-    };
+    };    
 
     enum class SurfaceFormat {
         Color = 0,
