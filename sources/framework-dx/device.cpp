@@ -248,7 +248,7 @@ namespace xna {
 			//UINT Flags,
 			createDeviceFlags,
 			//_In_reads_opt_( FeatureLevels ) CONST D3D_FEATURE_LEVEL* pFeatureLevels,
-			impl.FeatureLevels,
+			GraphicsDeviceImplementation::FeatureLevels,
 			//UINT FeatureLevels,
 			7,
 			//UINT SDKVersion,

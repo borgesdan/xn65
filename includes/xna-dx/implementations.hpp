@@ -31,7 +31,7 @@ namespace xna {
 		std::shared_ptr<RenderTarget2D> RenderTarget2D;
 		intptr_t WindowHandle{ 0 };
 
-		D3D_FEATURE_LEVEL FeatureLevels[7] =
+		inline static constexpr D3D_FEATURE_LEVEL FeatureLevels[7] =
 		{
 			D3D_FEATURE_LEVEL_11_1,
 			D3D_FEATURE_LEVEL_11_0,
