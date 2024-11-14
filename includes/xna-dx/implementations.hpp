@@ -5,21 +5,22 @@
 
 namespace xna {
 	struct GraphicsAdapterImplementation {
-		friend class GraphicsAdapter;
-
 		comptr<IDXGIAdapter1> Adapter;
 		comptr<IDXGIFactory1> Factory;
 	};	
 
 	struct BlendStateImplementation {
-		friend class BlendState;
-
 		D3D11_BLEND_DESC Description{};
 		float BlendFactor[4]{ 1.0F, 1.0F, 1.0F, 1.0F };
 		UINT SampleMask{ 0xffffffff };			
 		comptr<ID3D11BlendState> BlendState;
 
 		static constexpr int MAX_RENDER_TARGETS = 8;
+	};
+
+	struct DepthStencilStateImplementation {
+		comptr<ID3D11DepthStencilState> DepthStencil;
+		D3D11_DEPTH_STENCIL_DESC Description{};
 	};
 
 	struct SpriteFont::PlatformImplementation {
@@ -30,12 +31,7 @@ namespace xna {
 		sptr<DirectX::SpriteBatch> dxSpriteBatch = nullptr;
 		comptr<ID3D11InputLayout> dxInputLayout = nullptr;
 		sptr<DirectX::DX11::IEffect> dxEffectBuffer = nullptr;
-	};			
-
-	struct DepthStencilState::PlatformImplementation {
-		comptr<ID3D11DepthStencilState> dxDepthStencil = nullptr;
-		D3D11_DEPTH_STENCIL_DESC dxDescription{};
-	};
+	};				
 
 	struct GamePad::PlatformImplementation {
 		uptr<DirectX::GamePad> _dxGamePad = unew<DirectX::GamePad>();

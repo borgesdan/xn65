@@ -3,10 +3,14 @@
 
 #include "../default.hpp"
 #include "gresource.hpp"
+#include "../platform.hpp"
 
 namespace xna {
+
+	struct DepthStencilStateImplementation;
+
 	//Contains depth-stencil state for the device. 
-	class DepthStencilState : public GraphicsResource {
+	class DepthStencilState : public GraphicsResource, public PlatformImplementation<DepthStencilStateImplementation> {
 	public:
 		DepthStencilState();
 		DepthStencilState(sptr<GraphicsDevice> const& device);
@@ -86,14 +90,8 @@ namespace xna {
 		static uptr<DepthStencilState> DepthRead();
 
 		bool Initialize();
-		bool Apply();
-
-	public:
-		struct PlatformImplementation;
-		uptr<PlatformImplementation> impl = nullptr;
+		bool Apply();	
 	};
-
-	using PDepthStencilState = sptr<DepthStencilState>;
 }
 
 #endif
