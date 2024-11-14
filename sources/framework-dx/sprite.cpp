@@ -110,12 +110,12 @@ namespace xna {
 
 	SpriteBatch::SpriteBatch(sptr<GraphicsDevice> const& device) : GraphicsResource(device) {
 		Exception::ThrowIfNull(device, nameof(device));
-		Exception::ThrowIfNull(device->impl->_context.Get(), nameof(device->impl->_context));
+		Exception::ThrowIfNull(device->Implementation->Context.Get(), nameof(device->Implementation->Context));
 
 		impl = unew<PlatformImplementation>();
 		impl->dxSpriteBatch = snew<DxSpriteBatch>(
 			//ID3D11DeviceContext* deviceContext
-			device->impl->_context.Get()
+			device->Implementation->Context.Get()
 		);
 
 		Viewport(device->Viewport());
@@ -139,14 +139,14 @@ namespace xna {
 
 				effect->impl->dxEffect->GetVertexShaderBytecode(&shaderByteCode, &byteCodeLength);
 
-				m_device->impl->_device->CreateInputLayout(
+				m_device->Implementation->Device->CreateInputLayout(
 					DirectX::VertexPositionColorTexture::InputElements,
 					DirectX::VertexPositionColorTexture::InputElementCount,
 					shaderByteCode, byteCodeLength,
 					impl->dxInputLayout.GetAddressOf());
 			}
 
-			auto& context = m_device->impl->_context;
+			auto& context = m_device->Implementation->Context;
 
 			effectFunc = [=] {
 				impl->dxEffectBuffer->Apply(context.Get());

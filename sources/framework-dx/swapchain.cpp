@@ -17,7 +17,7 @@ namespace xna {
     }
 
     static bool internalInit(GraphicsDevice& device, HWND windowHandle, comptr<IDXGISwapChain1>& swapChain, DXGI_SWAP_CHAIN_DESC1 const& desc, DXGI_SWAP_CHAIN_FULLSCREEN_DESC const& fdesc) {
-        if (!device.impl->_device || !windowHandle)
+        if (!device.Implementation->Device || !windowHandle)
             return false;
         
         if (swapChain) {
@@ -33,7 +33,7 @@ namespace xna {
             return false;
 
         dxFactory2->CreateSwapChainForHwnd(
-            device.impl->_device.Get(),
+            device.Implementation->Device.Get(),
             windowHandle,
             &desc,
             &fdesc,
@@ -44,7 +44,7 @@ namespace xna {
     }
 
     bool SwapChain::Initialize() {
-        if (!impl || !m_device || !m_device->impl->_device) {
+        if (!impl || !m_device || !m_device->Implementation->Device) {
             Exception::Throw(Exception::UNABLE_TO_INITIALIZE);
         }
         

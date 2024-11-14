@@ -10,7 +10,7 @@ namespace xna {
 	}	
 
 	P_RenderTarget2D RenderTarget2D::FromBackBuffer(P_GraphicsDevice const& device) {
-		auto& swapChain = device->impl->_swapChain;
+		auto& swapChain = device->Implementation->SwapChain;
 		auto rt = snew<RenderTarget2D>(device);
 		auto& implementation = rt->impl;
 		auto& implementation2 = rt->impl2;
@@ -26,7 +26,7 @@ namespace xna {
 	}
 
 	void RenderTarget2D::Initialize() {
-		if (!impl || !m_device || !m_device->impl->_device) {
+		if (!impl || !m_device || !m_device->Implementation->Device) {
 			Exception::Throw(Exception::UNABLE_TO_INITIALIZE);
 		}				
 
@@ -39,7 +39,7 @@ namespace xna {
 
 		Texture2D::Initialize();
 		
-		auto& dxdevice = m_device->impl->_device;
+		auto& dxdevice = m_device->Implementation->Device;
 		
 		const auto hr = dxdevice->CreateRenderTargetView(
 			impl->dxTexture2D.Get(),

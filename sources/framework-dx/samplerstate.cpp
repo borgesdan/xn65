@@ -11,7 +11,7 @@ namespace xna {
 
 	bool SamplerState::Initialize()
 	{
-		if (!impl || !m_device || !m_device->impl->_device) {
+		if (!impl || !m_device || !m_device->Implementation->Device) {
 			Exception::Throw(Exception::UNABLE_TO_INITIALIZE);
 		}
 
@@ -19,7 +19,7 @@ namespace xna {
 			impl->_samplerState = nullptr;
 		}
 
-		const auto hr = m_device->impl->_device->CreateSamplerState(
+		const auto hr = m_device->Implementation->Device->CreateSamplerState(
 			&impl->_description,
 			impl->_samplerState.GetAddressOf());
 
@@ -32,7 +32,7 @@ namespace xna {
 
 	bool SamplerState::Apply()
 	{
-		if (!impl || !m_device || !m_device->impl->_context) {
+		if (!impl || !m_device || !m_device->Implementation->Context) {
 			Exception::Throw(Exception::INVALID_OPERATION);
 		}
 
@@ -40,7 +40,7 @@ namespace xna {
 			Exception::Throw(Exception::INVALID_OPERATION);
 		}
 
-		m_device->impl->_context->PSSetSamplers(0, 1, impl->_samplerState.GetAddressOf());
+		m_device->Implementation->Context->PSSetSamplers(0, 1, impl->_samplerState.GetAddressOf());
 
 		return true;
 	}
@@ -49,7 +49,7 @@ namespace xna {
 		if (samplers.empty())
 			return;
 
-		if (!device.impl || !device.impl->_device || !device.impl->_context) {
+		if (!device.Implementation || !device.Implementation->Device || !device.Implementation->Context) {
 			Exception::Throw(Exception::INVALID_OPERATION);
 		}
 
@@ -65,7 +65,7 @@ namespace xna {
 			states[i]->AddRef();
 		}
 
-		device.impl->_context->PSSetSamplers(
+		device.Implementation->Context->PSSetSamplers(
 			0, 
 			static_cast<UINT>(states.size()),
 			states.data());

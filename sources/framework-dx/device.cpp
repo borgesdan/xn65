@@ -1,19 +1,19 @@
 #include "xna-dx/framework.hpp"
 
 namespace xna {
-	static void reset(GraphicsDevice::PlatformImplementation& impl);
-	static void createDevice(GraphicsDevice::PlatformImplementation& impl, GraphicsAdapter& currentAdapter);
+	static void reset(GraphicsDeviceImplementation& impl);
+	static void createDevice(GraphicsDeviceImplementation& impl, GraphicsAdapter& currentAdapter);
 	static void initAndApplyState(P_BlendState& blendState, P_RasterizerState& rasterizerState,
 		P_DepthStencilState& depthStencilState, P_SamplerStateCollection& samplerStates, P_GraphicsDevice const& device);
 
 	GraphicsDevice::GraphicsDevice() {		
-		impl = unew<PlatformImplementation>();
+		Implementation = unew<GraphicsDeviceImplementation>();
 		adapter = GraphicsAdapter::DefaultAdapter();		
 	}
 	
 	GraphicsDevice::GraphicsDevice(sptr<GraphicsAdapter> const& adapter, GraphicsProfile const& graphicsProfile, sptr<PresentationParameters> const& presentationParameters) 
 		: adapter(adapter), graphicsProfile(graphicsProfile), presentationParameters(presentationParameters) {
-		impl = unew<PlatformImplementation>();
+		Implementation = unew<GraphicsDeviceImplementation>();
 		
 		blendState = xna::BlendState::Opaque();
 		depthStencilState = xna::DepthStencilState::Default();
@@ -22,11 +22,11 @@ namespace xna {
 	}
 
 	void GraphicsDevice::Initialize() {
-		reset(*impl);
+		reset(*Implementation);
 		
 		auto _this = shared_from_this();				
 			
-		createDevice(*impl, *adapter);	
+		createDevice(*Implementation, *adapter);
 		
 		//
 		// Background
@@ -35,22 +35,22 @@ namespace xna {
 		const auto backColor = Colors::CornflowerBlue;
 		const auto backColorV3 = backColor.ToVector3();
 
-		impl->_backgroundColor[0] = backColorV3.X;
-		impl->_backgroundColor[1] = backColorV3.Y;
-		impl->_backgroundColor[2] = backColorV3.Z;
-		impl->_backgroundColor[3] = 1.0f;		
+		Implementation->backgroundColor[0] = backColorV3.X;
+		Implementation->backgroundColor[1] = backColorV3.Y;
+		Implementation->backgroundColor[2] = backColorV3.Z;
+		Implementation->backgroundColor[3] = 1.0f;		
 
 		//
 		// Window Association
 		//
 
-		auto hr = CreateDXGIFactory1(__uuidof(IDXGIFactory1), (void**)&impl->_factory);
+		auto hr = CreateDXGIFactory1(__uuidof(IDXGIFactory1), (void**)&Implementation->Factory);
 
 		if FAILED(hr)
 			Exception::Throw(Exception::FAILED_TO_CREATE);
 
 		auto hwnd = reinterpret_cast<HWND>(presentationParameters->DeviceWindowHandle);
-		hr = impl->_factory->MakeWindowAssociation(hwnd, DXGI_MWA_NO_ALT_ENTER);
+		hr = Implementation->Factory->MakeWindowAssociation(hwnd, DXGI_MWA_NO_ALT_ENTER);
 		
 		if (FAILED(hr)) 
 			Exception::Throw(Exception::FAILED_TO_MAKE_WINDOW_ASSOCIATION);		
@@ -65,7 +65,7 @@ namespace xna {
 			0.0F, 1.F);
 
 		D3D11_VIEWPORT view = DxHelpers::ViewportToDx(viewport);
-		impl->_context->RSSetViewports(1, &view);
+		Implementation->Context->RSSetViewports(1, &view);
 
 		//
 		// States
@@ -84,18 +84,18 @@ namespace xna {
 		case PresentInterval::Default:
 		case PresentInterval::One:
 		case PresentInterval::Two:
-			impl->vSyncValue = 1;
+			Implementation->vSyncValue = 1;
 			break;
 		case PresentInterval::Immediate:
-			impl->vSyncValue = 0;
+			Implementation->vSyncValue = 0;
 			break;
 		default:
-			impl->vSyncValue = 1;
+			Implementation->vSyncValue = 1;
 			break;
 		}		
 
-		impl->_swapChain = snew<xna::SwapChain>(_this);
-		impl->_swapChain->Initialize();
+		Implementation->SwapChain = snew<xna::SwapChain>(_this);
+		Implementation->SwapChain->Initialize();
 
 		//
 		//Render Target
@@ -103,44 +103,44 @@ namespace xna {
 
 		if (renderTarget) {
 			renderTarget->Initialize();
-			impl->_renderTarget2D = renderTarget;
+			Implementation->RenderTarget2D = renderTarget;
 		}
 		else {
-			impl->_renderTarget2D = RenderTarget2D::FromBackBuffer(_this);
+			Implementation->RenderTarget2D = RenderTarget2D::FromBackBuffer(_this);
 		}
 
-		const auto& renderView = impl->_renderTarget2D->impl2->_renderTargetView;
-		impl->_context->OMSetRenderTargets(1, renderView.GetAddressOf(), nullptr);
+		const auto& renderView = Implementation->RenderTarget2D->impl2->_renderTargetView;
+		Implementation->Context->OMSetRenderTargets(1, renderView.GetAddressOf(), nullptr);
 	}
 
 	bool GraphicsDevice::Present() const {
-		bool result = impl->_swapChain->Present(impl->vSyncValue != 0);		
+		bool result = Implementation->SwapChain->Present(Implementation->vSyncValue != 0);
 		
-		impl->_context->OMSetRenderTargets(
+		Implementation->Context->OMSetRenderTargets(
 			1, 
-			impl->_renderTarget2D->impl2->_renderTargetView.GetAddressOf(), 
+			Implementation->RenderTarget2D->impl2->_renderTargetView.GetAddressOf(),
 			nullptr);
 
 		return result;
 	}		
 
 	void GraphicsDevice::Clear(Color const& color) const {
-		if (!impl) return;
+		if (!Implementation) return;
 
 		const auto v4 = color.ToVector4();
 
-		impl->_backgroundColor[0] = v4.X;
-		impl->_backgroundColor[1] = v4.Y;
-		impl->_backgroundColor[2] = v4.Z;
-		impl->_backgroundColor[3] = v4.W;
+		Implementation->backgroundColor[0] = v4.X;
+		Implementation->backgroundColor[1] = v4.Y;
+		Implementation->backgroundColor[2] = v4.Z;
+		Implementation->backgroundColor[3] = v4.W;
 		
-		impl->_context->ClearRenderTargetView(
-			impl->_renderTarget2D->impl2->_renderTargetView.Get(),
-			impl->_backgroundColor);
+		Implementation->Context->ClearRenderTargetView(
+			Implementation->RenderTarget2D->impl2->_renderTargetView.Get(),
+			Implementation->backgroundColor);
 	}
 
 	void GraphicsDevice::Clear(ClearOptions options, Color const& color, float depth, Int stencil) const {
-		if (!impl) return;
+		if (!Implementation) return;
 
 		switch (options)
 		{
@@ -162,7 +162,7 @@ namespace xna {
 		viewport = value;
 		const auto view = DxHelpers::ViewportToDx(viewport);
 
-		impl->_context->RSSetViewports(1, &view);
+		Implementation->Context->RSSetViewports(1, &view);
 	}	
 	
 	void GraphicsDevice::BlendState(sptr<xna::BlendState> const& value) {
@@ -181,7 +181,7 @@ namespace xna {
 	}		
 
 	void GraphicsDevice::Reset(sptr<PresentationParameters> const& parameters, sptr<GraphicsAdapter> const& graphicsAdapter){
-		impl = unew<PlatformImplementation>();
+		Implementation = unew<GraphicsDeviceImplementation>();
 		adapter = graphicsAdapter;
 		presentationParameters = parameters;
 		
@@ -192,25 +192,25 @@ namespace xna {
 	// INTERNAL
 	//
 
-	void reset(GraphicsDevice::PlatformImplementation& impl)
+	void reset(GraphicsDeviceImplementation& impl)
 	{
-		if (impl._device) {
-			impl._device->Release();
-			impl._device = nullptr;
+		if (impl.Device) {
+			impl.Device->Release();
+			impl.Device = nullptr;
 		}
 
-		if (impl._context) {
-			impl._context->Release();
-			impl._context = nullptr;
+		if (impl.Context) {
+			impl.Context->Release();
+			impl.Context = nullptr;
 		}
 
-		if (impl._factory) {
-			impl._factory->Release();
-			impl._factory = nullptr;
+		if (impl.Factory) {
+			impl.Factory->Release();
+			impl.Factory = nullptr;
 		}
 	}
 
-	void createDevice(GraphicsDevice::PlatformImplementation& impl, GraphicsAdapter& currentAdapter) {
+	void createDevice(GraphicsDeviceImplementation& impl, GraphicsAdapter& currentAdapter) {
 		//
 		// See ref
 		//
@@ -248,17 +248,17 @@ namespace xna {
 			//UINT Flags,
 			createDeviceFlags,
 			//_In_reads_opt_( FeatureLevels ) CONST D3D_FEATURE_LEVEL* pFeatureLevels,
-			impl.featureLevels,
+			impl.FeatureLevels,
 			//UINT FeatureLevels,
 			7,
 			//UINT SDKVersion,
 			D3D11_SDK_VERSION,
 			//_COM_Outptr_opt_ ID3D11Device** ppDevice
-			impl._device.GetAddressOf(),
+			impl.Device.GetAddressOf(),
 			//_Out_opt_ D3D_FEATURE_LEVEL* pFeatureLevel,
-			&impl.currentFeatureLevel,
+			&impl.CurrentFeatureLevel,
 			//_COM_Outptr_opt_ ID3D11DeviceContext** ppImmediateContext
-			impl._context.GetAddressOf());
+			impl.Context.GetAddressOf());
 
 		if FAILED(hr)
 			Exception::Throw(Exception::FAILED_TO_CREATE);

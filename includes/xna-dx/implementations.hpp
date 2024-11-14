@@ -21,7 +21,34 @@ namespace xna {
 	struct GraphicsAdapterImplementation {
 		comptr<IDXGIAdapter1> Adapter;
 		comptr<IDXGIFactory1> Factory;
-	};		
+	};	
+
+	struct GraphicsDeviceImplementation {
+		comptr<ID3D11Device> Device;
+		comptr<ID3D11DeviceContext> Context;
+		comptr<IDXGIFactory1> Factory;
+		std::shared_ptr<SwapChain> SwapChain;
+		std::shared_ptr<RenderTarget2D> RenderTarget2D;
+		intptr_t WindowHandle{ 0 };
+
+		D3D_FEATURE_LEVEL FeatureLevels[7] =
+		{
+			D3D_FEATURE_LEVEL_11_1,
+			D3D_FEATURE_LEVEL_11_0,
+			D3D_FEATURE_LEVEL_10_1,
+			D3D_FEATURE_LEVEL_10_0,
+			D3D_FEATURE_LEVEL_9_3,
+			D3D_FEATURE_LEVEL_9_2,
+			D3D_FEATURE_LEVEL_9_1,
+		};
+
+		D3D_FEATURE_LEVEL CurrentFeatureLevel{ D3D_FEATURE_LEVEL_11_1 };
+
+	private:
+		friend class GraphicsDevice;
+		float backgroundColor[4] = { 0, 0, 0, 0 };
+		UINT vSyncValue = 1;
+	};
 
 	struct SpriteFont::PlatformImplementation {
 		uptr<DirectX::SpriteFont> dxSpriteFont{ nullptr };
@@ -242,35 +269,7 @@ namespace xna {
 		}
 
 		uptr<DirectX::AudioEngine> _dxAudioEngine = nullptr;
-	};
-
-	struct GraphicsDevice::PlatformImplementation {
-		comptr<ID3D11Device> _device = nullptr;
-		comptr<ID3D11DeviceContext> _context = nullptr;
-		comptr<IDXGIFactory1> _factory = nullptr;
-
-		sptr<SwapChain> _swapChain = nullptr;
-		sptr<RenderTarget2D> _renderTarget2D = nullptr;
-		intptr_t windowHandle{ 0 };
-
-		D3D_FEATURE_LEVEL featureLevels[7] =
-		{
-			D3D_FEATURE_LEVEL_11_1,
-			D3D_FEATURE_LEVEL_11_0,
-			D3D_FEATURE_LEVEL_10_1,
-			D3D_FEATURE_LEVEL_10_0,
-			D3D_FEATURE_LEVEL_9_3,
-			D3D_FEATURE_LEVEL_9_2,
-			D3D_FEATURE_LEVEL_9_1,
-		};
-
-		D3D_FEATURE_LEVEL currentFeatureLevel{ D3D_FEATURE_LEVEL_11_1 };
-
-	private:
-		friend class GraphicsDevice;
-		float _backgroundColor[4] = { 0, 0, 0, 0 };
-		UINT vSyncValue = 1;
-	};
+	};	
 
 	struct Game::PlatformImplementation {
 	private:
