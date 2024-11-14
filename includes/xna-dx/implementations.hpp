@@ -4,15 +4,10 @@
 #include "headers.hpp"
 
 namespace xna {
-	struct GraphicsAdapterImplementation {
-		comptr<IDXGIAdapter1> Adapter;
-		comptr<IDXGIFactory1> Factory;
-	};	
-
 	struct BlendStateImplementation {
 		D3D11_BLEND_DESC Description{};
 		float BlendFactor[4]{ 1.0F, 1.0F, 1.0F, 1.0F };
-		UINT SampleMask{ 0xffffffff };			
+		UINT SampleMask{ 0xffffffff };
 		comptr<ID3D11BlendState> BlendState;
 
 		static constexpr int MAX_RENDER_TARGETS = 8;
@@ -22,6 +17,11 @@ namespace xna {
 		comptr<ID3D11DepthStencilState> DepthStencil;
 		D3D11_DEPTH_STENCIL_DESC Description{};
 	};
+
+	struct GraphicsAdapterImplementation {
+		comptr<IDXGIAdapter1> Adapter;
+		comptr<IDXGIFactory1> Factory;
+	};		
 
 	struct SpriteFont::PlatformImplementation {
 		uptr<DirectX::SpriteFont> dxSpriteFont{ nullptr };

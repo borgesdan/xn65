@@ -1,11 +1,11 @@
 #ifndef XNA_GRAPHICS_DEPTHSTENCILSTATE_HPP
 #define XNA_GRAPHICS_DEPTHSTENCILSTATE_HPP
 
-#include "gresource.hpp"
 #include "../platform.hpp"
+#include "gresource.hpp"
 #include "shared.hpp"
-#include <memory>
 #include <cstdint>
+#include <memory>
 
 namespace xna {
 	enum class StencilOperation
