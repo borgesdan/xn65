@@ -17,7 +17,6 @@ add_library (Xn65 STATIC
 "common/gjk.cpp"
 "common/numerics.cpp"
 "common/packedvalue.cpp"
-"graphics/gresource.cpp"
 "graphics/displaymode"
 "exception.cpp")
 
