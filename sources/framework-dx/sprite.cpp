@@ -161,7 +161,7 @@ namespace xna {
 			blendState ? blendState->Implementation->BlendState.Get() : nullptr,
 			samplerState ? samplerState->Implementation->SamplerState.Get() : nullptr,
 			depthStencil ? depthStencil->Implementation->DepthStencil.Get() : nullptr,
-			rasterizerState ? rasterizerState->impl->dxRasterizerState.Get() : nullptr,
+			rasterizerState ? rasterizerState->Implementation->RasterizerState.Get() : nullptr,
 			effectFunc,
 			_transformMatrix
 		);

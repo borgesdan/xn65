@@ -54,13 +54,7 @@ namespace xna {
         DepthBuffer,
         Stencil,
         Target,
-    };        
-
-    enum class CullMode {
-        None,
-        CullClockwiseFace,
-        CullCounterClockwiseFace,
-    };    
+    };                
 
     enum class DepthWriteMask {
         Zero,
@@ -93,13 +87,7 @@ namespace xna {
         Texture3D,
         TextureCube,
         Void
-    };    
-
-    enum class FillMode
-    {
-        WireFrame,
-        Solid,
-    };
+    };        
 
     enum class GameComponentType {
         Updatable,

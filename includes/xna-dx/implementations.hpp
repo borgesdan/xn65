@@ -54,6 +54,11 @@ namespace xna {
 		UINT vSyncValue = 1;
 	};
 
+	struct RasterizerStateImplementation {
+		comptr<ID3D11RasterizerState> RasterizerState;
+		D3D11_RASTERIZER_DESC Description{};
+	};
+
 	struct SamplerStateImplementation {
 		comptr<ID3D11SamplerState> SamplerState;
 		D3D11_SAMPLER_DESC Description;
@@ -107,11 +112,6 @@ namespace xna {
 		}
 
 		uptr<DirectX::Mouse> _dxMouse = nullptr;
-	};
-
-	struct RasterizerState::PlatformImplementation {
-		comptr<ID3D11RasterizerState> dxRasterizerState = nullptr;
-		D3D11_RASTERIZER_DESC dxDescription{};
 	};	
 
 	struct SwapChain::PlatformImplementation {
