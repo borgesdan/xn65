@@ -3,6 +3,7 @@
 
 #include "../default.hpp"
 #include "../common/numerics.hpp"
+#include "shared.hpp"
 
 namespace xna {
 	//Flags indicating the method the raster uses to create an image on a surface

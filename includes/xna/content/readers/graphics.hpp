@@ -8,6 +8,7 @@
 #include "../../graphics/texture.hpp"
 #include "../manager.hpp"
 #include "../reader.hpp"
+#include "../../graphics/shared.hpp"
 
 namespace xna {
 	class Texture2DReader : public ContentTypeReaderT<PTexture2D> {

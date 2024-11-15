@@ -3,6 +3,7 @@
 
 #include "../default.hpp"
 #include "gresource.hpp"
+#include "shared.hpp"
 
 namespace xna {
 	//Represents a texture resource. 
