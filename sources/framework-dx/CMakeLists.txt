@@ -24,7 +24,7 @@ add_library (Xn65DX STATIC
 "init.cpp"
 "audioengine.cpp"
 "effect.cpp"
-"screen.cpp")
+"screen.cpp" )
 
 if (CMAKE_VERSION VERSION_GREATER 3.12)
   set_property(TARGET Xn65DX PROPERTY CXX_STANDARD 20)

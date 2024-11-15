@@ -44,6 +44,9 @@ namespace xna {
 
 		D3D_FEATURE_LEVEL CurrentFeatureLevel{ D3D_FEATURE_LEVEL_11_1 };
 
+		void Create(GraphicsAdapter& currentAdapter);
+		void Reset();		
+
 	private:
 		friend class GraphicsDevice;
 		float backgroundColor[4] = { 0, 0, 0, 0 };
