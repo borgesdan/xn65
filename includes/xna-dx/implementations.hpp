@@ -54,6 +54,11 @@ namespace xna {
 		UINT vSyncValue = 1;
 	};
 
+	struct SamplerStateImplementation {
+		comptr<ID3D11SamplerState> SamplerState;
+		D3D11_SAMPLER_DESC Description;
+	};
+
 	struct SpriteBatchImplementation {
 		std::shared_ptr<DirectX::SpriteBatch> SpriteBatch;
 		comptr<ID3D11InputLayout> InputLayout;
@@ -62,7 +67,7 @@ namespace xna {
 
 	struct SpriteFontImplementation {
 		std::unique_ptr<DirectX::SpriteFont> SpriteFont;
-	};			
+	};	
 
 	struct GamePad::PlatformImplementation {
 		uptr<DirectX::GamePad> _dxGamePad = unew<DirectX::GamePad>();
@@ -107,12 +112,7 @@ namespace xna {
 	struct RasterizerState::PlatformImplementation {
 		comptr<ID3D11RasterizerState> dxRasterizerState = nullptr;
 		D3D11_RASTERIZER_DESC dxDescription{};
-	};
-
-	struct SamplerState::PlatformImplementation {
-		comptr<ID3D11SamplerState> _samplerState = nullptr;
-		D3D11_SAMPLER_DESC _description{};
-	};
+	};	
 
 	struct SwapChain::PlatformImplementation {
 		comptr<IDXGISwapChain1> dxSwapChain{ nullptr };

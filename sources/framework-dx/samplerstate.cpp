@@ -6,22 +6,22 @@ namespace xna {
 	SamplerState::SamplerState() : SamplerState(nullptr){}
 
 	SamplerState::SamplerState(sptr<GraphicsDevice> const& device) : GraphicsResource(device) {
-		impl = unew<PlatformImplementation>();
+		Implementation = unew<SamplerStateImplementation>();
 	}
 
 	bool SamplerState::Initialize()
 	{
-		if (!impl || !BaseGraphicsDevice || !BaseGraphicsDevice->Implementation->Device) {
+		if (!Implementation || !BaseGraphicsDevice || !BaseGraphicsDevice->Implementation->Device) {
 			Exception::Throw(Exception::UNABLE_TO_INITIALIZE);
 		}
 
-		if (impl->_samplerState) {
-			impl->_samplerState = nullptr;
+		if (Implementation->SamplerState) {
+			Implementation->SamplerState = nullptr;
 		}
 
 		const auto hr = BaseGraphicsDevice->Implementation->Device->CreateSamplerState(
-			&impl->_description,
-			impl->_samplerState.GetAddressOf());
+			&Implementation->Description,
+			Implementation->SamplerState.GetAddressOf());
 
 		if (FAILED(hr)) {
 			Exception::Throw(Exception::FAILED_TO_CREATE);
@@ -32,15 +32,15 @@ namespace xna {
 
 	bool SamplerState::Apply()
 	{
-		if (!impl || !BaseGraphicsDevice || !BaseGraphicsDevice->Implementation->Context) {
+		if (!Implementation || !BaseGraphicsDevice || !BaseGraphicsDevice->Implementation->Context) {
 			Exception::Throw(Exception::INVALID_OPERATION);
 		}
 
-		if (!impl->_samplerState) {
+		if (!Implementation->SamplerState) {
 			Exception::Throw(Exception::INVALID_OPERATION);
 		}
 
-		BaseGraphicsDevice->Implementation->Context->PSSetSamplers(0, 1, impl->_samplerState.GetAddressOf());
+		BaseGraphicsDevice->Implementation->Context->PSSetSamplers(0, 1, Implementation->SamplerState.GetAddressOf());
 
 		return true;
 	}
@@ -58,10 +58,10 @@ namespace xna {
 		for (size_t i = 0; i < samplers.size(); ++i) {
 			const auto& current = samplers[0];
 
-			if (!current || !current->impl || !current->impl->_samplerState)
+			if (!current || !current->Implementation || !current->Implementation->SamplerState)
 				Exception::Throw(Exception::INVALID_OPERATION);
 
-			states[i] = current->impl->_samplerState.Get();
+			states[i] = current->Implementation->SamplerState.Get();
 			states[i]->AddRef();
 		}
 
@@ -78,55 +78,55 @@ namespace xna {
 
 	uptr<SamplerState> SamplerState::PoinWrap() {
 		auto state = unew<SamplerState>();
-		state->impl->_description.Filter = D3D11_FILTER_MIN_MAG_MIP_POINT;
-		state->impl->_description.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
-		state->impl->_description.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
-		state->impl->_description.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+		state->Implementation->Description.Filter = D3D11_FILTER_MIN_MAG_MIP_POINT;
+		state->Implementation->Description.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
+		state->Implementation->Description.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
+		state->Implementation->Description.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
 		return state;
 	}
 
 	uptr<SamplerState> SamplerState::PointClamp() {
 		auto state = unew<SamplerState>();
-		state->impl->_description.Filter = D3D11_FILTER_MIN_MAG_MIP_POINT;
-		state->impl->_description.AddressU = D3D11_TEXTURE_ADDRESS_CLAMP;
-		state->impl->_description.AddressV = D3D11_TEXTURE_ADDRESS_CLAMP;
-		state->impl->_description.AddressW = D3D11_TEXTURE_ADDRESS_CLAMP;
+		state->Implementation->Description.Filter = D3D11_FILTER_MIN_MAG_MIP_POINT;
+		state->Implementation->Description.AddressU = D3D11_TEXTURE_ADDRESS_CLAMP;
+		state->Implementation->Description.AddressV = D3D11_TEXTURE_ADDRESS_CLAMP;
+		state->Implementation->Description.AddressW = D3D11_TEXTURE_ADDRESS_CLAMP;
 		return state;
 	}
 
 	uptr<SamplerState> SamplerState::LinearWrap() {
 		auto state = unew<SamplerState>();
-		state->impl->_description.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
-		state->impl->_description.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
-		state->impl->_description.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
-		state->impl->_description.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+		state->Implementation->Description.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+		state->Implementation->Description.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
+		state->Implementation->Description.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
+		state->Implementation->Description.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
 		return state;
 	}
 
 	uptr<SamplerState> SamplerState::LinearClamp() {
 		auto state = unew<SamplerState>();
-		state->impl->_description.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
-		state->impl->_description.AddressU = D3D11_TEXTURE_ADDRESS_CLAMP;
-		state->impl->_description.AddressV = D3D11_TEXTURE_ADDRESS_CLAMP;
-		state->impl->_description.AddressW = D3D11_TEXTURE_ADDRESS_CLAMP;
+		state->Implementation->Description.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+		state->Implementation->Description.AddressU = D3D11_TEXTURE_ADDRESS_CLAMP;
+		state->Implementation->Description.AddressV = D3D11_TEXTURE_ADDRESS_CLAMP;
+		state->Implementation->Description.AddressW = D3D11_TEXTURE_ADDRESS_CLAMP;
 		return state;
 	}
 
 	uptr<SamplerState> SamplerState::AnisotropicWrap() {
 		auto state = unew<SamplerState>();
-		state->impl->_description.Filter = D3D11_FILTER_ANISOTROPIC;
-		state->impl->_description.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
-		state->impl->_description.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
-		state->impl->_description.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+		state->Implementation->Description.Filter = D3D11_FILTER_ANISOTROPIC;
+		state->Implementation->Description.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
+		state->Implementation->Description.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
+		state->Implementation->Description.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
 		return state;
 	}
 
 	uptr<SamplerState> SamplerState::AnisotropicClamp() {
 		auto state = unew<SamplerState>();
-		state->impl->_description.Filter = D3D11_FILTER_ANISOTROPIC;
-		state->impl->_description.AddressU = D3D11_TEXTURE_ADDRESS_CLAMP;
-		state->impl->_description.AddressV = D3D11_TEXTURE_ADDRESS_CLAMP;
-		state->impl->_description.AddressW = D3D11_TEXTURE_ADDRESS_CLAMP;
+		state->Implementation->Description.Filter = D3D11_FILTER_ANISOTROPIC;
+		state->Implementation->Description.AddressU = D3D11_TEXTURE_ADDRESS_CLAMP;
+		state->Implementation->Description.AddressV = D3D11_TEXTURE_ADDRESS_CLAMP;
+		state->Implementation->Description.AddressW = D3D11_TEXTURE_ADDRESS_CLAMP;
 		return state;
 	}	
 
@@ -134,31 +134,31 @@ namespace xna {
 		switch (value)
 		{
 		case xna::TextureFilter::Linear:
-			impl->_description.Filter = D3D11_FILTER::D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+			Implementation->Description.Filter = D3D11_FILTER::D3D11_FILTER_MIN_MAG_MIP_LINEAR;
 			break;
 		case xna::TextureFilter::Point:
-			impl->_description.Filter = D3D11_FILTER::D3D11_FILTER_MIN_MAG_MIP_POINT;
+			Implementation->Description.Filter = D3D11_FILTER::D3D11_FILTER_MIN_MAG_MIP_POINT;
 			break;
 		case xna::TextureFilter::Anisotropic:
-			impl->_description.Filter = D3D11_FILTER::D3D11_FILTER_ANISOTROPIC;
+			Implementation->Description.Filter = D3D11_FILTER::D3D11_FILTER_ANISOTROPIC;
 			break;
 		case xna::TextureFilter::LinearMipPoint:
-			impl->_description.Filter = D3D11_FILTER::D3D11_FILTER_MIN_MAG_LINEAR_MIP_POINT;
+			Implementation->Description.Filter = D3D11_FILTER::D3D11_FILTER_MIN_MAG_LINEAR_MIP_POINT;
 			break;
 		case xna::TextureFilter::PointMipLinear:
-			impl->_description.Filter = D3D11_FILTER::D3D11_FILTER_MIN_MAG_POINT_MIP_LINEAR;
+			Implementation->Description.Filter = D3D11_FILTER::D3D11_FILTER_MIN_MAG_POINT_MIP_LINEAR;
 			break;
 		case xna::TextureFilter::MinLinearMagPointMipLinear:
-			impl->_description.Filter = D3D11_FILTER::D3D11_FILTER_MIN_LINEAR_MAG_POINT_MIP_LINEAR;
+			Implementation->Description.Filter = D3D11_FILTER::D3D11_FILTER_MIN_LINEAR_MAG_POINT_MIP_LINEAR;
 			break;
 		case xna::TextureFilter::MinLinearMagPointMipPoint:
-			impl->_description.Filter = D3D11_FILTER::D3D11_FILTER_MIN_LINEAR_MAG_MIP_POINT;
+			Implementation->Description.Filter = D3D11_FILTER::D3D11_FILTER_MIN_LINEAR_MAG_MIP_POINT;
 			break;
 		case xna::TextureFilter::MinPointMagLinearMipLinear:
-			impl->_description.Filter = D3D11_FILTER::D3D11_FILTER_MIN_POINT_MAG_MIP_LINEAR;
+			Implementation->Description.Filter = D3D11_FILTER::D3D11_FILTER_MIN_POINT_MAG_MIP_LINEAR;
 			break;
 		case xna::TextureFilter::MinPointMagLinearMipPoint:
-			impl->_description.Filter = D3D11_FILTER::D3D11_FILTER_MIN_POINT_MAG_LINEAR_MIP_POINT;
+			Implementation->Description.Filter = D3D11_FILTER::D3D11_FILTER_MIN_POINT_MAG_LINEAR_MIP_POINT;
 			break;
 		default:
 			break;
@@ -166,39 +166,39 @@ namespace xna {
 	}
 
 	void SamplerState::AddressU(TextureAddressMode value) {
-		impl->_description.AddressU = DxHelpers::TextureAddresModeToDx(value);
+		Implementation->Description.AddressU = DxHelpers::TextureAddresModeToDx(value);
 	}
 
 	void SamplerState::AddressV(TextureAddressMode value) {
-		impl->_description.AddressV = DxHelpers::TextureAddresModeToDx(value);
+		Implementation->Description.AddressV = DxHelpers::TextureAddresModeToDx(value);
 	}
 
 	void SamplerState::AddressW(TextureAddressMode value) {
-		impl->_description.AddressW = DxHelpers::TextureAddresModeToDx(value);
+		Implementation->Description.AddressW = DxHelpers::TextureAddresModeToDx(value);
 	}
 
 	void SamplerState::Comparison(ComparisonFunction value) {
-		impl->_description.ComparisonFunc = static_cast<D3D11_COMPARISON_FUNC>(static_cast<int>(value) + 1);
+		Implementation->Description.ComparisonFunc = static_cast<D3D11_COMPARISON_FUNC>(static_cast<int>(value) + 1);
 	}
 
 	void SamplerState::MipMapLevelOfDetailBias(float value) {
-		impl->_description.MipLODBias = value;
+		Implementation->Description.MipLODBias = value;
 	}
 
 	void SamplerState::MinMipLevel(float value) {
-		impl->_description.MinLOD = value;
+		Implementation->Description.MinLOD = value;
 	}
 
 	void SamplerState::MaxMipLevel (float value) {
-		impl->_description.MaxLOD = value;
+		Implementation->Description.MaxLOD = value;
 	}
 
 	void SamplerState::MaxAnisotropy(Uint value) {
-		impl->_description.MaxAnisotropy = static_cast<UINT>(value);
+		Implementation->Description.MaxAnisotropy = static_cast<UINT>(value);
 	}
 
 	TextureFilter SamplerState::Filter() const {
-		switch (impl->_description.Filter)
+		switch (Implementation->Description.Filter)
 		{
 		case D3D11_FILTER::D3D11_FILTER_MIN_MAG_MIP_LINEAR:
 			return xna::TextureFilter::Linear;
@@ -224,34 +224,34 @@ namespace xna {
 	}
 
 	TextureAddressMode SamplerState::AddressU() const {
-		return DxHelpers::TextureAddresModeToXna(impl->_description.AddressU);
+		return DxHelpers::TextureAddresModeToXna(Implementation->Description.AddressU);
 	}
 
 	TextureAddressMode SamplerState::AddressV() const {		
-		return DxHelpers::TextureAddresModeToXna(impl->_description.AddressV);
+		return DxHelpers::TextureAddresModeToXna(Implementation->Description.AddressV);
 	}
 
 	TextureAddressMode SamplerState::AddressW() const {		
-		return DxHelpers::TextureAddresModeToXna(impl->_description.AddressW);
+		return DxHelpers::TextureAddresModeToXna(Implementation->Description.AddressW);
 	}
 
 	ComparisonFunction SamplerState::Comparison() const {
-		return static_cast<ComparisonFunction>(impl->_description.ComparisonFunc - 1);
+		return static_cast<ComparisonFunction>(Implementation->Description.ComparisonFunc - 1);
 	}
 
 	float SamplerState::MipMapLevelOfDetailBias() const {
-		return impl->_description.MipLODBias;
+		return Implementation->Description.MipLODBias;
 	}
 
 	float SamplerState::MinMipLevel() const {
-		return impl->_description.MinLOD;
+		return Implementation->Description.MinLOD;
 	}
 
 	float SamplerState::MaxMipLevel() const {
-		return impl->_description.MaxLOD;
+		return Implementation->Description.MaxLOD;
 	}
 
 	Uint SamplerState::MaxAnisotropy() const {
-		return impl->_description.MaxAnisotropy;
+		return Implementation->Description.MaxAnisotropy;
 	}
 }

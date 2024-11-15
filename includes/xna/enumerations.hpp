@@ -142,28 +142,7 @@ namespace xna {
         FlipHorizontally = 1,
         FlipVertically = 2,
         Both = FlipHorizontally | FlipVertically
-    };
-    
-
-    enum class TextureAddressMode {
-        Wrap,
-        Mirror,
-        Clamp,
-        Border,
-        MirrorOnce
-    };
-
-    enum class TextureFilter {
-        Linear,
-        Point,
-        Anisotropic,
-        LinearMipPoint,
-        PointMipLinear,
-        MinLinearMagPointMipLinear,
-        MinLinearMagPointMipPoint,
-        MinPointMagLinearMipLinear,
-        MinPointMagLinearMipPoint,
-    };
+    };    
 
     constexpr int SURFACE_FORMAT_COUNT = 19;
 }

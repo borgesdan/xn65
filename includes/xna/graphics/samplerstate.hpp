@@ -1,21 +1,64 @@
 #ifndef XNA_GRAPHICS_SAMPLERSTATE_HPP
 #define XNA_GRAPHICS_SAMPLERSTATE_HPP
 
-#include "../default.hpp"
-#include "shared.hpp"
+#include "../platform.hpp"
 #include "gresource.hpp"
+#include "shared.hpp"
+#include <memory>
+#include <vector>
 
 namespace xna {
+	//Defines modes for addressing texels using texture coordinates that are outside of the typical range of 0.0 to 1.0.
+	enum class TextureAddressMode {
+		//Tile the texture at every integer junction.
+		//For example, for u values between 0 and 3, the texture is repeated three times; no mirroring is performed. 
+		Wrap,
+		//Similar to Wrap, except that the texture is flipped at every integer junction. 
+		//For u values between 0 and 1, for example, the texture is addressed normally; between 1 and 2, the texture is flipped (mirrored); between 2 and 3, the texture is normal again, and so on.
+		Mirror,
+		//Texture coordinates outside the range [0.0, 1.0] are set to the texture color at 0.0 or 1.0, respectively.
+		Clamp,
+		//Texture coordinates outside the range [0.0, 1.0] are set to the border color specified.
+		Border,
+		//Similar to Mirror and Clamp.
+		//Takes the absolute value of the texture coordinate (thus, mirroring around 0), and then clamps to the maximum value.
+		MirrorOnce
+	};
+
+	//Defines filtering types during texture sampling. 
+	enum class TextureFilter {
+		//Use linear filtering.
+		Linear,
+		//Use point filtering.
+		Point,
+		//Use anisotropic filtering.
+		Anisotropic,
+		//Use linear filtering to shrink or expand, and point filtering between mipmap levels (mip).
+		LinearMipPoint,
+		//Use point filtering to shrink (minify) or expand (magnify), and linear filtering between mipmap levels.
+		PointMipLinear,
+		//Use linear filtering to shrink, point filtering to expand, and linear filtering between mipmap levels.
+		MinLinearMagPointMipLinear,
+		//Use linear filtering to shrink, point filtering to expand, and point filtering between mipmap levels.
+		MinLinearMagPointMipPoint,
+		//Use point filtering to shrink, linear filtering to expand, and linear filtering between mipmap levels.
+		MinPointMagLinearMipLinear,
+		//Use point filtering to shrink, linear filtering to expand, and point filtering between mipmap levels.
+		MinPointMagLinearMipPoint,
+	};
+
+	struct SamplerStateImplementation;
+
 	//Contains sampler state, which determines how to sample texture data. 
-	class SamplerState : public GraphicsResource {
+	class SamplerState : public GraphicsResource, public PlatformImplementation<SamplerStateImplementation> {
 	public:
 		SamplerState();
-		SamplerState(sptr<GraphicsDevice> const& device);
+		SamplerState(std::shared_ptr<GraphicsDevice> const& device);
 		
 		//Gets or sets the maximum anisotropy. The default value is 0.
-		void MaxAnisotropy(Uint value);
+		void MaxAnisotropy(uint32_t value);
 		//Gets or sets the maximum anisotropy. The default value is 0.
-		Uint MaxAnisotropy() const;
+		uint32_t MaxAnisotropy() const;
 		//Gets or sets the type of filtering during sampling.
 		void Filter(TextureFilter value);
 		//Gets or sets the type of filtering during sampling.
@@ -49,30 +92,24 @@ namespace xna {
 		float MinMipLevel() const;		
 
 		//Contains default state for point filtering and texture coordinate wrapping.
-		static uptr<SamplerState> PoinWrap();
+		static std::unique_ptr<SamplerState> PoinWrap();
 		//Contains default state for point filtering and texture coordinate clamping.
-		static uptr<SamplerState> PointClamp();
+		static std::unique_ptr<SamplerState> PointClamp();
 		//Contains default state for linear filtering and texture coordinate wrapping.
-		static uptr<SamplerState> LinearWrap();
+		static std::unique_ptr<SamplerState> LinearWrap();
 		//Contains default state for linear filtering and texture coordinate clamping.
-		static uptr<SamplerState> LinearClamp();
+		static std::unique_ptr<SamplerState> LinearClamp();
 		//Contains default state for anisotropic filtering and texture coordinate wrapping.
-		static uptr<SamplerState> AnisotropicWrap();
+		static std::unique_ptr<SamplerState> AnisotropicWrap();
 		//Contains default state for anisotropic filtering and texture coordinate clamping.
-		static uptr<SamplerState> AnisotropicClamp();
+		static std::unique_ptr<SamplerState> AnisotropicClamp();
 
 		ComparisonFunction Comparison() const;
 		void Comparison(ComparisonFunction value);
 
 		bool Initialize();
-		bool Apply();
-
-	public:
-		struct PlatformImplementation;
-		uptr<PlatformImplementation> impl = nullptr;
-	};
-
-	using PSamplerState = sptr<SamplerState>;
+		bool Apply();	
+	};	
 
 	//Collection of SamplerState objects. 
 	class SamplerStateCollection {
@@ -82,10 +119,10 @@ namespace xna {
 		SamplerStateCollection(size_t size) 
 			: samplers(size){}
 
-		SamplerStateCollection(std::vector<PSamplerState> const& samplers) 
+		SamplerStateCollection(std::vector<std::shared_ptr<SamplerState>> const& samplers)
 			: samplers(samplers) {}
 
-		PSamplerState operator[](size_t index) {
+		std::shared_ptr<SamplerState> operator[](size_t index) {
 			if (index >= samplers.size())
 				return nullptr;
 
@@ -99,10 +136,8 @@ namespace xna {
 		void Apply(GraphicsDevice const& device);
 
 	public:
-		std::vector<PSamplerState> samplers;
-	};
-
-	using PSamplerStateCollection = sptr<SamplerStateCollection>;
+		std::vector<std::shared_ptr<SamplerState>> samplers;
+	};	
 }
 
 #endif
