@@ -54,15 +54,15 @@ namespace xna {
 		UINT vSyncValue = 1;
 	};
 
-	struct SpriteFont::PlatformImplementation {
-		uptr<DirectX::SpriteFont> dxSpriteFont{ nullptr };
+	struct SpriteBatchImplementation {
+		std::shared_ptr<DirectX::SpriteBatch> SpriteBatch;
+		comptr<ID3D11InputLayout> InputLayout;
+		std::shared_ptr<DirectX::DX11::IEffect> EffectBuffer;
 	};
 
-	struct SpriteBatch::PlatformImplementation {
-		sptr<DirectX::SpriteBatch> dxSpriteBatch = nullptr;
-		comptr<ID3D11InputLayout> dxInputLayout = nullptr;
-		sptr<DirectX::DX11::IEffect> dxEffectBuffer = nullptr;
-	};				
+	struct SpriteFontImplementation {
+		std::unique_ptr<DirectX::SpriteFont> SpriteFont;
+	};			
 
 	struct GamePad::PlatformImplementation {
 		uptr<DirectX::GamePad> _dxGamePad = unew<DirectX::GamePad>();

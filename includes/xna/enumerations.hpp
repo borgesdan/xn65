@@ -143,15 +143,7 @@ namespace xna {
         FlipVertically = 2,
         Both = FlipHorizontally | FlipVertically
     };
-
-    enum class SpriteSortMode
-    {
-        Deferred,
-        Immediate,
-        Texture,
-        BackToFront,
-        FrontToBack,
-    };        
+    
 
     enum class TextureAddressMode {
         Wrap,

@@ -42,6 +42,7 @@ namespace xna {
 		}
 	};
 
+	using PSpriteFont = std::shared_ptr<SpriteFont>;
 	class SpriteFontReader : public ContentTypeReaderT<PSpriteFont> {
 	public:
 		SpriteFontReader() : ContentTypeReaderT(typeof<PSpriteFont>()) {
