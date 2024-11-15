@@ -139,14 +139,14 @@ namespace xna {
 
 				effect->impl->dxEffect->GetVertexShaderBytecode(&shaderByteCode, &byteCodeLength);
 
-				m_device->Implementation->Device->CreateInputLayout(
+				BaseGraphicsDevice->Implementation->Device->CreateInputLayout(
 					DirectX::VertexPositionColorTexture::InputElements,
 					DirectX::VertexPositionColorTexture::InputElementCount,
 					shaderByteCode, byteCodeLength,
 					impl->dxInputLayout.GetAddressOf());
 			}
 
-			auto& context = m_device->Implementation->Context;
+			auto& context = BaseGraphicsDevice->Implementation->Context;
 
 			effectFunc = [=] {
 				impl->dxEffectBuffer->Apply(context.Get());

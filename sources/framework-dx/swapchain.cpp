@@ -44,11 +44,11 @@ namespace xna {
     }
 
     bool SwapChain::Initialize() {
-        if (!impl || !m_device || !m_device->Implementation->Device) {
+        if (!impl || !BaseGraphicsDevice || !BaseGraphicsDevice->Implementation->Device) {
             Exception::Throw(Exception::UNABLE_TO_INITIALIZE);
         }
         
-        const auto parameters = m_device->PresentParameters();
+        const auto parameters = BaseGraphicsDevice->PresentParameters();
 
         impl->dxDescription.Width = static_cast<UINT>(parameters->BackBufferWidth);
         impl->dxDescription.Height = static_cast<UINT>(parameters->BackBufferHeight);
@@ -67,7 +67,7 @@ namespace xna {
         impl->dxFullScreenDescription.Windowed = !parameters->IsFullscreen;
 
         HWND hwnd = reinterpret_cast<HWND>(parameters->DeviceWindowHandle);
-        return internalInit(*m_device, hwnd, impl->dxSwapChain, impl->dxDescription, impl->dxFullScreenDescription);
+        return internalInit(*BaseGraphicsDevice, hwnd, impl->dxSwapChain, impl->dxDescription, impl->dxFullScreenDescription);
     }   
 
     bool SwapChain::GetBackBuffer(Texture2D& texture2D) {

@@ -17,7 +17,7 @@ namespace xna {
 		sptr<xna::GraphicsDevice> Device() const;
 
 	protected:
-		sptr<GraphicsDevice> m_device = nullptr;
+		sptr<GraphicsDevice> BaseGraphicsDevice = nullptr;
 	};
 }
 

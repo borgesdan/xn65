@@ -17,7 +17,7 @@ namespace xna {
 	
 	bool RasterizerState::Initialize()
 	{
-		if (!impl || !m_device || !m_device->Implementation->Device) {
+		if (!impl || !BaseGraphicsDevice || !BaseGraphicsDevice->Implementation->Device) {
 			Exception::Throw(Exception::UNABLE_TO_INITIALIZE);
 		}
 
@@ -25,7 +25,7 @@ namespace xna {
 			impl->dxRasterizerState = nullptr;
 		}
 
-		const auto hr = m_device->Implementation->Device->CreateRasterizerState(
+		const auto hr = BaseGraphicsDevice->Implementation->Device->CreateRasterizerState(
 			&impl->dxDescription, 
 			impl->dxRasterizerState.GetAddressOf());
 
@@ -38,7 +38,7 @@ namespace xna {
 
 	bool RasterizerState::Apply()
 	{
-		if (!impl || !m_device || !m_device->Implementation->Context) {
+		if (!impl || !BaseGraphicsDevice || !BaseGraphicsDevice->Implementation->Context) {
 			Exception::Throw(Exception::UNABLE_TO_INITIALIZE);
 		}
 
@@ -46,7 +46,7 @@ namespace xna {
 			Exception::Throw(Exception::INVALID_OPERATION);
 		}
 
-		m_device->Implementation->Context->RSSetState(impl->dxRasterizerState.Get());
+		BaseGraphicsDevice->Implementation->Context->RSSetState(impl->dxRasterizerState.Get());
 
 		return true;
 	}

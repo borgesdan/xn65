@@ -37,7 +37,7 @@ namespace xna {
 
 	bool DepthStencilState::Initialize()
 	{
-		if (!m_device || !m_device->Implementation->Device) {
+		if (!BaseGraphicsDevice || !BaseGraphicsDevice->Implementation->Device) {
 			Exception::Throw(Exception::UNABLE_TO_INITIALIZE);
 		}
 
@@ -45,7 +45,7 @@ namespace xna {
 			Implementation->DepthStencil = nullptr;
 		}
 
-		const auto hr = m_device->Implementation->Device->CreateDepthStencilState(
+		const auto hr = BaseGraphicsDevice->Implementation->Device->CreateDepthStencilState(
 			&Implementation->Description,
 			Implementation->DepthStencil.GetAddressOf());
 
@@ -58,7 +58,7 @@ namespace xna {
 
 	bool DepthStencilState::Apply()
 	{
-		if (!m_device || !m_device->Implementation->Context) {
+		if (!BaseGraphicsDevice || !BaseGraphicsDevice->Implementation->Context) {
 			Exception::Throw(Exception::INVALID_OPERATION);
 		}
 
@@ -66,7 +66,7 @@ namespace xna {
 			Initialize();
 		}
 
-		m_device->Implementation->Context->OMSetDepthStencilState(Implementation->DepthStencil.Get(), 0);
+		BaseGraphicsDevice->Implementation->Context->OMSetDepthStencilState(Implementation->DepthStencil.Get(), 0);
 
 		return true;
 	}

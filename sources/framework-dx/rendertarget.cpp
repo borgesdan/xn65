@@ -26,7 +26,7 @@ namespace xna {
 	}
 
 	void RenderTarget2D::Initialize() {
-		if (!impl || !m_device || !m_device->Implementation->Device) {
+		if (!impl || !BaseGraphicsDevice || !BaseGraphicsDevice->Implementation->Device) {
 			Exception::Throw(Exception::UNABLE_TO_INITIALIZE);
 		}				
 
@@ -39,7 +39,7 @@ namespace xna {
 
 		Texture2D::Initialize();
 		
-		auto& dxdevice = m_device->Implementation->Device;
+		auto& dxdevice = BaseGraphicsDevice->Implementation->Device;
 		
 		const auto hr = dxdevice->CreateRenderTargetView(
 			impl->dxTexture2D.Get(),

@@ -97,7 +97,7 @@ namespace xna {
 
 	bool BlendState::Initialize()
 	{
-		if (!m_device || !m_device->Implementation->Device) {
+		if (!BaseGraphicsDevice || !BaseGraphicsDevice->Implementation->Device) {
 			Exception::Throw(Exception::UNABLE_TO_INITIALIZE);
 		}
 
@@ -105,7 +105,7 @@ namespace xna {
 			Implementation->BlendState = nullptr;
 		}
 
-		const auto hr = m_device->Implementation->Device->CreateBlendState(
+		const auto hr = BaseGraphicsDevice->Implementation->Device->CreateBlendState(
 			&Implementation->Description,
 			Implementation->BlendState.GetAddressOf());
 
@@ -117,7 +117,7 @@ namespace xna {
 	}
 
 	bool BlendState::Apply() {
-		if (!m_device || !m_device->Implementation->Context) {
+		if (!BaseGraphicsDevice || !BaseGraphicsDevice->Implementation->Context) {
 			Exception::Throw(Exception::FAILED_TO_APPLY);
 		}
 
@@ -125,7 +125,7 @@ namespace xna {
 			Initialize();
 		}
 
-		m_device->Implementation->Context->OMSetBlendState(
+		BaseGraphicsDevice->Implementation->Context->OMSetBlendState(
 			Implementation->BlendState.Get(),
 			Implementation->BlendFactor,
 			Implementation->SampleMask);

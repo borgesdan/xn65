@@ -1,17 +1,17 @@
 #include "xna/graphics/gresource.hpp"
 
 namespace xna {
-	GraphicsResource::GraphicsResource(sptr<GraphicsDevice> const& device) : m_device(device) {}
+	GraphicsResource::GraphicsResource(sptr<GraphicsDevice> const& device) : BaseGraphicsDevice(device) {}
 
 	sptr<GraphicsDevice> GraphicsResource::Device() const {
-		return m_device;
+		return BaseGraphicsDevice;
 	}
 
 	bool GraphicsResource::Bind(sptr<GraphicsDevice> const& device) {
-		if (!device || device == m_device)
+		if (!device || device == BaseGraphicsDevice)
 			return false;
 
-		m_device = device;
+		BaseGraphicsDevice = device;
 
 		return true;
 	}

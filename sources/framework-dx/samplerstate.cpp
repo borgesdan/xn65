@@ -11,7 +11,7 @@ namespace xna {
 
 	bool SamplerState::Initialize()
 	{
-		if (!impl || !m_device || !m_device->Implementation->Device) {
+		if (!impl || !BaseGraphicsDevice || !BaseGraphicsDevice->Implementation->Device) {
 			Exception::Throw(Exception::UNABLE_TO_INITIALIZE);
 		}
 
@@ -19,7 +19,7 @@ namespace xna {
 			impl->_samplerState = nullptr;
 		}
 
-		const auto hr = m_device->Implementation->Device->CreateSamplerState(
+		const auto hr = BaseGraphicsDevice->Implementation->Device->CreateSamplerState(
 			&impl->_description,
 			impl->_samplerState.GetAddressOf());
 
@@ -32,7 +32,7 @@ namespace xna {
 
 	bool SamplerState::Apply()
 	{
-		if (!impl || !m_device || !m_device->Implementation->Context) {
+		if (!impl || !BaseGraphicsDevice || !BaseGraphicsDevice->Implementation->Context) {
 			Exception::Throw(Exception::INVALID_OPERATION);
 		}
 
@@ -40,7 +40,7 @@ namespace xna {
 			Exception::Throw(Exception::INVALID_OPERATION);
 		}
 
-		m_device->Implementation->Context->PSSetSamplers(0, 1, impl->_samplerState.GetAddressOf());
+		BaseGraphicsDevice->Implementation->Context->PSSetSamplers(0, 1, impl->_samplerState.GetAddressOf());
 
 		return true;
 	}
