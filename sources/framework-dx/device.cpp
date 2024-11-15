@@ -14,7 +14,6 @@ namespace xna {
 #if _DEBUG
 		createDeviceFlags = D3D11_CREATE_DEVICE_FLAG::D3D11_CREATE_DEVICE_DEBUG;
 #endif  
-
 		const auto& pAdapter = GraphicsAdapter::UseNullDevice() ? NULL : currentAdapter.Implementation->Adapter.Get();
 
 		//
@@ -39,7 +38,7 @@ namespace xna {
 			//_In_reads_opt_( FeatureLevels ) CONST D3D_FEATURE_LEVEL* pFeatureLevels,
 			FeatureLevels,
 			//UINT FeatureLevels,
-			7,
+			static_cast<UINT>(FeatureLevelCount),
 			//UINT SDKVersion,
 			D3D11_SDK_VERSION,
 			//_COM_Outptr_opt_ ID3D11Device** ppDevice
