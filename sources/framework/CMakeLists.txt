@@ -17,9 +17,13 @@ add_library (Xn65 STATIC
 "common/gjk.cpp"
 "common/numerics.cpp"
 "common/packedvalue.cpp"
-"graphics/displaymode"
+"graphics/displaymode.cpp"
 "exception.cpp")
 
 if (CMAKE_VERSION VERSION_GREATER 3.12)
   set_property(TARGET Xn65 PROPERTY CXX_STANDARD 20)
 endif()
+
+#find_package(tinyxml2 CONFIG REQUIRED)
+
+target_link_libraries(Xn65 "${PROJECT_VCPKG_DIRECTORY}/installed/x64-windows/lib/tinyxml2.lib")

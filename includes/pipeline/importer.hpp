@@ -24,7 +24,7 @@ namespace xna {
 	//Accesses a statically typed ContentImporter instance from generic code using dynamic typing.
 	struct IContentImporter {
 		//Imports an asset from the specified file.
-		virtual std::any Import(std::string const& filename, ContentImporterContext& context) = 0;
+		virtual std::any ImportObject(std::string const& filename, ContentImporterContext& context) = 0;
 	};
 
 	//Implements a file format importer for use with game assets.
@@ -34,15 +34,15 @@ namespace xna {
 		virtual T Import(std::string const& filename, ContentImporterContext& context) = 0;
 
 		//Imports an asset from the specified file.
-		std::any Import(std::string const& filename, ContentImporterContext& context) override {
-			std::any obj = Import<T>(filename, context);
+		std::any ImportObject(std::string const& filename, ContentImporterContext& context) override {
+			std::any obj = Import(filename, context);
 			return obj;
 		}
 	};
 
 	//rovides properties that identify and provide metadata about the importer, such as supported file extensions and caching information.
 	struct ContentImporterAttribute {
-		bool CacheImportedData;
+		bool CacheImportedData{ false };
 		std::string DisplayName;
 		std::string DefaultProcessor;
 
@@ -61,6 +61,25 @@ namespace xna {
 
 	private:
 		std::vector<std::string> fileExtensions;
+	};
+
+	struct ImporterRegistration {
+		inline static auto Importers = std::vector<IContentImporter>();
+	};
+
+	class ImporterManager {
+	public:
+
+
+	private:
+
+	};
+
+	struct XmlImporter : ContentImporter_T<std::any> {
+		std::any Import(std::string const& filename, ContentImporterContext& context) override {
+			//TODO: XmlReader						
+			return {  };
+		}
 	};
 }
 
