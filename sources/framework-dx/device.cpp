@@ -175,7 +175,7 @@ namespace xna {
 			Implementation->RenderTarget2D = RenderTarget2D::FromBackBuffer(_this);
 		}
 
-		const auto& renderView = Implementation->RenderTarget2D->impl2->_renderTargetView;
+		const auto& renderView = Implementation->RenderTarget2D->Implementation2->RenderTargetView;
 		Implementation->Context->OMSetRenderTargets(1, renderView.GetAddressOf(), nullptr);
 	}
 
@@ -184,7 +184,7 @@ namespace xna {
 
 		Implementation->Context->OMSetRenderTargets(
 			1,
-			Implementation->RenderTarget2D->impl2->_renderTargetView.GetAddressOf(),
+			Implementation->RenderTarget2D->Implementation2->RenderTargetView.GetAddressOf(),
 			nullptr);
 
 		return result;
@@ -201,7 +201,7 @@ namespace xna {
 		Implementation->backgroundColor[3] = v4.W;
 
 		Implementation->Context->ClearRenderTargetView(
-			Implementation->RenderTarget2D->impl2->_renderTargetView.Get(),
+			Implementation->RenderTarget2D->Implementation2->RenderTargetView.Get(),
 			Implementation->backgroundColor);
 	}
 

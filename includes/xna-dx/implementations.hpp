@@ -59,6 +59,11 @@ namespace xna {
 		D3D11_RASTERIZER_DESC Description{};
 	};
 
+	struct RenderTarget2DImplementation {
+		comptr<ID3D11RenderTargetView> RenderTargetView;
+		D3D11_RENDER_TARGET_VIEW_DESC Description{};
+	};
+
 	struct SamplerStateImplementation {
 		comptr<ID3D11SamplerState> SamplerState;
 		D3D11_SAMPLER_DESC Description{};
@@ -151,12 +156,7 @@ namespace xna {
 
 			return !FAILED(hr);
 		}
-	};	
-
-	struct RenderTarget2D::PlatformImplementation {
-		comptr<ID3D11RenderTargetView> _renderTargetView = nullptr;
-		D3D11_RENDER_TARGET_VIEW_DESC _renderTargetDesc{};
-	};
+	};		
 
 	enum class GameWindowMode : UINT {
 		Fullscreen = WS_POPUP | WS_VISIBLE,

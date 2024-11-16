@@ -2,18 +2,18 @@
 
 namespace xna {
 	RenderTarget2D::RenderTarget2D() : Texture2D(nullptr) {
-		impl2 = unew<PlatformImplementation>();
+		Implementation2 = unew<RenderTarget2DImplementation>();
 	}
 
 	RenderTarget2D::RenderTarget2D(sptr<GraphicsDevice> const& device) : Texture2D(device) {
-		impl2 = unew<PlatformImplementation>();
+		Implementation2 = unew<RenderTarget2DImplementation>();
 	}	
 
 	P_RenderTarget2D RenderTarget2D::FromBackBuffer(P_GraphicsDevice const& device) {
 		auto& swapChain = device->Implementation->SwapChain;
 		auto rt = snew<RenderTarget2D>(device);
 		auto& implementation = rt->Implementation;
-		auto& implementation2 = rt->impl2;
+		auto& implementation2 = rt->Implementation2;
 
 		if (!swapChain->impl->GetBackBuffer(implementation->Texture2D))
 		{
@@ -30,7 +30,7 @@ namespace xna {
 			Exception::Throw(Exception::UNABLE_TO_INITIALIZE);
 		}				
 
-		if (impl2->_renderTargetView)
+		if (Implementation2->RenderTargetView)
 			return;
 
 		Implementation->Description.Width = width;
@@ -44,12 +44,12 @@ namespace xna {
 		const auto hr = dxdevice->CreateRenderTargetView(
 			Implementation->Texture2D.Get(),
 			NULL, 
-			impl2->_renderTargetView.ReleaseAndGetAddressOf());
+			Implementation2->RenderTargetView.ReleaseAndGetAddressOf());
 
 		if (FAILED(hr)) {
 			Exception::Throw(Exception::FAILED_TO_CREATE);
 		}
 
-		impl2->_renderTargetView->GetDesc(&impl2->_renderTargetDesc);
+		Implementation2->RenderTargetView->GetDesc(&Implementation2->Description);
 	}
 }
