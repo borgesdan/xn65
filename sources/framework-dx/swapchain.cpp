@@ -74,7 +74,7 @@ namespace xna {
         if (!impl || !impl->dxSwapChain)
             return false;
 
-        const auto hr = impl->dxSwapChain->GetBuffer(0, IID_ID3D11Texture2D, (void**)(&texture2D.impl->dxTexture2D));
+        const auto hr = impl->dxSwapChain->GetBuffer(0, IID_ID3D11Texture2D, (void**)(&texture2D.Implementation->Texture2D));
 
         return !FAILED(hr);
     }

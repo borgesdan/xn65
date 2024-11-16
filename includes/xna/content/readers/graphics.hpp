@@ -11,6 +11,8 @@
 #include "../../graphics/shared.hpp"
 
 namespace xna {
+	using PTexture2D = std::shared_ptr<Texture2D>;
+
 	class Texture2DReader : public ContentTypeReaderT<PTexture2D> {
 	public:
 		Texture2DReader() : ContentTypeReaderT(typeof<PTexture2D>()) {

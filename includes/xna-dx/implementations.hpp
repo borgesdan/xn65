@@ -61,18 +61,42 @@ namespace xna {
 
 	struct SamplerStateImplementation {
 		comptr<ID3D11SamplerState> SamplerState;
-		D3D11_SAMPLER_DESC Description;
+		D3D11_SAMPLER_DESC Description{};
 	};
 
 	struct SpriteBatchImplementation {
 		std::shared_ptr<DirectX::SpriteBatch> SpriteBatch;
-		comptr<ID3D11InputLayout> InputLayout;
 		std::shared_ptr<DirectX::DX11::IEffect> EffectBuffer;
+		comptr<ID3D11InputLayout> InputLayout;
 	};
 
 	struct SpriteFontImplementation {
 		std::unique_ptr<DirectX::SpriteFont> SpriteFont;
 	};	
+
+	struct Texture2DImplementation {
+		Texture2DImplementation() {
+			Description.MipLevels = 1;
+			Description.ArraySize = 1;
+			Description.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+			Description.SampleDesc.Count = 1;
+			Description.Usage = D3D11_USAGE_DEFAULT;
+			Description.BindFlags = D3D11_BIND_SHADER_RESOURCE;
+
+			ShaderDescription.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+			ShaderDescription.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+			ShaderDescription.Texture2D.MipLevels = Description.MipLevels;
+			ShaderDescription.Texture2D.MostDetailedMip = 0;
+		}
+
+		comptr<ID3D11Texture2D> Texture2D;
+		comptr<ID3D11ShaderResourceView> ShaderResource;
+		D3D11_SUBRESOURCE_DATA SubResource{};
+		D3D11_TEXTURE2D_DESC Description{};
+		D3D11_SHADER_RESOURCE_VIEW_DESC ShaderDescription{};
+
+		HRESULT SetData(GraphicsDevice& device, UINT const* data);
+	};
 
 	struct GamePad::PlatformImplementation {
 		uptr<DirectX::GamePad> _dxGamePad = unew<DirectX::GamePad>();
@@ -127,15 +151,7 @@ namespace xna {
 
 			return !FAILED(hr);
 		}
-	};
-
-	struct Texture2D::PlatformImplementation {
-		comptr<ID3D11Texture2D> dxTexture2D{ nullptr };
-		comptr<ID3D11ShaderResourceView> dxShaderResource{ nullptr };
-		D3D11_SUBRESOURCE_DATA dxSubResource{};
-		D3D11_TEXTURE2D_DESC dxDescription{};
-		D3D11_SHADER_RESOURCE_VIEW_DESC dxShaderDescription{};
-	};
+	};	
 
 	struct RenderTarget2D::PlatformImplementation {
 		comptr<ID3D11RenderTargetView> _renderTargetView = nullptr;

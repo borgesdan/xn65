@@ -3,7 +3,6 @@
 
 #include "../common/numerics.hpp"
 #include "../common/color.hpp"
-#include "../default.hpp"
 
 namespace xna {
 	//Describes a custom vertex format structure that contains position and color information. 

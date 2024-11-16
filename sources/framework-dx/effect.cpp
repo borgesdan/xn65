@@ -99,10 +99,10 @@ namespace xna {
 	}
 
 	void BasicEffect::Texture(sptr<xna::Texture2D> const& value) {
-		if (!value || !value->impl || !value->impl->dxShaderResource)
+		if (!value || !value->Implementation || !value->Implementation->ShaderResource)
 			Exception::Throw(Exception::ARGUMENT_IS_NULL);
 
-		impl->dxBasicEffect->SetTexture(value->impl->dxShaderResource.Get());
+		impl->dxBasicEffect->SetTexture(value->Implementation->ShaderResource.Get());
 	}
 
 	void BasicEffect::TextureEnabled(bool value) {

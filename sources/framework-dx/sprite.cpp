@@ -23,7 +23,7 @@ namespace xna {
 		std::optional<Char> const& defaultCharacter)
 	{
 		Exception::ThrowIfNull(texture, nameof(texture));
-		Exception::ThrowIfNull(texture->impl->dxShaderResource.Get(), nameof(texture->impl->dxShaderResource));		
+		Exception::ThrowIfNull(texture->Implementation->ShaderResource.Get(), nameof(texture->Implementation->ShaderResource));
 
 		if(cropping.size() != glyphs.size() || charMap.size() != glyphs.size() || (!kerning.empty() && kerning.size() != glyphs.size()))
 			Exception::Throw("Cropping, charmap and kerning (if not empty) must all be the same size.");
@@ -55,7 +55,7 @@ namespace xna {
 		Implementation = unew<SpriteFontImplementation>();
 		Implementation->SpriteFont = unew<DxSpriteFont>(
 			//ID3D11ShaderResourceView* texture
-			texture->impl->dxShaderResource.Get(),
+			texture->Implementation->ShaderResource.Get(),
 			//Glyph const* glyphs
 			dxGlyps.data(),
 			//size_t glyphCount
@@ -177,7 +177,7 @@ namespace xna {
 		const auto _color = DxHelpers::VectorToDx(v4);
 
 		Implementation->SpriteBatch->Draw(
-			texture.impl->dxShaderResource.Get(),
+			texture.Implementation->ShaderResource.Get(),
 			_position,
 			_color
 		);
@@ -195,7 +195,7 @@ namespace xna {
 		};
 
 		Implementation->SpriteBatch->Draw(
-			texture.impl->dxShaderResource.Get(),
+			texture.Implementation->ShaderResource.Get(),
 			_position,
 			sourceRectangle ? &_sourceRect : nullptr,
 			_color);
@@ -216,7 +216,7 @@ namespace xna {
 		const DxSpriteEffects _effects = static_cast<DxSpriteEffects>(effects);
 
 		Implementation->SpriteBatch->Draw(
-			texture.impl->dxShaderResource.Get(),
+			texture.Implementation->ShaderResource.Get(),
 			_position,
 			sourceRectangle ? &_sourceRect : nullptr,
 			_color,
@@ -243,7 +243,7 @@ namespace xna {
 		const XMFLOAT2 _scale = { scale.X, scale.Y };
 
 		Implementation->SpriteBatch->Draw(
-			texture.impl->dxShaderResource.Get(),
+			texture.Implementation->ShaderResource.Get(),
 			_position,
 			sourceRectangle ? &_sourceRect : nullptr,
 			_color,
@@ -260,7 +260,7 @@ namespace xna {
 		const auto v4 = color.ToVector4();
 		const XMVECTORF32 _color = { v4.X, v4.Y, v4.Z, v4.W };
 
-		Implementation->SpriteBatch->Draw(texture.impl->dxShaderResource.Get(), _destinationRect, _color);
+		Implementation->SpriteBatch->Draw(texture.Implementation->ShaderResource.Get(), _destinationRect, _color);
 	}
 
 	void SpriteBatch::Draw(Texture2D& texture, Rectangle const& destinationRectangle, std::optional<Rectangle> const& sourceRectangle, Color const& color) {
@@ -278,7 +278,7 @@ namespace xna {
 			_sourceRect.bottom = sourceRectangle->Y + sourceRectangle->Height;
 		};
 
-		Implementation->SpriteBatch->Draw(texture.impl->dxShaderResource.Get(), _destinationRect, sourceRectangle ? &_sourceRect : nullptr, _color);
+		Implementation->SpriteBatch->Draw(texture.Implementation->ShaderResource.Get(), _destinationRect, sourceRectangle ? &_sourceRect : nullptr, _color);
 	}
 
 	void SpriteBatch::Draw(Texture2D& texture, Rectangle const& destinationRectangle, std::optional<Rectangle> const& sourceRectangle, Color const& color, float rotation, Vector2 const& origin, SpriteEffects effects, float layerDepth) {
@@ -297,7 +297,7 @@ namespace xna {
 		const auto _effects = static_cast<DxSpriteEffects>(effects);
 
 		Implementation->SpriteBatch->Draw(
-			texture.impl->dxShaderResource.Get(),
+			texture.Implementation->ShaderResource.Get(),
 			_destinationRect,
 			sourceRectangle ? &_sourceRect : nullptr,
 			_color,

@@ -12,10 +12,10 @@ namespace xna {
 	P_RenderTarget2D RenderTarget2D::FromBackBuffer(P_GraphicsDevice const& device) {
 		auto& swapChain = device->Implementation->SwapChain;
 		auto rt = snew<RenderTarget2D>(device);
-		auto& implementation = rt->impl;
+		auto& implementation = rt->Implementation;
 		auto& implementation2 = rt->impl2;
 
-		if (!swapChain->impl->GetBackBuffer(implementation->dxTexture2D))
+		if (!swapChain->impl->GetBackBuffer(implementation->Texture2D))
 		{
 			Exception::Throw(Exception::FAILED_TO_CREATE);
 		}
@@ -26,23 +26,23 @@ namespace xna {
 	}
 
 	void RenderTarget2D::Initialize() {
-		if (!impl || !BaseGraphicsDevice || !BaseGraphicsDevice->Implementation->Device) {
+		if (!Implementation || !BaseGraphicsDevice || !BaseGraphicsDevice->Implementation->Device) {
 			Exception::Throw(Exception::UNABLE_TO_INITIALIZE);
 		}				
 
 		if (impl2->_renderTargetView)
 			return;
 
-		impl->dxDescription.Width = width;
-		impl->dxDescription.Height = height;
-		impl->dxDescription.BindFlags = D3D11_BIND_FLAG::D3D11_BIND_RENDER_TARGET;
+		Implementation->Description.Width = width;
+		Implementation->Description.Height = height;
+		Implementation->Description.BindFlags = D3D11_BIND_FLAG::D3D11_BIND_RENDER_TARGET;
 
 		Texture2D::Initialize();
 		
 		auto& dxdevice = BaseGraphicsDevice->Implementation->Device;
 		
 		const auto hr = dxdevice->CreateRenderTargetView(
-			impl->dxTexture2D.Get(),
+			Implementation->Texture2D.Get(),
 			NULL, 
 			impl2->_renderTargetView.ReleaseAndGetAddressOf());
 
