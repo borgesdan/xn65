@@ -4,7 +4,6 @@
 #include "../common/color.hpp"
 #include "../common/numerics.hpp"
 #include "../graphics/gresource.hpp"
-#include "../platform.hpp"
 #include <memory>
 #include <optional>
 #include <string>
@@ -35,7 +34,7 @@ namespace xna {
 	struct SpriteBatchImplementation;
 
 	//Enables a group of sprites to be drawn using the same settings. 
-	class SpriteBatch : public GraphicsResource, public PlatformImplementation<SpriteBatchImplementation>  {
+	class SpriteBatch : public GraphicsResource  {
 	public:
 		SpriteBatch(std::shared_ptr<GraphicsDevice> const& device);
 
@@ -147,12 +146,14 @@ namespace xna {
 			float rotation, Vector2 const& origin, float scale, SpriteEffects effects, float layerDepth) { DrawString(*spriteFont, text, position, color, rotation, origin, scale, effects, layerDepth); }
 		void DrawString(SpriteFont& spriteFont, std::string const& text, Vector2 const& position, Color const& color,
 			float rotation, Vector2 const& origin, float scale, SpriteEffects effects, float layerDepth);
+
+		std::unique_ptr<SpriteBatchImplementation> Implementation;
 	};
 
 	struct SpriteFontImplementation;
 
 	//Represents a font texture.
-	class SpriteFont : public PlatformImplementation<SpriteFontImplementation> {
+	class SpriteFont {
 	public:
 		SpriteFont(
 			std::shared_ptr<Texture2D> const& texture,
@@ -177,6 +178,8 @@ namespace xna {
 		int32_t LineSpacing() const;
 		//Gets or sets the vertical distance (in pixels) between the base lines of two consecutive lines of text
 		void LineSpacing(float value);
+
+		std::unique_ptr<SpriteFontImplementation> Implementation;
 	};
 }
 

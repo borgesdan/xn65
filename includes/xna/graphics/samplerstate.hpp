@@ -1,7 +1,6 @@
 #ifndef XNA_GRAPHICS_SAMPLERSTATE_HPP
 #define XNA_GRAPHICS_SAMPLERSTATE_HPP
 
-#include "../platform.hpp"
 #include "gresource.hpp"
 #include "shared.hpp"
 #include <memory>
@@ -50,7 +49,7 @@ namespace xna {
 	struct SamplerStateImplementation;
 
 	//Contains sampler state, which determines how to sample texture data. 
-	class SamplerState : public GraphicsResource, public PlatformImplementation<SamplerStateImplementation> {
+	class SamplerState : public GraphicsResource {
 	public:
 		SamplerState();
 		SamplerState(std::shared_ptr<GraphicsDevice> const& device);
@@ -109,6 +108,8 @@ namespace xna {
 
 		bool Initialize();
 		bool Apply();	
+
+		std::unique_ptr<SamplerStateImplementation> Implementation;
 	};	
 
 	//Collection of SamplerState objects. 

@@ -1,7 +1,6 @@
 #ifndef XNA_GRAPHICS_DEVICE_HPP
 #define XNA_GRAPHICS_DEVICE_HPP
 
-#include "../platform.hpp"
 #include "presentparams.hpp"
 #include "viewport.hpp"
 #include <memory>
@@ -10,10 +9,10 @@ namespace xna {
 	struct GraphicsDeviceImplementation;
 
 	//Performs primitive-based rendering, creates resources, handles system-level variables, adjusts gamma ramp levels, and creates shaders. 
-	class GraphicsDevice : public std::enable_shared_from_this<GraphicsDevice>, public PlatformImplementation<GraphicsDeviceImplementation> {
+	class GraphicsDevice : public std::enable_shared_from_this<GraphicsDevice> {
 	public:
 		GraphicsDevice();
-		
+
 		GraphicsDevice(
 			std::shared_ptr<GraphicsAdapter> const& adapter,
 			GraphicsProfile const& graphicsProfile,
@@ -42,9 +41,9 @@ namespace xna {
 		//Clears resource buffers. 
 		void Clear(Color const& color) const;
 		//Clears resource buffers. 
-		void Clear(ClearOptions options, Color const& color, float depth, Int stencil) const;		
+		void Clear(ClearOptions options, Color const& color, float depth, Int stencil) const;
 		//Presents the display with the contents of the next buffer in the sequence of back buffers owned by the GraphicsDevice.
-		bool Present() const;		
+		bool Present() const;
 		//Resets the presentation parameters for the current GraphicsDevice.
 		void Reset(std::shared_ptr<PresentationParameters> const& presentationParameters, std::shared_ptr<GraphicsAdapter> const& graphicsAdapter);
 		//Gets or sets a viewport identifying the portion of the render target to receive draw calls. 
@@ -56,6 +55,8 @@ namespace xna {
 
 		void Initialize();
 
+		std::unique_ptr<GraphicsDeviceImplementation> Implementation;
+
 	private:
 		std::shared_ptr<GraphicsAdapter> adapter{ nullptr };
 		std::shared_ptr<xna::BlendState> blendState{ nullptr };
@@ -65,7 +66,7 @@ namespace xna {
 		std::shared_ptr<PresentationParameters> presentationParameters{ nullptr };
 		std::shared_ptr<RenderTarget2D> renderTarget{ nullptr };
 		GraphicsProfile graphicsProfile{ GraphicsProfile::HiDef };
-		xna::Viewport viewport{};	
+		xna::Viewport viewport{};
 	};
 }
 

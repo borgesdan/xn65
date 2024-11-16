@@ -2,7 +2,6 @@
 #define XNA_GRAPHICS_BLENDSTATE_HPP
 
 #include "../common/color.hpp"
-#include "../platform.hpp"
 #include "gresource.hpp"
 #include <cstdint>
 #include <vector>
@@ -104,7 +103,7 @@ namespace xna {
 	struct BlendStateImplementation;
 
 	//Contains blend state for the device. 
-	class BlendState : public GraphicsResource, public PlatformImplementation<BlendStateImplementation> {
+	class BlendState : public GraphicsResource {
 	public:
 		BlendState();
 		BlendState(std::shared_ptr<GraphicsDevice> const& device);
@@ -168,6 +167,8 @@ namespace xna {
 		//A built-in state object with settings for blending with non-premultipled alpha, 
 		//that is blending source and destination data using alpha while assuming the color data contains no alpha information.
 		static std::unique_ptr<BlendState> NonPremultiplied();
+
+		std::unique_ptr< BlendStateImplementation> Implementation;
 	};	
 }
 

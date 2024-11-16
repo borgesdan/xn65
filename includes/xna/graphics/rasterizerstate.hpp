@@ -2,7 +2,6 @@
 #define XNA_GRAPHICS_RASTERIZER_HPP
 
 #include "gresource.hpp"
-#include "../platform.hpp"
 
 namespace xna {
 
@@ -28,7 +27,7 @@ namespace xna {
 	struct RasterizerStateImplementation;
 
 	//Contains rasterizer state, which determines how to convert vector data (shapes) into raster data (pixels). 
-	class RasterizerState : public GraphicsResource, public PlatformImplementation<RasterizerStateImplementation> {
+	class RasterizerState : public GraphicsResource {
 	public:
 		RasterizerState();
 		RasterizerState(std::shared_ptr<GraphicsDevice> const& device);
@@ -75,6 +74,8 @@ namespace xna {
 
 		bool Initialize();
 		bool Apply();	
+
+		std::unique_ptr<RasterizerStateImplementation> Implementation;
 	};	
 }
 

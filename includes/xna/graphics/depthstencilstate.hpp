@@ -1,7 +1,6 @@
 #ifndef XNA_GRAPHICS_DEPTHSTENCILSTATE_HPP
 #define XNA_GRAPHICS_DEPTHSTENCILSTATE_HPP
 
-#include "../platform.hpp"
 #include "gresource.hpp"
 #include "shared.hpp"
 #include <cstdint>
@@ -23,7 +22,7 @@ namespace xna {
 	struct DepthStencilStateImplementation;
 
 	//Contains depth-stencil state for the device. 
-	class DepthStencilState : public GraphicsResource, public PlatformImplementation<DepthStencilStateImplementation> {
+	class DepthStencilState : public GraphicsResource {
 	public:
 		DepthStencilState();
 		DepthStencilState(std::shared_ptr<GraphicsDevice> const& device);
@@ -104,6 +103,8 @@ namespace xna {
 
 		bool Initialize();
 		bool Apply();	
+
+		std::unique_ptr<DepthStencilStateImplementation> Implementation;
 	};
 }
 

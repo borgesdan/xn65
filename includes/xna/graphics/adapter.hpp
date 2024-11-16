@@ -1,7 +1,6 @@
 #ifndef XNA_GRAPHICS_ADAPTER_HPP
 #define XNA_GRAPHICS_ADAPTER_HPP
 
-#include "../platform.hpp"
 #include "displaymode.hpp"
 #include <cstdint>
 #include <memory>
@@ -12,7 +11,7 @@ namespace xna {
 	struct GraphicsAdapterImplementation;
 
 	//Provides methods to retrieve and manipulate graphics adapters.
-	class GraphicsAdapter : public PlatformImplementation<GraphicsAdapterImplementation> {
+	class GraphicsAdapter {
 	public:
 		//Collection of available adapters on the system.
 		static void Adapters(std::vector<std::unique_ptr<GraphicsAdapter>>& adapters);
@@ -80,6 +79,8 @@ namespace xna {
 			DepthFormat& selectedDepthFormat,
 			int32_t& selectedMultiSampleCount
 		) const;		
+
+		std::unique_ptr<GraphicsAdapterImplementation> Implementation;
 
 	private:
 		std::string description;

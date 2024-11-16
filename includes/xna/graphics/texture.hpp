@@ -2,7 +2,6 @@
 #define XNA_GRAPHICS_TEXTURE_HPP
 
 #include "../csharp/stream.hpp"
-#include "../platform.hpp"
 #include "gresource.hpp"
 #include "shared.hpp"
 #include <cstdint>
@@ -24,7 +23,7 @@ namespace xna {
 	struct Texture2DImplementation;
 
 	//Represents a 2D grid of texels. 
-	class Texture2D : public Texture, public PlatformImplementation<Texture2DImplementation> {
+	class Texture2D : public Texture {
 	public:
 		Texture2D();
 		Texture2D(std::shared_ptr<GraphicsDevice> const& device);
@@ -59,6 +58,8 @@ namespace xna {
 		static P_Texture2D FromStream(GraphicsDevice& device, std::vector<uint8_t> const& data);	
 		
 		void Initialize();
+
+		std::unique_ptr<Texture2DImplementation> Implementation;
 
 	protected:
 		SurfaceFormat surfaceFormat{ SurfaceFormat::Color };
