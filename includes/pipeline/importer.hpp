@@ -1,12 +1,12 @@
 #ifndef XNA_PIPELINE_IMPORTER_HPP
 #define XNA_PIPELINE_IMPORTER_HPP
 
-#include <any>
-#include <string>
-#include <memory>
-#include <vector>
-#include <map>
 #include "logger.hpp"
+#include <any>
+#include <map>
+#include <memory>
+#include <string>
+#include <vector>
 
 namespace xna {
 	//Provides properties that define logging behavior for the importer.
