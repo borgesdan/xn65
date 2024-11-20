@@ -1,7 +1,9 @@
 #include "pipeline/graphics.hpp"
+#include "misc.hpp"
 #include <memory>
 
-namespace xna {
+namespace xna {	
+
 	void xna::BitmapContent::Copy(BitmapContent const& sourceBitmap, Rectangle const& sourceRegion, BitmapContent& destinationBitmap, Rectangle const& destinationRegion)
 	{
 		BitmapContent::ValidateCopyArguments(sourceBitmap, sourceRegion, destinationBitmap, destinationRegion);
@@ -9,25 +11,20 @@ namespace xna {
 		if (sourceBitmap.TryCopyTo(destinationBitmap, sourceRegion, destinationRegion) || destinationBitmap.TryCopyFrom(sourceBitmap, sourceRegion, destinationRegion))
 			return;
 
-		auto bitmapContent1 = std::make_shared<PixelBitmapContent<Vector4>>(sourceBitmap.Width(), sourceBitmap.Height());
-		auto rectangle1 = Rectangle(0, 0, bitmapContent1->Width(), bitmapContent1->Height());
+		auto bitmapContent1 = misc::reinterpret_make_shared<BitmapContent, PixelBitmapContent<Vector4>>(sourceBitmap.Width(), sourceBitmap.Height());
+		auto rectangle1 = Rectangle(0, 0, bitmapContent1->Width(), bitmapContent1->Height());		
 
-		auto bmp1 = reinterpret_pointer_cast<BitmapContent>(bitmapContent1);
-
-		if (sourceBitmap.TryCopyTo(*bmp1, sourceRegion, rectangle1) && destinationBitmap.TryCopyFrom(*bmp1, rectangle1, destinationRegion))
+		if (sourceBitmap.TryCopyTo(*bitmapContent1, sourceRegion, rectangle1) && destinationBitmap.TryCopyFrom(*bitmapContent1, rectangle1, destinationRegion))
 			return;
 
-		auto bitmapContent2 = std::make_shared<PixelBitmapContent<Vector4>>(sourceBitmap.Width(), sourceBitmap.Height());
-		auto bitmapContent3 = std::make_shared<PixelBitmapContent<Vector4>>(destinationBitmap.Width(), destinationBitmap.Height());
+		auto bitmapContent2 = misc::reinterpret_make_shared<BitmapContent, PixelBitmapContent<Vector4>>(sourceBitmap.Width(), sourceBitmap.Height());
+		auto bitmapContent3 = misc::reinterpret_make_shared<BitmapContent, PixelBitmapContent<Vector4>>(destinationBitmap.Width(), destinationBitmap.Height());
 
 		auto rectangle2 = Rectangle(0, 0, sourceBitmap.Width(), sourceBitmap.Height());
-		auto rectangle3 = Rectangle(0, 0, destinationBitmap.Width(), destinationBitmap.Height());
+		auto rectangle3 = Rectangle(0, 0, destinationBitmap.Width(), destinationBitmap.Height());		
 
-		auto bmpContent2 = reinterpret_pointer_cast<BitmapContent>(bitmapContent2);
-		auto bmpContent3 = reinterpret_pointer_cast<BitmapContent>(bitmapContent3);
-
-		if (!sourceBitmap.TryCopyTo(*bmpContent2, rectangle2, rectangle2) || !destinationBitmap.TryCopyTo(*bmpContent3, rectangle3, rectangle3)
-			|| !bmpContent3->TryCopyFrom(*bmpContent2, sourceRegion, destinationRegion) || !destinationBitmap.TryCopyFrom(*bmpContent3, rectangle3, rectangle3))
+		if (!sourceBitmap.TryCopyTo(*bitmapContent2, rectangle2, rectangle2) || !destinationBitmap.TryCopyTo(*bitmapContent3, rectangle3, rectangle3)
+			|| !bitmapContent3->TryCopyFrom(*bitmapContent2, sourceRegion, destinationRegion) || !destinationBitmap.TryCopyFrom(*bitmapContent3, rectangle3, rectangle3))
 		{
 			Exception::Throw(Exception::INVALID_OPERATION);
 		}

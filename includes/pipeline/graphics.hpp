@@ -97,6 +97,9 @@ namespace xna {
 
 		//Attempts to copy a region from a specified bitmap.
 		bool TryCopyFrom(BitmapContent const& sourceBitmap, Rectangle const& sourceRegion, Rectangle const& destionationRegion) override { return false; }
+
+	private:
+
 	};
 
 
