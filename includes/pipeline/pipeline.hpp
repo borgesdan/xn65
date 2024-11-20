@@ -6,9 +6,11 @@
 #include <map>
 #include "xna/exception.hpp"
 #include "xna/helpers.hpp"
-
+#include "serialization.hpp"
 
 namespace xna {
+	class ContentTypeSerializer;
+
 	class ContentBuilderLogger {
 
 	};
