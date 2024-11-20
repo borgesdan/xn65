@@ -9,6 +9,7 @@
 #include "xna/graphics/shared.hpp"
 
 namespace xna {
+	//Provides properties and methods for creating and maintaining a bitmap resource.
 	class BitmapContent : public ContentItem {
 	public:		
 		BitmapContent(int32_t width, int32_t height) {
@@ -79,6 +80,7 @@ namespace xna {
 		int32_t height{ 0 };
 	};
 
+	//Provides methods for maintaining a 2D array of pixel values.
 	template <typename T>
 	class PixelBitmapContent : public BitmapContent {
 	public:
