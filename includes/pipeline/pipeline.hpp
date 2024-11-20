@@ -134,7 +134,7 @@ namespace xna {
 		ContentItem() {
 			opaqueData = std::make_shared<OpaqueDataDictionary>();
 		}
-
+		
 		//Gets or sets the name of the content item.
 		std::string Name() const { return name; }
 		//Gets or sets the identity of the content item.
