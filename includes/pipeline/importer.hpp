@@ -1,7 +1,7 @@
 #ifndef XNA_PIPELINE_IMPORTER_HPP
 #define XNA_PIPELINE_IMPORTER_HPP
 
-#include "logger.hpp"
+#include "pipeline.hpp"
 #include <any>
 #include <map>
 #include <memory>
@@ -29,7 +29,7 @@ namespace xna {
 
 	//Implements a file format importer for use with game assets.
 	template <typename T>
-	struct ContentImporter_T : public IContentImporter {
+	struct ContentImporter : public IContentImporter {
 		//Imports an asset from the specified file.
 		virtual T Import(std::string const& filename, ContentImporterContext& context) = 0;
 
@@ -75,7 +75,7 @@ namespace xna {
 
 	};
 
-	struct XmlImporter : ContentImporter_T<std::any> {
+	struct XmlImporter : ContentImporter<std::any> {
 		std::any Import(std::string const& filename, ContentImporterContext& context) override {
 			//TODO: XmlReader						
 			return {  };
