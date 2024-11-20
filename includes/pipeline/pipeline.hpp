@@ -105,7 +105,7 @@ namespace xna {
 
 	//Provides properties describing the origin of the game asset, such as the original source file and creation tool. 
 	//This information is used for error reporting, and by processors that need to determine from what directory the asset was originally loaded.
-	struct ContentIdentity {
+	struct ContentIdentity : public ISerialization {
 		constexpr ContentIdentity() = default;
 		constexpr ContentIdentity(std::string sourceFilename) :
 			SourceFilename(sourceFilename) {}
@@ -123,6 +123,8 @@ namespace xna {
 		//Gets or sets the specific location of the content item within the larger source file.
 		//Optional = true
 		std::string FragmentIdentifier;
+
+		void Serialize(ContentTypeSerializer& serializer, bool serializeOptional) override;
 	};
 
 	//Provides properties that define opaque data for a game asset.
