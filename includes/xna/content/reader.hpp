@@ -104,7 +104,7 @@ namespace xna {
 		const auto num = Read7BitEncodedInt();
 
 		if (num == 0) {
-			XnaHelper::ReturnDefaultOrNull<T>();
+			misc::ReturnDefaultOrNull<T>();
 		}
 
 		const auto index = num - 1;
@@ -133,7 +133,7 @@ namespace xna {
 			Exception::Throw(Exception::NOT_IMPLEMENTED);
 		}
 
-		return XnaHelper::ReturnDefaultOrNull<T>();
+		return misc::ReturnDefaultOrNull<T>();
 	}
 
 	template<typename T>

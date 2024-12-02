@@ -49,7 +49,6 @@
 #include "graphics/texture.hpp"
 #include "graphics/vertexposition.hpp"
 #include "graphics/viewport.hpp"
-#include "helpers.hpp"
 #include "input/gamepad.hpp"
 #include "input/keyboard.hpp"
 #include "input/mouse.hpp"

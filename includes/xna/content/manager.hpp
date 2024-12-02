@@ -39,10 +39,10 @@ namespace xna {
 		template <typename T>
 		auto Load(String const& assetName) {
 			if (assetName.empty()) {
-				return XnaHelper::ReturnDefaultOrNull<T>();
+				return misc::ReturnDefaultOrNull<T>();
 			}
 			
-			if constexpr (XnaHelper::is_shared_ptr<T>::value) {				
+			if constexpr (misc::is_shared_ptr<T>::value) {
 
 				if (loadedAssets.contains(assetName)) {
 					auto& voidAsset = loadedAssets[assetName];
@@ -54,7 +54,7 @@ namespace xna {
 
 			const auto obj2 = ReadAsset<T>(assetName); 
 
-			if constexpr (XnaHelper::is_shared_ptr<T>::value) {
+			if constexpr (misc::is_shared_ptr<T>::value) {
 
 				if(obj2)
 					loadedAssets.emplace( assetName, obj2 );
@@ -79,7 +79,7 @@ namespace xna {
 			auto input = OpenStream(assetName);
 
 			if (!input)
-				return XnaHelper::ReturnDefaultOrNull<T>();
+				return misc::ReturnDefaultOrNull<T>();
 
 			const auto _this = shared_from_this();
 			auto contentReader = ContentReader::Create(_this, input, assetName);

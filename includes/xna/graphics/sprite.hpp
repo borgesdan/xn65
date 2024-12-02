@@ -7,6 +7,7 @@
 #include <memory>
 #include <optional>
 #include <string>
+#include <cstdint>
 
 namespace xna {
 	//Defines sprite sort-rendering options.
@@ -30,6 +31,21 @@ namespace xna {
 		//This procedure is recommended when drawing opaque sprites of varying depths.
 		FrontToBack,
 	};
+
+	enum class SpriteEffects {
+		None = 0,
+		FlipHorizontally = 1,
+		FlipVertically = 2,
+		Both = FlipHorizontally | FlipVertically
+	};
+
+	class BlendState;
+	class SamplerState;
+	class DepthStencilState;
+	class RasterizerState;
+	class Effect;
+	class Texture2D;
+	class SpriteFont;
 
 	struct SpriteBatchImplementation;
 
@@ -159,11 +175,11 @@ namespace xna {
 			std::shared_ptr<Texture2D> const& texture,
 			std::vector<Rectangle> const& glyphs,
 			std::vector<Rectangle> const& cropping,
-			std::vector<Char> const& charMap,
+			std::vector<char16_t> const& charMap,
 			int32_t lineSpacing,
 			float spacing,
 			std::vector<Vector3> const& kerning,
-			std::optional<Char> const& defaultCharacter);
+			std::optional<char16_t> const& defaultCharacter);
 		
 		// Returns the width and height of a string.
 		Vector2 MeasureString(std::string const& text, bool ignoreWhiteSpace = true);
@@ -171,9 +187,9 @@ namespace xna {
 		Vector2 MeasureString(std::wstring const& text, bool ignoreWhiteSpace = true);	
 
 		//Gets or sets the default character for the font.
-		Char DefaultCharacter() const;
+		char16_t DefaultCharacter() const;
 		//Gets or sets the default character for the font.
-		void DefaultCharacter(Char value);
+		void DefaultCharacter(char16_t value);
 		//Gets or sets the vertical distance (in pixels) between the base lines of two consecutive lines of text
 		int32_t LineSpacing() const;
 		//Gets or sets the vertical distance (in pixels) between the base lines of two consecutive lines of text

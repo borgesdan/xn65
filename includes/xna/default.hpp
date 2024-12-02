@@ -16,7 +16,7 @@
 
 #include "enumerations.hpp"
 #include "exception.hpp"
-#include "helpers.hpp"
+#include "misc.hpp"
 
 namespace xna {
 

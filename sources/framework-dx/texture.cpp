@@ -231,7 +231,7 @@ namespace xna {
 		auto _this = device.shared_from_this();
 		auto texture2d = snew<Texture2D>(_this);
 		comptr<ID3D11Resource> resource = nullptr;
-		auto wstr = XnaHelper::ToWString(fileName);
+		auto wstr = misc::ToWString(fileName);
 
 		HRESULT result = DirectX::CreateWICTextureFromFile(
 			device.Implementation->Device.Get(),
