@@ -1,6 +1,6 @@
 #include "xna/csharp/stream.hpp"
 #include "xna/csharp/buffer.hpp"
-#include "xna/exception.hpp"
+#include "csharp/exception.hpp"
 #include <filesystem>
 
 namespace xna {
@@ -88,7 +88,7 @@ namespace xna {
 		auto i = _position + count;
 
 		if (i < 0 || i > _length) {
-			Exception::Throw("i < 0 || i > _length");
+			throw csharp::InvalidOperationException("i < 0 || i > _length");
 		}
 
 		if (count <= 8)	{
@@ -129,7 +129,7 @@ namespace xna {
 			//Especifica se deve abrir um arquivo existente.
 		case FileMode::Open:
 			if (!exists) 
-				Exception::Throw("The specified file does not exist.");
+				throw csharp::InvalidOperationException("The specified file does not exist.");
 			break;
 			//Especifica que se deve abrir um arquivo, se existir;
 			// caso contrário, um novo arquivo deverá ser criado.
@@ -144,7 +144,7 @@ namespace xna {
 			if (!exists)
 				flags |= std::fstream::trunc;
 			else
-				Exception::Throw("The specified file already exists.");
+				throw csharp::InvalidOperationException("The specified file already exists.");
 			break;
 			//Abre o arquivo, se existir, e busca o final do arquivo ou cria um novo arquivo.
 		case FileMode::Append:
@@ -159,7 +159,7 @@ namespace xna {
 			//Tentativa de ler um arquivo truncado retornará 0;
 		case FileMode::Truncate:
 			if(!exists)
-				Exception::Throw("The specified file does not exist.");
+				throw csharp::InvalidOperationException("The specified file does not exist.");
 
 			flags |= std::fstream::trunc;
 			_truncated = true;
@@ -171,7 +171,7 @@ namespace xna {
 		_fstream.open(path.c_str(), flags);
 
 		if (!_fstream.good())
-			Exception::Throw("Failed to open file: " + path);
+			throw csharp::InvalidOperationException("Failed to open file: " + path);
 	}
 
 	FileStream::FileStream(std::string const& path) {
@@ -187,7 +187,7 @@ namespace xna {
 		_fstream.open(path.c_str(), flags);
 
 		if (!_fstream.good())
-			Exception::Throw("Failed to open file: " + path);
+			throw csharp::InvalidOperationException("Failed to open file: " + path);
 	}
 
 	int64_t FileStream::Length() {

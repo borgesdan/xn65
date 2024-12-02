@@ -26,7 +26,7 @@ namespace xna {
 		if (!sourceBitmap.TryCopyTo(*bitmapContent2, rectangle2, rectangle2) || !destinationBitmap.TryCopyTo(*bitmapContent3, rectangle3, rectangle3)
 			|| !bitmapContent3->TryCopyFrom(*bitmapContent2, sourceRegion, destinationRegion) || !destinationBitmap.TryCopyFrom(*bitmapContent3, rectangle3, rectangle3))
 		{
-			Exception::Throw(Exception::INVALID_OPERATION);
+			throw csharp::InvalidOperationException();
 		}
 	}
 
@@ -73,9 +73,9 @@ namespace xna {
 		BitmapContent const& destinationBitmap, Rectangle const& destinationRegion) {
 
 		if (sourceRegion.Left() < 0 || sourceRegion.Top() < 0 || sourceRegion.Width < 0 || sourceRegion.Height < 0 || sourceRegion.Right() > sourceBitmap.Width() || sourceRegion.Bottom() > sourceBitmap.Height())
-			Exception::Throw(Exception::OUT_OF_BOUNDS);
+			throw csharp::InvalidOperationException();
 
 		if (destinationRegion.Left() < 0 || destinationRegion.Top() < 0 || destinationRegion.Width < 0 || destinationRegion.Height < 0 || destinationRegion.Right() > destinationBitmap.Width() || destinationRegion.Bottom() > destinationBitmap.Height())
-			Exception::Throw(Exception::OUT_OF_BOUNDS);
+			throw csharp::InvalidOperationException();
 	}
 }

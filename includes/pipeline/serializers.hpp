@@ -2,7 +2,7 @@
 #define XNA_PIPELINE_SERIALIZERS_HPP
 
 #include "serialization.hpp"
-#include "xna/exception.hpp"
+#include "csharp/exception.hpp"
 #include <any>
 #include <memory>
 #include <string>
@@ -13,7 +13,7 @@ namespace xna {
 	public:
 		XmlListReader(std::shared_ptr<IntermediateReader> const& reader) : reader(reader) {
 			if (this->reader == nullptr)
-				Exception::Throw(Exception::INVALID_OPERATION);
+				throw csharp::InvalidOperationException();
 
 			//this.enumerator = ((IEnumerable<string>) reader.Xml.ReadContentAsString().Split(XmlListReader.listSeparators, StringSplitOptions.RemoveEmptyEntries)).GetEnumerator();
 		}

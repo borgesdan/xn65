@@ -159,7 +159,7 @@ namespace xna {
 				return std::any_cast<T>(value);
 			}
 			catch (std::exception& ex) {
-				Exception::Throw(Exception::FAILED_TO_CREATE);
+				throw csharp::InvalidOperationException();
 			}
 		}
 	};

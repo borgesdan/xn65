@@ -4,7 +4,7 @@
 #include "pipeline.hpp"
 #include <vector>
 #include <cstdint>
-#include "xna/exception.hpp"
+#include "csharp/exception.hpp"
 #include "xna/common/numerics.hpp"
 #include "xna/graphics/shared.hpp"
 
@@ -14,7 +14,7 @@ namespace xna {
 	public:		
 		BitmapContent(int32_t width, int32_t height) {
 			if (width <= 0 || height <= 0)
-				Exception::Throw(Exception::INVALID_OPERATION);
+				throw csharp::InvalidOperationException();
 
 			this->width = width;
 			this->height = height;
@@ -26,7 +26,7 @@ namespace xna {
 		//Gets or sets the width of the bitmap, in pixels.
 		constexpr void Width(int32_t value) {
 			if(value <= 0)
-				Exception::Throw(Exception::INVALID_OPERATION);
+				throw csharp::InvalidOperationException();
 
 			width = value;
 		}
@@ -37,7 +37,7 @@ namespace xna {
 		//Gets or sets the height of the bitmap, in pixels.
 		constexpr void Height(int32_t value) {
 			if (value <= 0)
-				Exception::Throw(Exception::INVALID_OPERATION);
+				throw csharp::InvalidOperationException();
 
 			height = value;
 		}

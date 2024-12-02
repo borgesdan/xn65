@@ -12,7 +12,7 @@ namespace xna {
 	bool SamplerState::Initialize()
 	{
 		if (!Implementation || !BaseGraphicsDevice || !BaseGraphicsDevice->Implementation->Device) {
-			Exception::Throw(Exception::UNABLE_TO_INITIALIZE);
+			throw csharp::InvalidOperationException();
 		}
 
 		if (Implementation->SamplerState) {
@@ -24,7 +24,7 @@ namespace xna {
 			Implementation->SamplerState.GetAddressOf());
 
 		if (FAILED(hr)) {
-			Exception::Throw(Exception::FAILED_TO_CREATE);
+			throw csharp::InvalidOperationException();
 		}
 
 		return true;
@@ -33,11 +33,11 @@ namespace xna {
 	bool SamplerState::Apply()
 	{
 		if (!Implementation || !BaseGraphicsDevice || !BaseGraphicsDevice->Implementation->Context) {
-			Exception::Throw(Exception::INVALID_OPERATION);
+			throw csharp::InvalidOperationException();
 		}
 
 		if (!Implementation->SamplerState) {
-			Exception::Throw(Exception::INVALID_OPERATION);
+			throw csharp::InvalidOperationException();
 		}
 
 		BaseGraphicsDevice->Implementation->Context->PSSetSamplers(0, 1, Implementation->SamplerState.GetAddressOf());
@@ -50,7 +50,7 @@ namespace xna {
 			return;
 
 		if (!device.Implementation || !device.Implementation->Device || !device.Implementation->Context) {
-			Exception::Throw(Exception::INVALID_OPERATION);
+			throw csharp::InvalidOperationException();
 		}
 
 		std::vector<ID3D11SamplerState*> states(samplers.size());
@@ -59,7 +59,7 @@ namespace xna {
 			const auto& current = samplers[0];
 
 			if (!current || !current->Implementation || !current->Implementation->SamplerState)
-				Exception::Throw(Exception::INVALID_OPERATION);
+				throw csharp::InvalidOperationException();
 
 			states[i] = current->Implementation->SamplerState.Get();
 			states[i]->AddRef();

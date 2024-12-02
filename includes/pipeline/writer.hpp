@@ -175,7 +175,7 @@ namespace xna {
     void ContentWriter::WriteObject(T& value) {
         if constexpr (XnaHelper::IsSmartPoint<T>()) {
             if (value == nullptr) {
-                Exception::Throw(Exception::ARGUMENT_IS_NULL);
+                throw csharp::InvalidOperationException(Exception::ARGUMENT_IS_NULL);
             }
         }
 
@@ -203,7 +203,7 @@ namespace xna {
     void ContentWriter::WriteRawObject(T& value) {
         if constexpr (XnaHelper::IsSmartPoint<T>()) {
             if (value == nullptr) {
-                Exception::Throw(Exception::ARGUMENT_IS_NULL);
+                throw csharp::InvalidOperationException(Exception::ARGUMENT_IS_NULL);
             }
         }
 
@@ -216,7 +216,7 @@ namespace xna {
 
     template <class T>
     void ContentWriter::WriteRawObject(T& value, ContentTypeWriter& typeWriter) {
-        Exception::ThrowTIsNull(value);
+        throw csharp::InvalidOperationExceptionTIsNull(value);
 
         InvokeWriter<T>(value, typeWriter);
     }
@@ -259,13 +259,13 @@ namespace xna {
             if (filename1.ends_with(FilenameExt))
                 filename2 = filename1.substr(0, filename1.size() - FilenameExt.size());
             else
-                Exception::Throw(Exception::INVALID_OPERATION);
+                throw csharp::InvalidOperationException();
 
             if (!filename2.starts_with(rootDirectory))
-                Exception::Throw(Exception::INVALID_OPERATION);
+                throw csharp::InvalidOperationException();
 
 
-            Exception::Throw(Exception::NOT_IMPLEMENTED);
+            throw csharp::InvalidOperationException();
         }
     }
 

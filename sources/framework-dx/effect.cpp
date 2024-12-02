@@ -100,7 +100,7 @@ namespace xna {
 
 	void BasicEffect::Texture(sptr<xna::Texture2D> const& value) {
 		if (!value || !value->Implementation || !value->Implementation->ShaderResource)
-			Exception::Throw(Exception::ARGUMENT_IS_NULL);
+			throw csharp::InvalidOperationException();
 
 		impl->dxBasicEffect->SetTexture(value->Implementation->ShaderResource.Get());
 	}

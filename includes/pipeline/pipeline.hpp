@@ -4,7 +4,7 @@
 #include <string>
 #include <memory>
 #include <map>
-#include "xna/exception.hpp"
+#include "csharp/exception.hpp"
 #include "xna/helpers.hpp"
 #include "serialization.hpp"
 
@@ -56,12 +56,12 @@ namespace xna {
 	protected:
 		virtual void AddItem(std::string const& key, T const& value) {
 			if (key.empty()) {
-				Exception::Throw(Exception::INVALID_OPERATION);
+				throw csharp::InvalidOperationException();
 			}
 
 			if constexpr (XnaHelper::IsSmartPoint<T>()) {
 				if (value == nullptr)
-					Exception::Throw(Exception::INVALID_OPERATION);
+					throw csharp::InvalidOperationException();
 			}
 
 			items.insert({ key, value });
@@ -88,12 +88,12 @@ namespace xna {
 
 		virtual void SetItem(std::string const& key, T const& value) {
 			if (key.empty()) {
-				Exception::Throw(Exception::INVALID_OPERATION);
+				throw csharp::InvalidOperationException();
 			}
 
 			if constexpr (XnaHelper::IsSmartPoint<T>()) {
 				if (value == nullptr)
-					Exception::Throw(Exception::INVALID_OPERATION);
+					throw csharp::InvalidOperationException();
 			}
 
 			items[key] = value;

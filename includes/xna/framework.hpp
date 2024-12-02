@@ -25,7 +25,7 @@
 #include "csharp/type.hpp"
 #include "csharp/screen.hpp"
 #include "csharp/eventhandler.hpp"
-#include "exception.hpp"
+#include "csharp/exception.hpp"
 #include "game/component.hpp"
 #include "game/game.hpp"
 #include "game/gdeviceinfo.hpp"

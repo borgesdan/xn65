@@ -17,7 +17,7 @@ namespace xna {
 
 		if (!swapChain->impl->GetBackBuffer(implementation->Texture2D))
 		{
-			Exception::Throw(Exception::FAILED_TO_CREATE);
+			throw csharp::InvalidOperationException();
 		}
 
 		rt->Initialize();		
@@ -27,7 +27,7 @@ namespace xna {
 
 	void RenderTarget2D::Initialize() {
 		if (!Implementation || !BaseGraphicsDevice || !BaseGraphicsDevice->Implementation->Device) {
-			Exception::Throw(Exception::UNABLE_TO_INITIALIZE);
+			throw csharp::InvalidOperationException();
 		}				
 
 		if (Implementation2->RenderTargetView)
@@ -47,7 +47,7 @@ namespace xna {
 			Implementation2->RenderTargetView.ReleaseAndGetAddressOf());
 
 		if (FAILED(hr)) {
-			Exception::Throw(Exception::FAILED_TO_CREATE);
+			throw csharp::InvalidOperationException();
 		}
 
 		Implementation2->RenderTargetView->GetDesc(&Implementation2->Description);

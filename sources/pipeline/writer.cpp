@@ -88,7 +88,7 @@ namespace xna {
         if (targetPlatform == TargetPlatform::Windows)
             Write((Byte)119);
         else
-            Exception::Throw(Exception::NOT_IMPLEMENTED);
+            throw csharp::InvalidOperationException();
 
         if (compressContent)
             WriteCompressedOutput();
@@ -109,7 +109,7 @@ namespace xna {
     }
 
     void ContentWriter::WriteCompressedOutput() {
-        Exception::Throw(Exception::NOT_IMPLEMENTED);
+        throw csharp::InvalidOperationException();
     }
 
     void ContentWriter::WriteVersionNumber(Ushort version) {

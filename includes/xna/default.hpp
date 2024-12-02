@@ -15,7 +15,7 @@
 #include <vector>
 
 #include "enumerations.hpp"
-#include "exception.hpp"
+#include "csharp/exception.hpp"
 #include "misc.hpp"
 
 namespace xna {

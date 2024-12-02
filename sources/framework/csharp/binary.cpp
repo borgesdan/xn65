@@ -3,7 +3,8 @@
 
 namespace xna {
 	BinaryReader::BinaryReader(sptr<Stream> const& input) {		
-		Exception::ThrowIfNull(input, nameof(input));
+		if(!input)
+			throw csharp::ArgumentNullException("input");
 
 		stream = input;
 		buffer = std::vector<Byte>(bufferLength);
@@ -263,7 +264,7 @@ namespace xna {
 	void BinaryReader::FillBuffer(Int numBytes)
 	{
 		if (numBytes < 0 || numBytes > buffer.size()) {
-			Exception::Throw(Exception::OUT_OF_BOUNDS);
+			throw csharp::InvalidOperationException();
 		}		
 
 		Int bytesRead = 0;
@@ -273,7 +274,7 @@ namespace xna {
 			n = stream->ReadByte();
 			
 			if (n == -1){
-				Exception::Throw(Exception::END_OF_FILE);
+				throw csharp::InvalidOperationException();
 			}
 
 			buffer[0] = static_cast<Byte>(n);
@@ -284,7 +285,7 @@ namespace xna {
 			n = stream->Read(buffer, bytesRead, numBytes - bytesRead);
 			
 			if (n == 0) {
-				Exception::Throw(Exception::END_OF_FILE);
+				throw csharp::InvalidOperationException();
 			}
 
 			bytesRead += n;
@@ -440,7 +441,7 @@ namespace xna {
 	//Binary Writer
 
 	BinaryWriter::BinaryWriter(sptr<Stream> const& stream) {
-		Exception::ThrowIfNull(stream, nameof(stream));
+		throw csharp::ArgumentNullException("stream");
 
 		OutStream = stream;
 		_buffer = std::vector<Byte>(16);

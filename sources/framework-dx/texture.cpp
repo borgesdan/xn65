@@ -58,7 +58,7 @@ namespace xna {
 	void Texture2D::Initialize()
 	{
 		if (!BaseGraphicsDevice || !BaseGraphicsDevice->Implementation->Device) {
-			Exception::Throw(Exception::UNABLE_TO_INITIALIZE);
+			throw csharp::InvalidOperationException();
 		}		
 
 		auto& deviceImpl = BaseGraphicsDevice->Implementation;
@@ -72,7 +72,7 @@ namespace xna {
 				Implementation->Texture2D.ReleaseAndGetAddressOf());
 
 			if FAILED(hr) 
-				Exception::Throw(Exception::FAILED_TO_CREATE);
+				throw csharp::InvalidOperationException();
 		}
 		else {
 			//Updates description if texture is not null
@@ -83,7 +83,7 @@ namespace xna {
 		hr = Implementation->Texture2D->QueryInterface(IID_ID3D11Resource, (void**)resource.GetAddressOf());
 
 		if FAILED(hr)
-			Exception::Throw(Exception::INVALID_OPERATION);
+			throw csharp::InvalidOperationException();
 		
 		//Only initializes if it is a ShaderResource
 		if (Implementation->Description.BindFlags & D3D11_BIND_SHADER_RESOURCE) {
@@ -93,7 +93,7 @@ namespace xna {
 				Implementation->ShaderResource.ReleaseAndGetAddressOf());
 
 			if FAILED(hr)
-				Exception::Throw(Exception::FAILED_TO_CREATE);
+				throw csharp::InvalidOperationException();
 			
 		}		
 
@@ -106,19 +106,19 @@ namespace xna {
 	void Texture2D::SetData(std::vector<Uint> const& data, size_t startIndex, size_t elementCount)
 	{
 		if (!Implementation || !BaseGraphicsDevice || !BaseGraphicsDevice->Implementation->Device || !BaseGraphicsDevice->Implementation->Context) {
-			Exception::Throw(Exception::INVALID_OPERATION);
+			throw csharp::InvalidOperationException();
 		}		
 
 		auto hr = Implementation->SetData(*BaseGraphicsDevice, data.data());
 
 		if (FAILED(hr))
-			Exception::Throw(Exception::FAILED_TO_APPLY);
+			throw csharp::InvalidOperationException();
 	}
 
 	void Texture2D::SetData(std::vector<Byte> const& data, size_t startIndex, size_t elementCount)
 	{
 		if (!BaseGraphicsDevice || !BaseGraphicsDevice->Implementation->Device || !BaseGraphicsDevice->Implementation->Context) {
-			Exception::Throw(Exception::INVALID_OPERATION);
+			throw csharp::InvalidOperationException();
 		}
 
 		std::vector<UINT> finalData(elementCount / 4);
@@ -136,13 +136,13 @@ namespace xna {
 		auto hr = Implementation->SetData(*BaseGraphicsDevice, finalData.data());
 
 		if (FAILED(hr))
-			Exception::Throw(Exception::FAILED_TO_APPLY);
+			throw csharp::InvalidOperationException();
 	}	
 
 	void Texture2D::SetData(Int level, Rectangle* rect, std::vector<Byte> const& data, size_t startIndex, size_t elementCount)
 	{
 		if (!BaseGraphicsDevice || !BaseGraphicsDevice->Implementation->Device || !BaseGraphicsDevice->Implementation->Context) {
-			Exception::Throw(Exception::INVALID_OPERATION);
+			throw csharp::InvalidOperationException();
 		}
 
 		std::vector<UINT> finalData(elementCount / 4);
@@ -161,7 +161,7 @@ namespace xna {
 			auto hr = BaseGraphicsDevice->Implementation->Device->CreateTexture2D(&Implementation->Description, nullptr, Implementation->Texture2D.GetAddressOf());
 
 			if (FAILED(hr)) {
-				Exception::Throw(Exception::FAILED_TO_CREATE);
+				throw csharp::InvalidOperationException();
 			}
 		}
 
@@ -169,7 +169,7 @@ namespace xna {
 		auto hr = Implementation->Texture2D->QueryInterface(IID_ID3D11Resource, (void**)resource.GetAddressOf());
 
 		if (FAILED(hr)) {
-			Exception::Throw(Exception::INVALID_OPERATION);
+			throw csharp::InvalidOperationException();
 		}
 
 		D3D11_BOX box{};
@@ -191,7 +191,7 @@ namespace xna {
 		hr = BaseGraphicsDevice->Implementation->Device->CreateShaderResourceView(resource.Get(), &Implementation->ShaderDescription, Implementation->ShaderResource.ReleaseAndGetAddressOf());		
 
 		if (FAILED(hr)) {
-			Exception::Throw(Exception::FAILED_TO_CREATE);
+			throw csharp::InvalidOperationException();
 		}
 
 		Implementation->Texture2D->GetDesc(&Implementation->Description);
@@ -200,7 +200,7 @@ namespace xna {
 	void Texture2D::SetData(std::vector<Color> const& data, size_t startIndex, size_t elementCount)
 	{
 		if (!BaseGraphicsDevice || !BaseGraphicsDevice->Implementation->Device || !BaseGraphicsDevice->Implementation->Context) {
-			Exception::Throw(Exception::INVALID_OPERATION);
+			throw csharp::InvalidOperationException();
 		}
 
 		std::vector<UINT> finalData(elementCount);
@@ -214,7 +214,7 @@ namespace xna {
 		auto hr = Implementation->SetData(*BaseGraphicsDevice, finalData.data());
 
 		if (FAILED(hr))
-			Exception::Throw(Exception::FAILED_TO_APPLY);
+			throw csharp::InvalidOperationException();
 	}
 
 	P_Texture2D Texture2D::FromStream(GraphicsDevice& device, P_Stream const& stream)

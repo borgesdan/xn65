@@ -5,7 +5,7 @@
 #include <string>
 #include <vector>
 #include <cstdint>
-#include "../exception.hpp"
+#include "csharp/exception.hpp"
 
 namespace xna {
 	// Provides seek reference points.  
@@ -162,7 +162,7 @@ namespace xna {
 		virtual int64_t Position() override;
 
 		virtual void SetLength(int64_t value) override {
-			Exception::Throw(Exception::NOT_IMPLEMENTED);
+			throw csharp::InvalidOperationException();			
 		}
 
 		inline virtual void Close() override {

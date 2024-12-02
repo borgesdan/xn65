@@ -2,7 +2,7 @@
 #define XNA_CSHARP_TYPE_HPP
 
 #include "misc.hpp"
-#include "../exception.hpp"
+#include "csharp/exception.hpp"
 #include <map>
 #include <memory>
 #include <string>
@@ -81,7 +81,7 @@ namespace xna {
 		}
 		else 
 		{
-			Exception::Throw(Exception::INVALID_OPERATION);
+			throw csharp::InvalidOperationException();
 		}
 		
 		return type;

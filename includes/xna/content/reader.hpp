@@ -110,7 +110,7 @@ namespace xna {
 		const auto index = num - 1;
 
 		if (index >= typeReaders.size()) {
-			Exception::Throw(Exception::BAD_XNB);
+			throw csharp::InvalidOperationException("Bad Xnb");
 		}		
 		
 		auto& reader = typeReaders[index];		
@@ -130,7 +130,7 @@ namespace xna {
 			return objB;
 		}
 		else {
-			Exception::Throw(Exception::NOT_IMPLEMENTED);
+			throw csharp::InvalidOperationException();
 		}
 
 		return misc::ReturnDefaultOrNull<T>();

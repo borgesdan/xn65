@@ -70,7 +70,7 @@ namespace xna {
 
 		try {
 			if (!gameWindow->impl->Create()) {
-				Exception::Throw(Exception::FAILED_TO_CREATE);				
+				throw csharp::InvalidOperationException();				
 				return false;
 			}
 
@@ -85,8 +85,9 @@ namespace xna {
 			BeginRun();
 			return StartGameLoop();
 		}
-		catch (std::exception& e) {
+		catch (std::exception& e) {			
 			MessageBox(nullptr, e.what(), "XN65", MB_OK);
+
 			return EXIT_FAILURE;
 		}		
 	}	

@@ -13,7 +13,7 @@ namespace xna {
 		ObjectReader() : ContentTypeReader(typeof<Object>()) {}
 
 		virtual Object Read(ContentReader& input, Object& existingInstance) override {
-			Exception::Throw(Exception::NOT_IMPLEMENTED);
+			throw csharp::InvalidOperationException();
 
 			return Object();
 		}

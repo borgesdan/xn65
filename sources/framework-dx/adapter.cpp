@@ -15,7 +15,7 @@ namespace xna {
 		comptr<IDXGIFactory1> pFactory = nullptr;
 
 		if FAILED(CreateDXGIFactory1(__uuidof(IDXGIFactory1), (void**)pFactory.GetAddressOf()))
-			Exception::Throw(Exception::FAILED_TO_CREATE);
+			throw csharp::InvalidOperationException();
 
 		comptr<IDXGIAdapter1> pAdapter = nullptr;
 
@@ -55,7 +55,7 @@ namespace xna {
 		comptr<IDXGIFactory1> pFactory = nullptr;
 
 		if FAILED(CreateDXGIFactory1(__uuidof(IDXGIFactory1), (void**)pFactory.GetAddressOf()))
-			Exception::Throw(Exception::FAILED_TO_CREATE);
+			throw csharp::InvalidOperationException();
 
 		comptr<IDXGIAdapter1> pAdapter = nullptr;
 
