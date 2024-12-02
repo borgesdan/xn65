@@ -11,7 +11,7 @@ namespace xna {
 		//Gets or sets the XML element name for each item in a collection (default = "Item"). 
 		std::string CollectionItemName;
 		//Gets or sets a value idicating whether to write member contents directly into the current XML context rather than wrapping the member in a new XML element (default=false). 
-		bool FlatternContent{ false };
+		bool FlattenContent{ false };
 		//Indicates whether to write this element if the member is null and skip past it if not found when deserializing XML (default=false). 
 		bool Optional{ false };
 		//Get or set a value indicating whether this member can have a null value (default=true).

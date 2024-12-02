@@ -7,6 +7,10 @@ namespace xna {
 	class XmlReader {
 
 	};
+
+	class XmlWriter {
+
+	};
 }
 
 #endif

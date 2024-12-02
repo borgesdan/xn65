@@ -6,7 +6,10 @@
 add_library (Xn65Pipeline STATIC 
 "writer.cpp"
 "compiler.cpp"
- "importer.cpp" "graphics.cpp" "pipeline.cpp")
+"importer.cpp" 
+"graphics.cpp" 
+"pipeline.cpp" 
+"serializers.cpp" "serialization.cpp")
 
 if (CMAKE_VERSION VERSION_GREATER 3.12)
   set_property(TARGET Xn65Pipeline PROPERTY CXX_STANDARD 20)
