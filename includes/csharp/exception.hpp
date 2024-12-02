@@ -9,8 +9,8 @@
 
 namespace csharp {
 	struct HResults {
-        inline static constexpr size_t S_OK = 0x00000000;
-        inline static constexpr size_t S_FALSE = 0x1;
+        inline static constexpr size_t HR_S_OK = 0x00000000;
+        inline static constexpr size_t HR_S_FALSE = 0x1;
         inline static constexpr size_t COR_E_ABANDONEDMUTEX = 0x8013152D;
         inline static constexpr size_t COR_E_AMBIGUOUSIMPLEMENTATION = 0x8013106A;
         inline static constexpr size_t COR_E_AMBIGUOUSMATCH = 0x8000211D;
