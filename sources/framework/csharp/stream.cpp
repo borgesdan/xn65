@@ -1,9 +1,11 @@
 #include "xna/csharp/stream.hpp"
 #include "xna/csharp/buffer.hpp"
+#include "xna/exception.hpp"
+#include <filesystem>
 
 namespace xna {
-	Long MemoryStream::Seek(Long offset, SeekOrigin const& origin) {
-		Long p = 0;
+	int64_t MemoryStream::Seek(int64_t offset, SeekOrigin const& origin) {
+		int64_t p = 0;
 
 		switch (origin)
 		{
@@ -32,11 +34,11 @@ namespace xna {
 			return -1;
 		}
 
-		_position = static_cast<Int>(p);
+		_position = static_cast<int32_t>(p);
 		return _position;
 	}
 
-	Int MemoryStream::Read(Byte* buffer, Int bufferLength, Int offset, Int count) {
+	int32_t MemoryStream::Read(uint8_t* buffer, int32_t bufferLength, int32_t offset, int32_t count) {
 		if (buffer == nullptr || offset < 0 || count < 0 || bufferLength - offset < count) {			
 			return -1;
 		}
@@ -53,7 +55,7 @@ namespace xna {
 				buffer[offset + byteCount] = _buffer[_position + static_cast<size_t>(byteCount)];
 		}
 		else {
-			Buffer::BlockCopy<Byte>(_buffer.data(), _position, buffer, offset, off);
+			Buffer::BlockCopy<uint8_t>(_buffer.data(), _position, buffer, offset, off);
 		}			
 		
 		_position += off;
@@ -61,11 +63,11 @@ namespace xna {
 		return off;
 	}
 
-	Int MemoryStream::Read(std::vector<Byte>& buffer, Int offset, Int count) {
-		return Read(buffer.data(), static_cast<Int>(buffer.size()), offset, count);
+	int32_t MemoryStream::Read(std::vector<uint8_t>& buffer, int32_t offset, int32_t count) {
+		return Read(buffer.data(), static_cast<int32_t>(buffer.size()), offset, count);
 	}
 
-	Int MemoryStream::ReadByte() {
+	int32_t MemoryStream::ReadByte() {
 		if (!_closed)
 			return 0;
 
@@ -75,7 +77,7 @@ namespace xna {
 		return _buffer[_position++];
 	}
 
-	void MemoryStream::Write(Byte const* buffer, Int bufferLength, Int offset, Int count){
+	void MemoryStream::Write(uint8_t const* buffer, int32_t bufferLength, int32_t offset, int32_t count){
 		if (buffer == nullptr || offset < 0 || count < 0 || bufferLength - offset < count) {						
 			return;
 		}
@@ -86,7 +88,7 @@ namespace xna {
 		auto i = _position + count;
 
 		if (i < 0 || i > _length) {
-			return;
+			Exception::Throw("i < 0 || i > _length");
 		}
 
 		if (count <= 8)	{
@@ -100,11 +102,11 @@ namespace xna {
 		_position = i;
 	}
 
-	void MemoryStream::Write(std::vector<Byte> const& buffer, Int offset, Int count){
-		Write(buffer.data(), static_cast<Int>(buffer.size()), offset, count);
+	void MemoryStream::Write(std::vector<uint8_t> const& buffer, int32_t offset, int32_t count){
+		Write(buffer.data(), static_cast<int32_t>(buffer.size()), offset, count);
 	}
 
-	void MemoryStream::WriteByte(Byte value) {
+	void MemoryStream::WriteByte(uint8_t value) {
 		if (_closed)
 			return;
 
@@ -115,7 +117,7 @@ namespace xna {
 		_buffer[_position++] = value;
 	}
 
-	FileStream::FileStream(String const& path, FileMode fileMode) {
+	FileStream::FileStream(std::string const& path, FileMode fileMode) {
 		int flags = std::fstream::in
 			| std::fstream::out
 			| std::fstream::binary;
@@ -126,14 +128,12 @@ namespace xna {
 		{
 			//Especifica se deve abrir um arquivo existente.
 		case FileMode::Open:
-			if (!exists) {
-				_closed = true;
-				return;
-			}
+			if (!exists) 
+				Exception::Throw("The specified file does not exist.");
 			break;
 			//Especifica que se deve abrir um arquivo, se existir;
 			// caso contrário, um novo arquivo deverá ser criado.
-		case FileMode::OpenOrCreate:
+		case FileMode::OpenOrCreate:			
 		case FileMode::Create:
 			if (!exists)
 				flags |= std::fstream::trunc;
@@ -144,7 +144,7 @@ namespace xna {
 			if (!exists)
 				flags |= std::fstream::trunc;
 			else
-				return;
+				Exception::Throw("The specified file already exists.");
 			break;
 			//Abre o arquivo, se existir, e busca o final do arquivo ou cria um novo arquivo.
 		case FileMode::Append:
@@ -158,6 +158,9 @@ namespace xna {
 			//para que seu tamanho seja zero bytes.
 			//Tentativa de ler um arquivo truncado retornará 0;
 		case FileMode::Truncate:
+			if(!exists)
+				Exception::Throw("The specified file does not exist.");
+
 			flags |= std::fstream::trunc;
 			_truncated = true;
 			break;
@@ -171,7 +174,7 @@ namespace xna {
 			Exception::Throw("Failed to open file: " + path);
 	}
 
-	FileStream::FileStream(String const& path) {
+	FileStream::FileStream(std::string const& path) {
 		int flags = std::fstream::in
 			| std::fstream::out
 			| std::fstream::binary;
@@ -187,7 +190,7 @@ namespace xna {
 			Exception::Throw("Failed to open file: " + path);
 	}
 
-	Int FileStream::Length() {
+	int64_t FileStream::Length() {
 		if (_closed)
 			return 0;
 
@@ -195,14 +198,14 @@ namespace xna {
 		return end;
 	}
 
-	Long FileStream::Position() {
+	int64_t FileStream::Position() {
 		if (_closed)
 			return 0;
 
-		return static_cast<Long>(_fstream.tellg());
+		return static_cast<int64_t>(_fstream.tellg());
 	}
 
-	Long FileStream::Seek(Long offset, SeekOrigin const& origin){
+	int64_t FileStream::Seek(int64_t offset, SeekOrigin const& origin){
 		if (_closed)
 			return 0;
 
@@ -230,11 +233,11 @@ namespace xna {
 			return -1;
 		}		
 
-		const auto pos = static_cast<Long>(_fstream.tellg());
+		const auto pos = static_cast<int64_t>(_fstream.tellg());
 		return pos;
 	}
 
-	Int FileStream::Read(Byte* buffer, Int bufferLength, Int offset, Int count){
+	int32_t FileStream::Read(uint8_t* buffer, int32_t bufferLength, int32_t offset, int32_t count){
 		if (buffer == nullptr || offset < 0 || count < 0 || bufferLength - offset < count) {			
 			return -1;
 		}
@@ -249,14 +252,14 @@ namespace xna {
 			return -1;
 		}
 
-		return static_cast<Int>(_fstream.gcount());
+		return static_cast<int32_t>(_fstream.gcount());
 	}
 
-	Int FileStream::Read(std::vector<Byte>& buffer, Int offset, Int count){
-		return Read(buffer.data(), static_cast<Int>(buffer.size()), offset, count);
+	int32_t FileStream::Read(std::vector<uint8_t>& buffer, int32_t offset, int32_t count){
+		return Read(buffer.data(), static_cast<int32_t>(buffer.size()), offset, count);
 	}
 
-	Int FileStream::ReadByte(){
+	int32_t FileStream::ReadByte(){
 		if (_closed || _truncated)
 			return 0;
 
@@ -268,12 +271,12 @@ namespace xna {
 			return -1;
 		}
 
-		const auto result = static_cast<Int>(c);
+		const auto result = static_cast<int32_t>(c);
 
 		return result;
 	}
 
-	void FileStream::Write(Byte const* buffer, Int bufferLength, Int offset, Int count) {
+	void FileStream::Write(uint8_t const* buffer, int32_t bufferLength, int32_t offset, int32_t count) {
 		if (buffer == nullptr || offset < 0 || count < 0 || bufferLength - offset < count) {
 			return;
 		}
@@ -290,11 +293,11 @@ namespace xna {
 		}
 	}
 
-	void FileStream::Write(std::vector<Byte> const& buffer, Int offset, Int count) {
-		Write(buffer.data(), static_cast<Int>(buffer.size()), offset, count);
+	void FileStream::Write(std::vector<uint8_t> const& buffer, int32_t offset, int32_t count) {
+		Write(buffer.data(), static_cast<int32_t>(buffer.size()), offset, count);
 	}
 
-	void FileStream::WriteByte(Byte value) {
+	void FileStream::WriteByte(uint8_t value) {
 		if (_closed)
 			return;
 

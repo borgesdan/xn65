@@ -23,7 +23,7 @@ namespace xna {
 		return color;
 	}
 
-	Color Color::FromNonPremultiplied(Int r, Int g, Int b, Int a) {
+	Color Color::FromNonPremultiplied(int32_t r, int32_t g, int32_t b, int32_t a) {
 		r = ClampToByte32(r * a / ByteMaxValue);
 		g = ClampToByte32(g * a / ByteMaxValue);
 		b = ClampToByte32(b * a / ByteMaxValue);
@@ -33,33 +33,33 @@ namespace xna {
 		a <<= 24;
 
 		Color color;
-		color._packedValue = static_cast<Uint>(r | g | b | a);
+		color._packedValue = static_cast<uint32_t>(r | g | b | a);
 		return color;
 	}
 
 	Color Color::Lerp(Color const& value1, Color const& value2, float amount) {
-		const Int r1 = value1.R();
-		const Int g1 = value1.G();
-		const Int b1 = value1.B();
-		const Int a1 = value1.A();
-		const Int r2 = value2.R();
-		const Int g2 = value2.G();
-		const Int b2 = value2.B();
-		const Int a2 = value2.A();
+		const int32_t r1 = value1.R();
+		const int32_t g1 = value1.G();
+		const int32_t b1 = value1.B();
+		const int32_t a1 = value1.A();
+		const int32_t r2 = value2.R();
+		const int32_t g2 = value2.G();
+		const int32_t b2 = value2.B();
+		const int32_t a2 = value2.A();
 
-		const auto bitmask = static_cast<Int>(PackUtils::PackUNorm(65536.0f, amount));
+		const auto bitmask = static_cast<int32_t>(PackUtils::PackUNorm(65536.0f, amount));
 
-		const Int r = r1 + ((r2 - r1) * bitmask >> 16);
-		const Int g = g1 + ((g2 - g1) * bitmask >> 16);
-		const Int b = b1 + ((b2 - b1) * bitmask >> 16);
-		const Int a = a1 + ((a2 - a1) * bitmask >> 16);
+		const int32_t r = r1 + ((r2 - r1) * bitmask >> 16);
+		const int32_t g = g1 + ((g2 - g1) * bitmask >> 16);
+		const int32_t b = b1 + ((b2 - b1) * bitmask >> 16);
+		const int32_t a = a1 + ((a2 - a1) * bitmask >> 16);
 
 		Color color;
-		color._packedValue = static_cast<Uint>(r | g << 8 | b << 16 | a << 24);
+		color._packedValue = static_cast<uint32_t>(r | g << 8 | b << 16 | a << 24);
 		return color;
 	}
 
-	Uint Color::PackHelper(float vectorX, float vectorY, float vectorZ, float vectorW) {
+	uint32_t Color::PackHelper(float vectorX, float vectorY, float vectorZ, float vectorW) {
 		const auto byteMax = static_cast<float>(ByteMaxValue);
 		const auto x = PackUtils::PackUNorm(byteMax, vectorX);
 		const auto y = PackUtils::PackUNorm(byteMax, vectorY) << 8;

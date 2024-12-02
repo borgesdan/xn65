@@ -2,20 +2,20 @@
 
 namespace xna {
 	RenderTarget2D::RenderTarget2D() : Texture2D(nullptr) {
-		impl2 = unew<PlatformImplementation>();
+		Implementation2 = unew<RenderTarget2DImplementation>();
 	}
 
 	RenderTarget2D::RenderTarget2D(sptr<GraphicsDevice> const& device) : Texture2D(device) {
-		impl2 = unew<PlatformImplementation>();
+		Implementation2 = unew<RenderTarget2DImplementation>();
 	}	
 
 	P_RenderTarget2D RenderTarget2D::FromBackBuffer(P_GraphicsDevice const& device) {
-		auto& swapChain = device->impl->_swapChain;
+		auto& swapChain = device->Implementation->SwapChain;
 		auto rt = snew<RenderTarget2D>(device);
-		auto& implementation = rt->impl;
-		auto& implementation2 = rt->impl2;
+		auto& implementation = rt->Implementation;
+		auto& implementation2 = rt->Implementation2;
 
-		if (!swapChain->impl->GetBackBuffer(implementation->dxTexture2D))
+		if (!swapChain->impl->GetBackBuffer(implementation->Texture2D))
 		{
 			Exception::Throw(Exception::FAILED_TO_CREATE);
 		}
@@ -26,30 +26,30 @@ namespace xna {
 	}
 
 	void RenderTarget2D::Initialize() {
-		if (!impl || !m_device || !m_device->impl->_device) {
+		if (!Implementation || !BaseGraphicsDevice || !BaseGraphicsDevice->Implementation->Device) {
 			Exception::Throw(Exception::UNABLE_TO_INITIALIZE);
 		}				
 
-		if (impl2->_renderTargetView)
+		if (Implementation2->RenderTargetView)
 			return;
 
-		impl->dxDescription.Width = width;
-		impl->dxDescription.Height = height;
-		impl->dxDescription.BindFlags = D3D11_BIND_FLAG::D3D11_BIND_RENDER_TARGET;
+		Implementation->Description.Width = width;
+		Implementation->Description.Height = height;
+		Implementation->Description.BindFlags = D3D11_BIND_FLAG::D3D11_BIND_RENDER_TARGET;
 
 		Texture2D::Initialize();
 		
-		auto& dxdevice = m_device->impl->_device;
+		auto& dxdevice = BaseGraphicsDevice->Implementation->Device;
 		
 		const auto hr = dxdevice->CreateRenderTargetView(
-			impl->dxTexture2D.Get(),
+			Implementation->Texture2D.Get(),
 			NULL, 
-			impl2->_renderTargetView.ReleaseAndGetAddressOf());
+			Implementation2->RenderTargetView.ReleaseAndGetAddressOf());
 
 		if (FAILED(hr)) {
 			Exception::Throw(Exception::FAILED_TO_CREATE);
 		}
 
-		impl2->_renderTargetView->GetDesc(&impl2->_renderTargetDesc);
+		Implementation2->RenderTargetView->GetDesc(&Implementation2->Description);
 	}
 }

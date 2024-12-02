@@ -1,7 +1,6 @@
 #ifndef CXNA_COMMON_PACKEDVECTOR_HPP
 #define CXNA_COMMON_PACKEDVECTOR_HPP
 
-#include "../default.hpp"
 #include "numerics.hpp"
 #include <cmath>
 
@@ -19,17 +18,17 @@ namespace xna {
 
 	struct PackUtils {	
 
-		static constexpr float UnpackUNorm(Uint bitmask, Uint value) {
+		static constexpr float UnpackUNorm(uint32_t bitmask, uint32_t value) {
 			value &= bitmask;
 			return static_cast<float>(value) / static_cast<float>(bitmask);
 		}		
 
-		static constexpr float UnpackSNorm(Uint bitmask, Uint value) {
+		static constexpr float UnpackSNorm(uint32_t bitmask, uint32_t value) {
 			const auto num1 = (bitmask + 1U) >> 1;
 
-			const auto ivalue = static_cast<Int>(value);
-			const auto inum1 = static_cast<Int>(num1);
-			const auto ibitmask = static_cast<Int>(bitmask);
+			const auto ivalue = static_cast<int32_t>(value);
+			const auto inum1 = static_cast<int32_t>(num1);
+			const auto ibitmask = static_cast<int32_t>(bitmask);
 
 			if ((ivalue & inum1) != 0) {
 				if ((ivalue & ibitmask) == inum1)
@@ -42,13 +41,13 @@ namespace xna {
 
 			const auto num2 = static_cast<float>(bitmask >> 1);
 
-			return static_cast<Int>(value) / num2;
+			return static_cast<int32_t>(value) / num2;
 		}
 
-		static Uint PackUnsigned(float bitmask, float value);
-		static Uint PackSigned(Uint bitmask, float value);
-		static Uint PackUNorm(float bitmask, float value);
-		static Uint PackSNorm(Uint bitmask, float value);
+		static uint32_t PackUnsigned(float bitmask, float value);
+		static uint32_t PackSigned(uint32_t bitmask, float value);
+		static uint32_t PackUNorm(float bitmask, float value);
+		static uint32_t PackSNorm(uint32_t bitmask, float value);
 		static double ClampAndRound(float value, float min, float max);
 	};
 }

@@ -6,28 +6,28 @@ namespace xna {
 	RasterizerState::RasterizerState() : RasterizerState(nullptr){}
 
 	RasterizerState::RasterizerState(sptr<GraphicsDevice> const& device) : GraphicsResource(device) {
-		impl = unew<PlatformImplementation>();
-		impl->dxDescription.CullMode = D3D11_CULL_MODE::D3D11_CULL_BACK;
-		impl->dxDescription.FillMode = D3D11_FILL_MODE::D3D11_FILL_SOLID;
-		impl->dxDescription.MultisampleEnable = true;
-		impl->dxDescription.DepthBias = 0;
-		impl->dxDescription.SlopeScaledDepthBias = 0;
-		impl->dxDescription.ScissorEnable = false;
+		Implementation = unew<RasterizerStateImplementation>();
+		Implementation->Description.CullMode = D3D11_CULL_MODE::D3D11_CULL_BACK;
+		Implementation->Description.FillMode = D3D11_FILL_MODE::D3D11_FILL_SOLID;
+		Implementation->Description.MultisampleEnable = true;
+		Implementation->Description.DepthBias = 0;
+		Implementation->Description.SlopeScaledDepthBias = 0;
+		Implementation->Description.ScissorEnable = false;
 	}
 	
 	bool RasterizerState::Initialize()
 	{
-		if (!impl || !m_device || !m_device->impl->_device) {
+		if (!Implementation || !BaseGraphicsDevice || !BaseGraphicsDevice->Implementation->Device) {
 			Exception::Throw(Exception::UNABLE_TO_INITIALIZE);
 		}
 
-		if (impl->dxRasterizerState) {
-			impl->dxRasterizerState = nullptr;
+		if (Implementation->RasterizerState) {
+			Implementation->RasterizerState = nullptr;
 		}
 
-		const auto hr = m_device->impl->_device->CreateRasterizerState(
-			&impl->dxDescription, 
-			impl->dxRasterizerState.GetAddressOf());
+		const auto hr = BaseGraphicsDevice->Implementation->Device->CreateRasterizerState(
+			&Implementation->Description,
+			Implementation->RasterizerState.GetAddressOf());
 
 		if (FAILED(hr)) {
 			Exception::Throw(Exception::FAILED_TO_CREATE);
@@ -38,103 +38,103 @@ namespace xna {
 
 	bool RasterizerState::Apply()
 	{
-		if (!impl || !m_device || !m_device->impl->_context) {
+		if (!Implementation || !BaseGraphicsDevice || !BaseGraphicsDevice->Implementation->Context) {
 			Exception::Throw(Exception::UNABLE_TO_INITIALIZE);
 		}
 
-		if (!impl->dxRasterizerState) {
+		if (!Implementation->RasterizerState) {
 			Exception::Throw(Exception::INVALID_OPERATION);
 		}
 
-		m_device->impl->_context->RSSetState(impl->dxRasterizerState.Get());
+		BaseGraphicsDevice->Implementation->Context->RSSetState(Implementation->RasterizerState.Get());
 
 		return true;
 	}
 
 	bool RasterizerState::ScissorTestEnable() const {
-		return impl->dxDescription.ScissorEnable;
+		return Implementation->Description.ScissorEnable;
 	}
 
 	void  RasterizerState::ScissorTestEnable(bool value) {
-		impl->dxDescription.ScissorEnable = value;
+		Implementation->Description.ScissorEnable = value;
 	}
 
 	bool RasterizerState::MultiSampleAntiAlias() const {
-		return impl->dxDescription.MultisampleEnable;
+		return Implementation->Description.MultisampleEnable;
 	}
 
 	void  RasterizerState::MultiSampleAntiAlias(bool value) {
-		impl->dxDescription.MultisampleEnable = value;
+		Implementation->Description.MultisampleEnable = value;
 	}
 
 	float RasterizerState::DepthBias() const {
-		return static_cast<float>(impl->dxDescription.DepthBias);
+		return static_cast<float>(Implementation->Description.DepthBias);
 	}
 
 	void RasterizerState::DepthBias(float value) {
-		impl->dxDescription.DepthBias = static_cast<INT>(value);
+		Implementation->Description.DepthBias = static_cast<INT>(value);
 	}
 
 	float RasterizerState::SlopeScaleDepthBias() const {
-		return impl->dxDescription.SlopeScaledDepthBias;
+		return Implementation->Description.SlopeScaledDepthBias;
 	}
 
 	void RasterizerState::SlopeScaleDepthBias(float value) {
-		impl->dxDescription.SlopeScaledDepthBias = value;
+		Implementation->Description.SlopeScaledDepthBias = value;
 	}
 
 	uptr<RasterizerState> RasterizerState::CullNone()
 	{
 		auto raster = unew<RasterizerState>();
-		raster->impl->dxDescription.FillMode = D3D11_FILL_SOLID;
-		raster->impl->dxDescription.CullMode = D3D11_CULL_MODE::D3D11_CULL_NONE;
-		raster->impl->dxDescription.DepthClipEnable = true;
+		raster->Implementation->Description.FillMode = D3D11_FILL_SOLID;
+		raster->Implementation->Description.CullMode = D3D11_CULL_MODE::D3D11_CULL_NONE;
+		raster->Implementation->Description.DepthClipEnable = true;
 		return raster;
 	}
 
 	uptr<RasterizerState> RasterizerState::CullClockwise()
 	{
 		auto raster = unew<RasterizerState>();
-		raster->impl->dxDescription.FillMode = D3D11_FILL_SOLID;
-		raster->impl->dxDescription.CullMode = D3D11_CULL_MODE::D3D11_CULL_FRONT;
-		raster->impl->dxDescription.DepthClipEnable = true;
+		raster->Implementation->Description.FillMode = D3D11_FILL_SOLID;
+		raster->Implementation->Description.CullMode = D3D11_CULL_MODE::D3D11_CULL_FRONT;
+		raster->Implementation->Description.DepthClipEnable = true;
 		return raster;
 	}
 
 	uptr<RasterizerState> RasterizerState::CullCounterClockwise()
 	{
 		auto raster = unew<RasterizerState>();
-		raster->impl->dxDescription.FillMode = D3D11_FILL_SOLID;
-		raster->impl->dxDescription.CullMode = D3D11_CULL_MODE::D3D11_CULL_BACK;
-		raster->impl->dxDescription.DepthClipEnable = true;
+		raster->Implementation->Description.FillMode = D3D11_FILL_SOLID;
+		raster->Implementation->Description.CullMode = D3D11_CULL_MODE::D3D11_CULL_BACK;
+		raster->Implementation->Description.DepthClipEnable = true;
 		return raster;
 	}
 
 	xna::CullMode RasterizerState::CullMode() const {
-		if (!impl)
+		if (!Implementation)
 			return xna::CullMode::None;
 
-		return static_cast<xna::CullMode>(static_cast<int>(impl->dxDescription.CullMode) - 1);
+		return static_cast<xna::CullMode>(static_cast<int>(Implementation->Description.CullMode) - 1);
 	}
 
 	void RasterizerState::CullMode(xna::CullMode value) {
-		if (!impl)
+		if (!Implementation)
 			return;
 
-		impl->dxDescription.CullMode = static_cast<D3D11_CULL_MODE>(static_cast<int>(value) + 1);
+		Implementation->Description.CullMode = static_cast<D3D11_CULL_MODE>(static_cast<int>(value) + 1);
 	}
 
 	xna::FillMode RasterizerState::FillMode() const {
-		if (!impl)
+		if (!Implementation)
 			return xna::FillMode::WireFrame;
 
-		return static_cast<xna::FillMode>(static_cast<int>(impl->dxDescription.FillMode) - 2);
+		return static_cast<xna::FillMode>(static_cast<int>(Implementation->Description.FillMode) - 2);
 	}
 
 	void RasterizerState::FillMode(xna::FillMode value) {
-		if (!impl)
+		if (!Implementation)
 			return;
 
-		impl->dxDescription.FillMode = static_cast<D3D11_FILL_MODE>(static_cast<int>(value) + 2);
+		Implementation->Description.FillMode = static_cast<D3D11_FILL_MODE>(static_cast<int>(value) + 2);
 	}
 }

@@ -8,8 +8,11 @@
 #include "../../graphics/texture.hpp"
 #include "../manager.hpp"
 #include "../reader.hpp"
+#include "../../graphics/shared.hpp"
 
 namespace xna {
+	using PTexture2D = std::shared_ptr<Texture2D>;
+
 	class Texture2DReader : public ContentTypeReaderT<PTexture2D> {
 	public:
 		Texture2DReader() : ContentTypeReaderT(typeof<PTexture2D>()) {
@@ -41,6 +44,7 @@ namespace xna {
 		}
 	};
 
+	using PSpriteFont = std::shared_ptr<SpriteFont>;
 	class SpriteFontReader : public ContentTypeReaderT<PSpriteFont> {
 	public:
 		SpriteFontReader() : ContentTypeReaderT(typeof<PSpriteFont>()) {

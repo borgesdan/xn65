@@ -3,6 +3,7 @@
 
 #include "../csharp/eventhandler.hpp"
 #include "../default.hpp"
+#include "../graphics/shared.hpp"
 #include "gdeviceinfo.hpp"
 
 namespace xna {

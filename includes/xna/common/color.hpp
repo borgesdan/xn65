@@ -1,17 +1,18 @@
 #ifndef XNA_COMMON_COLOR_HPP
 #define XNA_COMMON_COLOR_HPP
 
-#include "../default.hpp"
 #include "packedvalue.hpp"
+#include <limits>
 
 namespace xna {
-	struct Color : public IPackedVector, public IPackedVectorT<Uint> {
+	//Represents a four-component color using red, green, blue, and alpha data. 
+	struct Color : public IPackedVector, public IPackedVectorT<uint32_t> {
 		constexpr Color() = default;
 
-		constexpr Color(Uint packedValue)
+		constexpr Color(uint32_t packedValue)
 			: _packedValue(packedValue) {}
 
-		constexpr Color(Int r, Int g, Int b, Int a = 255U) {
+		constexpr Color(int32_t r, int32_t g, int32_t b, int32_t a = 255U) {
 			if (((r | g | b | a) & -256) != 0)
 			{
 				r = ClampToByte32(r);
@@ -24,7 +25,7 @@ namespace xna {
 			b <<= 16;
 			a <<= 24;
 
-			_packedValue = static_cast<Uint>(r | g | b | a);
+			_packedValue = static_cast<uint32_t>(r | g | b | a);
 		}
 
 		Color(float r, float g, float b, float a = 1.0F);
@@ -33,22 +34,26 @@ namespace xna {
 
 		virtual void PackFromVector4(Vector4 const& vector) override;
 
+		//Converts a non-premultipled alpha color to a color that contains premultiplied alpha.
 		static Color FromNonPremultiplied(Vector4 const& vector);
 
-		static Color FromNonPremultiplied(Int r, Int g, Int b, Int a);
+		//Converts a non-premultipled alpha color to a color that contains premultiplied alpha.
+		static Color FromNonPremultiplied(int32_t r, int32_t g, int32_t b, int32_t a);
 
+		//Gets a three-component vector representation for this object.
 		constexpr Vector3 ToVector3() const {
 			Vector3 vector3;
-			const auto byteMax = static_cast<Uint>(ByteMaxValue);
+			const auto byteMax = static_cast<uint32_t>(ByteMaxValue);
 			vector3.X = PackUtils::UnpackUNorm(byteMax, _packedValue);
 			vector3.Y = PackUtils::UnpackUNorm(byteMax, _packedValue >> 8);
 			vector3.Z = PackUtils::UnpackUNorm(byteMax, _packedValue >> 16);
 			return vector3;
 		}
 
+		//Gets a four-component vector representation for this object.
 		constexpr virtual Vector4 ToVector4() const	override {
 			Vector4 vector4;
-			const auto byteMax = static_cast<Uint>(ByteMaxValue);
+			const auto byteMax = static_cast<uint32_t>(ByteMaxValue);
 			vector4.X = PackUtils::UnpackUNorm(byteMax, _packedValue);
 			vector4.Y = PackUtils::UnpackUNorm(byteMax, _packedValue >> 8);
 			vector4.Z = PackUtils::UnpackUNorm(byteMax, _packedValue >> 16);
@@ -56,62 +61,74 @@ namespace xna {
 			return vector4;
 		}
 
-		constexpr Byte R() const {
-			return static_cast<Byte>(_packedValue);
+		//Gets or sets the red component value of this Color. 
+		constexpr uint8_t R() const {
+			return static_cast<uint8_t>(_packedValue);
 		}
 
-		constexpr void R(Byte value) {
-			_packedValue = _packedValue & (UintMaxValue - 255) | static_cast<Uint>(value);
+		//Gets or sets the red component value of this Color. 
+		constexpr void R(uint8_t value) {
+			_packedValue = _packedValue & (UintMaxValue - 255) | static_cast<uint32_t>(value);
 		}
 
-		constexpr Byte G() const {
-			return static_cast<Byte>(_packedValue >> 8);
+		//Gets or sets the green component value of this Color. 
+		constexpr uint8_t G() const {
+			return static_cast<uint8_t>(_packedValue >> 8);
 		}
 
-		constexpr void G(Byte value) {
-			_packedValue = (static_cast<Int>(_packedValue) & -65281 | static_cast<Int>(value) << 8);
+		//Gets or sets the green component value of this Color. 
+		constexpr void G(uint8_t value) {
+			_packedValue = (static_cast<int32_t>(_packedValue) & -65281 | static_cast<int32_t>(value) << 8);
 		}
 
-		constexpr Byte B() const {
-			return static_cast<Byte>(_packedValue >> 16);
+		//Gets or sets the blue component value of this Color. 
+		constexpr uint8_t B() const {
+			return static_cast<uint8_t>(_packedValue >> 16);
 		}
 
-		constexpr void B(Byte value) {
-			_packedValue = (static_cast<Int>(_packedValue) & -16711681 | static_cast<Int>(value) << 16);
+		//Gets or sets the blue component value of this Color. 
+		constexpr void B(uint8_t value) {
+			_packedValue = (static_cast<int32_t>(_packedValue) & -16711681 | static_cast<int32_t>(value) << 16);
 		}
 
-		constexpr Byte A() const {
-			return static_cast<Byte>(_packedValue >> 24);
+		//Gets or sets the alpha component value. 
+		constexpr uint8_t A() const {
+			return static_cast<uint8_t>(_packedValue >> 24);
 		}
 
-		constexpr void A(Byte value) {
-			_packedValue = (static_cast<Int>(_packedValue) & 16777215 | static_cast<Int>(value) << 24);
+		//Gets or sets the alpha component value. 
+		constexpr void A(uint8_t value) {
+			_packedValue = (static_cast<int32_t>(_packedValue) & 16777215 | static_cast<int32_t>(value) << 24);
 		}
 
-		virtual constexpr Uint PackedValue() const override {
+		//Gets or sets the current color as a packed value.
+		virtual constexpr uint32_t PackedValue() const override {
 			return _packedValue;
 		}
 
-		virtual constexpr void PackedValue(Uint const& value) override {
+		//Gets or sets the current color as a packed value.
+		virtual constexpr void PackedValue(uint32_t const& value) override {
 			_packedValue = value;
 		}
 
+		//Linearly interpolate a color.
 		static Color Lerp(Color const& value1, Color const& value2, float amount);
 
+		//Multiply each color component by the scale factor.
 		static constexpr Color Multiply(Color const& value, float scale) {
-			const Uint r = value.R();
-			const Uint g = value.G();
-			const Uint b = value.B();
-			const Uint a = value.A();
+			const uint32_t r = value.R();
+			const uint32_t g = value.G();
+			const uint32_t b = value.B();
+			const uint32_t a = value.A();
 
 			scale *= 65536.0f;
 
-			const Uint num5 = scale >= 0.0F ? (scale <= 16777215.0F ? static_cast<Uint>(scale) : 16777215U) : 0U;
+			const uint32_t num5 = scale >= 0.0F ? (scale <= 16777215.0F ? static_cast<uint32_t>(scale) : 16777215U) : 0U;
 
-			Uint r1 = r * num5 >> 16;
-			Uint g1 = g * num5 >> 16;
-			Uint b1 = b * num5 >> 16;
-			Uint a1 = a * num5 >> 16;
+			uint32_t r1 = r * num5 >> 16;
+			uint32_t g1 = g * num5 >> 16;
+			uint32_t b1 = b * num5 >> 16;
+			uint32_t a1 = a * num5 >> 16;
 
 			if (r1 > ByteMaxValue)
 				r1 = ByteMaxValue;
@@ -125,13 +142,13 @@ namespace xna {
 			if (a1 > ByteMaxValue)
 				a1 = ByteMaxValue;
 
-			const auto r2 = static_cast<Int>(r1);
-			const auto g2 = static_cast<Int>(g1);
-			const auto b2 = static_cast<Int>(b1);
-			const auto a2 = static_cast<Int>(a1);
+			const auto r2 = static_cast<int32_t>(r1);
+			const auto g2 = static_cast<int32_t>(g1);
+			const auto b2 = static_cast<int32_t>(b1);
+			const auto a2 = static_cast<int32_t>(a1);
 
 			Color color;
-			color._packedValue = static_cast<Uint>(r2 | g2 << 8 | b2 << 16 | a2 << 24);
+			color._packedValue = static_cast<uint32_t>(r2 | g2 << 8 | b2 << 16 | a2 << 24);
 			return color;
 		}
 
@@ -143,21 +160,24 @@ namespace xna {
 			return Color::Multiply(value, scale);
 		}
 
-		constexpr operator Uint() const { 
-			return _packedValue; 
+		constexpr operator uint32_t() const {
+			return _packedValue;
 		}
 
 	private:
-		Uint _packedValue{ 0 };
+		uint32_t _packedValue{ 0 };
 
-		static constexpr Int ClampToByte32(Int value) noexcept {
+		static constexpr int32_t ClampToByte32(int32_t value) noexcept {
 			if (value < 0)
 				return 0;
 
 			return value > ByteMaxValue ? ByteMaxValue : value;
 		}
 
-		static Uint PackHelper(float vectorX, float vectorY, float vectorZ, float vectorW);
+		static uint32_t PackHelper(float vectorX, float vectorY, float vectorZ, float vectorW);
+
+		static constexpr uint8_t ByteMaxValue = (std::numeric_limits<uint8_t>::max)();
+		static constexpr uint32_t UintMaxValue = (std::numeric_limits<uint32_t>::max)();
 	};
 
 	struct Colors {
@@ -298,7 +318,7 @@ namespace xna {
 		static constexpr Color Turquoise{ Color(4291878976U) };
 		static constexpr Color Violet{ Color(4293821166U) };
 		static constexpr Color Wheat{ Color(4289978101U) };
-		static constexpr Color White{ Color(UintMaxValue) };
+		static constexpr Color White{ Color((std::numeric_limits<uint32_t>::max)()) };
 		static constexpr Color WhiteSmoke{ Color(4294309365U) };
 		static constexpr Color Yellow{ Color(4278255615U) };
 		static constexpr Color YellowGreen{ Color(4281519514U) };

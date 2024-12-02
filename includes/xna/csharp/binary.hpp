@@ -80,9 +80,7 @@ namespace xna {
 		std::vector<Byte> charBytes;
 		std::vector<Char> singleChar;
 		std::vector<Byte> buffer;
-		std::vector<Char> charBuffer;
-
-		//bool m2BytesPerChar{ false };
+		std::vector<Char> charBuffer;		
 	};	
 
 	//A simplified port of the System.IO.BinaryWriter class.
@@ -143,9 +141,8 @@ namespace xna {
 		}		
 
 		//Writes a 32-bit integer in a compressed format.
-		void Write7BitEncodedInt(Int value);
+		void Write7BitEncodedInt(Int value);		
 		
-		//void Write7BitEncodedInt64(Long value);	
 	protected:
 		sptr<Stream> OutStream = nullptr;
 

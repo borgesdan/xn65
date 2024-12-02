@@ -1,30 +1,35 @@
 #ifndef XNA_GRAPHICS_ADAPTER_HPP
 #define XNA_GRAPHICS_ADAPTER_HPP
 
-#include "../default.hpp"
 #include "displaymode.hpp"
+#include <cstdint>
+#include <memory>
+#include <string>
 
 namespace xna {
+	
+	struct GraphicsAdapterImplementation;
+
 	//Provides methods to retrieve and manipulate graphics adapters.
 	class GraphicsAdapter {
 	public:
 		//Collection of available adapters on the system.
-		static void Adapters(std::vector<uptr<GraphicsAdapter>>& adapters);
+		static void Adapters(std::vector<std::unique_ptr<GraphicsAdapter>>& adapters);
 
 		//Gets the current display mode.
-		inline sptr<DisplayMode> CurrentDisplayMode() const { return currentDisplayMode; }
+		inline std::shared_ptr<DisplayMode> CurrentDisplayMode() const { return currentDisplayMode; }
 
 		//Gets the default adapter. 
-		static uptr<GraphicsAdapter> DefaultAdapter();
+		static std::unique_ptr<GraphicsAdapter> DefaultAdapter();
 
 		//Retrieves a string used for presentation to the user.
-		constexpr String Description() const { return description; }
+		constexpr std::string Description() const { return description; }
 
 		//Retrieves a value that is used to help identify a particular chip set. 
-		constexpr Uint DeviceId() const { return deviceId; }
+		constexpr uint32_t DeviceId() const { return deviceId; }
 		
 		//Retrieves a string that contains the device name.
-		constexpr String DeviceName() const { return deviceName; }
+		constexpr std::string DeviceName() const { return deviceName; }
 		
 		//Determines if this instance of GraphicsAdapter is the default adapter.
 		constexpr bool IsDefaultAdapter() const { return isDefault; }
@@ -38,16 +43,16 @@ namespace xna {
 		constexpr intptr_t MonitorHandle() const { return monitorHandle; }
 
 		//Retrieves a value used to help identify the revision level of a particular chip set.
-		constexpr Uint Revision() const { return revision; }
+		constexpr uint32_t Revision() const { return revision; }
 		
 		//Retrieves a value used to identify the subsystem.
-		constexpr Uint SubSystemId() const { return subSystemId; }
+		constexpr uint32_t SubSystemId() const { return subSystemId; }
 		
 		//Returns a collection of supported display modes for the current adapter.
-		inline sptr<DisplayModeCollection> SupportedDisplayModes() const { return supportedDisplayModes; }
+		inline std::shared_ptr<DisplayModeCollection> SupportedDisplayModes() const { return supportedDisplayModes; }
 
 		//Retrieves a value used to identify the manufacturer.
-		constexpr Uint VendorId() const { return vendorId; }
+		constexpr uint32_t VendorId() const { return vendorId; }
 		
 		//Gets or sets a NULL device. 
 		static bool UseNullDevice() { return useNullDevice; }
@@ -69,32 +74,30 @@ namespace xna {
 			GraphicsProfile graphicsProfile,
 			SurfaceFormat format,
 			DepthFormat depthFormat,
-			Int multiSampleCount,
+			int32_t multiSampleCount,
 			SurfaceFormat& selectedFormat,
 			DepthFormat& selectedDepthFormat,
-			Int& selectedMultiSampleCount
+			int32_t& selectedMultiSampleCount
 		) const;		
 
+		std::unique_ptr<GraphicsAdapterImplementation> Implementation;
+
 	private:
-		String description;
-		Uint deviceId{0};
-		String deviceName;
+		std::string description;
+		uint32_t deviceId{0};
+		std::string deviceName;
 		bool isDefault{ false };
 		intptr_t monitorHandle{ 0 };
-		Uint revision{ 0 };
-		Uint subSystemId{ 0 };
-		Uint vendorId{ 0 };
-		sptr<DisplayMode> currentDisplayMode{ nullptr };
-		sptr<DisplayModeCollection> supportedDisplayModes{ nullptr };
+		uint32_t revision{ 0 };
+		uint32_t subSystemId{ 0 };
+		uint32_t vendorId{ 0 };
+		std::shared_ptr<DisplayMode> currentDisplayMode{ nullptr };
+		std::shared_ptr<DisplayModeCollection> supportedDisplayModes{ nullptr };
 
 		inline static bool useNullDevice = false;
 		inline static bool useReferenceDevice = false;
 
-		GraphicsAdapter();
-
-	public:
-		struct PlatformImplementation;
-		uptr<PlatformImplementation> impl = nullptr;
+		GraphicsAdapter();	
 	};
 }
 

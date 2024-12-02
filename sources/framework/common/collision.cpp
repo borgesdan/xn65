@@ -64,7 +64,7 @@ namespace xna {
 		if (result1.LengthSquared() < 9.9999997473787516E-06)
 			result1 = Vector3::Subtract(corners[0], box.Max);
 
-		auto num1 = FloatMaxValue;
+		auto num1 = FLOAT_MAX_VALUE;
 		float num2 = 0;
 		do
 		{
@@ -101,10 +101,10 @@ namespace xna {
 		if (result1 == ContainmentType::Contains)
 			return 0.0F;
 
-		auto num1 = FloatMinValue;
-		auto num2 = FloatMaxValue;
+		auto num1 = FLOAT_MIN_VALUE;
+		auto num2 = FLOAT_MAX_VALUE;
 
-		for (size_t i = 0; i < planes.size(); ++i) {
+		for (size_t i = 0; i < PlaneCount; ++i) {
 			const auto& plane = planes[i];
 
 			Vector3 normal = plane.Normal;
@@ -153,7 +153,7 @@ namespace xna {
 		if (result1.LengthSquared() < 9.9999997473787516E-06)
 			result1 = Vector3::UnitX();
 
-		auto num1 = FloatMaxValue;
+		auto num1 = FLOAT_MAX_VALUE;
 		auto num2 = 0.0F;
 
 		do
@@ -199,7 +199,7 @@ namespace xna {
 		if (result1.LengthSquared() < 9.9999997473787516E-06)
 			result1 = Vector3::Subtract(corners[0], frustum.corners[1]);
 
-		float num1 = FloatMaxValue;
+		float num1 = FLOAT_MAX_VALUE;
 		float num2 = 0;
 
 		do
@@ -242,7 +242,7 @@ namespace xna {
 		if (Intersects(frustum)) {
 			containmentType = ContainmentType::Contains;
 
-			for (size_t index = 0; index < corners.size(); ++index) {
+			for (size_t index = 0; index < CornerCount; ++index) {
 				if (Contains(frustum.corners[index]) == ContainmentType::Disjoint)
 				{
 					containmentType = ContainmentType::Intersects;
@@ -255,7 +255,7 @@ namespace xna {
 
 	std::optional<float> BoundingBox::Intersects(Ray const& ray) const {
 		float num1 = 0.0f;
-		float num2 = FloatMaxValue;
+		float num2 = FLOAT_MAX_VALUE;
 
 		if (std::abs(ray.Direction.X) < 9.9999999747524271E-07)
 		{
@@ -345,10 +345,10 @@ namespace xna {
 	}
 
 	BoundingSphere BoundingSphere::CreateFromFrustum(BoundingFrustum const& frustum) {
-		return BoundingSphere::CreateFromPoints(frustum.corners);
+		return BoundingSphere::CreateFromPoints(frustum.corners, frustum.CornerCount);
 	}
 
-	BoundingSphere BoundingSphere::CreateFromPoints(std::vector<Vector3> const& points) {
+	BoundingSphere BoundingSphere::CreateFromPoints(Vector3 const* points, size_t size) {
 		Vector3 current;
 		auto vector3_1 = current = points[0];
 		auto vector3_2 = current;
@@ -357,7 +357,7 @@ namespace xna {
 		auto vector3_5 = current;
 		auto vector3_6 = current;
 
-		for (size_t i = 0; i < points.size(); ++i) {
+		for (size_t i = 0; i < size; ++i) {
 			const auto& point = points[i];
 
 			if (point.X < vector3_6.X)
@@ -404,7 +404,7 @@ namespace xna {
 			num1 = result3 * 0.5f;
 		}
 
-		for (size_t i = 0; i < points.size(); ++i) {
+		for (size_t i = 0; i < size; ++i) {
 			const auto& point = points[i];
 
 			Vector3 vector3_7;
@@ -423,7 +423,7 @@ namespace xna {
 		fromPoints.Center = result4;
 		fromPoints.Radius = num1;
 		return fromPoints;
-	}
+	}	
 
 	ContainmentType BoundingSphere::Contains(BoundingFrustum& frustum) const {
 		if (!frustum.Intersects(*this))

@@ -1,15 +1,36 @@
 #ifndef XNA_GRAPHICS_RASTERIZER_HPP
 #define XNA_GRAPHICS_RASTERIZER_HPP
 
-#include "../default.hpp"
 #include "gresource.hpp"
 
 namespace xna {
+
+	//Defines winding orders that may be used to identify back faces for culling. 
+	enum class CullMode {
+		//Do not cull back faces. 
+		None,
+		//Cull back faces with clockwise vertices. 
+		CullClockwiseFace,
+		//Cull back faces with counterclockwise vertices. 
+		CullCounterClockwiseFace,
+	};
+
+	//Describes options for filling the vertices and lines that define a primitive. 
+	enum class FillMode
+	{
+		//Draw lines connecting the vertices that define a primitive face.
+		WireFrame,
+		//Draw solid faces for each primitive.
+		Solid,
+	};
+
+	struct RasterizerStateImplementation;
+
 	//Contains rasterizer state, which determines how to convert vector data (shapes) into raster data (pixels). 
 	class RasterizerState : public GraphicsResource {
 	public:
 		RasterizerState();
-		RasterizerState(sptr<GraphicsDevice> const& device);
+		RasterizerState(std::shared_ptr<GraphicsDevice> const& device);
 
 		//Specifies the conditions for culling or removing triangles. The default value is CullMode.CounterClockwise. 
 		xna::CullMode CullMode() const;
@@ -45,21 +66,17 @@ namespace xna {
 		void ScissorTestEnable(bool value);
 
 		//A built-in state object with settings for not culling any primitives.
-		static uptr<RasterizerState> CullNone();
+		static std::unique_ptr<RasterizerState> CullNone();
 		//A built-in state object with settings for culling primitives with clockwise winding order.
-		static uptr<RasterizerState> CullClockwise();
+		static std::unique_ptr<RasterizerState> CullClockwise();
 		//A built-in state object with settings for culling primitives with counter-clockwise winding order.
-		static uptr<RasterizerState> CullCounterClockwise();
+		static std::unique_ptr<RasterizerState> CullCounterClockwise();
 
 		bool Initialize();
-		bool Apply();
+		bool Apply();	
 
-	public:
-		struct PlatformImplementation;
-		uptr<PlatformImplementation> impl = nullptr;
-	};
-
-	using PRasterizerState = sptr<RasterizerState>;
+		std::unique_ptr<RasterizerStateImplementation> Implementation;
+	};	
 }
 
 #endif

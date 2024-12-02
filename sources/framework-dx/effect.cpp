@@ -16,7 +16,7 @@ namespace xna {
 	BasicEffect::BasicEffect(sptr<GraphicsDevice> const& device) : Effect(device) {
 		impl = unew<PlatformImplementation>();
 
-		uptr<DxEffectFactory> fxFactory = unew<DxEffectFactory>(device->impl->_device.Get());
+		uptr<DxEffectFactory> fxFactory = unew<DxEffectFactory>(device->Implementation->Device.Get());
 		DxEffectFactory::EffectInfo info;
 		info.name = L"basic";
 		info.alpha = 1.f;
@@ -25,7 +25,7 @@ namespace xna {
 		info.specularColor = DxHelpers::Vector3ToDx(specularColor);
 		info.specularPower = specularPower;
 
-		Effect::impl->dxEffect = fxFactory->CreateEffect(info, device->impl->_context.Get());
+		Effect::impl->dxEffect = fxFactory->CreateEffect(info, device->Implementation->Context.Get());
 		impl->dxBasicEffect = reinterpret_pointer_cast<DxBasicEffect>(Effect::impl->dxEffect);			
 	}
 
@@ -99,10 +99,10 @@ namespace xna {
 	}
 
 	void BasicEffect::Texture(sptr<xna::Texture2D> const& value) {
-		if (!value || !value->impl || !value->impl->dxShaderResource)
+		if (!value || !value->Implementation || !value->Implementation->ShaderResource)
 			Exception::Throw(Exception::ARGUMENT_IS_NULL);
 
-		impl->dxBasicEffect->SetTexture(value->impl->dxShaderResource.Get());
+		impl->dxBasicEffect->SetTexture(value->Implementation->ShaderResource.Get());
 	}
 
 	void BasicEffect::TextureEnabled(bool value) {

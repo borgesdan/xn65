@@ -17,7 +17,7 @@ namespace xna {
     }
 
     static bool internalInit(GraphicsDevice& device, HWND windowHandle, comptr<IDXGISwapChain1>& swapChain, DXGI_SWAP_CHAIN_DESC1 const& desc, DXGI_SWAP_CHAIN_FULLSCREEN_DESC const& fdesc) {
-        if (!device.impl->_device || !windowHandle)
+        if (!device.Implementation->Device || !windowHandle)
             return false;
         
         if (swapChain) {
@@ -27,13 +27,13 @@ namespace xna {
         auto adapter = device.Adapter();        
 
         comptr<IDXGIFactory2> dxFactory2 = nullptr;
-        const auto hr = adapter->impl->dxFactory->QueryInterface(IID_IDXGIFactory2, (void**)&dxFactory2);
+        const auto hr = adapter->Implementation->Factory->QueryInterface(IID_IDXGIFactory2, (void**)&dxFactory2);
 
         if (FAILED(hr)) 
             return false;
 
         dxFactory2->CreateSwapChainForHwnd(
-            device.impl->_device.Get(),
+            device.Implementation->Device.Get(),
             windowHandle,
             &desc,
             &fdesc,
@@ -44,11 +44,11 @@ namespace xna {
     }
 
     bool SwapChain::Initialize() {
-        if (!impl || !m_device || !m_device->impl->_device) {
+        if (!impl || !BaseGraphicsDevice || !BaseGraphicsDevice->Implementation->Device) {
             Exception::Throw(Exception::UNABLE_TO_INITIALIZE);
         }
         
-        const auto parameters = m_device->PresentParameters();
+        const auto parameters = BaseGraphicsDevice->PresentParameters();
 
         impl->dxDescription.Width = static_cast<UINT>(parameters->BackBufferWidth);
         impl->dxDescription.Height = static_cast<UINT>(parameters->BackBufferHeight);
@@ -67,14 +67,14 @@ namespace xna {
         impl->dxFullScreenDescription.Windowed = !parameters->IsFullscreen;
 
         HWND hwnd = reinterpret_cast<HWND>(parameters->DeviceWindowHandle);
-        return internalInit(*m_device, hwnd, impl->dxSwapChain, impl->dxDescription, impl->dxFullScreenDescription);
+        return internalInit(*BaseGraphicsDevice, hwnd, impl->dxSwapChain, impl->dxDescription, impl->dxFullScreenDescription);
     }   
 
     bool SwapChain::GetBackBuffer(Texture2D& texture2D) {
         if (!impl || !impl->dxSwapChain)
             return false;
 
-        const auto hr = impl->dxSwapChain->GetBuffer(0, IID_ID3D11Texture2D, (void**)(&texture2D.impl->dxTexture2D));
+        const auto hr = impl->dxSwapChain->GetBuffer(0, IID_ID3D11Texture2D, (void**)(&texture2D.Implementation->Texture2D));
 
         return !FAILED(hr);
     }

@@ -1,5 +1,4 @@
 #include "xna-dx/framework.hpp"
-#include <functional>
 
 using DxSpriteBatch = DirectX::SpriteBatch;
 using DxSpriteSortMode = DirectX::SpriteSortMode;
@@ -24,7 +23,7 @@ namespace xna {
 		std::optional<Char> const& defaultCharacter)
 	{
 		Exception::ThrowIfNull(texture, nameof(texture));
-		Exception::ThrowIfNull(texture->impl->dxShaderResource.Get(), nameof(texture->impl->dxShaderResource));		
+		Exception::ThrowIfNull(texture->Implementation->ShaderResource.Get(), nameof(texture->Implementation->ShaderResource));
 
 		if(cropping.size() != glyphs.size() || charMap.size() != glyphs.size() || (!kerning.empty() && kerning.size() != glyphs.size()))
 			Exception::Throw("Cropping, charmap and kerning (if not empty) must all be the same size.");
@@ -53,10 +52,10 @@ namespace xna {
 			dxGlyps[i] = g;
 		}		
 		
-		impl = unew<PlatformImplementation>();
-		impl->dxSpriteFont = unew<DxSpriteFont>(
+		Implementation = unew<SpriteFontImplementation>();
+		Implementation->SpriteFont = unew<DxSpriteFont>(
 			//ID3D11ShaderResourceView* texture
-			texture->impl->dxShaderResource.Get(),
+			texture->Implementation->ShaderResource.Get(),
 			//Glyph const* glyphs
 			dxGlyps.data(),
 			//size_t glyphCount
@@ -67,12 +66,12 @@ namespace xna {
 
 		if (defaultCharacter.has_value()) {
 			const auto defChar = static_cast<wchar_t>(defaultCharacter.value());
-			impl->dxSpriteFont->SetDefaultCharacter(defChar);
+			Implementation->SpriteFont->SetDefaultCharacter(defChar);
 		}
 	}	
 
 	Vector2 SpriteFont::MeasureString(String const& text, bool ignoreWhiteSpace) {
-		const auto size = impl->dxSpriteFont->MeasureString(text.c_str(), ignoreWhiteSpace);
+		const auto size = Implementation->SpriteFont->MeasureString(text.c_str(), ignoreWhiteSpace);
 		Vector2 vec2{};
 		vec2.X = size.m128_f32[0];
 		vec2.Y = size.m128_f32[1];
@@ -81,7 +80,7 @@ namespace xna {
 	}
 
 	Vector2 SpriteFont::MeasureString(WString const& text, bool ignoreWhiteSpace){
-		const auto size = impl->dxSpriteFont->MeasureString(text.c_str(), ignoreWhiteSpace);
+		const auto size = Implementation->SpriteFont->MeasureString(text.c_str(), ignoreWhiteSpace);
 		Vector2 vec2{};
 		vec2.X = size.m128_f32[0];
 		vec2.Y = size.m128_f32[1];
@@ -90,32 +89,32 @@ namespace xna {
 	}
 
 	Char SpriteFont::DefaultCharacter() const {
-		const auto defChar = impl->dxSpriteFont->GetDefaultCharacter();
+		const auto defChar = Implementation->SpriteFont->GetDefaultCharacter();
 		return static_cast<Char>(defChar);
 	}	
 
 	void SpriteFont::DefaultCharacter(Char value) {
 		const auto defChar = static_cast<wchar_t>(value);
-		impl->dxSpriteFont->SetDefaultCharacter(defChar);
+		Implementation->SpriteFont->SetDefaultCharacter(defChar);
 	}
 
 	Int SpriteFont::LineSpacing() const {
-		const auto space = impl->dxSpriteFont->GetLineSpacing();
+		const auto space = Implementation->SpriteFont->GetLineSpacing();
 		return static_cast<Int>(space);
 	}
 
 	void SpriteFont::LineSpacing(float value) {
-		impl->dxSpriteFont->SetLineSpacing(value);
+		Implementation->SpriteFont->SetLineSpacing(value);
 	}		
 
 	SpriteBatch::SpriteBatch(sptr<GraphicsDevice> const& device) : GraphicsResource(device) {
 		Exception::ThrowIfNull(device, nameof(device));
-		Exception::ThrowIfNull(device->impl->_context.Get(), nameof(device->impl->_context));
+		Exception::ThrowIfNull(device->Implementation->Context.Get(), nameof(device->Implementation->Context));
 
-		impl = unew<PlatformImplementation>();
-		impl->dxSpriteBatch = snew<DxSpriteBatch>(
+		Implementation = unew<SpriteBatchImplementation>();
+		Implementation->SpriteBatch = snew<DxSpriteBatch>(
 			//ID3D11DeviceContext* deviceContext
-			device->impl->_context.Get()
+			device->Implementation->Context.Get()
 		);
 
 		Viewport(device->Viewport());
@@ -128,48 +127,48 @@ namespace xna {
 		if (effect) {
 			bool dxEffectBufferChanged = false;
 
-			if (!impl->dxEffectBuffer || impl->dxEffectBuffer != effect->impl->dxEffect) {
-				impl->dxEffectBuffer = effect->impl->dxEffect;			
+			if (!Implementation->EffectBuffer || Implementation->EffectBuffer != effect->impl->dxEffect) {
+				Implementation->EffectBuffer = effect->impl->dxEffect;			
 				dxEffectBufferChanged = true;
 			}
 
-			if (!impl->dxInputLayout || dxEffectBufferChanged) {
+			if (!Implementation->InputLayout || dxEffectBufferChanged) {
 				void const* shaderByteCode;
 				size_t byteCodeLength;
 
 				effect->impl->dxEffect->GetVertexShaderBytecode(&shaderByteCode, &byteCodeLength);
 
-				m_device->impl->_device->CreateInputLayout(
+				BaseGraphicsDevice->Implementation->Device->CreateInputLayout(
 					DirectX::VertexPositionColorTexture::InputElements,
 					DirectX::VertexPositionColorTexture::InputElementCount,
 					shaderByteCode, byteCodeLength,
-					impl->dxInputLayout.GetAddressOf());
+					Implementation->InputLayout.GetAddressOf());
 			}
 
-			auto& context = m_device->impl->_context;
+			auto& context = BaseGraphicsDevice->Implementation->Context;
 
 			effectFunc = [=] {
-				impl->dxEffectBuffer->Apply(context.Get());
-				context->IASetInputLayout(impl->dxInputLayout.Get());
+				Implementation->EffectBuffer->Apply(context.Get());
+				context->IASetInputLayout(Implementation->InputLayout.Get());
 				};
 		}
 
 		auto _sortMode = DxHelpers::SpriteSortToDx(sortMode);
 		auto _transformMatrix = DxHelpers::MatrixToDx(transformMatrix);
 
-		impl->dxSpriteBatch->Begin(
+		Implementation->SpriteBatch->Begin(
 			_sortMode,
-			blendState ? blendState->impl->dxBlendState.Get() : nullptr,
-			samplerState ? samplerState->impl->_samplerState.Get() : nullptr,
-			depthStencil ? depthStencil->impl->dxDepthStencil.Get() : nullptr,
-			rasterizerState ? rasterizerState->impl->dxRasterizerState.Get() : nullptr,
+			blendState ? blendState->Implementation->BlendState.Get() : nullptr,
+			samplerState ? samplerState->Implementation->SamplerState.Get() : nullptr,
+			depthStencil ? depthStencil->Implementation->DepthStencil.Get() : nullptr,
+			rasterizerState ? rasterizerState->Implementation->RasterizerState.Get() : nullptr,
 			effectFunc,
 			_transformMatrix
 		);
 	}
 
 	void SpriteBatch::End() {
-		impl->dxSpriteBatch->End();
+		Implementation->SpriteBatch->End();
 	}
 
 	void SpriteBatch::Draw(Texture2D& texture, Vector2 const& position, Color const& color) {
@@ -177,8 +176,8 @@ namespace xna {
 		const auto v4 = color.ToVector4();
 		const auto _color = DxHelpers::VectorToDx(v4);
 
-		impl->dxSpriteBatch->Draw(
-			texture.impl->dxShaderResource.Get(),
+		Implementation->SpriteBatch->Draw(
+			texture.Implementation->ShaderResource.Get(),
 			_position,
 			_color
 		);
@@ -195,8 +194,8 @@ namespace xna {
 			_sourceRect = DxHelpers::RectangleToDx(sourceRectangle.value());
 		};
 
-		impl->dxSpriteBatch->Draw(
-			texture.impl->dxShaderResource.Get(),
+		Implementation->SpriteBatch->Draw(
+			texture.Implementation->ShaderResource.Get(),
 			_position,
 			sourceRectangle ? &_sourceRect : nullptr,
 			_color);
@@ -216,8 +215,8 @@ namespace xna {
 
 		const DxSpriteEffects _effects = static_cast<DxSpriteEffects>(effects);
 
-		impl->dxSpriteBatch->Draw(
-			texture.impl->dxShaderResource.Get(),
+		Implementation->SpriteBatch->Draw(
+			texture.Implementation->ShaderResource.Get(),
 			_position,
 			sourceRectangle ? &_sourceRect : nullptr,
 			_color,
@@ -243,8 +242,8 @@ namespace xna {
 		const auto _effects = static_cast<DxSpriteEffects>(effects);
 		const XMFLOAT2 _scale = { scale.X, scale.Y };
 
-		impl->dxSpriteBatch->Draw(
-			texture.impl->dxShaderResource.Get(),
+		Implementation->SpriteBatch->Draw(
+			texture.Implementation->ShaderResource.Get(),
 			_position,
 			sourceRectangle ? &_sourceRect : nullptr,
 			_color,
@@ -261,7 +260,7 @@ namespace xna {
 		const auto v4 = color.ToVector4();
 		const XMVECTORF32 _color = { v4.X, v4.Y, v4.Z, v4.W };
 
-		impl->dxSpriteBatch->Draw(texture.impl->dxShaderResource.Get(), _destinationRect, _color);
+		Implementation->SpriteBatch->Draw(texture.Implementation->ShaderResource.Get(), _destinationRect, _color);
 	}
 
 	void SpriteBatch::Draw(Texture2D& texture, Rectangle const& destinationRectangle, std::optional<Rectangle> const& sourceRectangle, Color const& color) {
@@ -279,7 +278,7 @@ namespace xna {
 			_sourceRect.bottom = sourceRectangle->Y + sourceRectangle->Height;
 		};
 
-		impl->dxSpriteBatch->Draw(texture.impl->dxShaderResource.Get(), _destinationRect, sourceRectangle ? &_sourceRect : nullptr, _color);
+		Implementation->SpriteBatch->Draw(texture.Implementation->ShaderResource.Get(), _destinationRect, sourceRectangle ? &_sourceRect : nullptr, _color);
 	}
 
 	void SpriteBatch::Draw(Texture2D& texture, Rectangle const& destinationRectangle, std::optional<Rectangle> const& sourceRectangle, Color const& color, float rotation, Vector2 const& origin, SpriteEffects effects, float layerDepth) {
@@ -297,8 +296,8 @@ namespace xna {
 		auto _origin = XMFLOAT2(origin.X, origin.Y);
 		const auto _effects = static_cast<DxSpriteEffects>(effects);
 
-		impl->dxSpriteBatch->Draw(
-			texture.impl->dxShaderResource.Get(),
+		Implementation->SpriteBatch->Draw(
+			texture.Implementation->ShaderResource.Get(),
 			_destinationRect,
 			sourceRectangle ? &_sourceRect : nullptr,
 			_color,
@@ -306,20 +305,15 @@ namespace xna {
 			_origin,
 			_effects,
 			layerDepth);
-	}
-
-	void SpriteBatch::Viewport(xna::Viewport const& value) {
-		const auto _view = DxHelpers::ViewportToDx(value);
-		impl->dxSpriteBatch->SetViewport(_view);
-	}
+	}	
 
 	void SpriteBatch::DrawString(SpriteFont& spriteFont, String const& text, Vector2 const& position, Color const& color) {
 		const auto _position = XMFLOAT2(position.X, position.Y);
 		const auto v4 = color.ToVector4();
 		const XMVECTORF32 _color = { v4.X, v4.Y, v4.Z, v4.W };
 
-		spriteFont.impl->dxSpriteFont->DrawString(
-			impl->dxSpriteBatch.get(),
+		spriteFont.Implementation->SpriteFont->DrawString(
+			Implementation->SpriteBatch.get(),
 			text.c_str(),
 			_position,
 			_color
@@ -334,8 +328,8 @@ namespace xna {
 		const XMVECTORF32 _color = { v4.X, v4.Y, v4.Z, v4.W };
 		const auto _effects = static_cast<DxSpriteEffects>(effects);
 
-		spriteFont.impl->dxSpriteFont->DrawString(
-			impl->dxSpriteBatch.get(),
+		spriteFont.Implementation->SpriteFont->DrawString(
+			Implementation->SpriteBatch.get(),
 			text.c_str(),
 			_position,
 			_color,

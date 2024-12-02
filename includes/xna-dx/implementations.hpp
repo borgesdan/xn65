@@ -4,44 +4,103 @@
 #include "headers.hpp"
 
 namespace xna {
-	struct SpriteFont::PlatformImplementation {
-		uptr<DirectX::SpriteFont> dxSpriteFont{ nullptr };
+	struct BlendStateImplementation {
+		D3D11_BLEND_DESC Description{};
+		float BlendFactor[4]{ 1.0F, 1.0F, 1.0F, 1.0F };
+		UINT SampleMask{ 0xffffffff };
+		comptr<ID3D11BlendState> BlendState;
+
+		static constexpr int MAX_RENDER_TARGETS = 8;
 	};
 
-	struct SpriteBatch::PlatformImplementation {
-		sptr<DirectX::SpriteBatch> dxSpriteBatch = nullptr;
-		comptr<ID3D11InputLayout> dxInputLayout = nullptr;
-		sptr<DirectX::DX11::IEffect> dxEffectBuffer = nullptr;
+	struct DepthStencilStateImplementation {
+		comptr<ID3D11DepthStencilState> DepthStencil;
+		D3D11_DEPTH_STENCIL_DESC Description{};
 	};
 
-	struct GraphicsAdapter::PlatformImplementation {
-		comptr<IDXGIAdapter1> dxAdapter = nullptr;
-		comptr<IDXGIFactory1> dxFactory = nullptr;
+	struct GraphicsAdapterImplementation {
+		comptr<IDXGIAdapter1> Adapter;
+		comptr<IDXGIFactory1> Factory;
+	};	
+
+	struct GraphicsDeviceImplementation {
+		comptr<ID3D11Device> Device;
+		comptr<ID3D11DeviceContext> Context;
+		comptr<IDXGIFactory1> Factory;
+		std::shared_ptr<SwapChain> SwapChain;
+		std::shared_ptr<RenderTarget2D> RenderTarget2D;
+		intptr_t WindowHandle{ 0 };
+
+		static constexpr int FeatureLevelCount = 7;
+		inline static constexpr D3D_FEATURE_LEVEL FeatureLevels[FeatureLevelCount] =
+		{
+			D3D_FEATURE_LEVEL_11_1,
+			D3D_FEATURE_LEVEL_11_0,
+			D3D_FEATURE_LEVEL_10_1,
+			D3D_FEATURE_LEVEL_10_0,
+			D3D_FEATURE_LEVEL_9_3,
+			D3D_FEATURE_LEVEL_9_2,
+			D3D_FEATURE_LEVEL_9_1,
+		};
+
+		D3D_FEATURE_LEVEL CurrentFeatureLevel{ D3D_FEATURE_LEVEL_11_1 };
+
+		void Create(GraphicsAdapter& currentAdapter);
+		void Reset();		
+
+	private:
+		friend class GraphicsDevice;
+		float backgroundColor[4] = { 0, 0, 0, 0 };
+		UINT vSyncValue = 1;
 	};
 
-	struct BlendRenderTarget {
-		bool Enabled{ true };
-		Blend Source{ Blend::SourceAlpha };
-		Blend Destination{ Blend::InverseSourceAlpha };
-		BlendOperation Operation{ BlendOperation::Add };
-		Blend SourceAlpha{ Blend::One };
-		Blend DestinationAlpha{ Blend::Zero };
-		BlendOperation OperationAlpha{ BlendOperation::Add };
-		ColorWriteChannels WriteMask{ ColorWriteChannels::All };
-
-		constexpr BlendRenderTarget() = default;
+	struct RasterizerStateImplementation {
+		comptr<ID3D11RasterizerState> RasterizerState;
+		D3D11_RASTERIZER_DESC Description{};
 	};
 
-	struct BlendState::PlatformImplementation {
-		comptr<ID3D11BlendState> dxBlendState = nullptr;
-		D3D11_BLEND_DESC dxDescription{};
-		float blendFactor[4]{ 1.0F, 1.0F, 1.0F, 1.0F };
-		UINT sampleMask{ 0xffffffff };
+	struct RenderTarget2DImplementation {
+		comptr<ID3D11RenderTargetView> RenderTargetView;
+		D3D11_RENDER_TARGET_VIEW_DESC Description{};
 	};
 
-	struct DepthStencilState::PlatformImplementation {
-		comptr<ID3D11DepthStencilState> dxDepthStencil = nullptr;
-		D3D11_DEPTH_STENCIL_DESC dxDescription{};
+	struct SamplerStateImplementation {
+		comptr<ID3D11SamplerState> SamplerState;
+		D3D11_SAMPLER_DESC Description{};
+	};
+
+	struct SpriteBatchImplementation {
+		std::shared_ptr<DirectX::SpriteBatch> SpriteBatch;
+		std::shared_ptr<DirectX::DX11::IEffect> EffectBuffer;
+		comptr<ID3D11InputLayout> InputLayout;
+	};
+
+	struct SpriteFontImplementation {
+		std::unique_ptr<DirectX::SpriteFont> SpriteFont;
+	};	
+
+	struct Texture2DImplementation {
+		Texture2DImplementation() {
+			Description.MipLevels = 1;
+			Description.ArraySize = 1;
+			Description.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+			Description.SampleDesc.Count = 1;
+			Description.Usage = D3D11_USAGE_DEFAULT;
+			Description.BindFlags = D3D11_BIND_SHADER_RESOURCE;
+
+			ShaderDescription.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+			ShaderDescription.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+			ShaderDescription.Texture2D.MipLevels = Description.MipLevels;
+			ShaderDescription.Texture2D.MostDetailedMip = 0;
+		}
+
+		comptr<ID3D11Texture2D> Texture2D;
+		comptr<ID3D11ShaderResourceView> ShaderResource;
+		D3D11_SUBRESOURCE_DATA SubResource{};
+		D3D11_TEXTURE2D_DESC Description{};
+		D3D11_SHADER_RESOURCE_VIEW_DESC ShaderDescription{};
+
+		HRESULT SetData(GraphicsDevice& device, UINT const* data);
 	};
 
 	struct GamePad::PlatformImplementation {
@@ -82,17 +141,7 @@ namespace xna {
 		}
 
 		uptr<DirectX::Mouse> _dxMouse = nullptr;
-	};
-
-	struct RasterizerState::PlatformImplementation {
-		comptr<ID3D11RasterizerState> dxRasterizerState = nullptr;
-		D3D11_RASTERIZER_DESC dxDescription{};
-	};
-
-	struct SamplerState::PlatformImplementation {
-		comptr<ID3D11SamplerState> _samplerState = nullptr;
-		D3D11_SAMPLER_DESC _description{};
-	};
+	};	
 
 	struct SwapChain::PlatformImplementation {
 		comptr<IDXGISwapChain1> dxSwapChain{ nullptr };
@@ -107,20 +156,7 @@ namespace xna {
 
 			return !FAILED(hr);
 		}
-	};
-
-	struct Texture2D::PlatformImplementation {
-		comptr<ID3D11Texture2D> dxTexture2D{ nullptr };
-		comptr<ID3D11ShaderResourceView> dxShaderResource{ nullptr };
-		D3D11_SUBRESOURCE_DATA dxSubResource{};
-		D3D11_TEXTURE2D_DESC dxDescription{};
-		D3D11_SHADER_RESOURCE_VIEW_DESC dxShaderDescription{};
-	};
-
-	struct RenderTarget2D::PlatformImplementation {
-		comptr<ID3D11RenderTargetView> _renderTargetView = nullptr;
-		D3D11_RENDER_TARGET_VIEW_DESC _renderTargetDesc{};
-	};
+	};		
 
 	enum class GameWindowMode : UINT {
 		Fullscreen = WS_POPUP | WS_VISIBLE,
@@ -253,35 +289,7 @@ namespace xna {
 		}
 
 		uptr<DirectX::AudioEngine> _dxAudioEngine = nullptr;
-	};
-
-	struct GraphicsDevice::PlatformImplementation {
-		comptr<ID3D11Device> _device = nullptr;
-		comptr<ID3D11DeviceContext> _context = nullptr;
-		comptr<IDXGIFactory1> _factory = nullptr;
-
-		sptr<SwapChain> _swapChain = nullptr;
-		sptr<RenderTarget2D> _renderTarget2D = nullptr;
-		intptr_t windowHandle{ 0 };
-
-		D3D_FEATURE_LEVEL featureLevels[7] =
-		{
-			D3D_FEATURE_LEVEL_11_1,
-			D3D_FEATURE_LEVEL_11_0,
-			D3D_FEATURE_LEVEL_10_1,
-			D3D_FEATURE_LEVEL_10_0,
-			D3D_FEATURE_LEVEL_9_3,
-			D3D_FEATURE_LEVEL_9_2,
-			D3D_FEATURE_LEVEL_9_1,
-		};
-
-		D3D_FEATURE_LEVEL currentFeatureLevel{ D3D_FEATURE_LEVEL_11_1 };
-
-	private:
-		friend class GraphicsDevice;
-		float _backgroundColor[4] = { 0, 0, 0, 0 };
-		UINT vSyncValue = 1;
-	};
+	};	
 
 	struct Game::PlatformImplementation {
 	private:
