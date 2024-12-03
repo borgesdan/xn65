@@ -85,8 +85,22 @@ namespace xna {
 			BeginRun();
 			return StartGameLoop();
 		}
-		catch (std::exception& e) {			
-			MessageBox(nullptr, e.what(), "XN65", MB_OK);
+		catch (std::exception& e) {		
+			auto ex = dynamic_cast<csharp::Exception*>(&e);
+
+			std::string message;
+			
+			if (ex == nullptr) {
+				message = e.what();
+			} else {
+#if DEBUG || _DEBUG
+				message = ex->FullMessage();
+#else
+				message = ex->Message();
+#endif
+			}
+
+			MessageBox(nullptr, message.c_str(), "XN65", MB_OK);
 
 			return EXIT_FAILURE;
 		}		

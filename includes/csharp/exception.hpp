@@ -5,6 +5,7 @@
 #include <string>
 #include <source_location>
 #include <memory>
+#include <optional>
 #include "sr.hpp"
 
 namespace csharp {
@@ -128,6 +129,8 @@ namespace csharp {
         static constexpr size_t HR_ERROR_FILE_INVALID = 0x800703EE;
 	};
 
+    using OptinalString = std::optional<std::string>;
+
 	class Exception : public std::runtime_error {
 	public:
         Exception(std::source_location const& source = std::source_location::current()) 
@@ -138,6 +141,24 @@ namespace csharp {
 			: Source(source), message(message), innerException(innerException), std::runtime_error(message) {}
 
         constexpr virtual std::string Message() const { return message; }
+
+        constexpr virtual std::string FullMessage() const {
+            std::string msg;
+            
+            msg.append(message);
+            msg.append(" In: ");
+            msg.append(Source.file_name());            
+            msg.append(" (");
+            msg.append(std::to_string(Source.line()));
+            msg.append(",");
+            msg.append(std::to_string(Source.column()));
+            msg.append("); ");
+            msg.append(Source.function_name());
+
+            return msg;
+            
+        }
+
 		const std::shared_ptr<Exception>& InnerException() const { return innerException; }
 
         // Retrieves the lowest exception (inner most) for the given Exception.
@@ -184,7 +205,17 @@ namespace csharp {
         }
 
         constexpr std::string Message() const override {
-            return Exception::Message().append(" Parameter: " + paramName + ".");            
+            if(!paramName.empty())
+                return Exception::Message().append(" Parameter: " + paramName + ".");            
+
+            return Exception::Message();
+        }
+
+        constexpr std::string FullMessage() const override {
+            if(!paramName.empty())
+                return Exception::FullMessage().append(" Parameter: " + paramName + ".");
+
+            return Exception::Message();
         }
 
     private:
