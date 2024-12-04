@@ -181,21 +181,14 @@ namespace csharp {
     class ArgumentException : public Exception {
     public:        
         ArgumentException(OptionalString const& message = std::nullopt, std::source_location const& source = std::source_location::current())
-            : Exception(message.value_or(SR::Arg_ArgumentException), source)
-        {
-            HRresult = HResults::HR_COR_E_ARGUMENT;
-        };
+            : ArgumentException(std::nullopt, message, nullptr, source){ }
 
         ArgumentException(OptionalString const& paramName, OptionalString const& message, std::source_location const& source = std::source_location::current())
-            : paramName(paramName), Exception(message.value_or(SR::Arg_ArgumentException), source)
-        {
-            HRresult = HResults::HR_COR_E_ARGUMENT;
-        };
+            : ArgumentException(paramName, message, nullptr, source) { }
+
         ArgumentException(OptionalString const& message, std::shared_ptr<Exception> const& innerException, std::source_location const& source = std::source_location::current())
-            : Exception(message.value_or(SR::Arg_ArgumentException), innerException, source)
-        {
-            HRresult = HResults::HR_COR_E_ARGUMENT;
-        }
+            : ArgumentException(std::nullopt, message, innerException, source){ }
+
         ArgumentException(OptionalString const& paramName, OptionalString const& message, std::shared_ptr<Exception> const& innerException, std::source_location const& source = std::source_location::current())
             : paramName(paramName), Exception(message.value_or(SR::Arg_ArgumentException), innerException, source)
         {
@@ -224,21 +217,14 @@ namespace csharp {
     class ArgumentNullException : public ArgumentException {
     public:        
         ArgumentNullException(OptionalString const& message = std::nullopt, std::source_location const& source = std::source_location::current())
-            : ArgumentException(message.value_or(SR::ArgumentNull_Generic), source)
-        {
-            HRresult = HResults::HR_E_POINTER;
-        };
+            : ArgumentNullException(std::nullopt, message, nullptr, source){ }
 
         ArgumentNullException(OptionalString const& paramName, OptionalString const& message, std::source_location const& source = std::source_location::current())
-            : ArgumentException(paramName, message.value_or(SR::ArgumentNull_Generic), source)
-        {
-            HRresult = HResults::HR_E_POINTER;
-        };
+            : ArgumentNullException(paramName, message, nullptr, source){ }
+
         ArgumentNullException(OptionalString const& message, std::shared_ptr<Exception> const& innerException, std::source_location const& source = std::source_location::current())
-            : ArgumentException(message.value_or(SR::ArgumentNull_Generic), innerException, source)
-        {
-            HRresult = HResults::HR_E_POINTER;
-        }
+            : ArgumentNullException(std::nullopt, message, innerException, source){ }
+
         ArgumentNullException(OptionalString const& paramName, OptionalString const& message, std::shared_ptr<Exception> const& innerException, std::source_location const& source = std::source_location::current())
             : ArgumentException(paramName, message.value_or(SR::ArgumentNull_Generic), innerException, source)
         {
@@ -257,21 +243,14 @@ namespace csharp {
     class ArgumentOutOfRangeException : public ArgumentException {
     public:        
         ArgumentOutOfRangeException(OptionalString const& message = std::nullopt, std::source_location const& source = std::source_location::current())
-            : ArgumentException(message.value_or(SR::Arg_ArgumentOutOfRangeException), source)
-        {
-            HRresult = HResults::HR_E_POINTER;
-        };
+            : ArgumentOutOfRangeException(message, std::nullopt, nullptr, source) { }
 
         ArgumentOutOfRangeException(OptionalString const& message, OptionalString const& paramName, std::source_location const& source = std::source_location::current())
-            : ArgumentException(message.value_or(SR::Arg_ArgumentOutOfRangeException), paramName, source)
-        {
-            HRresult = HResults::HR_E_POINTER;
-        };
+            : ArgumentOutOfRangeException(message, paramName, nullptr, source) { }
+
         ArgumentOutOfRangeException(OptionalString const& message, std::shared_ptr<Exception> const& innerException, std::source_location const& source = std::source_location::current())
-            : ArgumentException(message.value_or(SR::Arg_ArgumentOutOfRangeException), innerException, source)
-        {
-            HRresult = HResults::HR_E_POINTER;
-        }
+            : ArgumentOutOfRangeException(message, std::nullopt, innerException, source) { }
+
         ArgumentOutOfRangeException(OptionalString const& message, OptionalString const& paramName, std::shared_ptr<Exception> const& innerException, std::source_location const& source = std::source_location::current())
             : ArgumentException(message.value_or(SR::Arg_ArgumentOutOfRangeException), paramName, innerException, source)
         {
@@ -282,10 +261,7 @@ namespace csharp {
     class SystemException : public Exception {
     public:
         SystemException(OptionalString const& message = std::nullopt, std::source_location const& source = std::source_location::current())
-            : Exception(message.value_or(SR::Arg_SystemException), source)
-        {
-            HRresult = HResults::HR_COR_E_SYSTEM;
-        }
+            : SystemException(message, nullptr, source) { }
 
         SystemException(OptionalString const& message, std::shared_ptr<Exception> const& innerException, std::source_location const& source = std::source_location::current())
             : Exception(message.value_or(SR::Arg_SystemException), innerException, source)
@@ -298,10 +274,8 @@ namespace csharp {
     class InvalidOperationException : public SystemException {
     public:
         InvalidOperationException(OptionalString const& message = std::nullopt, std::source_location const& source = std::source_location::current())
-            : SystemException(message.value_or(SR::Arg_InvalidOperationException), source)
-        {
-            HRresult = HResults::HR_COR_E_INVALIDOPERATION;
-        }
+            : InvalidOperationException(message, nullptr, source)
+        { }
 
         InvalidOperationException(OptionalString const& message, std::shared_ptr<Exception> const& innerException, std::source_location const& source = std::source_location::current())
             : SystemException(message.value_or(SR::Arg_InvalidOperationException), innerException, source)
@@ -315,10 +289,8 @@ namespace csharp {
     class NotSupportedException : public SystemException {
     public:
         NotSupportedException(OptionalString const& message = std::nullopt, std::source_location const& source = std::source_location::current())
-            : SystemException(message.value_or(SR::Arg_NotSupportedException), source)
-        {
-            HRresult = HResults::HR_COR_E_INVALIDOPERATION;
-        }
+            : NotSupportedException(message, nullptr, source)
+        { }
 
         NotSupportedException(OptionalString const& message, std::shared_ptr<Exception> const& innerException, std::source_location const& source = std::source_location::current())
             : SystemException(message.value_or(SR::Arg_NotSupportedException), innerException, source)
@@ -331,10 +303,8 @@ namespace csharp {
     class UnauthorizedAccessException : public SystemException {
     public:
         UnauthorizedAccessException(OptionalString const& message, std::source_location const& source = std::source_location::current())
-            : SystemException(message.value_or(SR::Arg_UnauthorizedAccessException), source)
-        {
-            HRresult = HResults::HR_COR_E_UNAUTHORIZEDACCESS;
-        }
+            : UnauthorizedAccessException(message, nullptr, source)
+        {}        
 
         UnauthorizedAccessException(OptionalString const& message, std::shared_ptr<Exception> const& innerException, std::source_location const& source = std::source_location::current())
             : SystemException(message.value_or(SR::Arg_UnauthorizedAccessException), innerException, source)
