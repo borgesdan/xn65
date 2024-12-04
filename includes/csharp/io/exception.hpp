@@ -7,26 +7,20 @@
 namespace csharp {    
 	class IOException : public SystemException {
     public:
-        IOException(std::source_location const& source = std::source_location::current())
-            : SystemException(SR::Arg_IOException, source)
+        IOException(OptionalString const& message = std::nullopt, std::source_location const& source = std::source_location::current())
+            : SystemException(message.value_or(SR::Arg_IOException), source)
         {
             HRresult = HResults::HR_COR_E_IO;
         }
 
-        IOException(std::string const& message, std::source_location const& source = std::source_location::current())
-            : SystemException(!message.empty() ? message : SR::Arg_IOException, source)
-        {
-            HRresult = HResults::HR_COR_E_IO;
-        }
-
-        IOException(std::string const& message, size_t hresult, std::source_location const& source = std::source_location::current())
-            : SystemException(!message.empty() ? message : SR::Arg_IOException, source)
+        IOException(OptionalString const& message, size_t hresult, std::source_location const& source = std::source_location::current())
+            : SystemException(message.value_or(SR::Arg_IOException), source)
         {
             HRresult = hresult;
         }
 
-        IOException(std::string const& message, std::shared_ptr<Exception>& innerException, std::source_location const& source = std::source_location::current())
-            : SystemException(!message.empty() ? message : SR::Arg_IOException, innerException, source)
+        IOException(OptionalString const& message, std::shared_ptr<Exception>& innerException, std::source_location const& source = std::source_location::current())
+            : SystemException(message.value_or(SR::Arg_IOException), innerException, source)
         {
             HRresult = HResults::HR_COR_E_IO;
         }
@@ -34,20 +28,14 @@ namespace csharp {
 
     class EndOfStreamException : public IOException {
     public:
-        EndOfStreamException(std::source_location const& source = std::source_location::current())
-            : IOException(SR::Arg_IOException, source)
-        {
-            HRresult = HResults::HR_COR_E_ENDOFSTREAM;
-        }
-
-        EndOfStreamException(std::string const& message, std::source_location const& source = std::source_location::current())
-            : IOException(!message.empty() ? message : SR::Arg_IOException, source)
+        EndOfStreamException(OptionalString const& message = std::nullopt, std::source_location const& source = std::source_location::current())
+            : IOException(message.value_or(SR::Arg_IOException), source)
         {
             HRresult = HResults::HR_COR_E_ENDOFSTREAM;
         }        
 
-        EndOfStreamException(std::string const& message, std::shared_ptr<Exception>& innerException, std::source_location const& source = std::source_location::current())
-            : IOException(!message.empty() ? message : SR::Arg_IOException, innerException, source)
+        EndOfStreamException(OptionalString const& message, std::shared_ptr<Exception>& innerException, std::source_location const& source = std::source_location::current())
+            : IOException(message.value_or(SR::Arg_IOException), innerException, source)
         {
             HRresult = HResults::HR_COR_E_ENDOFSTREAM;
         }
