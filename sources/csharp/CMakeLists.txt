@@ -5,7 +5,7 @@
 # Add source to this project's executable.
 add_library (CSharp++ STATIC 
 	"exception.cpp"
- "io/stream.cpp")
+ "io/stream.cpp" "io/binary.cpp")
 
 if (CMAKE_VERSION VERSION_GREATER 3.12)
   set_property(TARGET CSharp++ PROPERTY CXX_STANDARD 20)

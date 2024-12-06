@@ -50,7 +50,13 @@ namespace csharp {
 		inline static const std::string ArgumentOutOfRange_StreamLength
 			= "Stream length must be non-negative and less than 2^31 - 1 - origin.";
 		inline static const std::string net_uri_NotAbsolute
-			= "This operation is not supported for a relative URI.";	
+			= "This operation is not supported for a relative URI.";
+		inline static const std::string Argument_StreamNotReadable
+			= "Stream was not readable.";
+		inline static const std::string Format_Bad7BitInt
+			= "Too many bytes in what should have been a 7-bit encoded integer.";
+		inline static const std::string IO_InvalidStringLen_Len
+			= "BinaryReader encountered an invalid string length.";	
 	};
 };
 

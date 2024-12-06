@@ -60,13 +60,21 @@ namespace csharp {
 		virtual int32_t Read(uint8_t* buffer, int32_t bufferLength);
 		virtual int32_t ReadByte();
 
-		virtual int32_t ReadExactly(uint8_t* buffer, int32_t bufferLength, int32_t offset, int32_t count) {
-			return ReadAtLeastCore(buffer, bufferLength, bufferLength, true);
+		void ReadExactly(uint8_t* buffer, int32_t bufferLength) {
+			ReadAtLeastCore(buffer, bufferLength, bufferLength, true);
+		}
+
+		virtual void ReadExactly(uint8_t* buffer, int32_t offset, int32_t count) {
+			ReadAtLeastCore(buffer + offset, count, count, true);
+		}
+
+		int32_t ReadAtLeast(uint8_t* buffer, int32_t bufferLength, int32_t minimumBytes, bool throwOnEndOfStream = true) {
+			return  ReadAtLeastCore(buffer, bufferLength, minimumBytes, throwOnEndOfStream);
 		}
 
 		virtual void Write(uint8_t const* buffer, int32_t bufferLength, int32_t offset, int32_t count) = 0;
 		virtual void Write(uint8_t const* buffer, int32_t bufferLength);
-		virtual void WriteByte(uint8_t value);
+		virtual void WriteByte(uint8_t value) = 0;
 
 	protected:
 		void ValidateBuffer(uint8_t const* buffer, int32_t bufferLength);

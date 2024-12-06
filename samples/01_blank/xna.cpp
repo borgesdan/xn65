@@ -2,6 +2,7 @@
 //
 
 #include "xna-dx/framework.hpp"
+#include "csharp/io/binary.hpp"
 
 using namespace std;
 using namespace xna;
@@ -11,6 +12,21 @@ namespace xna {
 	public:
 		Game1() : Game() {
 			Content()->RootDirectory("Content");
+
+			auto stream = std::make_shared<csharp::FileStream>("D:/file.bin", csharp::FileMode::Open);
+			auto reader = csharp::BinaryReader(stream);
+			auto bo = reader.ReadBoolean(); //reader.ReadChar()
+			auto sb = reader.ReadSByte(); //127
+			auto by = reader.ReadByte(); //255
+			auto ch = reader.ReadChar(); //x
+			auto i16 = reader.ReadInt16(); //32767
+			auto ui16 = reader.ReadUInt16();//65535
+			auto i32 = reader.ReadInt32(); //2147483647
+			auto ui32 = reader.ReadUInt32(); //4294967295
+			auto i64 = reader.ReadInt64(); //9223372036854775807
+			auto ui64 = reader.ReadUInt64(); //18446744073709551615
+			auto str = reader.ReadString(); //The string in stream.
+			auto str2 = reader.ReadString(); //Ç de cedilha e ñ com til mas sem ¨ trema.
 		}
 
 		void Initialize() override {

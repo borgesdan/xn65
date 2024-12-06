@@ -231,8 +231,8 @@ namespace csharp {
             HRresult = HResults::HR_E_POINTER;
         }
 
-        static void ThrowIfNull(void* argument, OptionalString const& paramName, std::source_location const& source = std::source_location::current()) {
-            if (!argument)
+        static void ThrowIfNull(void const* argument, OptionalString const& paramName, std::source_location const& source = std::source_location::current()) {
+            if (argument == nullptr)
             {
                 throw ArgumentNullException(paramName, source);
             }
@@ -245,17 +245,23 @@ namespace csharp {
         ArgumentOutOfRangeException(OptionalString const& message = std::nullopt, std::source_location const& source = std::source_location::current())
             : ArgumentOutOfRangeException(message, std::nullopt, nullptr, source) { }
 
-        ArgumentOutOfRangeException(OptionalString const& message, OptionalString const& paramName, std::source_location const& source = std::source_location::current())
-            : ArgumentOutOfRangeException(message, paramName, nullptr, source) { }
+        ArgumentOutOfRangeException(OptionalString const& paramName, OptionalString const& message, std::source_location const& source = std::source_location::current())
+            : ArgumentOutOfRangeException(paramName, message, nullptr, source) { }
 
         ArgumentOutOfRangeException(OptionalString const& message, std::shared_ptr<Exception> const& innerException, std::source_location const& source = std::source_location::current())
             : ArgumentOutOfRangeException(message, std::nullopt, innerException, source) { }
 
-        ArgumentOutOfRangeException(OptionalString const& message, OptionalString const& paramName, std::shared_ptr<Exception> const& innerException, std::source_location const& source = std::source_location::current())
-            : ArgumentException(message.value_or(SR::Arg_ArgumentOutOfRangeException), paramName, innerException, source)
+        ArgumentOutOfRangeException(OptionalString const& paramName, OptionalString const& message, std::shared_ptr<Exception> const& innerException, std::source_location const& source = std::source_location::current())
+            : ArgumentException(paramName, message.value_or(SR::Arg_ArgumentOutOfRangeException), innerException, source)
         {
             HRresult = HResults::HR_E_POINTER;
-        }        
+        }
+
+        template <typename T>
+        static void ThrowIfNegative(T& value, OptionalString const& paramName, std::source_location const& source = std::source_location::current()) {
+            if (value < 0)
+                throw ArgumentOutOfRangeException(paramName, source);
+        }
     };
 
     class SystemException : public Exception {

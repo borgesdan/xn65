@@ -684,7 +684,8 @@ namespace csharp {
             return -1;
         }
 
-        const auto result = static_cast<int32_t>(c);
+        const auto uchar = static_cast<unsigned char>(c);
+        const auto result = static_cast<int32_t>(uchar);
 
         return result;
     }
