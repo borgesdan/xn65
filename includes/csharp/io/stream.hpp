@@ -76,6 +76,9 @@ namespace csharp {
 		virtual void Write(uint8_t const* buffer, int32_t bufferLength);
 		virtual void WriteByte(uint8_t value) = 0;
 
+	public:
+		static const std::shared_ptr<Stream> Null;
+
 	protected:
 		void ValidateBuffer(uint8_t const* buffer, int32_t bufferLength);
 
@@ -85,6 +88,37 @@ namespace csharp {
 	private:
 		int32_t GetCopybufferLength() const;
 	};
+
+	class NullStream : Stream {
+	public:
+		NullStream(){}
+
+		constexpr bool CanRead() const override { return true; }
+		constexpr bool CanWrite() const override { return true; }
+		constexpr bool CanSeek() const override { return true; }		
+		constexpr int64_t Length() const  override { return 0; };
+		constexpr int64_t Position() const  override { return 0; };
+		constexpr void Position(int64_t value)  override { };
+		constexpr void CopyTo(Stream& destination, int32_t bufferLength) override {};
+		constexpr void SetLength(int64_t value) override {};
+
+		constexpr void Flush() override {};
+		constexpr int64_t Seek(int64_t offset, SeekOrigin origin) override {
+			return 0;
+		}
+
+		int32_t Read(uint8_t* buffer, int32_t bufferLength, int32_t offset, int32_t count) override {
+			return 0;
+		}
+
+		constexpr int32_t ReadByte() override { return -1; }
+
+		constexpr void Write(uint8_t const* buffer, int32_t bufferLength, int32_t offset, int32_t count) override 
+		{}
+		
+		constexpr void WriteByte(uint8_t value) override 
+		{}
+	};	
 
 	class MemoryStream : public Stream {
 	public:

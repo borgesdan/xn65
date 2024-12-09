@@ -11,9 +11,12 @@ namespace csharp {
 	* The BinaryReader class uses byte encodings, by default UTF8. 
 	* This was not implemented, but we tried to follow the same standard.
 	* Also the reading of primitives was modified.
+	* 
 	*/
 
 	//TODO: ReadString and ReadChar as it only reads ASCII characters
+	//https://learn.microsoft.com/pt-br/dotnet/csharp/language-reference/builtin-types/char
+	//char - 16 bits
 
 	//The BinaryReader class uses byte encodings, by default UTF8
 	class BinaryReader {
@@ -135,6 +138,27 @@ namespace csharp {
 		bool _2BytesPerChar{ false };
 
 		std::vector<uint8_t> _auxBuffer;		
+	};
+
+	class BinaryWriter {
+	public:
+		BinaryWriter(std::shared_ptr<Stream> const& output) {
+			OutStream = Stream::Null;
+		}
+
+		BinaryWriter(std::shared_ptr<Stream> const& output, bool leaveOpen);
+
+	protected:
+		BinaryWriter();
+
+	protected:
+		std::shared_ptr<Stream> OutStream;
+
+	private:
+		static constexpr int MaxArrayPoolRentalSize = 64 * 1024;
+		static std::shared_ptr<BinaryWriter> Null;
+		bool _leaveOpen{ false };
+		bool _useFastUtf8{ true };
 	};
 }
 
