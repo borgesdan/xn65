@@ -32,15 +32,13 @@ namespace csharp {
         {
             posSav = _stream->Position();
         }
-
-        auto charBytes = std::vector<uint8_t>(MaxCharBytesSize);
+        
         char singleChar = '\0';
 
         while (charsRead == 0) {
             numBytes = _2BytesPerChar ? 2 : 1;
 
-            auto r = _stream->ReadByte();
-            charBytes[0] = static_cast<uint8_t>(r);
+            auto r = _stream->ReadByte();            
 
             if (r == -1)
             {
@@ -48,13 +46,12 @@ namespace csharp {
             }
             if (numBytes == 2)
             {
-                r = _stream->ReadByte();
-                charBytes[1] = static_cast<uint8_t>(r);
+                r |= _stream->ReadByte();
 
                 if (r == -1)
                 {
                     numBytes = 1;
-                }
+                }                
             }
 
             if (numBytes == 0)
@@ -62,8 +59,8 @@ namespace csharp {
                 return -1;
             }
 
-            const auto chars = reinterpret_cast<char*>(charBytes.data());
-            const auto decoder = std::string(chars);
+            const char chars = r;
+            const auto decoder = std::string(&chars);
             charsRead = decoder.size();
             singleChar = decoder[0];
         }

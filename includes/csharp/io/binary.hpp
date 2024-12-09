@@ -135,7 +135,7 @@ namespace csharp {
 		std::shared_ptr<Stream> _stream;
 		bool _leaveOpen;
 		bool _disposed{false};
-		bool _2BytesPerChar{ false };
+		bool _2BytesPerChar{ true };
 
 		std::vector<uint8_t> _auxBuffer;		
 	};

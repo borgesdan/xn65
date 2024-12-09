@@ -13,6 +13,9 @@ namespace xna {
 		Game1() : Game() {
 			Content()->RootDirectory("Content");
 
+			short inteiro = 0xC3 | 0xA7;
+			char charpa = inteiro;
+
 			auto stream = std::make_shared<csharp::FileStream>("D:/file.bin", csharp::FileMode::Open);
 			auto reader = csharp::BinaryReader(stream);
 			auto bo = reader.ReadBoolean(); //reader.ReadChar()
