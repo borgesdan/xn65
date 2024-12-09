@@ -100,50 +100,12 @@ namespace csharp {
     }
 
     std::string BinaryReader::ReadString() {
-        if (_disposed)
-            throw InvalidOperationException();
+        return GenericReadString<std::string>();
+    }   
 
-        const auto stringLength = Read7BitEncodedInt();
-        if (stringLength < 0)
-        {
-            throw IOException(SR::IO_InvalidStringLen_Len);
-        }
-
-        if (stringLength == 0)
-        {
-            return {};
-        }
-
-        auto charBytes = std::vector<uint8_t>(MaxCharBytesSize);
-        int32_t currPos = 0;
-
-        std::string sb;
-
-        do
-        {
-            const auto readLength = std::min(MaxCharBytesSize, stringLength - currPos);
-            const auto n = _stream->Read(charBytes.data(), readLength);
-
-            if (n == 0)
-            {
-                throw EndOfStreamException(SR::IO_EOF_ReadBeyondEOF);
-            }
-
-            const auto chars = reinterpret_cast<char*>(charBytes.data());
-
-            if (currPos == 0 && n == stringLength)
-            {                
-                return std::string(chars);
-            }
-            
-            sb.append(chars);
-
-            currPos += n;
-
-        } while (currPos < stringLength);
-
-        return sb;
-    }    
+    std::u8string BinaryReader::ReadString8() {
+        return GenericReadString<std::u8string>();
+    }
 
     int32_t BinaryReader::Read(char* buffer, int32_t bufferLength, int32_t index, int32_t count) {
         ArgumentNullException::ThrowIfNull(buffer, "buffer");

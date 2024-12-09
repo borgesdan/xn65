@@ -92,6 +92,7 @@ namespace csharp {
 		}
 
 		virtual std::string ReadString();
+		virtual std::u8string ReadString8();
 
 		virtual int32_t Read(char* buffer, int32_t bufferLength, int32_t index, int32_t count);
 
@@ -109,6 +110,53 @@ namespace csharp {
 
 		int32_t Read7BitEncodedInt();
 		int64_t Read7BitEncodedInt64();
+
+		template <class TSTRING>
+		TSTRING GenericReadString() {
+			if (_disposed)
+				throw InvalidOperationException();
+
+			const auto stringLength = Read7BitEncodedInt();
+			if (stringLength < 0)
+			{
+				throw IOException(SR::IO_InvalidStringLen_Len);
+			}
+
+			if (stringLength == 0)
+			{
+				return {};
+			}
+
+			auto charBytes = std::vector<uint8_t>(MaxCharBytesSize);
+			int32_t currPos = 0;
+
+			TSTRING sb{};
+
+			do
+			{
+				const auto readLength = std::min(MaxCharBytesSize, stringLength - currPos);
+				const auto n = _stream->Read(charBytes.data(), readLength);
+
+				if (n == 0)
+				{
+					throw EndOfStreamException(SR::IO_EOF_ReadBeyondEOF);
+				}
+				
+				const auto chars = reinterpret_cast<TSTRING::value_type*>(charBytes.data());
+
+				if (currPos == 0 && n == stringLength)
+				{
+					return TSTRING(chars);
+				}
+
+				sb.append(chars);
+
+				currPos += n;
+
+			} while (currPos < stringLength);
+
+			return sb;
+		}
 
 	private:
 		uint8_t InternalReadByte();
@@ -135,7 +183,7 @@ namespace csharp {
 		std::shared_ptr<Stream> _stream;
 		bool _leaveOpen;
 		bool _disposed{false};
-		bool _2BytesPerChar{ true };
+		bool _2BytesPerChar{ false };
 
 		std::vector<uint8_t> _auxBuffer;		
 	};
