@@ -13,6 +13,8 @@ namespace csharp {
 	* Also the reading of primitives was modified.
 	*/
 
+	//TODO: ReadString and ReadChar as it only reads ASCII characters
+
 	//The BinaryReader class uses byte encodings, by default UTF8
 	class BinaryReader {
 	public:
