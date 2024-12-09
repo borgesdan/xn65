@@ -20,6 +20,7 @@ namespace xna {
 			auto reader = csharp::BinaryReader(stream);
 			auto bo = reader.ReadBoolean(); //reader.ReadChar()
 			auto x = reader.ReadChar(); //x
+			auto cedilha = reader.ReadChar8(); //ç
 			auto sb = reader.ReadSByte(); //127
 			auto by = reader.ReadByte(); //255
 			auto i16 = reader.ReadInt16(); //32767

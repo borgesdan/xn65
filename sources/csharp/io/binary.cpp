@@ -20,7 +20,7 @@ namespace csharp {
         return ch;
 	}
 
-    int32_t BinaryReader::Read() {
+    int32_t BinaryReader::Read(bool twoBytesPerChar) {
         if (_disposed)
             throw InvalidOperationException();
 
@@ -36,7 +36,7 @@ namespace csharp {
         char singleChar = '\0';
 
         while (charsRead == 0) {
-            numBytes = _2BytesPerChar ? 2 : 1;
+            numBytes = twoBytesPerChar ? 2 : 1;
 
             auto r = _stream->ReadByte();            
 
@@ -46,7 +46,8 @@ namespace csharp {
             }
             if (numBytes == 2)
             {
-                r |= _stream->ReadByte();
+                auto r2 = _stream->ReadByte();
+                r |= r2;
 
                 if (r == -1)
                 {
@@ -90,7 +91,18 @@ namespace csharp {
         }
 
         return static_cast<char>(value);
-    }    
+    }   
+
+    char BinaryReader::ReadChar8() {
+        const auto value = Read(true);
+
+        if (value == -1)
+        {
+            throw EndOfStreamException(SR::IO_EOF_ReadBeyondEOF);
+        }
+
+        return static_cast<char>(value);
+    }
 
     void BinaryReader::InternalRead(std::vector<uint8_t>& buffer) {
         if (_disposed)
@@ -142,11 +154,6 @@ namespace csharp {
         while (bufferLength > 0)
         {
             auto numBytes = bufferLength;
-            
-            if (_2BytesPerChar)
-            {
-                numBytes <<= 1;
-            }
 
             std::vector<uint8_t> byteBuffer;
             
@@ -169,9 +176,7 @@ namespace csharp {
             bufferLength = charsRead.length();            
             totalCharsRead += charsRead.length();
         }
-
-        // we may have read fewer than the number of characters requested if end of stream reached
-        // or if the encoding makes the char count too big for the buffer (e.g. fallback sequence)
+        
         return totalCharsRead;
     }
 

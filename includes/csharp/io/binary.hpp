@@ -43,7 +43,7 @@ namespace csharp {
 		}
 
 		virtual int32_t PeekChar();
-		virtual int32_t Read();
+		virtual int32_t Read(bool twoBytesPerChar = false);
 
 		virtual uint8_t ReadByte() {
 			return InternalReadByte();
@@ -58,6 +58,7 @@ namespace csharp {
 		}
 
 		virtual char ReadChar();
+		virtual char ReadChar8();
 		
 		virtual int16_t ReadInt16() { 
 			return ReadNumeric<int16_t>();
@@ -183,7 +184,6 @@ namespace csharp {
 		std::shared_ptr<Stream> _stream;
 		bool _leaveOpen;
 		bool _disposed{false};
-		bool _2BytesPerChar{ false };
 
 		std::vector<uint8_t> _auxBuffer;		
 	};
