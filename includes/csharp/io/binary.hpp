@@ -190,14 +190,65 @@ namespace csharp {
 
 	class BinaryWriter {
 	public:
-		BinaryWriter(std::shared_ptr<Stream> const& output) {
-			OutStream = Stream::Null;
+		BinaryWriter(std::shared_ptr<Stream> const& output)
+			: BinaryWriter(output, false) {	}
+
+		BinaryWriter(std::shared_ptr<Stream> const& output, bool leaveOpen) {
+			ArgumentNullException::ThrowIfNull(output.get(), "output");
+			
+			if (!output->CanWrite())
+				throw ArgumentException(SR::Argument_StreamNotWritable);
+
+			OutStream = output;
+			_leaveOpen = leaveOpen;
 		}
 
-		BinaryWriter(std::shared_ptr<Stream> const& output, bool leaveOpen);
+		inline void Close() const {
+			if (_leaveOpen)
+				OutStream->Flush();
+			else
+				OutStream->Close();
+		}
+
+		inline virtual std::shared_ptr<Stream> BaseStream() {
+			Flush();
+			return OutStream;
+		}
+
+		inline virtual void Flush() {
+			OutStream->Flush();
+		}
+
+		inline virtual int64_t Seek(int32_t offset, SeekOrigin origin) {
+			return OutStream->Seek(offset, origin);
+		}
+
+		inline virtual void Write(bool value) {
+			OutStream->WriteByte(static_cast<uint8_t>(value ? 1 : 0));
+		}
+
+		inline virtual void Write(uint8_t value) {
+			OutStream->WriteByte(value);
+		}
+
+		inline virtual void Write(int8_t value) {
+			OutStream->WriteByte(static_cast<uint8_t>(value));
+		}
+
+		inline virtual void Write(uint8_t const* buffer, int32_t bufferLength) {
+			OutStream->Write(buffer, bufferLength, 0, bufferLength);
+		}
+
+		inline virtual void Write(uint8_t const* buffer, int32_t bufferLength, int32_t index, int32_t count) {
+			OutStream->Write(buffer, bufferLength, index, count);
+		}
+
+		virtual void Write(char ch);
 
 	protected:
-		BinaryWriter();
+		BinaryWriter() {
+			OutStream = Stream::Null;
+		}
 
 	protected:
 		std::shared_ptr<Stream> OutStream;

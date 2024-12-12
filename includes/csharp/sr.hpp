@@ -56,7 +56,9 @@ namespace csharp {
 		inline static const std::string Format_Bad7BitInt
 			= "Too many bytes in what should have been a 7-bit encoded integer.";
 		inline static const std::string IO_InvalidStringLen_Len
-			= "BinaryReader encountered an invalid string length.";	
+			= "BinaryReader encountered an invalid string length.";
+		inline static const std::string Argument_StreamNotWritable
+			= "Stream was not writable.";	
 	};
 };
 
