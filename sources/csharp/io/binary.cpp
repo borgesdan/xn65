@@ -82,8 +82,8 @@ namespace csharp {
         return static_cast<uint8_t>(b);
     }
 
-    char BinaryReader::ReadChar() {
-        const auto value = Read();
+    char BinaryReader::ReadChar(bool twoBytes = false) {
+        const auto value = Read(twoBytes);
 
         if (value == -1)
         {
@@ -91,18 +91,7 @@ namespace csharp {
         }
 
         return static_cast<char>(value);
-    }   
-
-    char BinaryReader::ReadChar8() {
-        const auto value = Read(true);
-
-        if (value == -1)
-        {
-            throw EndOfStreamException(SR::IO_EOF_ReadBeyondEOF);
-        }
-
-        return static_cast<char>(value);
-    }
+    }       
 
     void BinaryReader::InternalRead(std::vector<uint8_t>& buffer) {
         if (_disposed)

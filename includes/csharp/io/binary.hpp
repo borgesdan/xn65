@@ -57,8 +57,7 @@ namespace csharp {
 			return InternalReadByte() != 0;
 		}
 
-		virtual char ReadChar();
-		virtual char ReadChar8();
+		virtual char ReadChar(bool twoBytesPerChar = false);
 		
 		virtual int16_t ReadInt16() { 
 			return ReadNumeric<int16_t>();
