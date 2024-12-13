@@ -2,6 +2,13 @@
 #define CSHARP_TEXT_UNICODE_HPP
 
 #include <cstdint>
+#include <vector>
+#include "csharp/exception.hpp"
+
+//
+// The char type keyword is an alias for the .NET System.Char structure type that represents a Unicode UTF-16 character.
+// https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/builtin-types/char
+//
 
 namespace csharp {
 	struct UnicodeUtility {
@@ -48,11 +55,6 @@ namespace csharp {
 		static constexpr bool IsAsciiCodePoint(uint32_t value) {
 			return value <= 0x7Fu;
 		}
-		
-		// Returns true if value is in the Basic Multilingual Plane (BMP
-		static constexpr bool IsAsciiCodePoint(uint32_t value) {
-			return value <= 0xFFFFu;
-		}
 
 		//Returns true if is a UTF-16 high surrogate code point, i.e., is in [ U+D800..U+DBFF ], inclusive.
 		static constexpr bool IsHighSurrogateCodePoint(uint32_t value) {
@@ -60,7 +62,7 @@ namespace csharp {
 		}
 		
 		//Returns true if is between
-		static consexpr bool IsInRangeInclusive(uint32_t value, uint32_t lowerBound, uint32_t upperBound) {
+		static constexpr bool IsInRangeInclusive(uint32_t value, uint32_t lowerBound, uint32_t upperBound) {
 			return (value - lowerBound) <= (upperBound - lowerBound);
 		}
 
@@ -75,7 +77,7 @@ namespace csharp {
 		}
 		 
 		//Returns true if value is a valid Unicode code point, i.e., is in [ U+0000..U+10FFFF ], inclusive.
-		static constexpr bool IsValidCodePoint(uint32_t value) {
+		static constexpr bool IsValidCodePoint(uint32_t codePoint) {
 			return codePoint <= 0x10FFFFU;
 		}
 

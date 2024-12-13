@@ -8,10 +8,10 @@
 
 namespace csharp {
 	/*
-	* The BinaryReader class uses byte encodings, by default UTF8. 
+	* The BinaryReader class uses byte encodings, by default UTF8.
 	* This was not implemented, but we tried to follow the same standard.
 	* Also the reading of primitives was modified.
-	* 
+	*
 	*/
 
 	//TODO: ReadString and ReadChar as it only reads ASCII characters
@@ -22,7 +22,7 @@ namespace csharp {
 	class BinaryReader {
 	public:
 		BinaryReader(std::shared_ptr<Stream> const& input, bool leaveOpen = false)
-			: _stream(input), _leaveOpen(leaveOpen) 
+			: _stream(input), _leaveOpen(leaveOpen)
 		{
 			ArgumentNullException::ThrowIfNull(input.get(), "input");
 
@@ -48,7 +48,7 @@ namespace csharp {
 		virtual uint8_t ReadByte() {
 			return InternalReadByte();
 		}
-		
+
 		virtual inline int8_t ReadSByte() {
 			return static_cast<int8_t>(InternalReadByte());
 		}
@@ -58,8 +58,8 @@ namespace csharp {
 		}
 
 		virtual char ReadChar(bool twoBytesPerChar = false);
-		
-		virtual int16_t ReadInt16() { 
+
+		virtual int16_t ReadInt16() {
 			return ReadNumeric<int16_t>();
 		}
 
@@ -141,7 +141,7 @@ namespace csharp {
 				{
 					throw EndOfStreamException(SR::IO_EOF_ReadBeyondEOF);
 				}
-				
+
 				const auto chars = reinterpret_cast<TSTRING::value_type*>(charBytes.data());
 
 				if (currPos == 0 && n == stringLength)
@@ -165,11 +165,11 @@ namespace csharp {
 
 		template<class TNUMERIC>
 		TNUMERIC ReadNumeric() {
-			const auto numericSize = sizeof(TNUMERIC);			
-	
+			const auto numericSize = sizeof(TNUMERIC);
+
 			if (_auxBuffer.size() != numericSize)
 				_auxBuffer.resize(numericSize);
-	
+
 			InternalRead(_auxBuffer);
 
 			const auto ptr = reinterpret_cast<TNUMERIC*>(_auxBuffer.data());
@@ -182,19 +182,20 @@ namespace csharp {
 
 		std::shared_ptr<Stream> _stream;
 		bool _leaveOpen;
-		bool _disposed{false};
+		bool _disposed{ false };
 
-		std::vector<uint8_t> _auxBuffer;		
+		std::vector<uint8_t> _auxBuffer;
 	};
 
 	class BinaryWriter {
 	public:
 		BinaryWriter(std::shared_ptr<Stream> const& output)
-			: BinaryWriter(output, false) {	}
+			: BinaryWriter(output, false) {
+		}
 
 		BinaryWriter(std::shared_ptr<Stream> const& output, bool leaveOpen) {
 			ArgumentNullException::ThrowIfNull(output.get(), "output");
-			
+
 			if (!output->CanWrite())
 				throw ArgumentException(SR::Argument_StreamNotWritable);
 
@@ -242,11 +243,80 @@ namespace csharp {
 			OutStream->Write(buffer, bufferLength, index, count);
 		}
 
-		virtual void Write(char ch);
+		inline virtual void Write(char ch) {
+			const auto byte = static_cast<uint8_t>(ch);
+			OutStream->Write(&byte, 1);
+		}
+
+		inline virtual void Write(char* chars, int32_t charsLength) {
+			ArgumentNullException::ThrowIfNull(chars, "chars");
+			auto bytes = reinterpret_cast<const uint8_t*>(chars);
+			OutStream->Write(bytes, charsLength);
+		}
+
+		inline virtual void Write(char* chars, int32_t charsLength, int32_t index, int32_t count) {
+			ArgumentNullException::ThrowIfNull(chars, "chars");
+			ArgumentOutOfRangeException::ThrowIfNegative(index, "index");
+			ArgumentOutOfRangeException::ThrowIfNegative(count, "count");
+
+			if (index > charsLength - count)
+				throw ArgumentOutOfRangeException("index");
+
+			auto bytes = reinterpret_cast<const uint8_t*>(chars);
+			OutStream->Write(bytes, charsLength, index, count);
+		}
+
+		inline virtual void Write(double value) {
+			WriteNumeric(value);
+		}
+
+		inline virtual void Write(int16_t value) {
+			WriteNumeric(value);
+		}
+
+		inline virtual void Write(uint16_t value) {
+			WriteNumeric(value);
+		}
+
+		inline virtual void Write(int32_t value) {
+			WriteNumeric(value);
+		}
+
+		inline virtual void Write(uint32_t value) {
+			WriteNumeric(value);
+		}
+
+		inline virtual void Write(int64_t value) {
+			WriteNumeric(value);
+		}
+
+		inline virtual void Write(uint64_t value) {
+			WriteNumeric(value);
+		}
+
+		inline virtual void Write(float value) {
+			WriteNumeric(value);
+		}
+
+		virtual void Write(std::string const& value) {
+			Write7BitEncodedInt(static_cast<int64_t>(value.size()));
+			auto bytes = reinterpret_cast<const uint8_t*>(value.data());
+			OutStream->Write(bytes, value.size());
+		}		
+
+		void Write7BitEncodedInt(int32_t value);
+		void Write7BitEncodedInt(int64_t value);
 
 	protected:
 		BinaryWriter() {
 			OutStream = Stream::Null;
+		}
+
+		template <typename TNUMERIC>
+		void WriteNumeric(TNUMERIC const& value) {
+			auto bytes = reinterpret_cast<const uint8_t*>(&value);
+			const auto size = sizeof(value);
+			OutStream->Write(bytes, static_cast<int32_t>(size));
 		}
 
 	protected:

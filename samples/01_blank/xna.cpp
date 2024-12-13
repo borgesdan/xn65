@@ -11,26 +11,7 @@ namespace xna {
 	class Game1 : public Game {
 	public:
 		Game1() : Game() {
-			Content()->RootDirectory("Content");
-
-			short inteiro = 0xC3 | 0xA7;
-			char charpa = inteiro;
-
-			auto stream = std::make_shared<csharp::FileStream>("D:/file.bin", csharp::FileMode::Open);
-			auto reader = csharp::BinaryReader(stream);
-			auto bo = reader.ReadBoolean(); //reader.ReadChar()
-			auto x = reader.ReadChar(); //x
-			auto cedilha = reader.ReadChar8(); //ç
-			auto sb = reader.ReadSByte(); //127
-			auto by = reader.ReadByte(); //255
-			auto i16 = reader.ReadInt16(); //32767
-			auto ui16 = reader.ReadUInt16();//65535
-			auto i32 = reader.ReadInt32(); //2147483647
-			auto ui32 = reader.ReadUInt32(); //4294967295
-			auto i64 = reader.ReadInt64(); //9223372036854775807
-			auto ui64 = reader.ReadUInt64(); //18446744073709551615
-			auto str = reader.ReadString(); //The string in stream.
-			auto str2 = reader.ReadString8(); //Ç de cedilha e ñ com til mas sem ¨ trema.
+			Content()->RootDirectory("Content");			
 		}
 
 		void Initialize() override {

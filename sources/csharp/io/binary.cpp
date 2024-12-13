@@ -1,6 +1,7 @@
 #include "csharp/io/binary.hpp"
 #include <vector>
 #include <cstdint>
+#include "csharp/text/unicode.hpp"
 
 namespace csharp {
 	int32_t BinaryReader::PeekChar() {
@@ -82,7 +83,7 @@ namespace csharp {
         return static_cast<uint8_t>(b);
     }
 
-    char BinaryReader::ReadChar(bool twoBytes = false) {
+    char BinaryReader::ReadChar(bool twoBytes) {
         const auto value = Read(twoBytes);
 
         if (value == -1)
@@ -294,5 +295,29 @@ namespace csharp {
 
         result |= static_cast<int64_t>(byteReadJustNow) << (MaxBytesWithoutOverflow * 7);
         return static_cast<int64_t>(result);
+    }
+
+    void BinaryWriter::Write7BitEncodedInt(int32_t value) {
+        auto uValue = static_cast<uint32_t>(value);
+
+        while (uValue > 0x7Fu)
+        {
+            Write(static_cast<uint8_t>(uValue | ~0x7Fu));
+            uValue >>= 7;
+        }
+
+        Write(static_cast<uint8_t>(uValue));
+    }
+
+    void BinaryWriter::Write7BitEncodedInt(int64_t value) {
+        auto uValue = static_cast<uint32_t>(value);
+
+        while (uValue > 0x7Fu)
+        {
+            Write(static_cast<uint8_t>(uValue | ~0x7Fu));
+            uValue >>= 7;
+        }
+
+        Write(static_cast<uint8_t>(uValue));
     }
 }
