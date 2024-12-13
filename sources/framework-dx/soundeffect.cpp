@@ -1,5 +1,5 @@
 #include "xna-dx/framework.hpp"
-#include "xna/csharp/stream.hpp"
+#include "csharp/io/stream.hpp"
 
 using DxSoundEffect = DirectX::SoundEffect;
 
@@ -35,7 +35,7 @@ namespace xna {
 			return;			
 		
 		//We expect 'format' to always be 16 bytes
-		MemoryStream stream(format);
+		csharp::MemoryStream stream(format);
 		WORD word = 0;
 		DWORD dword = 0;
 

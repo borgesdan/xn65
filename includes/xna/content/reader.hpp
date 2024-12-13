@@ -3,17 +3,20 @@
 
 #include "../common/color.hpp"
 #include "../common/numerics.hpp"
-#include "../csharp/binary.hpp"
 #include "../csharp/type.hpp"
 #include "../default.hpp"
+#include "csharp/io/binary.hpp"
 #include "typereadermanager.hpp"
 #include <any>
+#include <cstdint>
+#include <memory>
+#include <string>
 
 namespace xna {
 	//A worker object that implements most of ContentManager.Load.
-	class ContentReader : public BinaryReader, public std::enable_shared_from_this<ContentReader> {
+	class ContentReader : public csharp::BinaryReader, public std::enable_shared_from_this<ContentReader> {
 	public:
-		static sptr<ContentReader> Create(sptr<ContentManager> const& contentManager, sptr<Stream>& input, String const& assetName);		
+		static std::shared_ptr<ContentReader> Create(std::shared_ptr<ContentManager> const& contentManager, std::shared_ptr<csharp::Stream>& input, std::string const& assetName);		
 
 		// Reads a single object from the current stream.
 		template <typename T>
@@ -49,12 +52,12 @@ namespace xna {
 		double ReadDouble() override;
 
 		//Gets the name of the asset currently being read by this ContentReader.
-		constexpr String AssetName() const {
+		constexpr std::string AssetName() const {
 			return _assetName;
 		}
 
 		//Gets the ContentManager associated with the ContentReader.
-		sptr<xna::ContentManager> ContentManager() const;
+		std::shared_ptr<xna::ContentManager> ContentManager() const;
 
 		//
 		// Internal methods
@@ -63,15 +66,15 @@ namespace xna {
 		template <typename T>
 		auto ReadAsset();
 
-		std::vector<Byte> ReadByteBuffer(size_t size);		
+		std::vector<uint8_t> ReadByteBuffer(size_t size);		
 
 	private:
-		ContentReader(sptr<xna::ContentManager> const& contentManager, sptr<Stream>& input, String const& assetName, Int graphicsProfile)
-			: BinaryReader(input), _contentManager(contentManager), _assetName(assetName) {}
+		ContentReader(std::shared_ptr<xna::ContentManager> const& contentManager, std::shared_ptr<csharp::Stream>& input, std::string const& assetName, int32_t graphicsProfile)
+			: csharp::BinaryReader(input), _contentManager(contentManager), _assetName(assetName) {}
 
-		static sptr<Stream> PrepareStream(sptr<Stream>& input, String const& assetName, Int& graphicsProfile);
+		static std::shared_ptr<csharp::Stream> PrepareStream(std::shared_ptr<csharp::Stream>& input, std::string const& assetName, int32_t& graphicsProfile);
 
-		Int ReadHeader();
+		int32_t ReadHeader();
 
 		template <typename T>
 		auto ReadObjectInternal(std::any& existingInstance);
@@ -83,19 +86,19 @@ namespace xna {
 		auto InvokeReader(ContentTypeReader& reader, Object& existingInstance);
 
 	private:
-		sptr<xna::ContentManager> _contentManager = nullptr;
-		String _assetName;
-		std::vector<sptr<ContentTypeReader>> typeReaders;
-		Int graphicsProfile{ 0 };
-		std::vector<Byte> byteBuffer;
+		std::shared_ptr<xna::ContentManager> _contentManager = nullptr;
+		std::string _assetName;
+		std::vector<std::shared_ptr<ContentTypeReader>> typeReaders;
+		int32_t graphicsProfile{ 0 };
+		std::vector<uint8_t> byteBuffer;
 
-		static constexpr Ushort XnbVersionProfileMask = 32512;
-		static constexpr Ushort XnbCompressedVersion = 32773;
-		static constexpr Ushort XnbVersion = 5;
-		static constexpr Int XnbVersionProfileShift = 8;
-		static constexpr Char PlatformLabel = 'w';
-		static constexpr Int XnbPrologueSize = 10;
-		static constexpr Int XnbCompressedPrologueSize = 14;
+		static constexpr uint16_t XnbVersionProfileMask = 32512;
+		static constexpr uint16_t XnbCompressedVersion = 32773;
+		static constexpr uint16_t XnbVersion = 5;
+		static constexpr int32_t XnbVersionProfileShift = 8;
+		static constexpr char PlatformLabel = 'w';
+		static constexpr int32_t XnbPrologueSize = 10;
+		static constexpr int32_t XnbCompressedPrologueSize = 14;
 	};
 
 	template<typename T>

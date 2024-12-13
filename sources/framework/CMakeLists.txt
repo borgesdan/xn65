@@ -4,8 +4,6 @@
 
 # Add source to this project's executable.
 add_library (Xn65 STATIC 
-"csharp/stream.cpp"
-"csharp/binary.cpp"
 "game/component.cpp"
 "game/servicecontainer.cpp"
 "content/manager.cpp"

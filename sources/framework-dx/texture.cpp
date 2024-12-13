@@ -217,16 +217,16 @@ namespace xna {
 			throw csharp::InvalidOperationException();
 	}
 
-	P_Texture2D Texture2D::FromStream(GraphicsDevice& device, P_Stream const& stream)
+	P_Texture2D Texture2D::FromStream(GraphicsDevice& device, csharp::Stream& stream)
 	{
 		std::vector<Byte> data;
-		const auto lenght = stream->Length();
-		stream->Read(data, 0, lenght - 1);
+		const auto lenght = stream.Length();
+		stream.Read(data.data(), data.size(), 0, lenght - 1);
 
 		return FromStream(device, data);
 	}
 
-	sptr<Texture2D> Texture2D::FromStream(GraphicsDevice& device, String const& fileName)
+	sptr<Texture2D> Texture2D::FromStream(GraphicsDevice& device, std::string const& fileName)
 	{
 		auto _this = device.shared_from_this();
 		auto texture2d = snew<Texture2D>(_this);

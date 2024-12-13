@@ -28,7 +28,7 @@ namespace xna {
 		insertRegisteredReader<BooleanReader>("BooleanReader");
 		insertRegisteredReader<ByteReader>("ByteReader");
 		//insertRegisteredReader<CharReader>("CharReader");
-		insertRegisteredReader<CharReader>("CharReader", "Microsoft.Xna.Framework.Content.CharReader`1[[System.Char");
+		insertRegisteredReader<CharReader>("CharReader", "Microsoft.Xna.Framework.Content.CharReader");
 		insertRegisteredReader<ColorReader>("ColorReader");
 		insertRegisteredReader<DoubleReader>("DoubleReader");
 		insertRegisteredReader<Int16Reader>("Int16Reader");
@@ -39,7 +39,7 @@ namespace xna {
 		insertRegisteredReader<QuaternionReader>("QuaternionReader");
 
 		//insertRegisteredReader<RectangleReader>("RectangleReader");
-		insertRegisteredReader<RectangleReader>("RectangleReader", "Microsoft.Xna.Framework.Content.RectangleReadericrosoft.Xna.Framework.Rectangle");
+		insertRegisteredReader<RectangleReader>("RectangleReader", "Microsoft.Xna.Framework.Content.RectangleReader");
 
 		insertRegisteredReader<SByteReader>("SByteReader");
 		insertRegisteredReader<SingleReader>("SingleReader");
@@ -49,7 +49,7 @@ namespace xna {
 		insertRegisteredReader<UInt64Reader>("UInt64Reader");
 		insertRegisteredReader<Vector2Reader>("Vector2Reader");
 		//insertRegisteredReader<Vector3Reader>("Vector3Reader");
-		insertRegisteredReader<Vector3Reader>("Vector3Reader", "Microsoft.Xna.Framework.Content.Vector3Reader[Microsoft.Xna.Framework.Vector3");
+		insertRegisteredReader<Vector3Reader>("Vector3Reader", "Microsoft.Xna.Framework.Content.Vector3Reader");
 		insertRegisteredReader<Vector4Reader>("Vector4Reader");
 		insertRegisteredReader<Texture2DReader>("Texture2DReader");
 		insertRegisteredReader<SoundEffectReader>("SoundEffectReader");

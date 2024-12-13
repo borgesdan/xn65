@@ -115,7 +115,10 @@ namespace xna {
 			type = Type::NameOfRegisteredTypes[readerTypeName];		
 
 		if (!type) {
-			throw std::runtime_error("ContentTypeReaderManager::InstantiateTypeReader:  registered type is null.");
+
+			std::string error("ContentTypeReaderManager::InstantiateTypeReader:  registered type is null. ");
+			error.append("TypeName: " + readerTypeName);
+			throw std::runtime_error(error);
 		}
 
 		if (ContentTypeReaderManager::readerTypeToReader.contains(type)) {
