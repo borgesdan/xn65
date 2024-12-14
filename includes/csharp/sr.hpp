@@ -59,6 +59,18 @@ namespace csharp {
 			= "BinaryReader encountered an invalid string length.";
 		inline static const std::string Argument_StreamNotWritable
 			= "Stream was not writable.";	
+		inline static const std::string Overflow_TimeSpanTooLong
+			= "TimeSpan overflowed because the duration is too long.";
+		inline static const std::string Arg_ArithmeticException
+			= "Overflow or underflow in the arithmetic operation.";		
+		inline static const std::string Arg_OverflowException
+			= "Arithmetic operation resulted in an overflow.";
+		inline static const std::string Arg_CannotBeNaN
+			= "TimeSpan does not accept floating point Not-a-Number values.";
+		inline static const std::string Overflow_NegateTwosCompNum
+			= "Negating the minimum value of a twos complement number is invalid.";
+		inline static const std::string Overflow_Duration
+			= "The duration cannot be returned for TimeSpan.MinValue because the absolute value of TimeSpan.MinValue exceeds the value of TimeSpan.MaxValue.";	
 	};
 };
 

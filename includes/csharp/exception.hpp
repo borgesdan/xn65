@@ -318,6 +318,36 @@ namespace csharp {
             HRresult = HResults::HR_COR_E_UNAUTHORIZEDACCESS;
         }
     };
+
+    //The exception that is thrown for errors in an arithmetic, casting, or conversion operation.
+    class ArithmeticException : public SystemException {
+    public:
+        ArithmeticException(OptionalString const& message = std::nullopt, std::source_location const& source = std::source_location::current())
+            : ArithmeticException(message, nullptr, source)
+        {
+        }
+
+        ArithmeticException(OptionalString const& message, std::shared_ptr<Exception> const& innerException, std::source_location const& source = std::source_location::current())
+            : SystemException(message.value_or(SR::Arg_ArithmeticException), innerException, source)
+        {
+            HRresult = HResults::HR_COR_E_ARITHMETIC;
+        }
+    };
+
+    //The exception that is thrown for errors in an arithmetic, casting, or conversion operation.
+    class OverflowException : public ArithmeticException {
+    public:
+        OverflowException(OptionalString const& message = std::nullopt, std::source_location const& source = std::source_location::current())
+            : OverflowException(message, nullptr, source)
+        {
+        }
+
+        OverflowException(OptionalString const& message, std::shared_ptr<Exception> const& innerException, std::source_location const& source = std::source_location::current())
+            : ArithmeticException(message.value_or(SR::Arg_OverflowException), innerException, source)
+        {
+            HRresult = HResults::HR_COR_E_OVERFLOW;
+        }
+    };
 }
 
 #endif
