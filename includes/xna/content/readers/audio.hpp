@@ -2,7 +2,7 @@
 #define XNA_CONTENT_READERS_AUDIO_HPP
 
 #include "../../audio/soundeffect.hpp"
-#include "../../csharp/timespan.hpp"
+#include "csharp/time.hpp"
 #include "../../csharp/type.hpp"
 #include "../manager.hpp"
 #include "../reader.hpp"
@@ -23,7 +23,7 @@ namespace xna {
 			const auto loopLength = input.ReadInt32();
 			const auto num = input.ReadInt32();
 
-			auto sf = snew<SoundEffect>(format, data, loopStart, loopLength, TimeSpan::FromMilliseconds((double)num));
+			auto sf = snew<SoundEffect>(format, data, loopStart, loopLength, csharp::TimeSpan::FromMilliseconds((double)num));
 			return sf;
 		}
 	};

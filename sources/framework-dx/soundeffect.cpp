@@ -30,7 +30,7 @@ namespace xna {
 		Int loopStart,
 		Int loopLength,
 		//We must evaluate how to use the time duration
-		TimeSpan const& duration) {
+		csharp::TimeSpan const& duration) {
 		if (!AudioEngine::impl || !AudioEngine::impl->_dxAudioEngine)
 			return;			
 		

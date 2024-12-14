@@ -3,6 +3,7 @@
 
 #include "headers.hpp"
 #include "tile.hpp"
+#include "csharp/time.hpp"
 
 namespace PlatformerStarterKit {
 
@@ -30,7 +31,7 @@ namespace PlatformerStarterKit {
 			return reachedExit;
 		}
 
-		constexpr xna::TimeSpan TimeRemaining() const {
+		constexpr csharp::TimeSpan TimeRemaining() const {
 			return timeRemaining;
 		}
 
@@ -79,7 +80,7 @@ namespace PlatformerStarterKit {
 		xna::Point exit = InvalidPosition;		
 		int score = 0;
 		bool reachedExit = false;
-		xna::TimeSpan timeRemaining{};	
+		csharp::TimeSpan timeRemaining{};	
 		xna::sptr<xna::ContentManager> content = nullptr;
 		xna::sptr<xna::SoundEffect> exitReachedSound = nullptr;
 		xna::String path;

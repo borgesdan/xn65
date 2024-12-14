@@ -2,6 +2,7 @@
 #define XNA_SOUND_SOUNDEFFECT_HPP
 
 #include "../default.hpp"
+#include "csharp/time.hpp"
 
 namespace xna {
 	struct SoundEffectInstance {
@@ -31,7 +32,7 @@ namespace xna {
 			std::vector<Byte> const& data,
 			Int loopStart,
 			Int loopLength,
-			TimeSpan const& duration);
+			csharp::TimeSpan const& duration);
 		~SoundEffect();
 		void Play();
 		void Play(float volume, float pitch, float pan);

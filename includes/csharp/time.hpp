@@ -153,15 +153,15 @@ namespace csharp {
 			return FromUnits(hours, TicksPerHour, MinHours, MaxHours);
 		}
 
-		static constexpr TimeSpan FromMinutes(int32_t minutes) {
+		static constexpr TimeSpan FromMinutes(int64_t minutes) {
 			return FromUnits(minutes, TicksPerMinute, MinMinutes, MaxMinutes);
 		}
 		
-		static constexpr TimeSpan FromSeconds(int32_t seconds) {
+		static constexpr TimeSpan FromSeconds(int64_t seconds) {
 			return FromUnits(seconds, TicksPerSecond, MinSeconds, MaxSeconds);
 		}
 		
-		static constexpr TimeSpan FromMicroseconds(int32_t microseconds) {
+		static constexpr TimeSpan FromMicroseconds(int64_t microseconds) {
 			return FromUnits(microseconds, TicksPerMicrosecond, MinMicroseconds, MaxMicroseconds);
 		}
 		

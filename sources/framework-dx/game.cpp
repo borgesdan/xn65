@@ -52,8 +52,8 @@ namespace xna {
 			{
 				const auto elapsed = impl->_stepTimer.GetElapsedSeconds();
 				const auto total = impl->_stepTimer.GetTotalSeconds();
-				const auto elapsedTimeSpan = TimeSpan::FromSeconds(elapsed);
-				const auto totalTimeSpan = TimeSpan::FromSeconds(total);
+				const auto elapsedTimeSpan = csharp::TimeSpan::FromSeconds(elapsed);
+				const auto totalTimeSpan = csharp::TimeSpan::FromSeconds(total);
 				currentGameTime.ElapsedGameTime = elapsedTimeSpan;
 				currentGameTime.TotalGameTime = totalTimeSpan;
 				Update(currentGameTime);
@@ -209,7 +209,7 @@ namespace xna {
 
 		Mouse::impl->_dxMouse->SetVisible(value);
 	}
-	void Game::TargetElapsedTime(TimeSpan const& value) {
+	void Game::TargetElapsedTime(csharp::TimeSpan const& value) {
 		if (!isFixedTimeStep)
 			return;
 

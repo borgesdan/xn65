@@ -19,7 +19,6 @@
 #include "content/typereadermanager.hpp"
 #include "csharp/buffer.hpp"
 #include "csharp/service.hpp"
-#include "csharp/timespan.hpp"
 #include "csharp/type.hpp"
 #include "csharp/screen.hpp"
 #include "csharp/eventhandler.hpp"

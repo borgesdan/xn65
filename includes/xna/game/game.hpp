@@ -31,9 +31,9 @@ namespace xna {
 		//Gets the GameServiceContainer holding all the service providers attached to the Game.
 		sptr<GameServiceContainer> Services();
 		//Gets or sets the target time between calls to Update when IsFixedTimeStep is true. 
-		constexpr TimeSpan TargetElapsedTime() const { return targetElapsedTime; }
+		constexpr csharp::TimeSpan TargetElapsedTime() const { return targetElapsedTime; }
 		//Gets or sets the target time between calls to Update when IsFixedTimeStep is true. 
-		void TargetElapsedTime(TimeSpan const& value);
+		void TargetElapsedTime(csharp::TimeSpan const& value);
 		//Gets the underlying operating system window.
 		sptr<GameWindow> Window();
 
@@ -85,7 +85,7 @@ namespace xna {
 		bool enabledGameComponents{ false };
 		GameTime currentGameTime{};
 		bool isFixedTimeStep{ true };
-		TimeSpan targetElapsedTime{ TimeSpan::FromTicks(166667L) };
+		csharp::TimeSpan targetElapsedTime{ csharp::TimeSpan::FromTicks(166667L) };
 		bool isRunning{ false };
 		sptr<GameServiceContainer> services = nullptr;
 		sptr<GraphicsDevice> graphicsDevice = nullptr;

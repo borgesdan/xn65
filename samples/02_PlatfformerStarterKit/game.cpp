@@ -84,7 +84,7 @@ namespace PlatformerStarterKit {
 				if (!level->Player()->IsAlive()) {
 					level->StartNewLife();
 				}
-				else if (level->TimeRemaining() == TimeSpan::Zero()) {
+				else if (level->TimeRemaining() == csharp::TimeSpan::Zero()) {
 					if (level->ReachedExit())
 						LoadNextLevel();
 					else
@@ -144,7 +144,7 @@ namespace PlatformerStarterKit {
 			DrawShadowedString(*hudFont, "SCORE: " + to_string(level->Score()), hudLocation + Vector2(0.0f, timeHeight * 1.2f), Colors::Yellow);
 			
 			PTexture2D status = nullptr;
-			if (level->TimeRemaining() == TimeSpan::Zero())
+			if (level->TimeRemaining() == csharp::TimeSpan::Zero())
 			{
 				if (level->ReachedExit()) {
 					status = winOverlay;
@@ -179,7 +179,7 @@ namespace PlatformerStarterKit {
 		int levelIndex = -1;
 		sptr<Level> level = nullptr;
 		bool wasContinuePressed = false;
-		TimeSpan WarningTime = TimeSpan::FromSeconds(30);
+		csharp::TimeSpan WarningTime = csharp::TimeSpan::FromSeconds(30.0);
 		static constexpr int TargetFrameRate = 60;
 		static constexpr Buttons ContinueButton = Buttons::A;
 	};
