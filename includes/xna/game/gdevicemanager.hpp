@@ -1,7 +1,6 @@
 #ifndef XNA_GAME_GRAPHICSDEVICEMANAGER_HPP
 #define XNA_GAME_GRAPHICSDEVICEMANAGER_HPP
 
-#include "../csharp/eventhandler.hpp"
 #include "../default.hpp"
 #include "../graphics/shared.hpp"
 #include "gdeviceinfo.hpp"

@@ -2,7 +2,6 @@
 #define XNA_CONTENT_READERS_GRAPHICS_HPP
 
 #include "../../common/numerics.hpp"
-#include "../../csharp/timespan.hpp"
 #include "../../csharp/type.hpp"
 #include "../../graphics/sprite.hpp"
 #include "../../graphics/texture.hpp"

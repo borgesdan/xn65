@@ -18,7 +18,7 @@ namespace xna {
 	bool RasterizerState::Initialize()
 	{
 		if (!Implementation || !BaseGraphicsDevice || !BaseGraphicsDevice->Implementation->Device) {
-			Exception::Throw(Exception::UNABLE_TO_INITIALIZE);
+			throw csharp::InvalidOperationException();
 		}
 
 		if (Implementation->RasterizerState) {
@@ -30,7 +30,7 @@ namespace xna {
 			Implementation->RasterizerState.GetAddressOf());
 
 		if (FAILED(hr)) {
-			Exception::Throw(Exception::FAILED_TO_CREATE);
+			throw csharp::InvalidOperationException();
 		}
 
 		return true;
@@ -39,11 +39,11 @@ namespace xna {
 	bool RasterizerState::Apply()
 	{
 		if (!Implementation || !BaseGraphicsDevice || !BaseGraphicsDevice->Implementation->Context) {
-			Exception::Throw(Exception::UNABLE_TO_INITIALIZE);
+			throw csharp::InvalidOperationException();
 		}
 
 		if (!Implementation->RasterizerState) {
-			Exception::Throw(Exception::INVALID_OPERATION);
+			throw csharp::InvalidOperationException();
 		}
 
 		BaseGraphicsDevice->Implementation->Context->RSSetState(Implementation->RasterizerState.Get());

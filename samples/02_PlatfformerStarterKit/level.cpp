@@ -11,7 +11,7 @@ namespace PlatformerStarterKit {
 	Level::Level(xna::sptr<xna::IServiceProvider> const& serviceProvider, xna::String const& path) : path(path)
 	{
 		content = xna::snew<xna::ContentManager>(serviceProvider, "Content");
-		timeRemaining = xna::TimeSpan::FromMinutes(2.0);
+		timeRemaining = csharp::TimeSpan::FromMinutes(2.0);
 
 		layers = std::vector<xna::PTexture2D>(3);
 
@@ -207,13 +207,13 @@ namespace PlatformerStarterKit {
 	}
 
 	void Level::Update(xna::GameTime const& gameTime) {
-		if (!player->IsAlive() || timeRemaining == xna::TimeSpan::Zero()) {
+		if (!player->IsAlive() || timeRemaining == csharp::TimeSpan::Zero()) {
 			player->ApplyPhysics(gameTime);
 		}
 		else if (reachedExit) {
 			auto seconds = static_cast<int64_t>(std::round(gameTime.ElapsedGameTime.TotalSeconds() * 100.0f));
 			seconds = std::min(seconds, static_cast<int64_t>(std::ceil(timeRemaining.TotalSeconds())));
-			timeRemaining = timeRemaining - xna::TimeSpan::FromSeconds(seconds);
+			timeRemaining = timeRemaining - csharp::TimeSpan::FromSeconds(seconds);
 			score += seconds * PointsPerSecond;
 		}
 		else {
@@ -238,8 +238,8 @@ namespace PlatformerStarterKit {
 			}
 		}
 
-		if (timeRemaining < xna::TimeSpan::Zero())
-			timeRemaining = xna::TimeSpan::Zero();
+		if (timeRemaining < csharp::TimeSpan::Zero())
+			timeRemaining = csharp::TimeSpan::Zero();
 	}
 
 	void Level::Draw(xna::GameTime const& gameTime, xna::SpriteBatch& spriteBatch)

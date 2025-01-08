@@ -3,7 +3,7 @@
 
 #include "../../common/color.hpp"
 #include "../../common/numerics.hpp"
-#include "../../csharp/timespan.hpp"
+#include "csharp/time.hpp"
 #include "../../default.hpp"
 #include "../reader.hpp"
 
@@ -13,7 +13,7 @@ namespace xna {
 		ObjectReader() : ContentTypeReader(typeof<Object>()) {}
 
 		virtual Object Read(ContentReader& input, Object& existingInstance) override {
-			Exception::Throw(Exception::NOT_IMPLEMENTED);
+			throw csharp::InvalidOperationException();
 
 			return Object();
 		}
@@ -156,12 +156,12 @@ namespace xna {
 		}
 	};
 
-	class TimeSpanReader : public ContentTypeReaderT<TimeSpan> {
+	class TimeSpanReader : public ContentTypeReaderT<csharp::TimeSpan> {
 	public:
-		TimeSpanReader() : ContentTypeReaderT(typeof<TimeSpan>()) {}
+		TimeSpanReader() : ContentTypeReaderT(typeof<csharp::TimeSpan>()) {}
 
-		TimeSpan Read(ContentReader& input, TimeSpan& existingInstance) override {
-			return TimeSpan::FromTicks(input.ReadInt64());
+		csharp::TimeSpan Read(ContentReader& input, csharp::TimeSpan& existingInstance) override {
+			return csharp::TimeSpan::FromTicks(input.ReadInt64());
 		}
 	};
 

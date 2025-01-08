@@ -46,7 +46,7 @@ namespace xna {
 
 	void GraphicsDeviceManager::ChangeDevice(bool forceCreate) {
 		if (!game)
-			Exception::Throw(Exception::INVALID_OPERATION);
+			throw csharp::InvalidOperationException();
 
 		inDeviceTransition = true;
 		auto screenDeviceName = game->Window()->ScreenDeviceName();
@@ -208,13 +208,13 @@ namespace xna {
 		}
 
 		if (foundDevices.size() == 0) {
-			Exception::Throw("No Suitable Graphics Device");
+			throw csharp::InvalidOperationException("No Suitable Graphics Device");
 		}
 
 		RankDevices(foundDevices);
 
 		if (foundDevices.size() == 0)
-			Exception::Throw("No Suitable Graphics Device");
+			throw csharp::InvalidOperationException("No Suitable Graphics Device");
 			
 		return foundDevices[0];
 	}
@@ -323,7 +323,7 @@ namespace xna {
 
 		if (hWnd == 0) {
 			if (!game)
-				Exception::Throw(Exception::INVALID_OPERATION);
+				throw csharp::InvalidOperationException();
 
 			hWnd = game->Window()->Handle();
 		}
@@ -345,7 +345,7 @@ namespace xna {
 			return;
 
 		if (presentationParameters->BackBufferWidth == 0 || presentationParameters->BackBufferHeight == 0)
-			Exception::Throw(Exception::INVALID_OPERATION);
+			throw csharp::InvalidOperationException();
 
 		bool flag = true;
 
@@ -369,7 +369,7 @@ namespace xna {
 			}
 		}
 		if (!flag)
-			Exception::Throw(Exception::INVALID_OPERATION);
+			throw csharp::InvalidOperationException();
 	}
 
 	bool IsWindowOnAdapter(intptr_t windowHandle, GraphicsAdapter const& adapter) {

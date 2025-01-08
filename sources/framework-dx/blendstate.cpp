@@ -98,7 +98,7 @@ namespace xna {
 	bool BlendState::Initialize()
 	{
 		if (!BaseGraphicsDevice || !BaseGraphicsDevice->Implementation->Device) {
-			Exception::Throw(Exception::UNABLE_TO_INITIALIZE);
+			throw csharp::InvalidOperationException();
 		}
 
 		if (Implementation->BlendState) {
@@ -110,7 +110,7 @@ namespace xna {
 			Implementation->BlendState.GetAddressOf());
 
 		if (FAILED(hr)) {
-			Exception::Throw(Exception::FAILED_TO_CREATE);
+			throw csharp::InvalidOperationException();
 		}
 
 		return true;
@@ -118,7 +118,7 @@ namespace xna {
 
 	bool BlendState::Apply() {
 		if (!BaseGraphicsDevice || !BaseGraphicsDevice->Implementation->Context) {
-			Exception::Throw(Exception::FAILED_TO_APPLY);
+			throw csharp::InvalidOperationException();
 		}
 
 		if (!Implementation->BlendState) {

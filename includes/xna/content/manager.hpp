@@ -2,7 +2,7 @@
 #define XNA_CONTENT_MANAGER_HPP
 
 #include "../csharp/service.hpp"
-#include "../csharp/stream.hpp"
+#include "csharp/io/stream.hpp"
 #include "../default.hpp"
 #include "reader.hpp"
 
@@ -10,39 +10,39 @@ namespace xna {
 	//The run-time component which loads managed objects from the binary files produced by the design time content pipeline.
 	class ContentManager : public std::enable_shared_from_this<ContentManager> {
 	public:
-		ContentManager(sptr<IServiceProvider> const& services) :
+		ContentManager(std::shared_ptr<IServiceProvider> const& services) :
 			rootDirectory("") {
 			serviceProvider = services;
 		};
 
-		ContentManager(sptr<IServiceProvider> const& services, String const& rootDirectory) :
+		ContentManager(std::shared_ptr<IServiceProvider> const& services, std::string const& rootDirectory) :
 			rootDirectory(rootDirectory){
 			serviceProvider = services;
 		};		
 
 		//Gets the service provider associated with the ContentManager.
-		sptr<IServiceProvider> ServiceProvider() const {
+		std::shared_ptr<IServiceProvider> ServiceProvider() const {
 			return serviceProvider;
 		}
 
 		//Gets or sets the root directory associated with this ContentManager.
-		constexpr String RootDirectory() const {
+		constexpr std::string RootDirectory() const {
 			return rootDirectory;
 		}
 
 		//Gets or sets the root directory associated with this ContentManager.
-		void RootDirectory(String const& value) {
+		void RootDirectory(std::string const& value) {
 			rootDirectory = value;
 		}
 
 		//Loads an asset that has been processed by the Content Pipeline.
 		template <typename T>
-		auto Load(String const& assetName) {
+		auto Load(std::string const& assetName) {
 			if (assetName.empty()) {
-				return XnaHelper::ReturnDefaultOrNull<T>();
+				return misc::ReturnDefaultOrNull<T>();
 			}
 			
-			if constexpr (XnaHelper::is_shared_ptr<T>::value) {				
+			if constexpr (misc::is_shared_ptr<T>::value) {
 
 				if (loadedAssets.contains(assetName)) {
 					auto& voidAsset = loadedAssets[assetName];
@@ -54,7 +54,7 @@ namespace xna {
 
 			const auto obj2 = ReadAsset<T>(assetName); 
 
-			if constexpr (XnaHelper::is_shared_ptr<T>::value) {
+			if constexpr (misc::is_shared_ptr<T>::value) {
 
 				if(obj2)
 					loadedAssets.emplace( assetName, obj2 );
@@ -69,17 +69,17 @@ namespace xna {
 		}
 
 		//Gets the service provider associated with the main Game.
-		static sptr<IServiceProvider> GameServiceProvider() {
+		static std::shared_ptr<IServiceProvider> GameServiceProvider() {
 			return mainGameService;
 		}
 
 	protected:
 		template <typename T>
-		auto ReadAsset(String const& assetName) {
+		auto ReadAsset(std::string const& assetName) {
 			auto input = OpenStream(assetName);
 
 			if (!input)
-				return XnaHelper::ReturnDefaultOrNull<T>();
+				return misc::ReturnDefaultOrNull<T>();
 
 			const auto _this = shared_from_this();
 			auto contentReader = ContentReader::Create(_this, input, assetName);
@@ -88,18 +88,18 @@ namespace xna {
 			return asset;
 		}
 
-		sptr<Stream> OpenStream(String const& assetName) const;
+		std::shared_ptr<csharp::Stream> OpenStream(std::string const& assetName) const;
 
 	private:
 		friend class ContentReader;
 		friend class Game;
 
-		String rootDirectory;				
-		sptr<IServiceProvider> serviceProvider = nullptr;
-		std::map<String, sptr<void>> loadedAssets;
+		std::string rootDirectory;				
+		std::shared_ptr<IServiceProvider> serviceProvider = nullptr;
+		std::map<std::string, std::shared_ptr<void>> loadedAssets;
 		
-		inline static sptr<IServiceProvider> mainGameService = nullptr;		
-		inline const static String contentExtension = ".xnb";
+		inline static std::shared_ptr<IServiceProvider> mainGameService = nullptr;		
+		inline const static std::string contentExtension = ".xnb";
 	};
 }
 

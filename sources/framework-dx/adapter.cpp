@@ -15,7 +15,7 @@ namespace xna {
 		comptr<IDXGIFactory1> pFactory = nullptr;
 
 		if FAILED(CreateDXGIFactory1(__uuidof(IDXGIFactory1), (void**)pFactory.GetAddressOf()))
-			Exception::Throw(Exception::FAILED_TO_CREATE);
+			throw csharp::InvalidOperationException();
 
 		comptr<IDXGIAdapter1> pAdapter = nullptr;
 
@@ -28,7 +28,7 @@ namespace xna {
 			DXGI_ADAPTER_DESC1 desc{};
 			pAdapter->GetDesc1(&desc);
 
-			adp->description = XnaHelper::ToString(desc.Description);
+			adp->description = misc::ToString(desc.Description);
 			adp->deviceId = static_cast<Uint>(desc.DeviceId);
 			adp->isDefault = true;
 			adp->revision = static_cast<Uint>(desc.Revision);
@@ -55,7 +55,7 @@ namespace xna {
 		comptr<IDXGIFactory1> pFactory = nullptr;
 
 		if FAILED(CreateDXGIFactory1(__uuidof(IDXGIFactory1), (void**)pFactory.GetAddressOf()))
-			Exception::Throw(Exception::FAILED_TO_CREATE);
+			throw csharp::InvalidOperationException();
 
 		comptr<IDXGIAdapter1> pAdapter = nullptr;
 
@@ -68,7 +68,7 @@ namespace xna {
 			DXGI_ADAPTER_DESC1 desc{};
 			pAdapter->GetDesc1(&desc);
 
-			adp->description = XnaHelper::ToString(desc.Description);
+			adp->description = misc::ToString(desc.Description);
 			adp->deviceId = static_cast<Uint>(desc.DeviceId);			
 			adp->isDefault = count == 0;
 			adp->revision = static_cast<Uint>(desc.Revision);
@@ -253,7 +253,7 @@ namespace xna {
 			DXGI_OUTPUT_DESC outputDesc;
 			pOutput->GetDesc(&outputDesc);
 
-			deviceName = XnaHelper::ToString(outputDesc.DeviceName);
+			deviceName = misc::ToString(outputDesc.DeviceName);
 			monitorHandle = reinterpret_cast<intptr_t>(outputDesc.Monitor);
 		}
 	}

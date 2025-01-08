@@ -1,5 +1,5 @@
 #include "xna-dx/framework.hpp"
-#include "xna/csharp/stream.hpp"
+#include "csharp/io/stream.hpp"
 
 using DxSoundEffect = DirectX::SoundEffect;
 
@@ -16,7 +16,7 @@ namespace xna {
 		if (!AudioEngine::impl || !AudioEngine::impl->_dxAudioEngine)
 			return;
 
-		const auto file = XnaHelper::ToWString(fileName);
+		const auto file = misc::ToWString(fileName);
 		impl->_dxSoundEffect = unew<DxSoundEffect>(AudioEngine::impl->_dxAudioEngine.get(), file.c_str());
 	}
 
@@ -30,12 +30,12 @@ namespace xna {
 		Int loopStart,
 		Int loopLength,
 		//We must evaluate how to use the time duration
-		TimeSpan const& duration) {
+		csharp::TimeSpan const& duration) {
 		if (!AudioEngine::impl || !AudioEngine::impl->_dxAudioEngine)
 			return;			
 		
 		//We expect 'format' to always be 16 bytes
-		MemoryStream stream(format);
+		csharp::MemoryStream stream(format);
 		WORD word = 0;
 		DWORD dword = 0;
 

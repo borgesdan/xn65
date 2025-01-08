@@ -1,8 +1,8 @@
 #ifndef XNA_CSHARP_TYPE_HPP
 #define XNA_CSHARP_TYPE_HPP
 
-#include "../helpers.hpp"
-#include "../exception.hpp"
+#include "misc.hpp"
+#include "csharp/exception.hpp"
 #include <map>
 #include <memory>
 #include <string>
@@ -21,11 +21,11 @@ namespace xna {
 
 		constexpr size_t GetHashCode() const {
 			size_t seed = 0;
-			XnaHelper::HashCombine(seed, fullName);
-			XnaHelper::HashCombine(seed, isClass);
-			XnaHelper::HashCombine(seed, isEnum);
-			XnaHelper::HashCombine(seed, isValueType);
-			XnaHelper::HashCombine(seed, isPrimitive);
+			misc::HashCombine(seed, fullName);
+			misc::HashCombine(seed, isClass);
+			misc::HashCombine(seed, isEnum);
+			misc::HashCombine(seed, isValueType);
+			misc::HashCombine(seed, isPrimitive);
 
 			return seed;
 		}
@@ -81,7 +81,7 @@ namespace xna {
 		}
 		else 
 		{
-			Exception::Throw(Exception::INVALID_OPERATION);
+			throw csharp::InvalidOperationException();
 		}
 		
 		return type;

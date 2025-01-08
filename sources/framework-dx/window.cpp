@@ -101,7 +101,7 @@ namespace xna {
 		gameWindow->clientBounds = { _windowPosX, _windowPosY, _windowWidth, _windowHeight };
 		gameWindow->currentOrientation = DisplayOrientation::Default;
 		
-		auto screens = Screen::AllScreens();
+		auto screens = csharp::Screen::AllScreens();
 		
 		if (screens.size() == 1)
 			gameWindow->screenDeviceName = screens[0]->DeviceName();
@@ -195,54 +195,31 @@ namespace xna {
 		return DefWindowProc(hWnd, msg, wParam, lParam);
 	}
 
-	uptr<Screen> GameWindow::ScreenFromAdapter(GraphicsAdapter const& adapter) {
-		auto screens = Screen::AllScreens();
+	uptr<csharp::Screen> GameWindow::ScreenFromAdapter(GraphicsAdapter const& adapter) {
+		auto screens = csharp::Screen::AllScreens();
 
 		for (size_t i = 0; i < screens.size(); ++i) {
 			auto& screen = screens[i];
 			
-			if (screen->DeviceName() == adapter.DeviceName())
+			const auto screeDeviceName = screen->DeviceName();
+			const auto adapterDeviceName = adapter.DeviceName();
+
+			if (screeDeviceName == adapterDeviceName)
 				return std::move(screen);
 		}		
 
 		return nullptr;
 	}
 
-	uptr<Screen> GameWindow::ScreenFromHandle(intptr_t windowHandle) {
+	uptr<csharp::Screen> GameWindow::ScreenFromHandle(intptr_t windowHandle) {
 		const auto handle = reinterpret_cast<HWND>(windowHandle);
 		auto hMonitor = MonitorFromWindow(handle, MONITOR_DEFAULTTOPRIMARY);
 
 		if (!hMonitor)
-			return nullptr;
-
-		MONITORINFOEX monitorInfo{};
-		monitorInfo.cbSize = sizeof(MONITORINFOEX);
-		GetMonitorInfo(hMonitor, &monitorInfo);
+			return nullptr;		
 
 		const auto hmonitor = reinterpret_cast<intptr_t>(hMonitor);
-		const auto primary = monitorInfo.dwFlags == MONITORINFOF_PRIMARY;
-
-		Rectangle bounds;
-		bounds.X = monitorInfo.rcMonitor.left;
-		bounds.Y = monitorInfo.rcMonitor.top;
-		bounds.Width = monitorInfo.rcMonitor.right - monitorInfo.rcMonitor.left;
-		bounds.Height = monitorInfo.rcMonitor.bottom - monitorInfo.rcMonitor.top;
-
-		Rectangle workingArea;
-		workingArea.X = monitorInfo.rcWork.left;
-		workingArea.Y = monitorInfo.rcWork.top;
-		workingArea.Width = monitorInfo.rcWork.right - monitorInfo.rcWork.left;
-		workingArea.Height = monitorInfo.rcWork.bottom - monitorInfo.rcWork.top;
-
-		const auto deviceName = String(monitorInfo.szDevice);
-
-		auto screen = unew<Screen>(
-			hmonitor,
-			primary,
-			bounds,
-			workingArea,
-			deviceName
-		);
+		auto screen = unew<csharp::Screen>(hmonitor);
 
 		return screen;
 	}

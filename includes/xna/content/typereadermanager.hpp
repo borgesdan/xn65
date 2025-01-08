@@ -56,7 +56,7 @@ namespace xna {
 			if (existingInstance.has_value() && !(existingInstance.type() == typeid(T)))
 				throw std::runtime_error("ContentTypeReader<T>::Read: bad xbn, wrong type.");
 
-			auto existingInstance1 = XnaHelper::ReturnDefaultOrNull<T>();
+			auto existingInstance1 = misc::ReturnDefaultOrNull<T>();
 			auto obj = Read(input, existingInstance1);
 			return obj;
 		}

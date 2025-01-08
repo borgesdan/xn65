@@ -38,7 +38,7 @@ namespace xna {
 	bool DepthStencilState::Initialize()
 	{
 		if (!BaseGraphicsDevice || !BaseGraphicsDevice->Implementation->Device) {
-			Exception::Throw(Exception::UNABLE_TO_INITIALIZE);
+			throw csharp::InvalidOperationException();
 		}
 
 		if (Implementation->DepthStencil) {
@@ -50,7 +50,7 @@ namespace xna {
 			Implementation->DepthStencil.GetAddressOf());
 
 		if (FAILED(hr)) {
-			Exception::Throw(Exception::FAILED_TO_CREATE);
+			throw csharp::InvalidOperationException();
 		}
 
 		return true;
@@ -59,7 +59,7 @@ namespace xna {
 	bool DepthStencilState::Apply()
 	{
 		if (!BaseGraphicsDevice || !BaseGraphicsDevice->Implementation->Context) {
-			Exception::Throw(Exception::INVALID_OPERATION);
+			throw csharp::InvalidOperationException();
 		}
 
 		if (!Implementation->DepthStencil) {

@@ -22,11 +22,11 @@ namespace xna {
 		std::vector<Vector3> const& kerning,
 		std::optional<Char> const& defaultCharacter)
 	{
-		Exception::ThrowIfNull(texture, nameof(texture));
-		Exception::ThrowIfNull(texture->Implementation->ShaderResource.Get(), nameof(texture->Implementation->ShaderResource));
+		if (!texture || !texture->Implementation->ShaderResource.Get())
+			throw csharp::ArgumentNullException();		
 
 		if(cropping.size() != glyphs.size() || charMap.size() != glyphs.size() || (!kerning.empty() && kerning.size() != glyphs.size()))
-			Exception::Throw("Cropping, charmap and kerning (if not empty) must all be the same size.");
+			throw csharp::InvalidOperationException("Cropping, charmap and kerning (if not empty) must all be the same size.");
 
 		std::vector<DxGlyph> dxGlyps(glyphs.size());		
 
@@ -108,8 +108,8 @@ namespace xna {
 	}		
 
 	SpriteBatch::SpriteBatch(sptr<GraphicsDevice> const& device) : GraphicsResource(device) {
-		Exception::ThrowIfNull(device, nameof(device));
-		Exception::ThrowIfNull(device->Implementation->Context.Get(), nameof(device->Implementation->Context));
+		if (!device || !device->Implementation->Context.Get())
+			throw csharp::ArgumentNullException("device");		
 
 		Implementation = unew<SpriteBatchImplementation>();
 		Implementation->SpriteBatch = snew<DxSpriteBatch>(

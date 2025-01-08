@@ -52,8 +52,8 @@ namespace xna {
 			{
 				const auto elapsed = impl->_stepTimer.GetElapsedSeconds();
 				const auto total = impl->_stepTimer.GetTotalSeconds();
-				const auto elapsedTimeSpan = TimeSpan::FromSeconds(elapsed);
-				const auto totalTimeSpan = TimeSpan::FromSeconds(total);
+				const auto elapsedTimeSpan = csharp::TimeSpan::FromSeconds(elapsed);
+				const auto totalTimeSpan = csharp::TimeSpan::FromSeconds(total);
 				currentGameTime.ElapsedGameTime = elapsedTimeSpan;
 				currentGameTime.TotalGameTime = totalTimeSpan;
 				Update(currentGameTime);
@@ -70,7 +70,7 @@ namespace xna {
 
 		try {
 			if (!gameWindow->impl->Create()) {
-				Exception::Throw(Exception::FAILED_TO_CREATE);				
+				throw csharp::InvalidOperationException();				
 				return false;
 			}
 
@@ -85,8 +85,23 @@ namespace xna {
 			BeginRun();
 			return StartGameLoop();
 		}
-		catch (std::exception& e) {
-			MessageBox(nullptr, e.what(), "XN65", MB_OK);
+		catch (std::exception& e) {		
+			auto ex = dynamic_cast<csharp::Exception*>(&e);
+
+			std::string message;
+			
+			if (ex == nullptr) {
+				message = e.what();
+			} else {
+#if DEBUG || _DEBUG
+				message = ex->FullMessage();
+#else
+				message = ex->Message();
+#endif
+			}
+
+			MessageBox(nullptr, message.c_str(), "XN65", MB_OK);
+
 			return EXIT_FAILURE;
 		}		
 	}	
@@ -194,7 +209,7 @@ namespace xna {
 
 		Mouse::impl->_dxMouse->SetVisible(value);
 	}
-	void Game::TargetElapsedTime(TimeSpan const& value) {
+	void Game::TargetElapsedTime(csharp::TimeSpan const& value) {
 		if (!isFixedTimeStep)
 			return;
 

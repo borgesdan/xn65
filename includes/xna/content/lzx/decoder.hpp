@@ -2,7 +2,7 @@
 #define XNA_CONTENT_LZX_LZXDECODE_HPP
 
 #include "../../default.hpp"
-#include "../../csharp/stream.hpp"
+#include "csharp/io/stream.hpp"
 #include <algorithm>
 
 namespace xna {

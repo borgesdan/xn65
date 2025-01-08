@@ -49,7 +49,7 @@ namespace xna {
 			Context.GetAddressOf());
 
 		if FAILED(hr)
-			Exception::Throw(Exception::FAILED_TO_CREATE);
+			throw csharp::InvalidOperationException();
 	}
 
 	void GraphicsDeviceImplementation::Reset() {
@@ -113,13 +113,13 @@ namespace xna {
 		auto hr = CreateDXGIFactory1(__uuidof(IDXGIFactory1), (void**)&Implementation->Factory);
 
 		if FAILED(hr)
-			Exception::Throw(Exception::FAILED_TO_CREATE);
+			throw csharp::InvalidOperationException();
 
 		auto hwnd = reinterpret_cast<HWND>(presentationParameters->DeviceWindowHandle);
 		hr = Implementation->Factory->MakeWindowAssociation(hwnd, DXGI_MWA_NO_ALT_ENTER);
 
 		if (FAILED(hr))
-			Exception::Throw(Exception::FAILED_TO_MAKE_WINDOW_ASSOCIATION);
+			throw csharp::InvalidOperationException();
 
 		//
 		// Viewport
@@ -211,10 +211,10 @@ namespace xna {
 		switch (options)
 		{
 		case xna::ClearOptions::DepthBuffer:
-			Exception::Throw(Exception::NOT_IMPLEMENTED);
+			throw csharp::InvalidOperationException();
 			break;
 		case xna::ClearOptions::Stencil:
-			Exception::Throw(Exception::NOT_IMPLEMENTED);
+			throw csharp::InvalidOperationException();
 			break;
 		case xna::ClearOptions::Target:
 			Clear(color);

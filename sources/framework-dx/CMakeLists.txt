@@ -24,7 +24,7 @@ add_library (Xn65DX STATIC
 "init.cpp"
 "audioengine.cpp"
 "effect.cpp"
-"screen.cpp" 
+ 
 "gresource.cpp")
 
 if (CMAKE_VERSION VERSION_GREATER 3.12)

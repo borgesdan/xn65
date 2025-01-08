@@ -2,6 +2,7 @@
 //
 
 #include "xna-dx/framework.hpp"
+#include "csharp/io/binary.hpp"
 
 using namespace std;
 using namespace xna;
@@ -10,7 +11,7 @@ namespace xna {
 	class Game1 : public Game {
 	public:
 		Game1() : Game() {
-			Content()->RootDirectory("Content");
+			Content()->RootDirectory("Content");						
 		}
 
 		void Initialize() override {

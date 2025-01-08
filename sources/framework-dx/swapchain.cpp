@@ -45,7 +45,7 @@ namespace xna {
 
     bool SwapChain::Initialize() {
         if (!impl || !BaseGraphicsDevice || !BaseGraphicsDevice->Implementation->Device) {
-            Exception::Throw(Exception::UNABLE_TO_INITIALIZE);
+            throw csharp::InvalidOperationException();
         }
         
         const auto parameters = BaseGraphicsDevice->PresentParameters();

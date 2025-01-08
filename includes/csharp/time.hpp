@@ -1,14 +1,49 @@
-#ifndef XNA_CSHARP_TIMESPAN_HPP
-#define XNA_CSHARP_TIMESPAN_HPP
+#ifndef CSHARP_TIME_HPP
+#define CSHARP_TIME_HPP
 
-#include <limits>
 #include <cstdint>
+#include <limits>
 #include <cmath>
+#include "exception.hpp"
+#include "sr.hpp"
 
-namespace xna {
-	//A port of the System.TimeSpan
-	//TimeSpan represents a duration of time.A TimeSpan can be negative or positive.
+namespace csharp {
 	struct TimeSpan {
+		constexpr TimeSpan() = default;
+		constexpr TimeSpan(int64_t ticks) : _ticks(ticks) {}
+
+		constexpr TimeSpan(int32_t hours, int32_t minutes, int32_t seconds)
+		{
+			_ticks = TimeToTicks(hours, minutes, seconds);
+		}
+
+		constexpr TimeSpan(int32_t days, int32_t hours, int32_t minutes, int32_t seconds)
+			: TimeSpan(days, hours, minutes, seconds, 0)
+		{
+		}
+
+		constexpr TimeSpan(int32_t days, int32_t hours, int32_t minutes, int32_t seconds, int32_t milliseconds)
+			: TimeSpan(days, hours, minutes, seconds, milliseconds, 0)
+		{
+		}
+
+		constexpr TimeSpan(int32_t days, int32_t hours, int32_t minutes, int32_t seconds, int32_t milliseconds, int32_t microseconds)
+		{
+			const auto totalMicroseconds = (days * MicrosecondsPerDay)
+				+ (hours * MicrosecondsPerHour)
+				+ (minutes * MicrosecondsPerMinute)
+				+ (seconds * MicrosecondsPerSecond)
+				+ (milliseconds * MicrosecondsPerMillisecond)
+				+ microseconds;
+
+			if ((totalMicroseconds > MaxMicroseconds) || (totalMicroseconds < MinMicroseconds))
+			{
+				throw ArgumentOutOfRangeException(SR::Overflow_TimeSpanTooLong);
+			}
+			_ticks = totalMicroseconds * TicksPerMicrosecond;
+		}
+
+
 		static constexpr int64_t NanosecondsPerTick = 100;
 		static constexpr int64_t TicksPerMicrosecond = 10;
 		static constexpr int64_t TicksPerMillisecond = TicksPerMicrosecond * 1000;
@@ -30,7 +65,7 @@ namespace xna {
 		static constexpr int64_t SecondsPerDay = TicksPerDay / TicksPerSecond;
 		static constexpr int64_t MinutesPerHour = TicksPerHour / TicksPerMinute;
 		static constexpr int64_t MinutesPerDay = TicksPerDay / TicksPerMinute;
-		static constexpr int64_t HoursPerDay = TicksPerDay / TicksPerHour;
+		static constexpr int32_t HoursPerDay = static_cast<int32_t>(TicksPerDay / TicksPerHour);
 		static constexpr int64_t MinTicks = (std::numeric_limits<int64_t>::min)();
 		static constexpr int64_t MaxTicks = (std::numeric_limits<int64_t>::max)();
 		static constexpr int64_t MinMicroseconds = MinTicks / TicksPerMicrosecond;
@@ -46,19 +81,10 @@ namespace xna {
 		static constexpr int64_t MinDays = MinTicks / TicksPerDay;
 		static constexpr int64_t MaxDays = MaxTicks / TicksPerDay;
 		static constexpr int64_t TicksPerTenthSecond = TicksPerMillisecond * 100;
-		
-		static constexpr TimeSpan Zero() { return TimeSpan(); }
+
+		static constexpr TimeSpan Zero() { return TimeSpan(0); }
 		static constexpr TimeSpan MaxValue() { return TimeSpan(MaxTicks); }
 		static constexpr TimeSpan MinValue() { return TimeSpan(MinTicks); }
-
-		constexpr TimeSpan() = default;
-		constexpr TimeSpan(int64_t ticks) : _ticks(ticks) {}
-		constexpr TimeSpan(int32_t hours, int32_t minutes, int32_t seconds) {
-			_ticks = TimeToTicks(hours, minutes, seconds);
-		}
-		constexpr TimeSpan(int32_t days, int32_t hours, int32_t minutes, int32_t seconds, int32_t milliseconds, int32_t microseconds = 0) {
-			_ticks = TimeToTicks(days, hours, minutes, seconds, milliseconds, microseconds);
-		}
 
 		constexpr int64_t Ticks() const { return _ticks; }
 		constexpr int32_t Days() const { return static_cast<int32_t>(_ticks / TicksPerDay); }
@@ -71,14 +97,17 @@ namespace xna {
 		constexpr double TotalDays() const { return static_cast<double>(_ticks) / TicksPerDay; }
 		constexpr double TotalHours() const { return static_cast<double>(_ticks) / TicksPerHour; }
 
-		constexpr double TotalMilliseconds() const {
-			double temp = static_cast<double>(_ticks) / TicksPerMillisecond;
+		constexpr double TotalMilliseconds() const
+		{
+			const double temp = static_cast<double>(_ticks) / TicksPerMillisecond;
 
-			if (temp > MaxMilliseconds) {
+			if (temp > MaxMilliseconds)
+			{
 				return MaxMilliseconds;
 			}
 
-			if (temp < MinMilliseconds) {
+			if (temp < MinMilliseconds)
+			{
 				return MinMilliseconds;
 			}
 			return temp;
@@ -89,252 +118,202 @@ namespace xna {
 		constexpr double TotalMinutes() const { return static_cast<double>(_ticks) / TicksPerMinute; }
 		constexpr double TotalSeconds() const { return static_cast<double>(_ticks) / TicksPerSecond; }
 
-		constexpr TimeSpan Add(TimeSpan const& ts) const {
-			int64_t result = _ticks + ts._ticks;
-			int64_t t1Sign = _ticks >> 63;
+		constexpr TimeSpan Add(TimeSpan const& ts) const { return *this + ts; }
 
-			if ((t1Sign == (ts._ticks >> 63)) && (t1Sign != (result >> 63))) {
-				return TimeSpan::Zero();
-				//exception
-			}
-
-			return result;
-		}
-
-		static TimeSpan FromDays(double value) {
+		static constexpr TimeSpan FromDays(double value) {
 			return Interval(value, TicksPerDay);
 		}
 
 		constexpr TimeSpan Duration() const {
-			if (_ticks == MinTicks) {
-				return TimeSpan::Zero();
+			if (_ticks == MinTicks)
+			{
+				throw OverflowException(SR::Overflow_Duration);
 			}
 
 			return TimeSpan(_ticks >= 0 ? _ticks : -_ticks);
 		}
 
-		static constexpr TimeSpan FromUnits(int64_t units, int64_t ticksPerUnit, int64_t minUnits, int64_t maxUnits) {
-			if (units > maxUnits || units < minUnits) {
-				return TimeSpan::Zero();
-			}
+		constexpr static int64_t TimeToTicks(int32_t hour, int32_t minute, int32_t second) {
+			const auto totalSeconds = (hour * SecondsPerHour)
+				+ (minute * SecondsPerMinute)
+				+ second;
 
-			return TimeSpan::FromTicks(units * ticksPerUnit);
+			if ((totalSeconds > MaxSeconds) || (totalSeconds < MinSeconds))
+			{
+				throw ArgumentOutOfRangeException(SR::Overflow_TimeSpanTooLong);
+			}
+			return totalSeconds * TicksPerSecond;
 		}
 
 		static constexpr TimeSpan FromDays(int32_t days) {
 			return FromUnits(days, TicksPerDay, MinDays, MaxDays);
 		}
 
-		//TODO: Not implemented.
-		//static constexpr TimeSpan FromDays(int32_t days, int32_t hours = 0, int64_t minutes = 0, int64_t seconds = 0, int64_t milliseconds = 0, int64_t microseconds = 0);
-
 		static constexpr TimeSpan FromHours(int32_t hours) {
 			return FromUnits(hours, TicksPerHour, MinHours, MaxHours);
 		}
 
-		//TODO: Not implemented.
-		//static constexpr TimeSpan FromHours(int32_t hours, int64_t minutes = 0, int64_t seconds = 0, int64_t milliseconds = 0, int64_t microseconds = 0);
-
 		static constexpr TimeSpan FromMinutes(int64_t minutes) {
 			return FromUnits(minutes, TicksPerMinute, MinMinutes, MaxMinutes);
 		}
-
-		//TODO: Not implemented.
-		//static constexpr TimeSpan FromMinutes(int64_t minutes, int64_t seconds = 0, int64_t milliseconds = 0, int64_t microseconds = 0);
-		static constexpr TimeSpan FromSeconds(int seconds) {
-			return FromSeconds(static_cast<int64_t>(seconds));
-		}
-
+		
 		static constexpr TimeSpan FromSeconds(int64_t seconds) {
 			return FromUnits(seconds, TicksPerSecond, MinSeconds, MaxSeconds);
 		}
-
-		//TODO: Not implemented.
-		//static constexpr TimeSpan FromSeconds(int64_t seconds, int64_t milliseconds = 0, int64_t microseconds = 0);
-
-		//TODO: Not implemented.
-		//static constexpr TimeSpan FromMilliseconds(int64_t milliseconds, int64_t microseconds = 0);
-
+		
 		static constexpr TimeSpan FromMicroseconds(int64_t microseconds) {
 			return FromUnits(microseconds, TicksPerMicrosecond, MinMicroseconds, MaxMicroseconds);
 		}
-
-		static TimeSpan FromHours(double value) {
+		
+		static constexpr TimeSpan FromHours(double  value) {
 			return Interval(value, TicksPerHour);
 		}
 
-		static constexpr int64_t TimeToTicks(int32_t hour, int32_t minute, int32_t second) {
-			int64_t totalSeconds =
-				(hour * SecondsPerHour)
-				+ (minute * SecondsPerMinute)
-				+ second;
-
-			//exception
-			if (totalSeconds > MaxSeconds) {
-				return MaxValue()._ticks;
-			}
-			else if (totalSeconds < MinSeconds) {
-				return MinValue()._ticks;
-			}
-
-			return totalSeconds * TicksPerSecond;
-		}
-
-		static TimeSpan FromMilliseconds(double value) {
+		static constexpr TimeSpan FromMilliseconds(double value) {
 			return Interval(value, TicksPerMillisecond);
 		}
 
-		static TimeSpan FromMicroseconds(double value) {
+		static constexpr TimeSpan FromMicroseconds(double value) {
 			return Interval(value, TicksPerMicrosecond);
 		}
-
-		static TimeSpan FromMinutes(double value) {
+		
+		static constexpr TimeSpan FromMinutes(double value) {
 			return Interval(value, TicksPerMinute);
 		}
 
 		constexpr TimeSpan Negate() const {
-			if (_ticks == MinTicks) {
-				return MinTicks;
-			}
-
-			return -_ticks;
+			return -(*this);
 		}
 
-		static TimeSpan FromSeconds(double value) {
+		static constexpr TimeSpan FromSeconds(double value) {
 			return Interval(value, TicksPerSecond);
 		}
 
 		constexpr TimeSpan Subtract(TimeSpan const& ts) const {
-			int64_t result = _ticks - ts._ticks;
-			int64_t t1Sign = _ticks >> 63;
-
-			if ((t1Sign != (ts._ticks >> 63)) && (t1Sign != (result >> 63))) {
-				return TimeSpan::Zero();
-				//exception
-			}
-
-			return result;
+			return *this - ts;
 		}
 
 		TimeSpan Multiply(double factor) const {
-			if (isnan(factor)) {
-				return TimeSpan::Zero();
-				//exception
-			}
-
-			const auto ticks = std::round(_ticks * factor);
-			return IntervalFromDoubleTicks(ticks);
+			return *this * factor;
 		}
-
+		
 		TimeSpan Divide(double divisor) const {
-			if (isnan(divisor)) {
-				return TimeSpan::Zero();
-				//exception
-			}
-
-			const auto ticks = std::round(_ticks / divisor);
-			return IntervalFromDoubleTicks(ticks);
+			return *this / divisor;
 		}
 
-		constexpr double Divide(TimeSpan const& ts) const {
-			return  _ticks / static_cast<double>(ts._ticks);
+		double Divide(TimeSpan const& ts) const {
+			return *this / ts;
 		}
 
 		static constexpr TimeSpan FromTicks(int64_t value) {
 			return TimeSpan(value);
 		}
 
-		static constexpr int64_t TimeToTicks(int32_t days, int32_t hours, int32_t minutes, int32_t seconds, int32_t milliseconds, int32_t microseconds) {
-			int64_t totalMicroseconds =
-				(days * MicrosecondsPerDay)
-				+ (hours * MicrosecondsPerHour)
-				+ (minutes * MicrosecondsPerMinute)
-				+ (seconds * MicrosecondsPerSecond)
-				+ (milliseconds * MicrosecondsPerMillisecond)
-				+ microseconds;
-
-			//exception
-			if (totalMicroseconds > MaxMicroseconds) {
-				return MaxValue()._ticks;
-			}
-			else if (totalMicroseconds < MinMicroseconds) {
-				return MinValue()._ticks;
+		constexpr TimeSpan operator-() const {
+			if (_ticks == MinTicks)
+			{
+				throw OverflowException(SR::Overflow_NegateTwosCompNum);
 			}
 
-			return totalMicroseconds * TicksPerMicrosecond;
+			return TimeSpan(_ticks);
+		}
+
+		friend constexpr TimeSpan operator-(TimeSpan const& t1, TimeSpan const t2) {
+			const auto result = t1._ticks - t2._ticks;
+			const auto t1Sign = t1._ticks >> 63;
+
+			if ((t1Sign != (t2._ticks >> 63)) && (t1Sign != (result >> 63)))
+			{				
+				throw OverflowException(SR::Overflow_TimeSpanTooLong);
+			}
+
+			return TimeSpan(result);
+		}
+
+		constexpr TimeSpan operator+() const {
+			return *this;
+		}
+
+		friend constexpr TimeSpan operator+(TimeSpan const& t1, TimeSpan const t2) {
+			auto result = t1._ticks + t2._ticks;
+			auto t1Sign = t1._ticks >> 63;
+
+			if ((t1Sign == (t2._ticks >> 63)) && (t1Sign != (result >> 63)))
+			{
+				throw OverflowException(SR::Overflow_TimeSpanTooLong);
+			}
+			return TimeSpan(result);
+		}
+
+		friend TimeSpan operator*(TimeSpan const& timeSpan, double factor) {
+			const auto ticks = std::round(timeSpan.Ticks() * factor);
+			return IntervalFromDoubleTicks(ticks);
+		}
+
+		friend TimeSpan operator*(double factor, TimeSpan const& timeSpan) {
+			return timeSpan * factor;
+		}
+
+		friend TimeSpan operator/(TimeSpan const& timeSpan, double divisor) {
+			const auto ticks = std::round(timeSpan.Ticks() / divisor);
+			return IntervalFromDoubleTicks(ticks);
+		}
+
+		friend double operator/(TimeSpan const& t1, TimeSpan const t2) {
+			return t1.Ticks() / static_cast<double>(t2.Ticks());
 		}
 
 		constexpr bool operator==(TimeSpan const& other) const {
 			return _ticks == other._ticks;
 		}
 
-		constexpr TimeSpan operator-() const {
-			return Negate();
+		constexpr bool operator<(TimeSpan const& other) const {
+			return _ticks < other._ticks;
 		}
 
-		friend constexpr TimeSpan operator-(TimeSpan const& a, TimeSpan const& b) {
-			return a.Subtract(b);
+		constexpr bool operator<=(TimeSpan const& other) const {
+			return _ticks <= other._ticks;
 		}
 
-		friend constexpr TimeSpan operator+(TimeSpan const& a, TimeSpan const& b) {
-			return a.Add(b);
+		constexpr bool operator>(TimeSpan const& other) const {
+			return _ticks > other._ticks;
 		}
 
-		friend TimeSpan operator*(TimeSpan const& a, double factor) {
-			return a.Multiply(factor);
-		}
-
-		friend TimeSpan operator*(double factor, TimeSpan const& b) {
-			return b.Multiply(factor);
-		}		
-
-		friend double operator/(TimeSpan const& a, TimeSpan const& b) {
-			return a.Divide(b);
-		}
-
-		friend bool operator<(TimeSpan const& a, TimeSpan const& b) {
-			return a._ticks < b._ticks;
-		}
-
-		friend bool operator<=(TimeSpan const& a, TimeSpan const& b) {
-			return a._ticks <= b._ticks;
-		}
-
-		friend bool operator>(TimeSpan const& a, TimeSpan const& b) {
-			return a._ticks > b._ticks;
-		}
-
-		friend bool operator>=(TimeSpan const& a, TimeSpan const& b) {
-			return a._ticks >= b._ticks;
+		constexpr bool operator>=(TimeSpan const& other) const {
+			return _ticks >= other._ticks;
 		}
 
 	private:
-		int64_t _ticks{ 0 };
 
-		static TimeSpan Interval(double value, double scale) {
-			if (isnan(value)) {
-				//exception
-				return TimeSpan::Zero();
+		static constexpr TimeSpan FromUnits(int64_t units, int64_t ticksPerUnit, int64_t minUnits, int64_t maxUnits) {
+			if (units > maxUnits || units < minUnits)
+			{
+				throw ArgumentOutOfRangeException(SR::Overflow_TimeSpanTooLong);
 			}
 
+			return TimeSpan::FromTicks(units * ticksPerUnit);
+		}
+
+		static constexpr TimeSpan Interval(double value, double scale) {
 			return IntervalFromDoubleTicks(value * scale);
 		}
 
 		static constexpr TimeSpan IntervalFromDoubleTicks(double ticks) {
-			if ((ticks > MaxTicks) || (ticks < MinTicks) || isnan(ticks)) {
-				//exception
-				return TimeSpan::Zero();
+			if ((ticks > MaxTicks) || (ticks < MinTicks))
+			{
+				throw OverflowException(SR::Overflow_TimeSpanTooLong);
 			}
 
-			if (ticks == MaxTicks) {
+			if (ticks == MaxTicks)
+			{
 				return MaxValue();
 			}
 
 			return TimeSpan(static_cast<int64_t>(ticks));
 		}
 
-		//TODO: Not implemented.
-		//static TimeSpan FromMicroseconds(__int128 microseconds);
+	private:
+		int64_t _ticks{ 0 };
 	};
 }
 

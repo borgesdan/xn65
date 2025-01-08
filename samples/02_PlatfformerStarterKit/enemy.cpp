@@ -65,7 +65,7 @@ namespace PlatformerStarterKit {
 	{
 		if (!level->Player()->IsAlive() ||
 			level->ReachedExit() ||
-			level->TimeRemaining() == xna::TimeSpan::Zero() ||
+			level->TimeRemaining() == csharp::TimeSpan::Zero() ||
 			waitTime > 0) {
 			sprite.PlayAnimation(idleAnimation);
 		}

@@ -123,14 +123,7 @@ namespace xna {
         DiscardContents,
         PreserveContents,
         PlatformContents
-    };    
-
-    enum class SpriteEffects {
-        None = 0,
-        FlipHorizontally = 1,
-        FlipVertically = 2,
-        Both = FlipHorizontally | FlipVertically
-    };    
+    };        
 
     constexpr int SURFACE_FORMAT_COUNT = 19;
 }

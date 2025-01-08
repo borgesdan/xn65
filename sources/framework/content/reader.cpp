@@ -3,14 +3,14 @@
 #include "xna/content/typereadermanager.hpp"
 
 namespace xna {
-	sptr<ContentReader> ContentReader::Create(sptr<xna::ContentManager> const& contentManager, sptr<Stream>& input, String const& assetName)
+	std::shared_ptr<ContentReader> ContentReader::Create(std::shared_ptr<xna::ContentManager> const& contentManager, std::shared_ptr<csharp::Stream>& input, String const& assetName)
 	{
 		Int graphicsProfile = 0;
 		input = ContentReader::PrepareStream(input, assetName, graphicsProfile);
 		return std::shared_ptr<ContentReader>(new ContentReader(contentManager, input, assetName, graphicsProfile));
 	}
 
-	sptr<ContentManager> ContentReader::ContentManager() const {
+	std::shared_ptr<ContentManager> ContentReader::ContentManager() const {
 		return _contentManager;
 	}
 
@@ -101,7 +101,7 @@ namespace xna {
 		Int num = 0;
 		for (size_t index = 0; index < size; index += num)
 		{			
-			num = Read(byteBuffer, index, size - index);
+			num = Read(byteBuffer.data(), byteBuffer.size(), index, size - index);
 			if (num == 0) {
 				throw std::runtime_error("ContentReader::ReadByteBuffer: Bad xbn.");
 			}
@@ -110,7 +110,7 @@ namespace xna {
 		return byteBuffer;
 	}
 
-	sptr<Stream> ContentReader::PrepareStream(sptr<Stream>& input, String const& assetName, Int& graphicsProfile)
+	std::shared_ptr<csharp::Stream> ContentReader::PrepareStream(std::shared_ptr<csharp::Stream>& input, String const& assetName, Int& graphicsProfile)
 	{
 		BinaryReader binaryReader = BinaryReader(input);
 

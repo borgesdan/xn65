@@ -1,7 +1,7 @@
 #ifndef XNA_GRAPHICS_TEXTURE_HPP
 #define XNA_GRAPHICS_TEXTURE_HPP
 
-#include "../csharp/stream.hpp"
+#include "csharp/io/stream.hpp"
 #include "gresource.hpp"
 #include "shared.hpp"
 #include <cstdint>
@@ -51,11 +51,11 @@ namespace xna {
 		void SetData(int32_t level, Rectangle* rect, std::vector<uint8_t> const& data, size_t startIndex, size_t elementCount);
 		
 		//Loads texture data from a stream. 
-		static P_Texture2D FromStream(GraphicsDevice& device, std::shared_ptr<Stream> const& stream);
+		static std::shared_ptr<Texture2D> FromStream(GraphicsDevice& device, csharp::Stream& stream);
 		//Loads texture data from a file. 
-		static P_Texture2D FromStream(GraphicsDevice& device, std::string const& fileName);
+		static std::shared_ptr<Texture2D> FromStream(GraphicsDevice& device, std::string const& fileName);
 		//Loads texture data from a data. 
-		static P_Texture2D FromStream(GraphicsDevice& device, std::vector<uint8_t> const& data);	
+		static std::shared_ptr<Texture2D> FromStream(GraphicsDevice& device, std::vector<uint8_t> const& data);	
 		
 		void Initialize();
 
