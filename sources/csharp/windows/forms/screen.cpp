@@ -8,21 +8,27 @@
 namespace csharp {
 	int Screen::s_primaryMonitor = 65537;
 
+	static MONITORINFOEX getMonitorInfo(intptr_t monitor) {
+		MONITORINFOEX info{};
+		info.cbSize = sizeof(MONITORINFOEX);
+		auto hmonitor = reinterpret_cast<HMONITOR>(monitor);
+		GetMonitorInfo(hmonitor, &info);
+		return info;
+	}
+
 	Screen::Screen(intptr_t monitor, intptr_t hdc) {
 		HDC screenDC = reinterpret_cast<HDC>(hdc);
 
 		if (!SystemInformation::MultiMonitorSupport() || monitor == s_primaryMonitor) {
 			_bounds = SystemInformation::VirtualScreen();
 			_primary = true;
-			_deviceName = "DISPLAY";
+			//_deviceName = "DISPLAY";			
+			MONITORINFOEX info = getMonitorInfo(monitor);
+			_deviceName = std::string(info.szDevice);
 		}
 		else {
-			MONITORINFOEX info{};
-			info.cbSize = sizeof(MONITORINFOEX);
-
-			auto hmonitor = reinterpret_cast<HMONITOR>(monitor);
-			GetMonitorInfo(hmonitor, &info);
-
+			MONITORINFOEX info = getMonitorInfo(monitor);
+			
 			_bounds = Rectangle::FromLTRB(
 				info.rcMonitor.left,
 				info.rcMonitor.top,

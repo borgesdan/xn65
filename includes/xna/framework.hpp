@@ -20,7 +20,6 @@
 #include "csharp/buffer.hpp"
 #include "csharp/service.hpp"
 #include "csharp/type.hpp"
-#include "csharp/screen.hpp"
 #include "csharp/eventhandler.hpp"
 #include "csharp/exception.hpp"
 #include "game/component.hpp"

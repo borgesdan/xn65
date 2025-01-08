@@ -3,7 +3,7 @@
 
 #include "../default.hpp"
 #include "../common/numerics.hpp"
-#include "../csharp/screen.hpp"
+#include "csharp/windows/forms/screen.hpp"
 
 namespace xna {
 	class GameWindow {
@@ -36,8 +36,8 @@ namespace xna {
 		//Gets the device name of the screen the window is currently in.
 		String ScreenDeviceName() const;
 
-		static uptr<Screen> ScreenFromAdapter(GraphicsAdapter const& adapter);
-		static uptr<Screen> ScreenFromHandle(intptr_t windowHandle);
+		static uptr<csharp::Screen> ScreenFromAdapter(GraphicsAdapter const& adapter);
+		static uptr<csharp::Screen> ScreenFromHandle(intptr_t windowHandle);
 		bool IsWindowMinimized() const;
 
 		inline static constexpr Int DefaultClientWidth = 800;
