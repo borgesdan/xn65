@@ -8,6 +8,7 @@ namespace csharp {
 		static bool MultiMonitorSupport();
 		static Rectangle VirtualScreen();
 		static Size PrimaryMonitorSize();
+		static Rectangle WorkingArea();
 
 	private:
 		static Size GetSize(int systemMetricsIndexX, int systemMetricsIndexY);

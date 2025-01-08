@@ -235,8 +235,8 @@ namespace csharp {
 		}
 
 		friend constexpr TimeSpan operator+(TimeSpan const& t1, TimeSpan const t2) {
-			long result = t1._ticks + t2._ticks;
-			long t1Sign = t1._ticks >> 63;
+			auto result = t1._ticks + t2._ticks;
+			auto t1Sign = t1._ticks >> 63;
 
 			if ((t1Sign == (t2._ticks >> 63)) && (t1Sign != (result >> 63)))
 			{

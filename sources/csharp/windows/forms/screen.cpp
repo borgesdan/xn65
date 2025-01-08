@@ -30,7 +30,7 @@ namespace csharp {
 				info.rcMonitor.bottom);
 
 			_primary = ((info.dwFlags & MONITORINFOF_PRIMARY) != 0);
-			
+
 			auto _deviceName = info.szDevice;
 
 			if (hdc == 0) {
@@ -56,7 +56,7 @@ namespace csharp {
 	) {
 		auto screens = (std::vector<std::unique_ptr<Screen>>*)lparam;
 		auto screen = std::make_unique<Screen>(
-			reinterpret_cast<intptr_t>(hmonitor), 
+			reinterpret_cast<intptr_t>(hmonitor),
 			reinterpret_cast<intptr_t>(hdc));
 
 		screens->push_back(std::move(screen));
@@ -102,6 +102,80 @@ namespace csharp {
 			return std::make_unique<Screen>(s_primaryMonitor, 0);
 		}
 	}
+
+	Rectangle Screen::WorkingArea() {
+		if (_currentDesktopChangedCount != DesktopChangedCount()) {
+			if (!SystemInformation::MultiMonitorSupport() || _hmonitor == s_primaryMonitor) {
+				_workingArea = SystemInformation::WorkingArea();
+			}
+			else {
+				MONITORINFOEXW info{};
+				info.cbSize = sizeof(MONITORINFOEXW);
+
+				auto hmonitor = reinterpret_cast<HMONITOR>(_hmonitor);
+				auto monitorInfo = reinterpret_cast<MONITORINFO*>(&info);
+				GetMonitorInfo(hmonitor, monitorInfo);
+				_workingArea = Rectangle::FromLTRB(
+					info.rcWork.left,
+					info.rcWork.top,
+					info.rcWork.right,
+					info.rcWork.top);
+			}
+		}
+
+		return _workingArea;
+	}
+
+	int32_t Screen::DesktopChangedCount() {
+		if (s_desktopChangedCount == -1) {
+			s_desktopChangedCount = 0;
+		}
+
+		return s_desktopChangedCount;
+	}
+
+	std::unique_ptr<Screen> Screen::FromPoint(Point const& point) {
+		if (SystemInformation::MultiMonitorSupport())
+		{
+			POINT p{};
+			p.x = static_cast<LONG>(point.X);
+			p.y = static_cast<LONG>(point.Y);
+			auto monitor = MonitorFromPoint(p, MONITOR_DEFAULTTONEAREST);
+			auto i_monitor = reinterpret_cast<intptr_t>(monitor);
+			return std::make_unique<Screen>(i_monitor);
+		}
+
+		return std::make_unique<Screen>(s_primaryMonitor);
+	}
+
+	std::unique_ptr<Screen> Screen::FromRectangle(Rectangle const& rectangle) {
+		if (SystemInformation::MultiMonitorSupport())
+		{
+			RECT r{};
+			r.left = static_cast<LONG>(rectangle.Left());
+			r.right = static_cast<LONG>(rectangle.Right());
+			r.top = static_cast<LONG>(rectangle.Top());
+			r.bottom = static_cast<LONG>(rectangle.Bottom());
+
+			auto monitor = MonitorFromRect(&r, MONITOR_DEFAULTTONEAREST);
+			auto i_monitor = reinterpret_cast<intptr_t>(monitor);
+			return std::make_unique<Screen>(i_monitor);
+		}
+
+		return std::make_unique<Screen>(s_primaryMonitor);
+	}
+
+	std::unique_ptr<Screen> Screen::FromHandle(intptr_t hwnd) {
+		if (SystemInformation::MultiMonitorSupport())
+		{
+			auto handle = reinterpret_cast<HWND>(hwnd);
+			auto monitor = MonitorFromWindow(handle, MONITOR_DEFAULTTONEAREST);
+			auto i_monitor = reinterpret_cast<intptr_t>(monitor);
+			return std::make_unique<Screen>(i_monitor);
+		}
+
+		return std::make_unique<Screen>(s_primaryMonitor);
+	}	
 }
 
 #endif

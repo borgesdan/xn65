@@ -301,7 +301,7 @@ namespace csharp {
 		virtual void Write(std::string const& value) {
 			Write7BitEncodedInt(static_cast<int64_t>(value.size()));
 			auto bytes = reinterpret_cast<const uint8_t*>(value.data());
-			OutStream->Write(bytes, value.size());
+			OutStream->Write(bytes, static_cast<int32_t>(value.size()));
 		}		
 
 		void Write7BitEncodedInt(int32_t value);

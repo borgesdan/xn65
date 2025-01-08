@@ -36,6 +36,18 @@ namespace csharp {
 		const auto y = GetSystemMetrics(systemMetricsIndexY);
 		return Size(x, y);
 	}
+
+	Rectangle SystemInformation::WorkingArea() {
+		RECT workingArea{};
+		SystemParametersInfo(SPI_GETWORKAREA, NULL, &workingArea, NULL);
+		Rectangle rect = Rectangle::FromLTRB(
+			workingArea.left,
+			workingArea.top,
+			workingArea.right,
+			workingArea.bottom);
+
+		return rect;
+	}
 }
 
 #endif

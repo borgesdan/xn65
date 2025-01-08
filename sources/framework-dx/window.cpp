@@ -1,4 +1,5 @@
 #include "xna-dx/framework.hpp"
+#include "csharp/windows/forms/screen.hpp"
 
 namespace xna {
 	GameWindow::GameWindow() {
