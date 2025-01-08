@@ -11,7 +11,7 @@ namespace xna {
 	class Game1 : public Game {
 	public:
 		Game1() : Game() {
-			Content()->RootDirectory("Content");			
+			Content()->RootDirectory("Content");						
 		}
 
 		void Initialize() override {
