@@ -15,7 +15,7 @@ namespace misc {
 	std::shared_ptr<TBASE> reinterpret_make_shared(_Types&&... _Args) {
 		auto derived = std::make_shared<TDERIVED>(std::forward<_Types>(_Args)...);
 		return reinterpret_pointer_cast<TBASE>(derived);
-	}
+	}	
 
 	//
 	// Smart Pointer Comparator

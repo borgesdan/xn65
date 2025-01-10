@@ -65,6 +65,7 @@ namespace xna {
 		auto type = std::make_shared<Type>();
 		type->fullName = typeid(T).name();
 
+		//an integral type or a floating-point type
 		if (std::is_arithmetic<T>::value) {									
 			type->isPrimitive = true;
 			type->isValueType = true;			
