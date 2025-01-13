@@ -21,14 +21,26 @@ namespace csharp {
 		constexpr bool IsClass() const { return isClass; }
 		constexpr bool IsEnum() const { return isEnum; }
 		constexpr bool IsPrimitive() const { return isPrimitive; }
-		constexpr bool IsValueType() const { return isValueType; }
+		constexpr bool IsValueType() const { return isValueType; }		
 
-		using value_type = void;
+		constexpr size_t GetHashCode() const {
+			return hashCode;
+		}
+
+	public:
+		constexpr Type() = default;
 
 	private:
-		Type() = default;
+		enum class TypeFlags {
+			Interface = 1,
+			Array = 2,
+			Pointer = 4,
+			Class = 8,
+			Enum = 16,
+			Primitive = 32,
+			ValueType = 64
+		};
 
-	private:
 		std::string ns;
 		std::string fullname;
 		std::string name;
@@ -42,61 +54,89 @@ namespace csharp {
 		bool isPrimitive{ false };
 		bool isValueType{ false };		
 
+		size_t hashCode{ 0 };
+
 	public:
 		template <class T>
 		friend std::unique_ptr<Type> typeof();
 
 		template <class T>
-		friend std::unique_ptr<Type> GetType(T value);
+		friend constexpr void typeof(Type& type);
+
+		template <class T>
+		friend std::unique_ptr<Type> GetType(T const& value);
+
+		template <class T>
+		friend constexpr void GetType(T const& value, Type& type);
+
+		constexpr void InternalGenerateHashCode() {
+			size_t seed = 0;
+			misc::HashCombine(seed, fullname);
+
+			hashCode = seed;
+		}
 
 	private:
 		template <class T>
-		static std::unique_ptr<Type> FromTemplate();
+		static constexpr void FromTemplate(Type& type);
 	};	
 
 	template <class T>
 	inline std::unique_ptr<Type> typeof() {
-		return Type::FromTemplate<T>();
+		Type t;
+		Type::FromTemplate<T>(t);
+
+		return std::make_unique<Type>(t);
 	}
 
 	template <class T>
-	inline std::unique_ptr<Type> GetType(T value) {
+	constexpr void typeof(Type& t) {
+		Type::FromTemplate<T>(t);
+	}
+
+	template <class T>
+	inline std::unique_ptr<Type> GetType(T const& value) {
 		return typeof<T>();
 	}
 
 	template <class T>
-	std::unique_ptr<Type> Type::FromTemplate() {
-		std::unique_ptr<Type> type = std::unique_ptr<Type>(new Type());
+	constexpr void GetType(T const& value, Type& type) {
+		typeof<T>(type);
+	}
+
+	template <class T>
+	constexpr void Type::FromTemplate(Type& type) {
+		type = Type();
 		std::string fullname = typeid(T).name();
-		type->fullname = fullname;
+		type.fullname = fullname;
 
 		//An integral type or a floating-point type
 		if constexpr (std::is_arithmetic<T>::value) {
-			type->isPrimitive = true;
-			type->isValueType = true;
+			type.isPrimitive = true;
+			type.isValueType = true;
 		}
 		//checks whether T is an enumeration type.
 		else if constexpr (std::is_enum<T>::value) {
-			type->isValueType = true;
-			type->isEnum = true;			
+			type.isValueType = true;
+			type.isEnum = true;			
 		}
 		//Checks whether T is a pointer to object or function (including pointer to void, but excluding pointer to member)
 		//or a cv-qualified version thereof.
 		else if constexpr (std::is_pointer<T>::value || misc::IsSmartPointer<T>()) {
-			type->isPointer = true;			
+			type.isPointer = true;			
 		}
 		//Checks whether T is a non-union class type. 
 		else if constexpr (std::is_class<T>::value) {
-			type->isClass = true;			
+			type.isClass = true;			
 		}
 		else if constexpr (std::is_abstract<T>::value) {
-			type->isInterface = true;			
+			type.isInterface = true;			
 		}
 		else if constexpr (std::is_array<T>::value) {
-			type->isArray = true;			
+			type.isArray = true;			
 		}
 
-		return std::move(type);
+		type.InternalGenerateHashCode();
 	}
 }
 
