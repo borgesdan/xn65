@@ -10,9 +10,39 @@
 #include <source_location>
 
 namespace misc {
+	template <typename TENUM>
+	constexpr void SetFlag(int& current, TENUM flag) {
+		current |= static_cast<int>(flag);
+	}
+
+	template <typename TENUM>
+	constexpr void SetFlag(int& current, TENUM flag1, TENUM flag2) {
+		current |= static_cast<int>(flag1) | static_cast<int>(flag2);
+	}
+
+	template <typename TENUM>
+	constexpr void UnsetFlag(int& current, TENUM flag) {
+		current &= ~static_cast<int>(flag);
+	}
+
+	template <typename TENUM>
+	constexpr void FlipFlag(int& current, TENUM flag) {
+		current ^= static_cast<int>(flag);
+	}
+
+	template <typename TENUM>
+	constexpr bool HasFlag(int const& current, TENUM flag) {
+		return (current & static_cast<int>(flag)) == static_cast<int>(flag);
+	}
+
+	template <typename TENUM>
+	constexpr bool HasAnyFlag(int const& current, TENUM flag) {
+		return (current & static_cast<int>(flag)) != 0;
+	}
+
 	//Performs a std::make_shared<TDERIVED> and converts to base class with reinterpret_pointer_cast<TBASE>
 	template <typename TBASE, typename TDERIVED, class... _Types>
-	std::shared_ptr<TBASE> reinterpret_make_shared(_Types&&... _Args) {
+	inline std::shared_ptr<TBASE> reinterpret_make_shared(_Types&&... _Args) {
 		auto derived = std::make_shared<TDERIVED>(std::forward<_Types>(_Args)...);
 		return reinterpret_pointer_cast<TBASE>(derived);
 	}	
