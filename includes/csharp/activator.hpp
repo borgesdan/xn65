@@ -28,28 +28,30 @@ namespace csharp {
 
 			//auto a = std::any(std::in_place_type<int8_t>, std::forward<Arguments>(args)...);
 			
-			if (typeHashCode == int8Hash)
-				obj = std::any(std::in_place_type<int8_t>, std::forward<Arguments>(args)...);
-			else if (typeHashCode == int16Hash)
-				obj = std::any(std::in_place_type<int16_t>, std::forward<Arguments>(args)...);
-			else if (typeHashCode == int32Hash)
-				obj = std::any(std::in_place_type<int32_t>, std::forward<Arguments>(args)...);
-			else if (typeHashCode == int64Hash)
-				obj = std::any(std::in_place_type<int64_t>, std::forward<Arguments>(args)...);
+			if (typeHashCode == charHash)
+				obj = std::any(std::in_place_type<char>, std::forward<Arguments>(args)...);
+			else if (typeHashCode == shortHash)
+				obj = std::any(std::in_place_type<short>, std::forward<Arguments>(args)...);
+			else if (typeHashCode == intHash)
+				obj = std::any(std::in_place_type<int>, std::forward<Arguments>(args)...);
+			else if (typeHashCode == longHash)
+				obj = std::any(std::in_place_type<long>, std::forward<Arguments>(args)...);
+			else if (typeHashCode == long2Hash)
+				obj = std::any(std::in_place_type<long long>, std::forward<Arguments>(args)...);
+			else if (typeHashCode == ucharHash)
+				obj = std::any(std::in_place_type<unsigned char>, std::forward<Arguments>(args)...);
+			else if (typeHashCode == ushortHash)
+				obj = std::any(std::in_place_type<unsigned short>, std::forward<Arguments>(args)...);
+			else if (typeHashCode == uintHash)
+				obj = std::any(std::in_place_type<unsigned int>, std::forward<Arguments>(args)...);
+			else if (typeHashCode == ulongHash)
+				obj = std::any(std::in_place_type<unsigned long>, std::forward<Arguments>(args)...);
+			else if (typeHashCode == ulong2Hash)
+				obj = std::any(std::in_place_type<unsigned long long>, std::forward<Arguments>(args)...);
 			else if (typeHashCode == floatHash)
 				obj = std::any(std::in_place_type<float>, std::forward<Arguments>(args)...);
 			else if (typeHashCode == doubleHash)
 				obj = std::any(std::in_place_type<double>, std::forward<Arguments>(args)...);
-			else if (typeHashCode == uint8Hash)
-				obj = std::any(std::in_place_type<uint8_t>, std::forward<Arguments>(args)...);
-			else if (typeHashCode == uint16Hash)
-				obj = std::any(std::in_place_type<uint16_t>, std::forward<Arguments>(args)...);
-			else if (typeHashCode == uint32Hash)
-				obj = std::any(std::in_place_type<uint32_t>, std::forward<Arguments>(args)...);
-			else if (typeHashCode == uint64Hash)
-				obj = std::any(std::in_place_type<uint64_t>, std::forward<Arguments>(args)...);
-			else if (typeHashCode == charHash)
-				obj = std::any(std::in_place_type<char>, std::forward<Arguments>(args)...);
 			else if (typeHashCode == stringHash)
 				obj = std::any(std::in_place_type<std::string>, std::forward<Arguments>(args)...);
 			else
@@ -59,18 +61,19 @@ namespace csharp {
 		}
 
 	private:			
-		static inline const size_t int8Hash = typeof_v<int8_t>().GetHashCode();
-		static inline const size_t int16Hash = typeof_v<int16_t>().GetHashCode();
-		static inline const size_t int32Hash = typeof_v<int32_t>().GetHashCode();
-		static inline const size_t int64Hash = typeof_v<int64_t>().GetHashCode();
+		static inline const size_t charHash = typeof_v<char>().GetHashCode();
+		static inline const size_t shortHash = typeof_v<short>().GetHashCode();
+		static inline const size_t intHash = typeof_v<int>().GetHashCode();
+		static inline const size_t longHash = typeof_v<long>().GetHashCode();
+		static inline const size_t long2Hash = typeof_v<long long>().GetHashCode();
+		static inline const size_t ucharHash = typeof_v<unsigned char>().GetHashCode();
+		static inline const size_t ushortHash = typeof_v<unsigned short>().GetHashCode();
+		static inline const size_t uintHash = typeof_v<unsigned int>().GetHashCode();
+		static inline const size_t ulongHash = typeof_v<unsigned long>().GetHashCode();
+		static inline const size_t ulong2Hash = typeof_v<unsigned long long>().GetHashCode();
 		static inline const size_t floatHash = typeof_v<float>().GetHashCode();
 		static inline const size_t doubleHash = typeof_v<double>().GetHashCode();
-		static inline const size_t uint8Hash = typeof_v<uint8_t>().GetHashCode();
-		static inline const size_t uint16Hash = typeof_v<uint16_t>().GetHashCode();
-		static inline const size_t uint32Hash = typeof_v<uint32_t>().GetHashCode();
-		static inline const size_t uint64Hash = typeof_v<uint64_t>().GetHashCode();
-		static inline const size_t stringHash = typeof_v<std::string>().GetHashCode();
-		static inline const size_t charHash = typeof_v<char>().GetHashCode();
+		static inline const size_t stringHash = typeof_v<std::string>().GetHashCode();		
 	};
 }
 
