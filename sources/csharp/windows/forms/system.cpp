@@ -1,4 +1,7 @@
 #include "csharp/windows/forms/system.hpp"
+//TODO: REMOVER
+#include "csharp/type.hpp"
+#include "csharp/activator.hpp"
 
 #ifdef WIN32
 #include <Windows.h>
@@ -9,6 +12,9 @@ namespace csharp {
 			s_multiMonitorSupport = GetSystemMetrics(SM_CMONITORS) != 0;
 			s_checkMultiMonitorSupport = true;
 		}
+
+		//TODO: REMOVER
+		auto t = typeof<RECT>();
 
 		return s_multiMonitorSupport;
 	}

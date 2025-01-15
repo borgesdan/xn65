@@ -17,17 +17,23 @@ namespace csharp {
 			std::any obj;
 
 			if (InternalCreateKnowTypes(typeHashCode, obj))
-				return obj;
+				return obj;			
+			
+			return obj;
+		}
+
+		template <typename T, typename... Arguments>
+		static std::any CreateInstance(Type_T<T> const& type, Arguments &&... args) {			
+			using value_type = Type_T<T>::value_type;
+
+			std::any obj = std::any(std::in_place_type<value_type>, std::forward<Arguments>(args)...);
 
 			return obj;
 		}
 
 	private:		
 		template <typename... Arguments>
-		static constexpr bool InternalCreateKnowTypes(size_t const& typeHashCode, std::any& obj, Arguments &&... args) {
-
-			//auto a = std::any(std::in_place_type<int8_t>, std::forward<Arguments>(args)...);
-			
+		static constexpr bool InternalCreateKnowTypes(size_t const& typeHashCode, std::any& obj, Arguments &&... args) {			
 			if (typeHashCode == charHash)
 				obj = std::any(std::in_place_type<char>, std::forward<Arguments>(args)...);
 			else if (typeHashCode == shortHash)

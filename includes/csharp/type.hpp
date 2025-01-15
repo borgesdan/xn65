@@ -10,6 +10,8 @@
 namespace csharp {
 	class Type {
 	public:
+		virtual ~Type() = default;
+
 		constexpr std::string Namespace() const { return ns; }
 		constexpr std::string FullName() const { return fullname; }
 		constexpr std::string Name() const { return name; }
@@ -30,7 +32,7 @@ namespace csharp {
 	public:
 		constexpr Type() = default;
 
-	private:
+	protected:
 		enum class TypeFlags {
 			Interface = 1 << 0,
 			Array = 1 << 1,//2
@@ -48,6 +50,9 @@ namespace csharp {
 
 		size_t hashCode{ 0 };
 		int flags{ 0 };
+
+		template <class T>
+		static constexpr void FromTemplate(Type& type);
 
 	public:
 		template <class T>
@@ -71,10 +76,6 @@ namespace csharp {
 
 			hashCode = seed;
 		}
-
-	private:
-		template <class T>
-		static constexpr void FromTemplate(Type& type);
 	};
 
 	template <class T>
@@ -142,6 +143,68 @@ namespace csharp {
 		}
 
 		type.InternalGenerateHashCode();
+	}
+
+	//TYPE TEMPLATE CLASS
+	template <typename T>
+	class Type_T : public Type {
+	public:
+		Type_T() {}
+
+		Type_T(Type const& type) : Type(type){}
+
+		using value_type = T;
+
+	public:
+		template <class T>
+		friend std::unique_ptr<Type_T<T>> typeof_t();
+
+		template <class T>
+		friend constexpr void typeof_t(Type_T<T>& type);
+
+		template <class T>
+		friend constexpr Type_T<T> typeof_v_t();
+
+		template <class T>
+		friend std::unique_ptr<Type_T<T>> GetType_t(T const& value);
+
+		template <class T>
+		friend constexpr void GetType_t(T const& value, Type_T<T>& type);
+	};
+
+	template <class T>
+	inline std::unique_ptr<Type_T<T>> typeof_t() {
+		Type t;
+		Type::FromTemplate<T>(t);
+
+		return std::make_unique<Type_T<T>>(t);
+	}
+
+	template <class T>
+	constexpr void typeof_t(Type_T<T>& type) {
+		Type t;
+		Type::FromTemplate<T>(t);
+
+		type = Type_T<T>(t);
+	}
+
+	template <class T>
+	constexpr Type_T<T> typeof_v_t() {
+		Type t;
+		Type::FromTemplate<T>(t);
+
+		auto type = Type_T<T>(t);
+		return type;
+	}
+
+	template <class T>
+	inline std::unique_ptr<Type_T<T>> GetType_t(T const& value) {
+		return typeof_t<T>();
+	}
+
+	template <class T>
+	constexpr void GetType_t(T const& value, Type_T<T>& type) {
+		typeof_v_t<T>(type);
 	}
 }
 
