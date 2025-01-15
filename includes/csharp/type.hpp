@@ -44,10 +44,10 @@ namespace csharp {
 
 		std::string ns;
 		std::string fullname;
-		std::string name;		
+		std::string name;
 
 		size_t hashCode{ 0 };
-		int flags { 0 };
+		int flags{ 0 };
 
 	public:
 		template <class T>
@@ -55,6 +55,9 @@ namespace csharp {
 
 		template <class T>
 		friend constexpr void typeof(Type& type);
+
+		template <class T>
+		friend constexpr Type typeof_v();
 
 		template <class T>
 		friend std::unique_ptr<Type> GetType(T const& value);
@@ -72,7 +75,7 @@ namespace csharp {
 	private:
 		template <class T>
 		static constexpr void FromTemplate(Type& type);
-	};	
+	};
 
 	template <class T>
 	inline std::unique_ptr<Type> typeof() {
@@ -85,6 +88,14 @@ namespace csharp {
 	template <class T>
 	constexpr void typeof(Type& t) {
 		Type::FromTemplate<T>(t);
+	}
+
+	template <class T>
+	constexpr Type typeof_v() {
+		Type t;
+		Type::FromTemplate<T>(t);
+
+		return t;
 	}
 
 	template <class T>
@@ -104,7 +115,7 @@ namespace csharp {
 		type.fullname = fullname;
 
 		//An integral type or a floating-point type
-		if constexpr (std::is_arithmetic<T>::value) {		
+		if constexpr (std::is_arithmetic<T>::value) {
 			misc::SetFlag(type.flags, TypeFlags::Primitive, TypeFlags::ValueType);
 		}
 		//checks whether T is an enumeration type.
