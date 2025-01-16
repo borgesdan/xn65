@@ -5,8 +5,12 @@
 #include <cstdint>
 #include <string>
 #include "type.hpp"
-#include "optional"
+#include <optional>
 #include <utility>
+#include <vector>
+#include <functional>
+#include <memory>
+#include "csharp/drawing/primitives.hpp"
 
 namespace csharp {
 	class Activator {
@@ -16,9 +20,23 @@ namespace csharp {
 			const auto typeHashCode = type.GetHashCode();
 			std::any obj;
 
-			if (InternalCreateKnowTypes(typeHashCode, obj))
-				return obj;			
-			
+			InternalCreateKnowTypes(typeHashCode, obj));
+
+			return obj;
+		}
+
+		template <class... Arguments>
+		using  func = std::function<bool(Type const&, std::any&, Arguments &&...)>;
+
+		template <typename... Arguments>
+		static std::any CreateInstance(Type const& type, std::function<bool(Type const&, std::any&, Arguments &&...)>& callback) {
+			const auto typeHashCode = type.GetHashCode();
+			std::any obj;
+
+			if (callback) {
+				callback(type, obj, std::forward<Arguments>(args)...);
+			}
+
 			return obj;
 		}
 
@@ -29,7 +47,8 @@ namespace csharp {
 			std::any obj = std::any(std::in_place_type<value_type>, std::forward<Arguments>(args)...);
 
 			return obj;
-		}
+		}	
+		
 
 	private:		
 		template <typename... Arguments>
