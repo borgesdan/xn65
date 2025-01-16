@@ -11,6 +11,7 @@
 #include <functional>
 #include <memory>
 #include "csharp/drawing/primitives.hpp"
+#include "exception.hpp"
 
 namespace csharp {
 	class Activator {
@@ -31,7 +32,7 @@ namespace csharp {
 			if (!type_t)
 				throw csharp::InvalidOperationException();
 
-			std::any obj = std::any(std::in_place_type<value_type>, std::forward<Arguments>(args)...);
+			std::any obj = std::any(std::in_place_type<T>, std::forward<Arguments>(args)...);
 
 			return obj;
 		}
