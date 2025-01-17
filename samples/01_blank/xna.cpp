@@ -12,16 +12,7 @@ namespace xna {
 	class Game1 : public Game {
 	public:
 		Game1() : Game() {
-			Content()->RootDirectory("Content");	
-
-			csharp::Type t;
-			csharp::typeof<long>(t);
-			csharp::Activator::CreateInstance(t);
-
-			csharp::Type_T<char> tc;
-			csharp::typeof_t<char>(tc);
-			auto any = csharp::Activator::CreateInstance(tc);
-			auto c = std::any_cast<char>(any);
+			Content()->RootDirectory("Content");			
 		}
 
 		void Initialize() override {
