@@ -9,12 +9,8 @@
 
 namespace csharp {
 	class Type {
-	public:
-		virtual ~Type() = default;
-
-		constexpr std::string Namespace() const { return ns; }
+	public:		
 		constexpr std::string FullName() const { return fullname; }
-		constexpr std::string Name() const { return name; }
 
 		constexpr bool IsInterface() const { return misc::HasFlag(flags, TypeFlags::Interface); }
 		constexpr bool IsArray() const { return misc::HasFlag(flags, TypeFlags::Array); }
@@ -29,10 +25,10 @@ namespace csharp {
 			return hashCode;
 		}
 
-	public:
+	private:
 		constexpr Type() = default;
 
-	protected:
+	private:
 		enum class TypeFlags {
 			Interface = 1 << 0,
 			Array = 1 << 1,//2
@@ -43,75 +39,33 @@ namespace csharp {
 			ValueType = 1 << 6,
 			SmartPointer = 1 << 7, //128
 		};
-
-		std::string ns;
+		
 		std::string fullname;
-		std::string name;
 
 		size_t hashCode{ 0 };
 		int flags{ 0 };
 
 		template <class T>
-		static constexpr void FromTemplate(Type& type);
-
-	public:
-		template <class T>
-		friend std::unique_ptr<Type> typeof();
+		static constexpr Type FromTemplate();
 
 		template <class T>
-		friend constexpr void typeof(Type& type);
+		friend Type typeof();
 
 		template <class T>
-		friend constexpr Type typeof_v();
-
-		template <class T>
-		friend std::unique_ptr<Type> GetType(T const& value);
-
-		template <class T>
-		friend constexpr void GetType(T const& value, Type& type);
+		friend Type GetType(T value);
 
 		constexpr void InternalGenerateHashCode() {
 			size_t seed = 0;
 			misc::HashCombine(seed, fullname);
+			misc::HashCombine(seed, flags);
 
 			hashCode = seed;
 		}
-	};
+	};				
 
 	template <class T>
-	inline std::unique_ptr<Type> typeof() {
-		Type t;
-		Type::FromTemplate<T>(t);
-
-		return std::make_unique<Type>(t);
-	}
-
-	template <class T>
-	constexpr void typeof(Type& t) {
-		Type::FromTemplate<T>(t);
-	}
-
-	template <class T>
-	constexpr Type typeof_v() {
-		Type t;
-		Type::FromTemplate<T>(t);
-
-		return t;
-	}
-
-	template <class T>
-	inline std::unique_ptr<Type> GetType(T const& value) {
-		return typeof<T>();
-	}
-
-	template <class T>
-	constexpr void GetType(T const& value, Type& type) {
-		typeof<T>(type);
-	}
-
-	template <class T>
-	constexpr void Type::FromTemplate(Type& type) {
-		type = Type();
+	constexpr Type Type::FromTemplate() {
+		auto type = Type();
 		std::string fullname = typeid(T).name();
 		type.fullname = fullname;
 
@@ -143,68 +97,18 @@ namespace csharp {
 		}
 
 		type.InternalGenerateHashCode();
-	}
 
-	//TYPE TEMPLATE CLASS
-	template <typename T>
-	class Type_T : public Type {
-	public:
-		Type_T() {}
-
-		Type_T(Type const& type) : Type(type){}
-
-		using value_type = T;
-
-	public:
-		template <class T>
-		friend std::unique_ptr<Type_T<T>> typeof_t();
-
-		template <class T>
-		friend constexpr void typeof_t(Type_T<T>& type);
-
-		template <class T>
-		friend constexpr Type_T<T> typeof_v_t();
-
-		template <class T>
-		friend std::unique_ptr<Type_T<T>> GetType_t(T const& value);
-
-		template <class T>
-		friend constexpr void GetType_t(T const& value, Type_T<T>& type);
-	};
-
-	template <class T>
-	inline std::unique_ptr<Type_T<T>> typeof_t() {
-		Type t;
-		Type::FromTemplate<T>(t);
-
-		return std::make_unique<Type_T<T>>(t);
-	}
-
-	template <class T>
-	constexpr void typeof_t(Type_T<T>& type) {
-		Type t;
-		Type::FromTemplate<T>(t);
-
-		type = Type_T<T>(t);
-	}
-
-	template <class T>
-	constexpr Type_T<T> typeof_v_t() {
-		Type t;
-		Type::FromTemplate<T>(t);
-
-		auto type = Type_T<T>(t);
 		return type;
+	}	
+
+	template <class T>
+	Type typeof() {
+		return Type::FromTemplate<T>();		
 	}
 
 	template <class T>
-	inline std::unique_ptr<Type_T<T>> GetType_t(T const& value) {
-		return typeof_t<T>();
-	}
-
-	template <class T>
-	constexpr void GetType_t(T const& value, Type_T<T>& type) {
-		typeof_v_t<T>(type);
+	Type GetType(T value) {
+		return  Type::FromTemplate<T>();
 	}
 }
 
