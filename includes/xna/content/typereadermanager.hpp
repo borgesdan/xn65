@@ -1,7 +1,7 @@
 #ifndef XNA_CONTENT_TYPEREADER_HPP
 #define XNA_CONTENT_TYPEREADER_HPP
 
-#include "../csharp/type.hpp"
+#include "csharp/type.hpp"
 #include "../default.hpp"
 #include <algorithm>
 #include <map>
@@ -22,13 +22,13 @@ namespace xna {
 		virtual void Initialize(sptr<ContentTypeReaderManager> const& manager) {}
 
 		//Gets the type handled by this reader component.
-		sptr<Type> TargetType() { return _targetType; }
+		sptr<csharp::Type> TargetType() { return _targetType; }
 
 		//Reads a strongly typed object from the current stream.
 		virtual std::any Read(ContentReader& input, std::any& existingInstance) = 0;
 
 	protected:
-		ContentTypeReader(sptr<Type> const& targetType) : _targetType(targetType)
+		ContentTypeReader(sptr<csharp::Type> const& targetType) : _targetType(targetType)
 		{
 		}
 
@@ -37,7 +37,7 @@ namespace xna {
 		bool TargetIsValueType{ true };
 
 	private:
-		sptr<Type> _targetType = nullptr;
+		sptr<csharp::Type> _targetType = nullptr;
 	};
 
 	//Worker for reading a specific managed type from a binary format. 
@@ -46,9 +46,9 @@ namespace xna {
 	class ContentTypeReaderT : public ContentTypeReader {
 	public:
 		//For some reason ListReader<T> needs a default constructor
-		ContentTypeReaderT() : ContentTypeReader(typeof<T>()) {}
+		ContentTypeReaderT() : ContentTypeReader(std::make_shared<csharp::Type>(csharp::typeof<T>())) {}
 	protected:
-		ContentTypeReaderT(sptr<Type> const& targetType) : ContentTypeReader(targetType) {}
+		ContentTypeReaderT(sptr<csharp::Type> const& targetType) : ContentTypeReader(targetType) {}
 
 	public:
 		//Reads a strongly typed object from the current stream.
@@ -72,8 +72,8 @@ namespace xna {
 	public:
 		using Activador = sptr<ContentTypeReader>(*)();
 
-		static sptr<ContentTypeReader> CreateInstance(sptr<Type> const& type);
-		static void SetActivador(sptr<Type> const& type, Activador activador);
+		static sptr<ContentTypeReader> CreateInstance(sptr<csharp::Type> const& type);
+		static void SetActivador(sptr<csharp::Type> const& type, Activador activador);
 
 	private:
 		inline static auto activators = std::map<size_t, Activador>();
@@ -84,7 +84,7 @@ namespace xna {
 	};
 
 	using PContentTypeReader = sptr<ContentTypeReader>;
-	using PType = sptr<Type>;
+	using PType = sptr<csharp::Type>;
 
 	//-------------------------------------------------------//
 	// 				ContentTypeReaderManager				 //
@@ -96,9 +96,9 @@ namespace xna {
 		static std::vector<PContentTypeReader> ReadTypeManifest(Int typeCount, sptr<ContentReader>& contentReader);
 		
 		//Looks up a reader for the specified type.
-		static sptr<ContentTypeReader> GetTypeReader(sptr<Type> const& targetType);		
+		static sptr<ContentTypeReader> GetTypeReader(sptr<csharp::Type> const& targetType);		
 
-		inline static bool ContainsTypeReader(sptr<Type> const& targetType) {
+		inline static bool ContainsTypeReader(sptr<csharp::Type> const& targetType) {
 			return ContentTypeReaderManager::targetTypeToReader.contains(targetType);
 		}
 

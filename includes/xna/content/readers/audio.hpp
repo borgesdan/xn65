@@ -3,14 +3,15 @@
 
 #include "../../audio/soundeffect.hpp"
 #include "csharp/time.hpp"
-#include "../../csharp/type.hpp"
+#include "csharp/type.hpp"
 #include "../manager.hpp"
 #include "../reader.hpp"
+#include "csharp/type.hpp"
 
 namespace xna {
 	class SoundEffectReader : public ContentTypeReaderT<PSoundEffect> {
 	public:
-		SoundEffectReader() : ContentTypeReaderT(typeof<PSoundEffect>()) {
+		SoundEffectReader() : ContentTypeReaderT(std::make_shared<csharp::Type>(csharp::typeof<PSoundEffect>())) {
 			ContentTypeReader::TargetIsValueType = false;
 		}
 

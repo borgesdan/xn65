@@ -4,7 +4,7 @@
 
 namespace xna {
 
-	sptr<ContentTypeReader> ContentTypeReaderActivador::CreateInstance(sptr<Type> const& type) {
+	sptr<ContentTypeReader> ContentTypeReaderActivador::CreateInstance(sptr<csharp::Type> const& type) {
 		if (!type)
 		{
 			throw std::invalid_argument("ContentTypeReaderActivador: type is null.");
@@ -22,7 +22,7 @@ namespace xna {
 		return activador();
 	}
 
-	void ContentTypeReaderActivador::SetActivador(sptr<Type> const& type, Activador activador) {
+	void ContentTypeReaderActivador::SetActivador(sptr<csharp::Type> const& type, Activador activador) {
 		if (!type) {
 			throw std::invalid_argument("ContentTypeReaderActivador: type is null.");
 		}
@@ -68,7 +68,7 @@ namespace xna {
 		return contentTypeReaderArray;
 	}
 
-	sptr<ContentTypeReader> ContentTypeReaderManager::GetTypeReader(sptr<Type> const& targetType)
+	sptr<ContentTypeReader> ContentTypeReaderManager::GetTypeReader(sptr<csharp::Type> const& targetType)
 	{
 		if (!targetType) {
 			throw std::invalid_argument("ContentTypeReaderManager::GetTypeReader: targetType is null.");
@@ -109,10 +109,10 @@ namespace xna {
 
 	bool ContentTypeReaderManager::InstantiateTypeReader(String const& readerTypeName, sptr<ContentReader>& contentReader, sptr<ContentTypeReader>& reader)
 	{
-		sptr<Type> type = nullptr;
+		sptr<csharp::Type> type = csharp::RuntimeType::GetType(readerTypeName);
 
-		if (Type::NameOfRegisteredTypes.contains(readerTypeName))
-			type = Type::NameOfRegisteredTypes[readerTypeName];		
+		/*if (csharp::Type::NameOfRegisteredTypes.contains(readerTypeName))
+			type = Type::NameOfRegisteredTypes[readerTypeName];	*/	
 
 		if (!type) {
 
@@ -140,7 +140,7 @@ namespace xna {
 		}
 
 		ContentTypeReaderManager::targetTypeToReader.insert({ targetType, reader });
-		ContentTypeReaderManager::readerTypeToReader.insert({ typeof(*reader), reader});
+		ContentTypeReaderManager::readerTypeToReader.insert({ std::make_shared<csharp::Type>(csharp::GetType(*reader)), reader});
 		ContentTypeReaderManager::nameToReader.insert({ readerTypeName, reader });
 	}
 
@@ -163,8 +163,8 @@ namespace xna {
 			auto typeReader = snew<ObjectReader>();
 			auto contentTypeReader = reinterpret_pointer_cast<ContentTypeReader>(typeReader);
 			
-			targetTypeToReader.insert({ typeof<Object>(), contentTypeReader});
-			readerTypeToReader.insert({ typeof<ObjectReader>(), contentTypeReader});
+			targetTypeToReader.insert({ std::make_shared<csharp::Type>(csharp::typeof<Object>()), contentTypeReader});
+			readerTypeToReader.insert({ std::make_shared<csharp::Type>(csharp::typeof<ObjectReader>()), contentTypeReader});
 		}
 	}	
 

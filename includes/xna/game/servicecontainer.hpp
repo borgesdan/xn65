@@ -2,21 +2,21 @@
 #define XNA_GAME_SERVICECONTAINER_HPP
 
 #include "../default.hpp"
-#include "../csharp/service.hpp"
+#include "csharp/service.hpp"
 #include <map>
 
 namespace xna {
 	//A collection of game services. 
-	class GameServiceContainer : public IServiceProvider {
+	class GameServiceContainer : public csharp::IServiceProvider {
 	public:
 		//Adds a service to the GameServiceContainer.
-		void AddService(Type& type, std::any& provider);
+		void AddService(csharp::Type const& type, std::any& provider);
 
 		// Inherited via IServiceProvider
-		std::any GetService(Type& serviceType) override;
+		std::any GetService(csharp::Type const& serviceType) override;
 
 		//Removes the object providing a specified service. 
-		void RemoveService(Type& type);
+		void RemoveService(csharp::Type const& type);
 
 	private:
 		std::map<size_t, std::any> services;

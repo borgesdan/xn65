@@ -6,6 +6,9 @@
 #include <memory>
 #include <type_traits>
 #include "misc.hpp"
+#include <vector>
+#include <map>
+#include <optional>
 
 namespace csharp {
 	class Type {
@@ -25,7 +28,7 @@ namespace csharp {
 			return hashCode;
 		}
 
-	private:
+	public:
 		constexpr Type() = default;
 
 	private:
@@ -51,13 +54,15 @@ namespace csharp {
 		template <class T>
 		friend Type typeof();
 
+		/*template <class T>
+		friend Type GetType(T value);	*/
+
 		template <class T>
-		friend Type GetType(T value);
+		friend Type GetType(T const& value);
 
 		constexpr void InternalGenerateHashCode() {
 			size_t seed = 0;
 			misc::HashCombine(seed, fullname);
-			misc::HashCombine(seed, flags);
 
 			hashCode = seed;
 		}
@@ -106,10 +111,53 @@ namespace csharp {
 		return Type::FromTemplate<T>();		
 	}
 
-	template <class T>
+	/*template <class T>
 	Type GetType(T value) {
 		return  Type::FromTemplate<T>();
+	}*/
+
+	template <class T>
+	Type GetType(T const& value) {
+		return  Type::FromTemplate<T>();
 	}
+
+	class RuntimeType {
+	public:
+		static inline void Add(Type const& type) {
+			runtimeMap.insert({ type.FullName(), type });
+		}
+
+		static inline void Add(std::string const& typeName, Type const& type) {
+			runtimeMap.insert({ typeName, type });
+		}
+
+		static inline std::unique_ptr<Type> GetType(std::string const& typeName) {
+			const auto iterator = runtimeMap.find(typeName);
+
+			if (iterator != runtimeMap.end())
+				return std::make_unique<Type>(runtimeMap[typeName]);
+
+			return nullptr;
+		}
+
+	private:
+		static inline auto runtimeMap = std::map<std::string, Type>
+		{
+			{ typeid(char).name(), typeof<char>() },
+			{ typeid(unsigned char).name(), typeof<unsigned char>() },
+			{ typeid(short).name(), typeof<short>() },
+			{ typeid(unsigned short).name(), typeof<unsigned short>() },
+			{ typeid(int).name(), typeof<int>() },
+			{ typeid(unsigned int).name(), typeof<unsigned int>() },
+			{ typeid(long).name(), typeof<long>() },
+			{ typeid(unsigned long).name(), typeof<unsigned long>() },
+			{ typeid(long long).name(), typeof<long long>() },
+			{ typeid(unsigned long long).name(), typeof<unsigned long long>() },
+			{ typeid(float).name(), typeof<float>() },
+			{ typeid(double).name(), typeof<double>() },
+			{ typeid(std::string).name(), typeof<std::string>() },
+		};		
+	};
 }
 
 #endif

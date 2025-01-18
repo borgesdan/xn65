@@ -25,7 +25,7 @@ namespace PlatformerStarterKit {
 			graphics->ApplyChanges();
 
 			std::any device = Device();
-			Services()->AddService(*typeof<GraphicsDevice>(), device);
+			Services()->AddService(csharp::typeof<GraphicsDevice>(), device);
 
 			Game::Initialize();
 		}

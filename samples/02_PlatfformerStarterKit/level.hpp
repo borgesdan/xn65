@@ -18,7 +18,7 @@ namespace PlatformerStarterKit {
 	*/
 	class Level : public std::enable_shared_from_this<Level> {		
 	public:
-		Level(xna::sptr<xna::IServiceProvider> const& serviceProvider, xna::String const& path );
+		Level(xna::sptr<csharp::IServiceProvider> const& serviceProvider, xna::String const& path );
 
 	public:
 		xna::sptr<PlatformerStarterKit::Player> Player() const;
