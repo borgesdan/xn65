@@ -8,7 +8,7 @@
 #include <string>
 
 namespace PlatformerStarterKit {
-	Level::Level(xna::sptr<xna::IServiceProvider> const& serviceProvider, xna::String const& path) : path(path)
+	Level::Level(xna::sptr<csharp::IServiceProvider> const& serviceProvider, xna::String const& path) : path(path)
 	{
 		content = xna::snew<xna::ContentManager>(serviceProvider, "Content");
 		timeRemaining = csharp::TimeSpan::FromMinutes(2.0);

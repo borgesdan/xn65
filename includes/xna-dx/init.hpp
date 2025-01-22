@@ -2,6 +2,7 @@
 #define XNA_DX_INIT_HPP
 
 #include "headers.hpp"
+#include "csharp/type.hpp"
 
 namespace xna {
 	struct PlatformInit {
@@ -15,24 +16,21 @@ namespace xna {
 
 	private:
 		template <typename T>
-		static void insertRegisteredReader(String const& readerName) {
-			const auto reader = typeof<T>();
-			//Type::NameOfRegisteredTypes.insert({ "xna::" + readerName, reader });
-			Type::NameOfRegisteredTypes.insert({ reader->FullName(), reader });
-			Type::NameOfRegisteredTypes.insert({ "Microsoft.Xna.Framework.Content." + readerName, reader });
+		static void insertRegisteredReader() {
+			const auto reader = csharp::typeof<T>();
+			csharp::RuntimeType::Add(reader.FullName(), reader);
 		}
 
 		template <typename T>
-		static void insertRegisteredReader(String const& readerName, String const& microsoftNameFullName) {
-			const auto reader = typeof<T>();
-			//Type::NameOfRegisteredTypes.insert({ "xna::" + readerName, reader });
-			Type::NameOfRegisteredTypes.insert({ reader->FullName(), reader });
-			Type::NameOfRegisteredTypes.insert({ microsoftNameFullName, reader });
+		static void insertRegisteredReader(String const& microsoftNameFullName) {
+			const auto reader = csharp::typeof<T>();
+			csharp::RuntimeType::Add(reader.FullName(), reader);
+			csharp::RuntimeType::Add(microsoftNameFullName, reader);			
 		}
 
 		template <typename T>
 		static void insertActivadorReader() {
-			ContentTypeReaderActivador::SetActivador(typeof<T>(), []() -> sptr<ContentTypeReader> {
+			ContentTypeReaderActivador::SetActivador(std::make_shared<csharp::Type>(csharp::typeof<T>()), []() -> sptr<ContentTypeReader> {
 				auto obj = snew<T>();
 				return reinterpret_pointer_cast<ContentTypeReader>(obj);
 				});

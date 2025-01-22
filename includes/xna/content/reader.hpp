@@ -3,7 +3,6 @@
 
 #include "../common/color.hpp"
 #include "../common/numerics.hpp"
-#include "../csharp/type.hpp"
 #include "../default.hpp"
 #include "csharp/io/binary.hpp"
 #include "typereadermanager.hpp"

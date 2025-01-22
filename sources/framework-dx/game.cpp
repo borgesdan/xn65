@@ -4,7 +4,7 @@ namespace xna {
 	Game::Game() {
 		impl = unew<PlatformImplementation>();
 		services = snew<GameServiceContainer>();
-		auto iservice = reinterpret_pointer_cast<IServiceProvider>(services);
+		auto iservice = reinterpret_pointer_cast<csharp::IServiceProvider>(services);
 		contentManager = snew<ContentManager>(services, "");
 		contentManager->mainGameService = iservice;
 
@@ -187,7 +187,7 @@ namespace xna {
 
 	void Game::Content(sptr<ContentManager> const& value) {
 		contentManager = value;
-		auto iservice = reinterpret_pointer_cast<IServiceProvider>(services);
+		auto iservice = reinterpret_pointer_cast<csharp::IServiceProvider>(services);
 		contentManager->mainGameService = iservice;
 	}
 

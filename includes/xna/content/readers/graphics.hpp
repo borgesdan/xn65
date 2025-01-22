@@ -2,7 +2,7 @@
 #define XNA_CONTENT_READERS_GRAPHICS_HPP
 
 #include "../../common/numerics.hpp"
-#include "../../csharp/type.hpp"
+#include "csharp/type.hpp"
 #include "../../graphics/sprite.hpp"
 #include "../../graphics/texture.hpp"
 #include "../manager.hpp"
@@ -14,7 +14,7 @@ namespace xna {
 
 	class Texture2DReader : public ContentTypeReaderT<PTexture2D> {
 	public:
-		Texture2DReader() : ContentTypeReaderT(typeof<PTexture2D>()) {
+		Texture2DReader() : ContentTypeReaderT(std::make_shared<csharp::Type>(csharp::typeof<PTexture2D>())) {
 			ContentTypeReader::TargetIsValueType = false;
 		}
 
@@ -24,7 +24,8 @@ namespace xna {
 			const auto height = input.ReadInt32();
 			const auto mipMaps = input.ReadInt32();
 
-			auto a_device = ContentManager::GameServiceProvider()->GetService(*typeof<GraphicsDevice>());
+			const auto type = csharp::typeof<GraphicsDevice>();
+			auto a_device = ContentManager::GameServiceProvider()->GetService(type);
 			sptr<GraphicsDevice> device = nullptr;
 
 			if (a_device.has_value())
@@ -46,7 +47,7 @@ namespace xna {
 	using PSpriteFont = std::shared_ptr<SpriteFont>;
 	class SpriteFontReader : public ContentTypeReaderT<PSpriteFont> {
 	public:
-		SpriteFontReader() : ContentTypeReaderT(typeof<PSpriteFont>()) {
+		SpriteFontReader() : ContentTypeReaderT(std::make_shared<csharp::Type>(csharp::typeof<PSpriteFont>())) {
 			ContentTypeReader::TargetIsValueType = false;
 		}
 

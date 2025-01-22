@@ -3,6 +3,7 @@
 
 #include "xna-dx/framework.hpp"
 #include "csharp/io/binary.hpp"
+#include "csharp/activator.hpp"
 
 using namespace std;
 using namespace xna;
@@ -11,7 +12,7 @@ namespace xna {
 	class Game1 : public Game {
 	public:
 		Game1() : Game() {
-			Content()->RootDirectory("Content");						
+			Content()->RootDirectory("Content");			
 		}
 
 		void Initialize() override {
@@ -21,7 +22,7 @@ namespace xna {
 			graphics->ApplyChanges();
 
 			std::any device = Device();
-			Services()->AddService(*typeof<GraphicsDevice>(), device);
+			Services()->AddService(csharp::typeof<GraphicsDevice>(), device);
 
 			Game::Initialize();
 		}

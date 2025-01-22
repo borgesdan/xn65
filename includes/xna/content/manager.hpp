@@ -1,7 +1,7 @@
 #ifndef XNA_CONTENT_MANAGER_HPP
 #define XNA_CONTENT_MANAGER_HPP
 
-#include "../csharp/service.hpp"
+#include "csharp/service.hpp"
 #include "csharp/io/stream.hpp"
 #include "../default.hpp"
 #include "reader.hpp"
@@ -10,18 +10,18 @@ namespace xna {
 	//The run-time component which loads managed objects from the binary files produced by the design time content pipeline.
 	class ContentManager : public std::enable_shared_from_this<ContentManager> {
 	public:
-		ContentManager(std::shared_ptr<IServiceProvider> const& services) :
+		ContentManager(std::shared_ptr<csharp::IServiceProvider> const& services) :
 			rootDirectory("") {
 			serviceProvider = services;
 		};
 
-		ContentManager(std::shared_ptr<IServiceProvider> const& services, std::string const& rootDirectory) :
+		ContentManager(std::shared_ptr<csharp::IServiceProvider> const& services, std::string const& rootDirectory) :
 			rootDirectory(rootDirectory){
 			serviceProvider = services;
 		};		
 
 		//Gets the service provider associated with the ContentManager.
-		std::shared_ptr<IServiceProvider> ServiceProvider() const {
+		std::shared_ptr<csharp::IServiceProvider> ServiceProvider() const {
 			return serviceProvider;
 		}
 
@@ -69,7 +69,7 @@ namespace xna {
 		}
 
 		//Gets the service provider associated with the main Game.
-		static std::shared_ptr<IServiceProvider> GameServiceProvider() {
+		static std::shared_ptr<csharp::IServiceProvider> GameServiceProvider() {
 			return mainGameService;
 		}
 
@@ -95,10 +95,10 @@ namespace xna {
 		friend class Game;
 
 		std::string rootDirectory;				
-		std::shared_ptr<IServiceProvider> serviceProvider = nullptr;
+		std::shared_ptr<csharp::IServiceProvider> serviceProvider = nullptr;
 		std::map<std::string, std::shared_ptr<void>> loadedAssets;
 		
-		inline static std::shared_ptr<IServiceProvider> mainGameService = nullptr;		
+		inline static std::shared_ptr<csharp::IServiceProvider> mainGameService = nullptr;		
 		inline const static std::string contentExtension = ".xnb";
 	};
 }

@@ -8,7 +8,7 @@ namespace csharp {
 		if (!s_checkMultiMonitorSupport) {
 			s_multiMonitorSupport = GetSystemMetrics(SM_CMONITORS) != 0;
 			s_checkMultiMonitorSupport = true;
-		}
+		}	
 
 		return s_multiMonitorSupport;
 	}
