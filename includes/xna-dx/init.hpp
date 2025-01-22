@@ -19,7 +19,6 @@ namespace xna {
 		static void insertRegisteredReader() {
 			const auto reader = csharp::typeof<T>();
 			csharp::RuntimeType::Add(reader.FullName(), reader);
-
 		}
 
 		template <typename T>

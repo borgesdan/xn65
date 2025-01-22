@@ -26,7 +26,7 @@ namespace csharp {
 			std::any obj = std::any(std::in_place_type<T>, std::forward<Arguments>(args)...);
 
 			return obj;
-		}
+		}		
 	};
 }
 

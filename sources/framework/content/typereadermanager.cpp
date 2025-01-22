@@ -1,6 +1,7 @@
 #include "xna/content/typereadermanager.hpp"
 #include "xna/content/reader.hpp"
 #include "xna/content/readers/default.hpp"
+#include "csharp/activator.hpp"
 
 namespace xna {
 
@@ -109,10 +110,7 @@ namespace xna {
 
 	bool ContentTypeReaderManager::InstantiateTypeReader(String const& readerTypeName, sptr<ContentReader>& contentReader, sptr<ContentTypeReader>& reader)
 	{
-		sptr<csharp::Type> type = csharp::RuntimeType::GetType(readerTypeName);
-
-		/*if (csharp::Type::NameOfRegisteredTypes.contains(readerTypeName))
-			type = Type::NameOfRegisteredTypes[readerTypeName];	*/	
+		sptr<csharp::Type> type = csharp::RuntimeType::GetType(readerTypeName);		
 
 		if (!type) {
 

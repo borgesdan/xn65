@@ -109,12 +109,7 @@ namespace csharp {
 	template <class T>
 	Type typeof() {
 		return Type::FromTemplate<T>();		
-	}
-
-	/*template <class T>
-	Type GetType(T value) {
-		return  Type::FromTemplate<T>();
-	}*/
+	}	
 
 	template <class T>
 	Type GetType(T const& value) {
