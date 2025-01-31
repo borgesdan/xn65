@@ -1,0 +1,987 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="BadImporterFileExtension" xml:space="preserve">
+    <value>The importer file extension "{0}" is invalid. File extensions should start with a period (.) .</value>
+  </data>
+  <data name="RebuildBecauseCantLoadCache" xml:space="preserve">
+    <value>Rebuilding all content because {0} could not be read</value>
+  </data>
+  <data name="EffectPostProcessorInvalidEffectFormat" xml:space="preserve">
+    <value>The effect file contains invalid data.</value>
+  </data>
+  <data name="String1" xml:space="preserve">
+    <value />
+  </data>
+  <data name="ModelProcessorDisplayName" xml:space="preserve">
+    <value>Model - XNA Framework</value>
+  </data>
+  <data name="ShaderSizeAluOps" xml:space="preserve">
+    <value>arithmetic instruction slots</value>
+  </data>
+  <data name="AudioFileOpenFailed" xml:space="preserve">
+    <value>Failed to open file {0}. Ensure the file is a valid audio file and is not DRM protected.</value>
+  </data>
+  <data name="WarnDuplicateAssetReferencedBy" xml:space="preserve">
+    <value>, referenced by {0}</value>
+  </data>
+  <data name="BuildLogAllUpToDate" xml:space="preserve">
+    <value>All content is already up to date</value>
+  </data>
+  <data name="ModelProcessorParameterPremultiplyVertexColors" xml:space="preserve">
+    <value>Premultiply Vertex Colors</value>
+  </data>
+  <data name="VertexContentPositionIndexOutOfRange" xml:space="preserve">
+    <value>Position index out of range. VertexContent.PositionIndices contains a value outside of the range of the parent MeshContent.Positions collection.</value>
+  </data>
+  <data name="VideoProcessorParameterSoundTrackType" xml:space="preserve">
+    <value>Video Soundtrack Type</value>
+  </data>
+  <data name="CantSerializeMember" xml:space="preserve">
+    <value>Unable to serialize member {0} of {1}.</value>
+  </data>
+  <data name="IndirectPositionCollectionIsReadOnly" xml:space="preserve">
+    <value>IndirectPositionCollection is read-only. To modify position data, edit VertexContent.PositionIndices or MeshContent.Positions.</value>
+  </data>
+  <data name="FilenameNotAbsolute" xml:space="preserve">
+    <value>Filename should contain an absolute path: "{0}".</value>
+  </data>
+  <data name="TextureProcessorParameterResizeToPowerOfTwoDescription" xml:space="preserve">
+    <value>If enabled, the texture is resized to the next largest power of two, maximizing compatibility. Many graphics cards do not support texture sizes that are not a power of two.</value>
+  </data>
+  <data name="DeserializerConstructedNewInstance" xml:space="preserve">
+    <value>Intermediate ContentTypeSerializer {0} (handling type {1}) returned a new object instance from its Deserialize method. This should have loaded data into the existingInstance parameter.</value>
+  </data>
+  <data name="VertexChannelAddWrongType" xml:space="preserve">
+    <value>Collection parameter contains values of the wrong type: cannot store {0} in a VertexChannel&lt;{1}&gt;.</value>
+  </data>
+  <data name="FontTextureProcessor_MultipleIndicesSameChar" xml:space="preserve">
+    <value>The character '{0}'(0x{1:x4}) cannot be mapped to the glyph at index {2}: it is already mapped to index {3}. GetCharacterForIndex must return a different character for every index it is passed.</value>
+  </data>
+  <data name="BuildLogDeserializing" xml:space="preserve">
+    <value>Deserializing {0}</value>
+  </data>
+  <data name="EffectPostProcessorInvalidStateValue" xml:space="preserve">
+    <value>The effect state '{0}' was assigned an invalid value.</value>
+  </data>
+  <data name="MissingExternalReference" xml:space="preserve">
+    <value>Missing external reference "{0}".</value>
+  </data>
+  <data name="RebuildReferenceRenamed" xml:space="preserve">
+    <value>Rebuilding because referenced asset {0} was renamed</value>
+  </data>
+  <data name="CantNormalizeWeights" xml:space="preserve">
+    <value>Error normalizing vertex bone weights. BoneWeightCollection does not contain any weighting values.</value>
+  </data>
+  <data name="ShaderSizeOps" xml:space="preserve">
+    <value>instruction slots</value>
+  </data>
+  <data name="InteropFailedCreateD3DDevice" xml:space="preserve">
+    <value>Cannot create D3D Device{0}.</value>
+  </data>
+  <data name="ValidateTextureNoFaces" xml:space="preserve">
+    <value>Invalid texture. The Faces collection is empty.</value>
+  </data>
+  <data name="WarnDuplicateAssetNoProcessor" xml:space="preserve">
+    <value>no processor</value>
+  </data>
+  <data name="InvalidVideoContent" xml:space="preserve">
+    <value>Video file {0} is invalid. Please make sure that the video is not DRM protected and is a valid single-pass CBR encoded video file.</value>
+  </data>
+  <data name="ProfileMaxVertexStride" xml:space="preserve">
+    <value>XNA Framework {0} profile supports a maximum vertex stride of {1}.</value>
+  </data>
+  <data name="TextureProcessorParameterTextureFormatDescription" xml:space="preserve">
+    <value>Specifies the SurfaceFormat type of processed textures. Textures can either remain unchanged from the source asset, converted to the Color format, or DXT compressed.</value>
+  </data>
+  <data name="MissingNativeDependency" xml:space="preserve">
+    <value>Failed to load {0}. Please verify that you have the XNA Framework installed.</value>
+  </data>
+  <data name="ErrorCreatingFont" xml:space="preserve">
+    <value>There was an error creating the font: {0}</value>
+  </data>
+  <data name="NormalWrongType" xml:space="preserve">
+    <value>The vertex channel "{0}" is of type {1}. CalculateTangentFrames requires that the vertex channel containing normals be of type Vector3.</value>
+  </data>
+  <data name="XactProcessing" xml:space="preserve">
+    <value>Processing XACT project file {0}</value>
+  </data>
+  <data name="TextureProcessorParameterColorKeyEnabled" xml:space="preserve">
+    <value>Color Key Enabled</value>
+  </data>
+  <data name="TextureProcessorParameterTextureFormat" xml:space="preserve">
+    <value>Texture Format</value>
+  </data>
+  <data name="FileNotFound" xml:space="preserve">
+    <value>Specified file "{0}" not found.</value>
+  </data>
+  <data name="XactMissingWaveFile" xml:space="preserve">
+    <value>Wave file "{0}" not found.</value>
+  </data>
+  <data name="IntermediateDirectoryInvalid" xml:space="preserve">
+    <value>The value specified for IntermediateDirectory, "{0}", is not a valid directory name.</value>
+  </data>
+  <data name="SongProcessorUnsupportedFormat" xml:space="preserve">
+    <value>Unsupported format. Song processor supports MP3, WMA and WAV files.</value>
+  </data>
+  <data name="DuplicateID" xml:space="preserve">
+    <value>Duplicate XML ID attribute "{0}".</value>
+  </data>
+  <data name="EffectProcessorParameterDebugMode" xml:space="preserve">
+    <value>Debugging Options</value>
+  </data>
+  <data name="CreateVertexBufferBadType" xml:space="preserve">
+    <value>Vertex channel "{0}" has element type {1}, which is not a valid vertex buffer format. Supported types are {2}.</value>
+  </data>
+  <data name="SkinningButNoWeights" xml:space="preserve">
+    <value>The skinned mesh "{0}" contains geometry without any vertex weights.</value>
+  </data>
+  <data name="IndirectPositionCollectionHasNoParent" xml:space="preserve">
+    <value>IndirectPositionCollection cannot lookup position values because the parent GeometryContent has not been added to a MeshContent.</value>
+  </data>
+  <data name="VertexElementOffsetNotMultipleFour" xml:space="preserve">
+    <value>Invalid VertexDeclaration. Vertex stride and VertexElement.Offset must be multiples of four.</value>
+  </data>
+  <data name="FoundCyclicReference" xml:space="preserve">
+    <value>Cyclic reference found while serializing {0}. You may be missing a ContentSerializerAttribute.SharedResource flag.</value>
+  </data>
+  <data name="TextureProcessorParameterColorKeyEnabledDescription" xml:space="preserve">
+    <value>If enabled, the source texture is color keyed. Pixels matching the value of "Color Key Color" are replaced with transparent black.</value>
+  </data>
+  <data name="ShaderSizeTexOps" xml:space="preserve">
+    <value>texture instruction slots</value>
+  </data>
+  <data name="ZeroSizeVertexBuffer" xml:space="preserve">
+    <value>Zero size vertex buffers are not supported.</value>
+  </data>
+  <data name="ValidateTextureWrongType" xml:space="preserve">
+    <value>Invalid texture. Bitmap type mismatch: face {0} mip {1} is {2}, but face 0 mip 0 is {3}.</value>
+  </data>
+  <data name="ValidateTextureWrongSize" xml:space="preserve">
+    <value>Invalid texture. Face {0} mip {1} is sized {2}x{3}, but should be {4}x{5}.</value>
+  </data>
+  <data name="ShaderSizeFloatConstants" xml:space="preserve">
+    <value>constant registers</value>
+  </data>
+  <data name="RebuildAll" xml:space="preserve">
+    <value>Rebuilding all content</value>
+  </data>
+  <data name="ProfileNotPowerOfTwo" xml:space="preserve">
+    <value>XNA Framework {0} profile requires {1} sizes to be powers of two, but this {1} is {2}.</value>
+  </data>
+  <data name="NotIntermediateXml" xml:space="preserve">
+    <value>XML is not in the XNA intermediate format. Missing XnaContent root element.</value>
+  </data>
+  <data name="CantSetValueOnProcessor" xml:space="preserve">
+    <value>There was a problem setting the {1} property of {0} to the value "{2}": {3}</value>
+  </data>
+  <data name="ModelProcessorParameterGenerateMipmapsDescription" xml:space="preserve">
+    <value>If enabled, a full mipmap chain is generated for the model's textures. Existing mipmaps are not replaced.</value>
+  </data>
+  <data name="DuplicateProcessor" xml:space="preserve">
+    <value>The pipeline found two content processors named "{0}" ("{1}" and "{2}"). Rename or remove one of them.</value>
+  </data>
+  <data name="ProfileNoSeparateAlphaBlend" xml:space="preserve">
+    <value>XNA Framework {0} profile does not support separate alpha blend.</value>
+  </data>
+  <data name="ZeroSizeIndexBuffer" xml:space="preserve">
+    <value>Zero size index buffers are not supported.</value>
+  </data>
+  <data name="TextureProcessorParameterColorKeyColor" xml:space="preserve">
+    <value>Color Key Color</value>
+  </data>
+  <data name="ValidateTextureNoMipmaps" xml:space="preserve">
+    <value>Invalid texture. Face {0} does not contain any mipmaps.</value>
+  </data>
+  <data name="EffectProcessorDisplayName" xml:space="preserve">
+    <value>Effect - XNA Framework</value>
+  </data>
+  <data name="FontTextureProcessorParameterFirstCharacterDescription" xml:space="preserve">
+    <value>Specifies how the first character in the font texture is interpreted. Typically, the first character is a space.</value>
+  </data>
+  <data name="VertexChannelAlreadyExists" xml:space="preserve">
+    <value>Vertex channel "{0}" already exists.</value>
+  </data>
+  <data name="MaterialProcessorParameterResizeTexturesToPowerOfTwoDescription" xml:space="preserve">
+    <value>If enabled, the material's textures are resized to the next largest power of two, maximizing compatibility. Many graphics cards do not support texture sizes that are not a power of two.</value>
+  </data>
+  <data name="CantDeduceImporterConflict" xml:space="preserve">
+    <value>Cannot autodetect which importer to use for "{0}". There are two conflicting importers, "{1}" and "{2}", which handle this file type. Specify the appropriate importer in your project or remove one of the importers.</value>
+  </data>
+  <data name="FontDescriptionSizeMustBeGreaterThanZero" xml:space="preserve">
+    <value>The value {0} is invalid. Font size must be greater than zero.</value>
+  </data>
+  <data name="ShaderSizeError" xml:space="preserve">
+    <value>Compiled shader code uses too many {0} ({1}). Max. allowed by the target ({2}) is {3}.</value>
+  </data>
+  <data name="VertexChannelIsFixedSize" xml:space="preserve">
+    <value>Cannot directly resize a VertexChannel. Use the VertexContent Add and Remove methods instead.</value>
+  </data>
+  <data name="XmDeserializelException" xml:space="preserve">
+    <value>There was an error while deserializing intermediate XML. {0}</value>
+  </data>
+  <data name="SetPixelDataBadSourceDataLength" xml:space="preserve">
+    <value>The sourceData array has length {0}, but bitmap pixel data size should be {1}.</value>
+  </data>
+  <data name="ModelProcessorParameterScale" xml:space="preserve">
+    <value>Scale</value>
+  </data>
+  <data name="TextureProcessorParameterGenerateMipmaps" xml:space="preserve">
+    <value>Generate Mipmaps</value>
+  </data>
+  <data name="RebuildBecauseAssembliesChanged" xml:space="preserve">
+    <value>Rebuilding all content because pipeline assemblies have changed</value>
+  </data>
+  <data name="FontDescriptionImporterDisplayName" xml:space="preserve">
+    <value>Sprite Font Description - XNA Framework</value>
+  </data>
+  <data name="TextureProcessorParameterPremultiplyAlpha" xml:space="preserve">
+    <value>Premultiply Alpha</value>
+  </data>
+  <data name="ValidateTextureTooManyMipmaps" xml:space="preserve">
+    <value>Invalid texture. Face {0} contains too many mipmaps.</value>
+  </data>
+  <data name="BadTypeNameString" xml:space="preserve">
+    <value>XML contains invalid type name {0}.</value>
+  </data>
+  <data name="ModelProcessorParameterColorKeyColorDescription" xml:space="preserve">
+    <value>If the model's textures are color-keyed, pixels of this color are replaced with transparent black.</value>
+  </data>
+  <data name="NullElementNotAllowed" xml:space="preserve">
+    <value>XML element "{0}" is not allowed to be null.</value>
+  </data>
+  <data name="XactSkipBuild" xml:space="preserve">
+    <value>All target files of XACT are up to date.</value>
+  </data>
+  <data name="RebuildBecauseAssemblyChanged" xml:space="preserve">
+    <value>Rebuilding all content because pipeline assembly {0} has changed</value>
+  </data>
+  <data name="MissingAttribute" xml:space="preserve">
+    <value>XML attribute "{0}" was not found.</value>
+  </data>
+  <data name="ModelProcessorParameterZAxisRotation" xml:space="preserve">
+    <value>Z Axis Rotation</value>
+  </data>
+  <data name="GlyphPackerNoGlyphs" xml:space="preserve">
+    <value>Cannot build this font: there were no glyphs found to build.</value>
+  </data>
+  <data name="FragmentIdentifier" xml:space="preserve">
+    <value>Fragment identifier "{0}".</value>
+  </data>
+  <data name="VertexChannelCollectionAddViaInterface" xml:space="preserve">
+    <value>VertexChannelCollection does not support adding channels via the ICollection or IList interfaces. Use the VertexChannelCollection Add or Insert methods instead.</value>
+  </data>
+  <data name="XmlImporterDisplayName" xml:space="preserve">
+    <value>XML Content - XNA Framework</value>
+  </data>
+  <data name="ModelProcessorParameterScaleDescription" xml:space="preserve">
+    <value>Scales the model uniformly along all three axes.</value>
+  </data>
+  <data name="VectorConverterInvalidType" xml:space="preserve">
+    <value>Cannot convert vector type {0}. Supported types are Single, Vector2, Vector3, Vector4, and value types that implement IPackedVector.</value>
+  </data>
+  <data name="ProfileMaxPrimitiveCount" xml:space="preserve">
+    <value>XNA Framework {0} profile supports a maximum of {1} primitives per draw call, but this ModelMeshPart contains {2} triangles. Reduce the number of triangles, or split the model into several smaller meshes.</value>
+  </data>
+  <data name="XactBuilding" xml:space="preserve">
+    <value>Building {0} -&gt; {1}</value>
+  </data>
+  <data name="ModelsNotSupportedOnPlatform" xml:space="preserve">
+    <value>Models are not supported on {0}</value>
+  </data>
+  <data name="FontDescriptionProcessorDisplayName" xml:space="preserve">
+    <value>Sprite Font Description - XNA Framework</value>
+  </data>
+  <data name="EffectProcessorParameterDebugModeDescription" xml:space="preserve">
+    <value>Specifies whether effect debugging is enabled.</value>
+  </data>
+  <data name="TextureProcessorDisplayName" xml:space="preserve">
+    <value>Texture - XNA Framework</value>
+  </data>
+  <data name="ConvertWeightsOutputAlreadyExists" xml:space="preserve">
+    <value>Cannot convert vertex channel "{0}" because the output channel "{1}" already exists.</value>
+  </data>
+  <data name="InvalidFilename" xml:space="preserve">
+    <value>Invalid filesystem location "{0}".</value>
+  </data>
+  <data name="XactBuildFailed" xml:space="preserve">
+    <value>Building XACT project has failed.</value>
+  </data>
+  <data name="ProfileNoIndexElementSize32" xml:space="preserve">
+    <value>XNA Framework {0} profile does not support 32 bit indices. To fit the data into 16 bit index format, reduce the number of triangles, or split the model into several smaller meshes.</value>
+  </data>
+  <data name="VertexChannelNotFound" xml:space="preserve">
+    <value>Vertex channel "{0}" was not found.</value>
+  </data>
+  <data name="MobileNoXact" xml:space="preserve">
+    <value>XACT is not supported by the Windows Phone platform.</value>
+  </data>
+  <data name="ValidateTextureBadDxtSize" xml:space="preserve">
+    <value>Invalid texture. Face {0} is sized {1}x{2}, but textures using DXT compressed formats must be multiples of four.</value>
+  </data>
+  <data name="ValidateCubemapNotSquare" xml:space="preserve">
+    <value>Invalid texture. The cubemap is not square.</value>
+  </data>
+  <data name="ModelProcessorParameterPremultiplyTextureAlphaDescription" xml:space="preserve">
+    <value>If enabled, the model's textures are converted to premultiplied alpha format.</value>
+  </data>
+  <data name="CharacterRegionStartGreaterThanEnd" xml:space="preserve">
+    <value>The value is invalid. Start, '{0}' (0x{1:x4}), must be less than or equal to End, '{2}' (0x{3:x4}).</value>
+  </data>
+  <data name="PassThroughProcessorDisplayName" xml:space="preserve">
+    <value>No Processing Required</value>
+  </data>
+  <data name="ModelProcessorParameterSwapWindingOrder" xml:space="preserve">
+    <value>Swap Winding Order</value>
+  </data>
+  <data name="MaterialProcessorParameterColorKeyEnabledDescription" xml:space="preserve">
+    <value>If enabled, the material's textures are color keyed. Pixels matching the value of "Color Key Color" are replaced with transparent black.</value>
+  </data>
+  <data name="MeshBuilderTypesDoNotMatch" xml:space="preserve">
+    <value>{0} cannot be called with the parameter of type {1} for index {2}. The type must match the type of data channel created for index {2}, which was {3}.</value>
+  </data>
+  <data name="BadGenericTypeHandler" xml:space="preserve">
+    <value>Intermediate {0} {1} is an invalid generic. It should be in the form My{0}&lt;T&gt; : {0}&lt;MyType&lt;T&gt;&gt; .</value>
+  </data>
+  <data name="WarnDuplicateAssetBuiltUsing" xml:space="preserve">
+    <value>using {0} and {1}</value>
+  </data>
+  <data name="DuplicateVertexElement" xml:space="preserve">
+    <value>Invalid VertexDeclaration. Duplicate element {0}{1}.</value>
+  </data>
+  <data name="EffectPostProcessorObsoleteStateUsed" xml:space="preserve">
+    <value>The effect state '{0}' is obsolete and can no longer be used.</value>
+  </data>
+  <data name="ModelProcessorParameterPremultiplyTextureAlpha" xml:space="preserve">
+    <value>Premultiply Texture Alpha</value>
+  </data>
+  <data name="InvalidEnumValue" xml:space="preserve">
+    <value>XML contains invalid value "{0}" for enum {1}.</value>
+  </data>
+  <data name="WrongExternalReferenceType" xml:space="preserve">
+    <value>XML specifies wrong type for external reference "{0}".</value>
+  </data>
+  <data name="ModelProcessorParameterColorKeyEnabledDescription" xml:space="preserve">
+    <value>If enabled, the model's textures are color keyed. Pixels matching the value of "Color Key Color" are replaced with transparent black.</value>
+  </data>
+  <data name="BadVertexBufferType" xml:space="preserve">
+    <value>Type {0} cannot be stored in a vertex buffer because it is not a simple value type. Vertex buffers cannot contain reference types or value types that contain reference type fields.</value>
+  </data>
+  <data name="ConvertBitmapTypeNotBitmapContent" xml:space="preserve">
+    <value>ConvertBitmapType cannot convert to {0}. The target type must be derived from BitmapContent.</value>
+  </data>
+  <data name="CompressionError" xml:space="preserve">
+    <value>Error compressing content data.</value>
+  </data>
+  <data name="EffectProcessorErrorCompilingEffect" xml:space="preserve">
+    <value>Errors compiling {0}:{1}{2}</value>
+  </data>
+  <data name="RegistryError" xml:space="preserve">
+    <value>Unable to resolve content pipeline assemblies. An error has occurred attempting to read the registry value "{0}".</value>
+  </data>
+  <data name="RequiredVertexChannelNotFound" xml:space="preserve">
+    <value>Required vertex channel "{0}" not found.</value>
+  </data>
+  <data name="BuildLogCompiling" xml:space="preserve">
+    <value>Compiling {0}</value>
+  </data>
+  <data name="ProfileFormatNotSupported" xml:space="preserve">
+    <value>XNA Framework {0} profile does not support {1} format {2}.</value>
+  </data>
+  <data name="CollectionArgumentContainsNull" xml:space="preserve">
+    <value>The argument is invalid. The collection contains a null element.</value>
+  </data>
+  <data name="ModelProcessorParameterResizeTexturesToPowerOfTwo" xml:space="preserve">
+    <value>Resize Textures to Power of Two</value>
+  </data>
+  <data name="WrongVertexChannelSize" xml:space="preserve">
+    <value>Wrong number of VertexChannel entries in "{0}". Channel size is {1}, but the parent VertexContent has a count of {2}.</value>
+  </data>
+  <data name="MaterialProcessorParameterDefaultEffectDescription" xml:space="preserve">
+    <value>Specifies what rendering effect to use if the source data does not explicitly specify an effect.</value>
+  </data>
+  <data name="CantCreateDirectory" xml:space="preserve">
+    <value>Cannot create directory "{0}".</value>
+  </data>
+  <data name="ProfileAspectRatio" xml:space="preserve">
+    <value>XNA Framework {0} profile supports a maximum {1} aspect ratio of {2}, but this {1} is sized {3}.</value>
+  </data>
+  <data name="XactWrongVersion" xml:space="preserve">
+    <value>The .xap file was created with a version of XACT that is incompatible with the XNA Framework Content Pipeline version used by this project. Refer to the documentation for options to resolve this mismatch.</value>
+  </data>
+  <data name="FontTextureProcessorDisplayName" xml:space="preserve">
+    <value>Sprite Font Texture - XNA Framework</value>
+  </data>
+  <data name="ContentPipelineInnerException" xml:space="preserve">
+    <value>Inner exception: {0}: {1}</value>
+  </data>
+  <data name="BuildCancelled" xml:space="preserve">
+    <value>Build cancelled at the user's request</value>
+  </data>
+  <data name="CantLoadPipelineAssembly" xml:space="preserve">
+    <value>Error loading pipeline assembly "{0}".</value>
+  </data>
+  <data name="ReadOnlySharedResource" xml:space="preserve">
+    <value>Members marked with ContentSerializerAttribute.SharedResource cannot be read-only.</value>
+  </data>
+  <data name="SongProcessorDisplayName" xml:space="preserve">
+    <value>Song - XNA Framework</value>
+  </data>
+  <data name="NotACollectionType" xml:space="preserve">
+    <value>{0} is not a collection type.</value>
+  </data>
+  <data name="WrongContentProcessorInputType" xml:space="preserve">
+    <value>Wrong content processor input type. Processor {0} expects an input of {1}, but {2} was passed. Your importer and processor selections may not be compatible.</value>
+  </data>
+  <data name="VideoProcessorParameterSoundTrackTypeDescription" xml:space="preserve">
+    <value>Specifies the role of audio track in the video.</value>
+  </data>
+  <data name="RebuildBecauseSettingsChanged" xml:space="preserve">
+    <value>Rebuilding all content because build settings have changed</value>
+  </data>
+  <data name="ValidateTextureWrongMipCount" xml:space="preserve">
+    <value>Invalid texture. Face {0} has a mipmap count of {1}, but face 0 has {2}.</value>
+  </data>
+  <data name="BuildLogSerializing" xml:space="preserve">
+    <value>Serializing {0}</value>
+  </data>
+  <data name="CantLoadPipelineAssemblyOffShare" xml:space="preserve">
+    <value>Error loading pipeline assembly "{0}".  Pipeline assemblies cannot be loaded from a network share.</value>
+  </data>
+  <data name="BuildAndLoadAssetNotIntermediate" xml:space="preserve">
+    <value>The BuildAndLoadAsset function can only be used with intermediate content files.</value>
+  </data>
+  <data name="FontTextureProcessorParameterFirstCharacter" xml:space="preserve">
+    <value>First Character</value>
+  </data>
+  <data name="VertexElementBadUsage" xml:space="preserve">
+    <value>Invalid VertexDeclaration. Usage {0}{1} is out of range.</value>
+  </data>
+  <data name="RebuildNewAsset" xml:space="preserve">
+    <value>Rebuilding because asset is new</value>
+  </data>
+  <data name="InvalidTargetProfile" xml:space="preserve">
+    <value>The target profile "{0}" is invalid. Supported values are {1}.</value>
+  </data>
+  <data name="MobileNoEffects" xml:space="preserve">
+    <value>The Windows Phone platform does not support custom shaders.</value>
+  </data>
+  <data name="ConvertBitmapException" xml:space="preserve">
+    <value>Unsupported bitmap conversion. {0}</value>
+  </data>
+  <data name="CantSerializeReadOnlyNull" xml:space="preserve">
+    <value>Cannot deserialize XML element "{0}" because this member is both null and read-only.</value>
+  </data>
+  <data name="RebuildDirtyDependency" xml:space="preserve">
+    <value>Rebuilding because {0} has changed</value>
+  </data>
+  <data name="ModelProcessorParameterPremultiplyVertexColorsDescription" xml:space="preserve">
+    <value>If enabled, vertex color channels are converted to premultiplied alpha format.</value>
+  </data>
+  <data name="DeserializerReturnedNull" xml:space="preserve">
+    <value>Intermediate ContentTypeSerializer {0} (handling type {1}) returned a null value from its Deserialize method.</value>
+  </data>
+  <data name="FontNotFound" xml:space="preserve">
+    <value>The font family "{0}" could not be found. Please ensure the requested font is installed, and is a TrueType or OpenType font.</value>
+  </data>
+  <data name="EffectPostProcessorUnknownEffectState" xml:space="preserve">
+    <value>Unrecognized effect state assignment.</value>
+  </data>
+  <data name="InvalidAssetName" xml:space="preserve">
+    <value>Invalid asset name "{0}".</value>
+  </data>
+  <data name="NullXnaFrameworkVersion" xml:space="preserve">
+    <value>Attempted to set the XNA Framework Version to null.</value>
+  </data>
+  <data name="NullVertexChannelEntry" xml:space="preserve">
+    <value>Vertex channel "{0}" contains a null {1}.</value>
+  </data>
+  <data name="VertexHasUnknownBoneName" xml:space="preserve">
+    <value>Vertex is bound to bone "{0}", but this bone is not present in the skeleton.</value>
+  </data>
+  <data name="ModelProcessorParameterYAxisRotation" xml:space="preserve">
+    <value>Y Axis Rotation</value>
+  </data>
+  <data name="AudioProcessorParameterQualityDescription" xml:space="preserve">
+    <value>Specifies the audio quality after compression. Typically better quality means lower compression.</value>
+  </data>
+  <data name="NotEnoughEntriesInXmlList" xml:space="preserve">
+    <value>XML does not have enough entries in space-separated list.</value>
+  </data>
+  <data name="ProfileMaxVertexElements" xml:space="preserve">
+    <value>XNA Framework {0} profile supports a maximum of {1} simultaneous vertex elements.</value>
+  </data>
+  <data name="ConvertBitmapTypeNotConstructable" xml:space="preserve">
+    <value>ConvertBitmapType cannot convert to {0}. The target must be a concrete type with a public constructor taking integer width and height parameters.</value>
+  </data>
+  <data name="MaterialProcessorParameterColorKeyColorDescription" xml:space="preserve">
+    <value>If the material's textures are color-keyed, pixels of this color are replaced with transparent black.</value>
+  </data>
+  <data name="ShaderSizeIntConstants" xml:space="preserve">
+    <value>integer constant registers</value>
+  </data>
+  <data name="ModelProcessorParameterYAxisRotationDescription" xml:space="preserve">
+    <value>Rotates the model a specified number of degrees around the y-axis.</value>
+  </data>
+  <data name="WriteExternalReferenceNotXnb" xml:space="preserve">
+    <value>External reference "{0}" is not a compiled {1} file.</value>
+  </data>
+  <data name="CantFindType" xml:space="preserve">
+    <value>Cannot find type "{0}".</value>
+  </data>
+  <data name="CantResizeMipmapChainCollection" xml:space="preserve">
+    <value>Cannot resize MipmapChainCollection. This type of texture has a fixed number of faces.</value>
+  </data>
+  <data name="AudioDataReadFailed" xml:space="preserve">
+    <value>Could not read the audio data from file "{0}".</value>
+  </data>
+  <data name="DuplicateXmlTypeName" xml:space="preserve">
+    <value>Intermediate ContentTypeSerializer "{0}" conflicts with existing handler "{1}" for XmlTypeName "{2}".</value>
+  </data>
+  <data name="TooManyEntriesInXmlList" xml:space="preserve">
+    <value>XML has too many entries in the space-separated list.</value>
+  </data>
+  <data name="DuplicateBoneName" xml:space="preserve">
+    <value>Skeleton contains more than one bone named "{0}".</value>
+  </data>
+  <data name="AudioFormatIsUnsupported" xml:space="preserve">
+    <value>Audio file {0} contains an unsupported audio format.</value>
+  </data>
+  <data name="ChildAlreadyHasParent" xml:space="preserve">
+    <value>Cannot add child object {0} because it already has a parent. Remove it from the existing parent collection first.</value>
+  </data>
+  <data name="InteropFailedCreateDummyWindow" xml:space="preserve">
+    <value>Cannot create dummy window.</value>
+  </data>
+  <data name="TextureCoordinateWrongType" xml:space="preserve">
+    <value>The vertex channel "{0}" is of type {1}. CalculateTangentFrames requires that the vertex channel indicated by the textureCoordinateChannelName parameter be of type Vector2.</value>
+  </data>
+  <data name="AudioFormatReadFailed" xml:space="preserve">
+    <value>Could not read the audio format from file "{0}".</value>
+  </data>
+  <data name="TextureProcessorParameterResizeToPowerOfTwo" xml:space="preserve">
+    <value>Resize to Power of Two</value>
+  </data>
+  <data name="ModelProcessorParameterGenerateTangentFrames" xml:space="preserve">
+    <value>Generate Tangent Frames</value>
+  </data>
+  <data name="VertexChannelWrongContentType" xml:space="preserve">
+    <value>Vertex channel "{0}" is the wrong type. It has element type {1}. Type {2} is expected.</value>
+  </data>
+  <data name="BadTypePointerOrReference" xml:space="preserve">
+    <value>Cannot serialize type {0}. Pointers and references are not supported.</value>
+  </data>
+  <data name="BuildLogProcessing" xml:space="preserve">
+    <value>Processing {0} with {1}</value>
+  </data>
+  <data name="MaterialProcessorParameterDefaultEffect" xml:space="preserve">
+    <value>Default Effect</value>
+  </data>
+  <data name="EffectProcessorParameterDefineProperty" xml:space="preserve">
+    <value>Defines</value>
+  </data>
+  <data name="MeshBuilderNotInSetupState" xml:space="preserve">
+    <value>The function {0} can only be called before calling {1}. All of the create functions must be called to set up the mesh before per-triangle data is added.</value>
+  </data>
+  <data name="ValidateTexturePartialMipChain" xml:space="preserve">
+    <value>Invalid texture. Partial mipmap chains are not supported, but texture is sized {0} yet has only {1} mipmaps.</value>
+  </data>
+  <data name="CompiledAssetFilenameConflict" xml:space="preserve">
+    <value>More than one output asset is named "{0}". You must explicitly specify asset names to resolve the conflict.</value>
+  </data>
+  <data name="RebuildNotBuilt" xml:space="preserve">
+    <value>Rebuilding because asset is out of date</value>
+  </data>
+  <data name="CantWriteNullInFlattenContentMode" xml:space="preserve">
+    <value>Cannot serialize null values when the ContentSerializerAttribute.FlattenContent flag is set.</value>
+  </data>
+  <data name="VideoProcessorDisplayName" xml:space="preserve">
+    <value>Video - XNA Framework</value>
+  </data>
+  <data name="WriteExternalReferenceBadPath" xml:space="preserve">
+    <value>External reference "{0}" is not inside output directory "{1}".</value>
+  </data>
+  <data name="BadTypeDelegate" xml:space="preserve">
+    <value>Cannot serialize type {0}. Delegates are not supported.</value>
+  </data>
+  <data name="ModelProcessorParameterZAxisRotationDescription" xml:space="preserve">
+    <value>Rotates the model a specified number of degrees around the z-axis.</value>
+  </data>
+  <data name="MaterialProcessorBadTypeForEffectParameter" xml:space="preserve">
+    <value>The EffectMaterialContent named "{0}" has an invalid parameter in its OpaqueData. The parameter is named "{1}", and is of the type {2}, which is invalid. All types must be valid input for EffectParameter.SetValue or EffectParameter.SetValueArray. Valid types are int, bool, float, Vector2, Vector3, Vector4, Matrix, arrays of those types, and strings.</value>
+  </data>
+  <data name="CantDeduceImporterNoneAvailable" xml:space="preserve">
+    <value>Cannot autodetect which importer to use for "{0}". There are no importers which handle this file type. Specify the importer that handles this file type in your project.</value>
+  </data>
+  <data name="EffectProcessorParameterDefinePropertyDescription" xml:space="preserve">
+    <value>Semi-colon delimited string list of defines that is passed into the Effect processor.</value>
+  </data>
+  <data name="MissingResource" xml:space="preserve">
+    <value>Missing shared resource "{0}".</value>
+  </data>
+  <data name="AudioProcessorParameterQuality" xml:space="preserve">
+    <value>Compression Quality</value>
+  </data>
+  <data name="ModelProcessorParameterXAxisRotationDescription" xml:space="preserve">
+    <value>Rotates the model a specified number of degrees around the x-axis.</value>
+  </data>
+  <data name="ContentPipelineException" xml:space="preserve">
+    <value>Building content threw {0}: {1}</value>
+  </data>
+  <data name="MaterialProcessorParameterGenerateMipmapsDescription" xml:space="preserve">
+    <value>If enabled, a full mipmap chain is generated for the material's textures. Existing mipmaps are not replaced.</value>
+  </data>
+  <data name="MaterialProcessorParameterPremultiplyTextureAlphaDescription" xml:space="preserve">
+    <value>If enabled, the material's textures are converted to premultiplied alpha format.</value>
+  </data>
+  <data name="ModelProcessorParameterSwapWindingOrderDescription" xml:space="preserve">
+    <value>If enabled, the winding order of the model is swapped. Useful for models that appear to be drawn inside-out.</value>
+  </data>
+  <data name="MeshBuilderWrongNumberOfIndices" xml:space="preserve">
+    <value>MeshBuilder only supports triangle lists. The number of calls to {0} must be a multiple of three.</value>
+  </data>
+  <data name="ProfileVertexShaderModel" xml:space="preserve">
+    <value>XNA Framework {0} profile does not support vertex shader model {1}.</value>
+  </data>
+  <data name="SoundEffectProcessorUnsupportedFormat" xml:space="preserve">
+    <value>Unsupported format. Sound effect processor currently only supports PCM wave files.</value>
+  </data>
+  <data name="CreateVertexBufferBadUsage" xml:space="preserve">
+    <value>Vertex channel name "{0}" is not a valid vertex buffer usage. This should be one of the values of the VertexElementUsage enum, plus an optional usage index suffix.</value>
+  </data>
+  <data name="WrongSharedResourceType" xml:space="preserve">
+    <value>XML specifies invalid type for shared resource. Expecting a subclass of "{0}", but XML contains "{1}".</value>
+  </data>
+  <data name="ValidateVolumeWrongMipCount" xml:space="preserve">
+    <value>Invalid texture. Face {0} has a mipmap count of {1}, but should be {2}.</value>
+  </data>
+  <data name="VertexBufferSizeNotMultipleOfStride" xml:space="preserve">
+    <value>Vertex buffer size must be a multiple of the vertex stride.</value>
+  </data>
+  <data name="TextureProcessorObsolete" xml:space="preserve">
+    <value>{0} is obsolete, and may be removed in a future version. TextureProcessor (Texture - XNA Framework) should be used instead.</value>
+  </data>
+  <data name="ProcessorParametersDictionaryContainsWeirdEntry" xml:space="preserve">
+    <value>The processorParameters dictionary contains an invalid entry, {0}. Entries should have the same name as a public property on the processor, and either be of the correct type or have an appropriate TypeConverter.</value>
+  </data>
+  <data name="DuplicateVertexChannel" xml:space="preserve">
+    <value>VertexChannelCollection already contains a channel with name "{0}".</value>
+  </data>
+  <data name="InvalidAssemblyName" xml:space="preserve">
+    <value>A content pipeline assembly has an invalid name or path: "{0}".</value>
+  </data>
+  <data name="AudioFormatConversionFailed" xml:space="preserve">
+    <value>Could not convert audio file {0} to {1} format.</value>
+  </data>
+  <data name="IntermediateDirectoryNullOrEmpty" xml:space="preserve">
+    <value>IntermediateDirectory is a required property, and cannot be null or empty.</value>
+  </data>
+  <data name="CantSerializeMultidimensionalArrays" xml:space="preserve">
+    <value>Cannot serialize multidimensional arrays.</value>
+  </data>
+  <data name="PathTooLong" xml:space="preserve">
+    <value>Path "{0}" is too long. The file name must be less than 260 characters, and the directory name must be less than 248 characters.</value>
+  </data>
+  <data name="ZeroSizeVertexDeclaration" xml:space="preserve">
+    <value>Zero size vertex declarations are not supported.</value>
+  </data>
+  <data name="WrongXmlType" xml:space="preserve">
+    <value>XML "Type" attribute is invalid. Expecting a subclass of {0}, but XML contains {1}.</value>
+  </data>
+  <data name="NoRegistryPermissions" xml:space="preserve">
+    <value>Unable to resolve content pipeline assemblies. You do not have permissions to read the registry value {0}.</value>
+  </data>
+  <data name="ElementNotFound" xml:space="preserve">
+    <value>XML element "{0}" not found.</value>
+  </data>
+  <data name="ModelProcessorParameterXAxisRotation" xml:space="preserve">
+    <value>X Axis Rotation</value>
+  </data>
+  <data name="ModelProcessorParameterResizeTexturesToPowerOfTwoDescription" xml:space="preserve">
+    <value>If enabled, the model's textures are resized to the next largest power of two, maximizing compatibility. Many graphics cards do not support texture sizes that are not a power of two.</value>
+  </data>
+  <data name="AudioDurationInvalid" xml:space="preserve">
+    <value>Could not obtain valid duration for the audio file.</value>
+  </data>
+  <data name="DuplicateTypeHandler" xml:space="preserve">
+    <value>Intermediate {0} "{1}" conflicts with existing handler "{2}" for {3}.</value>
+  </data>
+  <data name="EffectPostProcessorInvalidSamplerIndex" xml:space="preserve">
+    <value>Invalid index ({0}) used when assigning state '{1}'.</value>
+  </data>
+  <data name="ProfilePixelShaderModel" xml:space="preserve">
+    <value>XNA Framework {0} profile does not support pixel shader model {1}.</value>
+  </data>
+  <data name="WarnDuplicateAsset" xml:space="preserve">
+    <value>Asset was built {0} times with different settings:</value>
+  </data>
+  <data name="ProfileNotPowerOfTwoDXT" xml:space="preserve">
+    <value>XNA Framework {0} profile requires DXT compressed {1} sizes to be powers of two, but this {1} is {2}. Resize it to a power of two, or disable DXT compression.</value>
+  </data>
+  <data name="NullElementName" xml:space="preserve">
+    <value>ContentSerializerAttribute has a null ElementName property.</value>
+  </data>
+  <data name="SourceAssetNotFound" xml:space="preserve">
+    <value>Missing asset "{0}".</value>
+  </data>
+  <data name="XactSerializing" xml:space="preserve">
+    <value>Serializing {0}</value>
+  </data>
+  <data name="TextureButNoTextureCoordinates" xml:space="preserve">
+    <value>The mesh "{0}", using {1}, contains geometry that is missing texture coordinates for channel {2}.</value>
+  </data>
+  <data name="SoundEffectProcessorDisplayName" xml:space="preserve">
+    <value>Sound Effect - XNA Framework</value>
+  </data>
+  <data name="TextureProcessorParameterPremultiplyAlphaDescription" xml:space="preserve">
+    <value>If enabled, the texture is converted to premultiplied alpha format.</value>
+  </data>
+  <data name="SkeletonNotFound" xml:space="preserve">
+    <value>Skeleton not found. Meshes that contain a Weights vertex channel cannot be processed without access to the skeleton data.</value>
+  </data>
+  <data name="ProfileFeatureNotSupported" xml:space="preserve">
+    <value>XNA Framework {0} profile does not support {1}.</value>
+  </data>
+  <data name="TextureProcessorParameterGenerateMipmapsDescription" xml:space="preserve">
+    <value>If enabled, a full mipmap chain is generated from the source texture. Existing mipmaps are not replaced.</value>
+  </data>
+  <data name="NoDefaultConstructor" xml:space="preserve">
+    <value>Cannot deserialize type {0} because it does not have a parameterless constructor.</value>
+  </data>
+  <data name="FileCloseFailed" xml:space="preserve">
+    <value>Failed to close the file "{0}".</value>
+  </data>
+  <data name="BadBitmapSize" xml:space="preserve">
+    <value>Bitmap size must be greater than zero.</value>
+  </data>
+  <data name="InteropFailedCreateD3D" xml:space="preserve">
+    <value>Cannot create D3D object.</value>
+  </data>
+  <data name="AudioFileIsDRMProtected" xml:space="preserve">
+    <value>Audio file {0} is DRM protected.</value>
+  </data>
+  <data name="InvalidTargetPlatform" xml:space="preserve">
+    <value>The target platform "{0}" is invalid. Supported values are {1}.</value>
+  </data>
+  <data name="AssemblyReferenceWrongVersion" xml:space="preserve">
+    <value>Assembly {0} was built with a reference to {1} with an incorrect version {2} when version {3} was expected.</value>
+  </data>
+  <data name="VideoInvalidContent" xml:space="preserve">
+    <value>Video file {0} is invalid. Please make sure that the video is not DRM protected and is a valid single-pass CBR encoded video file.</value>
+  </data>
+  <data name="BadPixelBitmapType" xml:space="preserve">
+    <value>{0} is not a valid PixelBitmapContent type.</value>
+  </data>
+  <data name="VertexElementOutsideStride" xml:space="preserve">
+    <value>Invalid VertexDeclaration. Element {0}{1} does not fit within the specified vertex stride.</value>
+  </data>
+  <data name="WrongArgumentType" xml:space="preserve">
+    <value>Invalid argument type. Expecting a subclass of {0}, but {1} was passed.</value>
+  </data>
+  <data name="WrongContentProcessorOutputType" xml:space="preserve">
+    <value>Wrong content processor output type. Processor {0} produces a result of {1}, but {2} was requested.</value>
+  </data>
+  <data name="BuildLogImporting" xml:space="preserve">
+    <value>Importing {0} with {1}</value>
+  </data>
+  <data name="RebuildMissingOutput" xml:space="preserve">
+    <value>Rebuilding because {0} is missing</value>
+  </data>
+  <data name="ShaderSizeBoolConstants" xml:space="preserve">
+    <value>boolean constant registers</value>
+  </data>
+  <data name="DuplicateImporter" xml:space="preserve">
+    <value>The pipeline found two importers named "{0}" ("{1}" and "{2}"). Rename or remove one of them.</value>
+  </data>
+  <data name="MaterialProcessorEffectMaterialContentFilenameNullOrEmpty" xml:space="preserve">
+    <value>{0} is an EffectMaterialContent, but its Effect is invalid: Effect.Filename is null or or an empty string.</value>
+  </data>
+  <data name="BuildLogBuilding" xml:space="preserve">
+    <value>Building {0} -&gt; {1}</value>
+  </data>
+  <data name="UnknownDeserializationType" xml:space="preserve">
+    <value>XML is missing a "Type" attribute.</value>
+  </data>
+  <data name="TextureProcessorParameterColorKeyColorDescription" xml:space="preserve">
+    <value>If the texture is color-keyed, pixels of this color are replaced with transparent black.</value>
+  </data>
+  <data name="BadTextureType" xml:space="preserve">
+    <value>Texture type {0} is not a valid format. Supported PixelBitmapContent types are {1}.</value>
+  </data>
+  <data name="MeshBuilderInFinishedState" xml:space="preserve">
+    <value>The function {0} cannot be called after calling {1}.</value>
+  </data>
+  <data name="MaterialProcessorEffectMaterialDoesntHaveEffect" xml:space="preserve">
+    <value>{0} is an EffectMaterialContent, but its Effect is null.</value>
+  </data>
+  <data name="BadTypeOpenGeneric" xml:space="preserve">
+    <value>Type {0} cannot be serialized because not all the generic type parameters have been specified.</value>
+  </data>
+  <data name="ModelProcessorParameterGenerateTangentFramesDescription" xml:space="preserve">
+    <value>If enabled, binormals and tangents are generated if none were found; otherwise, any existing data remains unchanged.</value>
+  </data>
+  <data name="BuildLogAlreadyUpToDate" xml:space="preserve">
+    <value>{0} is already up to date</value>
+  </data>
+  <data name="CantFindProcessor" xml:space="preserve">
+    <value>Cannot find content processor "{0}".</value>
+  </data>
+  <data name="TooManyBones" xml:space="preserve">
+    <value>Skeleton contains {0} bones. Maximum is {1}.</value>
+  </data>
+  <data name="TypeScannerError" xml:space="preserve">
+    <value>{0} is not valid on type {1}. The target should be a non-abstract class which derives from {2} and has a default public constructor.</value>
+  </data>
+  <data name="FontDescriptionNameCannotBeNullOrEmpty" xml:space="preserve">
+    <value>FontName is required, and cannot be null or empty.</value>
+  </data>
+  <data name="EffectProcessorWarningCompilingEffect" xml:space="preserve">
+    <value>Warning compiling {0}: {1}</value>
+  </data>
+  <data name="CleaningContent" xml:space="preserve">
+    <value>Deleting content pipeline output files</value>
+  </data>
+  <data name="ProfileNotPowerOfTwoMipped" xml:space="preserve">
+    <value>XNA Framework {0} profile requires mipmapped {1} sizes to be powers of two, but this {1} is {2}. Resize it to a power of two, or remove the mipmaps.</value>
+  </data>
+  <data name="XactProjectFileNotFound" xml:space="preserve">
+    <value>XACT project file not found.</value>
+  </data>
+  <data name="NoLoopInAudioFile" xml:space="preserve">
+    <value>No valid loop region was found in the audio file "{0}"</value>
+  </data>
+  <data name="NullCompiledEffect" xml:space="preserve">
+    <value>EffectMaterialContent cannot have a null CompiledEffect.</value>
+  </data>
+  <data name="ProfileTooBig" xml:space="preserve">
+    <value>XNA Framework {0} profile supports a maximum {1} size of {2}, but this {1} is {3}.</value>
+  </data>
+  <data name="CantFindImporter" xml:space="preserve">
+    <value>Cannot find importer "{0}".</value>
+  </data>
+  <data name="DuplicateSkeleton" xml:space="preserve">
+    <value>Node has more than one BoneContent child. Unable to determine which one is the skeleton root.</value>
+  </data>
+  <data name="CantWriteDynamicTypesInFlattenContentMode" xml:space="preserve">
+    <value>Cannot serialize derived types when the ContentSerializerAttribute.FlattenContent flag is set.</value>
+  </data>
+  <data name="VertexElementsOverlap" xml:space="preserve">
+    <value>Invalid VertexDeclaration. Elements {0}{1} and {2}{3} are overlapping.</value>
+  </data>
+</root>
