@@ -1,8 +1,12 @@
-﻿# XN65
+## Note
+> The project has been discontinued. The new repository can be found at: [https://github.com/borgesdan/xnpp](https://github.com/borgesdan/xnpp)
+
+
+# XN65
 
 <img src="images/xn65-logo-285x110.png" alt="Exemplo imagem">
 
-> XN65 is an implementation of Microsoft XNA 4.0 in modern C++, with DirectX 11 and the DirectXTK library.
+XN65 is an implementation of Microsoft XNA 4.0 in modern C++, with DirectX 11 and the DirectXTK library.
 
 ### Adjustments and improvements
 
